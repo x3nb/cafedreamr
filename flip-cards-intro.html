@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="/.nekoweb-api/static/site.js" defer></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Collective | Agency HQ Deck</title>
+    <link href="https://fonts.googleapis.com/css2?family=Vampiro+One&family=Klee+One:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-deep: #0f041d;          
+            --cornflower: #6495ed;      
+            --neon-green: #39ff14;       
+            --zine-paper: #f4f4f4;
+            --glass-shine: rgba(255, 255, 255, 0.15);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Klee One', cursive;
+            background-color: var(--bg-deep);
+            color: #fff;
+            min-height: 100vh;
+            overflow: hidden;
+            background-image: 
+                radial-gradient(1px 1px at 20px 30px, var(--cornflower), rgba(0,0,0,0)),
+                radial-gradient(1.5px 1.5px at 100px 150px, #fff, rgba(0,0,0,0)),
+                radial-gradient(1px 1px at 400px 50px, #fff, rgba(0,0,0,0));
+            background-size: 500px 500px;
+        }
+
+        header { padding: 30px; text-align: center; pointer-events: none; }
+        .zine-headline {
+            font-family: 'Vampiro One', cursive;
+            font-size: 3.5rem;
+            color: var(--cornflower);
+            text-transform: uppercase;
+            text-shadow: 0 0 20px rgba(100, 149, 237, 0.4);
+        }
+
+        /* --- THE DESK --- */
+        .zine-desk {
+            position: relative;
+            width: 100vw;
+            height: calc(100vh - 120px);
+            perspective: 1500px;
+        }
+
+        /* --- POST-IT EXIT --- */
+        .back-note {
+            position: fixed; bottom: 30px; left: 30px;
+            width: 90px; height: 90px;
+            background: var(--neon-green);
+            color: #000;
+            display: flex; align-items: center; justify-content: center;
+            text-decoration: none; font-family: 'Vampiro One';
+            transform: rotate(-5deg);
+            box-shadow: 5px 5px 15px rgba(0,0,0,0.4);
+            z-index: 2000; cursor: pointer;
+            transition: 0.3s;
+            clip-path: polygon(0% 0%, 100% 0%, 100% 80%, 80% 100%, 0% 100%);
+        }
+        .back-note:hover { transform: rotate(0deg) scale(1.1); }
+
+        /* --- HQ CARD STYLING --- */
+        .char-card {
+            position: absolute;
+            width: 260px;
+            height: 380px;
+            cursor: grab;
+            transform-style: preserve-3d;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            user-select: none;
+        }
+
+        .card-face {
+            position: absolute;
+            width: 100%; height: 100%;
+            backface-visibility: hidden;
+            border-radius: 20px; /* Smooth HQ Corners */
+            box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        /* The Glossy Shine Effect */
+        .card-face::after {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: linear-gradient(45deg, 
+                transparent 45%, 
+                var(--glass-shine) 50%, 
+                transparent 55%);
+            pointer-events: none;
+            transition: 0.5s;
+        }
+
+        .char-card:hover .card-face::after {
+            transform: translate(10%, 10%);
+        }
+
+        .card-front { background: #111; }
+        .char-img { width: 100%; height: 100%; object-fit: cover; }
+
+        .nameplate {
+            position: absolute; bottom: 0; width: 100%;
+            padding: 15px; background: rgba(15, 4, 29, 0.8);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid var(--cornflower);
+        }
+        .nameplate h2 { font-family: 'Vampiro One'; color: var(--cornflower); font-size: 1.2rem; }
+
+        .card-back {
+            background-color: var(--zine-paper);
+            color: #1a0b2e;
+            transform: rotateY(180deg);
+            padding: 25px;
+            display: flex; flex-direction: column;
+            border: 4px solid #1a0b2e;
+        }
+        .card-back h3 { font-family: 'Vampiro One'; font-size: 1.6rem; margin-bottom: 10px; border-bottom: 2px solid #000; }
+        .card-back p { font-size: 0.85rem; line-height: 1.5; margin-bottom: 8px; }
+
+        .dog-ear {
+            position: absolute; bottom: 0; right: 0;
+            width: 50px; height: 50px;
+            background: linear-gradient(135deg, transparent 50%, var(--neon-green) 50%);
+            z-index: 10; cursor: pointer;
+            display: flex; align-items: flex-end; justify-content: flex-end;
+            padding: 5px; color: #000; font-weight: bold; font-size: 0.6rem;
+        }
+
+        .char-card.is-flipped { transform: rotateY(180deg) !important; }
+
+        /* Initial Positions for all 5 */
+        #star { top: 10%; left: 5%; transform: rotate(-4deg); }
+        #chari { top: 15%; left: 22%; transform: rotate(2deg); }
+        #miki { top: 8%; left: 40%; transform: rotate(-3deg); }
+        #milo { top: 12%; left: 58%; transform: rotate(5deg); }
+        #hans { top: 5%; left: 75%; transform: rotate(-2deg); }
+
+        .hint { position: fixed; bottom: 20px; right: 30px; color: var(--neon-green); font-size: 0.7rem; opacity: 0.5; }
+    </style>
+</head>
+<body>
+
+    <a href="https://xencafe.nekoweb.org/2024-ARCHIVES/CHIMERACAT-LORE/breathing-LORE-character-map.html" class="back-note">EXIT</a>
+
+    <header>
+        <h1 class="zine-headline">The Chimera Collective</h1>
+    </header>
+
+    <div class="zine-desk" id="desk">
+        
+        <div class="char-card" id="star">
+            <div class="card-face card-front">
+                <img src="https://xencafe.nekoweb.org/2024-ARCHIVES/CHIMERACAT-LORE/STAR.jpeg" class="char-img">
+                <div class="nameplate"><h2>STAR</h2></div>
+                <div class="dog-ear" onclick="flipCard(event, 'star')">INTEL</div>
+            </div>
+            <div class="card-face card-back" onclick="flipCard(event, 'star')">
+                <h3>STAR</h3>
+                <p>Cafe Owner & Literary Navigator. A British-Japanese hybrid bridging feline elegance and human likeness.</p>
+                <p><b>DNA:</b> Purple (Romantic Goth)</p>
+            </div>
+        </div>
+
+        <div class="char-card" id="chari">
+            <div class="card-face card-front">
+                <img src="https://xencafe.nekoweb.org/2024-ARCHIVES/CHIMERACAT-LORE/Chari-Barista.jpeg" class="char-img">
+                <div class="nameplate"><h2>CHARI</h2></div>
+                <div class="dog-ear" onclick="flipCard(event, 'chari')">INTEL</div>
+            </div>
+            <div class="card-face card-back" onclick="flipCard(event, 'chari')">
+                <h3>CHARI</h3>
+                <p>Apprentice & Watcher. Incredibly crafty, observing the world through a sharp, quiet intelligence.</p>
+                <p><b>DNA:</b> Soft Pink (Support)</p>
+            </div>
+        </div>
+
+        <div class="char-card" id="miki">
+            <div class="card-face card-front">
+                <img src="https://xencafe.nekoweb.org/2024-ARCHIVES/CHIMERACAT-LORE/Miki-Official.jpeg" class="char-img">
+                <div class="nameplate"><h2>MIKI</h2></div>
+                <div class="dog-ear" onclick="flipCard(event, 'miki')">INTEL</div>
+            </div>
+            <div class="card-face card-back" onclick="flipCard(event, 'miki')">
+                <h3>MIKI</h3>
+                <p>Security & Rockstar. Snarky, bold, and fiercely protective. Expert in cyborg-tech security.</p>
+                <p><b>DNA:</b> Neon Yellow (Security)</p>
+            </div>
+        </div>
+
+        <div class="char-card" id="milo">
+            <div class="card-face card-front">
+                <img src="https://xencafe.nekoweb.org/2024-ARCHIVES/CHIMERACAT-LORE/Emo-Milo-Japanese-Parisian.jpeg" class="char-img">
+                <div class="nameplate"><h2>MILO</h2></div>
+                <div class="dog-ear" onclick="flipCard(event, 'milo')">INTEL</div>
+            </div>
+            <div class="card-face card-back" onclick="flipCard(event, 'milo')">
+                <h3>MILO</h3>
+                <p>Gardener & Spiritual Buffer. Soft-spoken mediator tending to the Cafe’s soil and spirit.</p>
+                <p><b>DNA:</b> Mint Green (Zen)</p>
+            </div>
+        </div>
+
+        <div class="char-card" id="hans">
+            <div class="card-face card-front">
+                <img src="https://xencafe.nekoweb.org/2024-ARCHIVES/CHIMERACAT-LORE/HANS-OFFICIAL-CHIMERA.jpeg" class="char-img">
+                <div class="nameplate"><h2>HANS</h2></div>
+                <div class="dog-ear" onclick="flipCard(event, 'hans')">INTEL</div>
+            </div>
+            <div class="card-face card-back" onclick="flipCard(event, 'hans')">
+                <h3>HANS</h3>
+                <p>Hans is a redeemed vampire, 'tech-allergic',historian and tea snob who views a perfectly brewed cup as a divine right and finds his sanity in Earl Grey and Shakespeare. He remains the unwavering anchor of etiquette. </p>
+                <p><b>DNA:</b> Cornflower Blue (Scribe)</p>
+            </div>
+        </div>
+
+    </div>
+
+    <p class="hint">DRAG TO SHUFFLE // CLICK GREEN CORNER FOR INTEL</p>
+
+    <script>
+        let isDragging = false;
+        let activeCard = null;
+        let cardOffset = { x: 0, y: 0 };
+        let highestZ = 10;
+
+        function flipCard(e, id) {
+            e.stopPropagation();
+            const card = document.getElementById(id);
+            card.classList.toggle('is-flipped');
+        }
+
+        document.querySelectorAll('.char-card').forEach(card => {
+            card.addEventListener('mousedown', (e) => {
+                if(e.target.classList.contains('dog-ear')) return;
+                isDragging = true;
+                activeCard = card;
+                highestZ++;
+                card.style.zIndex = highestZ;
+                const rect = card.getBoundingClientRect();
+                cardOffset.x = e.clientX - rect.left;
+                cardOffset.y = e.clientY - rect.top;
+            });
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (!isDragging || !activeCard) return;
+            activeCard.style.left = (e.clientX - cardOffset.x) + 'px';
+            activeCard.style.top = (e.clientY - cardOffset.y) + 'px';
+            activeCard.style.margin = '0';
+        });
+
+        document.addEventListener('mouseup', () => {
+            isDragging = false;
+            activeCard = null;
+        });
+    </script>
+</body>
+</html>
