@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="/.nekoweb-api/static/site.js" defer></script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CafeDream Realm | The Final Secret</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Klee+One&family=Vampiro+One&family=UnifrakturMaguntia&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+    <style>
+        :root {
+            --deep-purple: #1a0a2e; 
+            --royal-bg: linear-gradient(135deg, #1a0a2e 0%, #301934 100%);
+            --cornflower: #6495ed;
+            --violet-glow: rgba(238, 130, 238, 0.4);
+            --glass-violet: rgba(138, 43, 226, 0.2);
+            --accent-violet: #ee82ee;
+            --brass: #b5a642;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Klee One', cursive;
+            background: var(--royal-bg);
+            background-attachment: fixed;
+            color: var(--cornflower);
+            overflow-x: hidden;
+            min-height: 100vh;
+            padding-bottom: 120px;
+        }
+
+        /* --- Gatekeeper --- */
+        #gatekeeper {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000; display: flex; align-items: center;
+            justify-content: center; z-index: 10000; flex-direction: column;
+            text-align: center;
+        }
+        #tea-input {
+            background: transparent; border: 1px solid var(--cornflower);
+            padding: 12px; color: white; font-size: 1.2rem; text-align: center;
+            border-radius: 5px; width: 300px; outline: none;
+        }
+
+        /* --- Main UI --- */
+        #main { display: none; opacity: 0; transition: opacity 1.2s ease; }
+        .realm-status { position: absolute; top: 25px; right: 40px; text-align: right; z-index: 10; }
+        
+        .header { text-align: center; margin-bottom: 30px; padding-top: 20px; }
+        .header h1 { 
+            font-family: 'UnifrakturMaguntia', serif; font-size: 5em; 
+            background: linear-gradient(to bottom, #fff, var(--cornflower)); 
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 10px var(--violet-glow));
+        }
+        .subtitle { font-style: italic; max-width: 700px; margin: 15px auto; opacity: 0.8; }
+
+        /* --- Nav & Marquee --- */
+        .nav-container { display: flex; justify-content: center; gap: 20px; padding: 100px 30px 30px; flex-wrap: wrap; }
+        .nav-btn {
+            background: var(--glass-violet); backdrop-filter: blur(10px);
+            border: 1px solid rgba(238, 130, 238, 0.3); color: var(--cornflower);
+            padding: 12px 25px; text-decoration: none; border-radius: 8px; transition: 0.4s;
+            font-family: 'Vampiro One', cursive; box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        .nav-btn:hover { transform: scale(1.1) rotate(-3deg); box-shadow: 0 0 20px var(--violet-glow); color: #fff; }
+
+        .marquee-wrap {
+            width: 100%; overflow: hidden; background: rgba(0,0,0,0.4);
+            border-top: 1px solid var(--violet-glow); border-bottom: 1px solid var(--violet-glow);
+            padding: 12px 0; margin-bottom: 30px;
+        }
+        .marquee-text { white-space: nowrap; display: inline-block; animation: scroll-text 28s linear infinite; }
+        @keyframes scroll-text { from { transform: translateX(100vw); } to { transform: translateX(-100%); } }
+        
+        .secret-pearl { color: #fff; text-shadow: 0 0 10px #fff; cursor: pointer; font-weight: bold; }
+
+        /* --- Controls & Hubs --- */
+        .hub-controls { display: flex; justify-content: center; gap: 30px; margin-bottom: 50px; }
+        .toggle-btn {
+            background: rgba(138, 43, 226, 0.1); border: 2px double var(--accent-violet);
+            color: var(--accent-violet); padding: 15px 30px; font-family: 'UnifrakturMaguntia', serif;
+            font-size: 1.4rem; cursor: pointer; transition: 0.3s; border-radius: 50px;
+        }
+        .toggle-btn:hover { box-shadow: 0 0 25px var(--violet-glow); transform: translateY(-5px); }
+
+        .hub-flex-container { display: flex; max-width: 1400px; margin: 0 auto; gap: 25px; padding: 0 20px; perspective: 1000px; }
+        .drop-section {
+            opacity: 0; transform: translateY(-50px) rotateX(-20deg); pointer-events: none;
+            transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            background: rgba(20, 10, 40, 0.6); border-radius: 20px; border: 1px solid rgba(100, 149, 237, 0.1);
+            backdrop-filter: blur(8px); flex: 1; padding: 25px;
+        }
+        .drop-section.active { opacity: 1; transform: translateY(0) rotateX(0); pointer-events: auto; }
+
+        /* --- Mystery Drawers --- */
+        .drawer-container { position: fixed; bottom: 0; width: 100%; display: flex; justify-content: space-between; padding: 0 50px; z-index: 1000; pointer-events: none; }
+        .drawer {
+            width: 300px; background: rgba(15, 5, 25, 0.95); border: 2px solid var(--brass);
+            border-bottom: none; border-radius: 20px 20px 0 0; transform: translateY(100%);
+            transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55); pointer-events: auto; padding: 20px;
+        }
+        .drawer.open { transform: translateY(0); }
+        .handle { position: absolute; top: -40px; left: 50%; transform: translateX(-50%); background: var(--brass); color: #000; padding: 5px 20px; border-radius: 10px 10px 0 0; cursor: pointer; font-family: 'Vampiro One'; font-size: 0.8rem; }
+
+        /* --- Shared Glass Popups --- */
+        .glass-popup {
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0);
+            background: rgba(15, 5, 25, 0.95); backdrop-filter: blur(25px);
+            border: 1px solid var(--accent-violet); padding: 40px; border-radius: 20px;
+            z-index: 11000; transition: 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            text-align: center; color: #fff; width: 450px; box-shadow: 0 0 60px rgba(0,0,0,0.9);
+            cursor: pointer; /* To indicate you can click to close */
+        }
+        .glass-popup.visible { transform: translate(-50%, -50%) scale(1); animation: textFlicker 3s linear infinite; }
+        
+        @keyframes textFlicker { 0%, 100%, 95%, 97%, 99% { opacity: 1; } 96% { opacity: 0.8; } 98% { opacity: 0.9; } }
+
+        .letter-link { display: block; color: var(--cornflower); text-decoration: none; margin-top: 10px; font-style: italic; transition: 0.3s; cursor: pointer; }
+        .letter-link:hover { color: #fff; transform: translateX(5px); }
+
+        /* --- Particle Effect --- */
+        .particle { position: fixed; pointer-events: none; border-radius: 50%; z-index: 9999; animation: fall linear forwards; }
+        @keyframes fall { to { transform: translateY(100vh) rotate(360deg); opacity: 0; } }
+
+        #chat-sidebar { height: 600px; overflow: hidden; }
+    </style>
+</head>
+<body>
+
+<div id="gatekeeper">
+    <h2 style="font-family: 'UnifrakturMaguntia'; color: var(--cornflower); font-size: 2.5rem; margin-bottom: 20px;">"What tea shall we brew?"</h2>
+    <input type="text" id="tea-input" placeholder="Earl ____" autofocus>
+    <p style="margin-top:15px; opacity:0.5; font-size:0.8rem; color:var(--cornflower);">[ Press Enter to Unlock ]</p>
+</div>
+
+<div id="main">
+    <div class="realm-status">
+        <div id="date" style="font-size: 0.7rem; opacity: 0.6; text-transform: uppercase;"></div>
+        <div id="clock" style="font-weight: bold; font-size: 1.3rem;"></div>
+        <div style="font-size: 0.5rem; color: var(--accent-violet); letter-spacing: 2px;">LOCAL SYNC</div>
+    </div>
+
+    <nav class="nav-container">
+        <a href="#" class="nav-btn">ABOUT</a>
+        <a href="#" class="nav-btn">BLOG</a>
+        <a href="#" class="nav-btn">SHOP</a>
+        <a href="#" class="nav-btn">GUIDE</a>
+        <a href="#" class="nav-btn">GALLERY</a>
+    </nav>
+
+    <div class="marquee-wrap">
+        <div class="marquee-text">
+            "I must go seek some dewdrops here and hang a <span class="secret-pearl" onclick="triggerSecret()">pearl</span> in every cowslip's ear." — Shakespeare &nbsp;&nbsp; ● &nbsp;&nbsp; "The course of true love never did run smooth."
+        </div>
+    </div>
+
+    <div class="header">
+        <h1>CafeDream Realm</h1>
+        <p class="subtitle">"Welcome to the Fringe of the Empire. Leave your titles at the gate; we only trade in dreams and caffeine here."</p>
+    </div>
+
+    <div class="hub-controls">
+        <button class="toggle-btn" onclick="toggleSection('community')">Open Archives</button>
+        <button class="toggle-btn" onclick="toggleSection('chat-sidebar')">Enter Parlour</button>
+    </div>
+
+    <div class="hub-flex-container">
+        <section id="community" class="drop-section">
+            <h2 style="font-family:'Vampiro One'; margin-bottom:20px; color: var(--accent-violet);">The Inner Circle</h2>
+            <div id="disqus_thread"></div>
+        </section>
+
+        <aside id="chat-sidebar" class="drop-section">
+            <div style="background: #1a0a2e; padding: 10px; text-align: center; font-family: 'Vampiro One'; border-bottom: 1px solid #331a4d; color: var(--cornflower);">Dream Chat</div>
+            <iframe src="https://e.widgetbot.io/channels/1498131914798665829" height="100%" width="100%" allowtransparency="true" frameborder="0"></iframe>
+        </aside>
+    </div>
+
+    <div class="drawer-container">
+        <div id="music-drawer" class="drawer">
+            <div class="handle" onclick="toggleDrawer('music-drawer')">GRAMOPHONE</div>
+            <h3 style="color:var(--brass); font-family: 'UnifrakturMaguntia';">Music Cabinet</h3>
+            <p style="font-size:0.8rem; margin-bottom:10px;">Ambient Frequency</p>
+            <audio id="bg-music" src="starlightcafe.mp3" loop></audio>
+            <button onclick="document.getElementById('bg-music').play(); playChime(880);" style="background:none; border:1px solid var(--cornflower); color:var(--cornflower); padding:5px 10px; cursor:pointer;">Play</button>
+            <button onclick="document.getElementById('bg-music').pause(); playChime(440);" style="background:none; border:1px solid var(--cornflower); color:var(--cornflower); padding:5px 10px; cursor:pointer;">Silence</button>
+        </div>
+
+        <div id="letter-drawer" class="drawer">
+            <div class="handle" onclick="toggleDrawer('letter-drawer')">MISSIVES</div>
+            <h3 style="color:var(--brass); font-family: 'UnifrakturMaguntia';">Dead Letters</h3>
+            <div class="letter-link" onclick="showEtiquette()">📜 The Unspoken Etiquette</div>
+            <div class="letter-link" onclick="showAdminNote()">✉️ Admin's Secret Note</div>
+        </div>
+    </div>
+</div>
+
+<div id="etiquette-overlay" class="glass-popup" onclick="closePopups()">
+    <h2 style="font-family:'UnifrakturMaguntia'; color:var(--accent-violet); margin-bottom:15px;">Realm Lore</h2>
+    <p id="etiquette-text" style="font-size:1.2rem; font-style:italic; line-height:1.5;"></p>
+    <p style="margin-top:20px; font-size:0.7rem; opacity:0.5;">[ Click to Dismiss ]</p>
+</div>
+
+<div id="admin-note-overlay" class="glass-popup" onclick="closePopups()">
+    <h2 style="font-family:'UnifrakturMaguntia'; color:var(--cornflower); border-bottom: 1px solid var(--cornflower); display:inline-block; margin-bottom:15px;">A Message from the Admin</h2>
+    <p style="font-size:1.1rem; line-height:1.6; text-align:left; font-family:'Klee One';">
+        To the Dreamer who found this,<br><br>
+        This realm was built from the remnants of old midnight conversations and the steam of a thousand cups of tea. <br><br>
+        If the world feels a bit too loud today, stay here a while. The archives are open and the parlour is warm.<br><br>
+        Stay strange,<br>
+        <em>— The Admin</em>
+    </p>
+    <p style="margin-top:20px; font-size:0.7rem; opacity:0.5; letter-spacing:2px;">[ SEALED WITH VIOLET DUST ]</p>
+</div>
+
+<script>
+    /* --- AUDIO ENGINE --- */
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    function playChime(freq = 880) {
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
+        osc.type = 'sine'; osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.03, audioCtx.currentTime); gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 1.5);
+        osc.connect(gain); gain.connect(audioCtx.destination);
+        osc.start(); osc.stop(audioCtx.currentTime + 1.5);
+    }
+
+    /* --- GATEKEEPER --- */
+    const teaInput = document.getElementById('tea-input');
+    teaInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter' && teaInput.value.trim().toLowerCase() === 'earl grey') {
+            document.getElementById('gatekeeper').style.display = 'none';
+            document.getElementById('main').style.display = 'block';
+            setTimeout(() => { document.getElementById('main').style.opacity = '1'; }, 50);
+            updateClock(); setInterval(updateClock, 1000);
+            playChime(660);
+        }
+    });
+
+    /* --- CLOCK --- */
+    function updateClock() {
+        const now = new Date();
+        document.getElementById('clock').textContent = now.toLocaleTimeString();
+        document.getElementById('date').textContent = now.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+    }
+
+    /* --- INTERACTION LOGIC --- */
+    function toggleSection(id) { document.getElementById(id).classList.toggle('active'); playChime(660); }
+    function toggleDrawer(id) { document.getElementById(id).classList.toggle('open'); playChime(440); }
+
+    const etiquetteRules = [
+        "Speak in ink, but think in starlight.",
+        "The tea is always hot, but the tea is never spilled.",
+        "Respect the silence between the songs.",
+        "Only kind ghosts are permitted in the chat.",
+        "Leave your crown at the gate; we are all dreamers here.",
+        "If you find a secret, keep it until it's ready to be told."
+    ];
+
+    function showEtiquette() {
+        closePopups();
+        const text = etiquetteRules[Math.floor(Math.random() * etiquetteRules.length)];
+        document.getElementById('etiquette-text').innerText = text;
+        document.getElementById('etiquette-overlay').classList.add('visible');
+        playChime(330);
+    }
+
+    function showAdminNote() {
+        closePopups();
+        document.getElementById('admin-note-overlay').classList.add('visible');
+        playChime(554.37);
+    }
+
+    function closePopups() {
+        document.getElementById('etiquette-overlay').classList.remove('visible');
+        document.getElementById('admin-note-overlay').classList.remove('visible');
+    }
+
+    /* --- THE PEARL SECRET --- */
+    function triggerSecret() {
+        playChime(1200);
+        for(let i=0; i<30; i++) {
+            const p = document.createElement('div');
+            p.className = 'particle';
+            p.style.left = Math.random() * 100 + 'vw';
+            p.style.top = '-10px';
+            p.style.width = p.style.height = Math.random() * 8 + 'px';
+            p.style.background = i % 2 === 0 ? '#ee82ee' : '#6495ed';
+            p.style.boxShadow = '0 0 10px white';
+            p.style.animationDuration = (Math.random() * 2 + 1) + 's';
+            document.body.appendChild(p);
+            setTimeout(() => p.remove(), 3000);
+        }
+    }
+
+    /* --- HOVER CHIMES --- */
+    document.querySelectorAll('.nav-btn, .toggle-btn, .handle, .letter-link').forEach(btn => {
+        btn.addEventListener('mouseenter', () => playChime(880));
+    });
+
+    /* --- DISQUS --- */
+    var disqus_config = function () { this.page.url = window.location.href; this.page.identifier = 'cafedream-final-v4'; };
+    (function() { var d = document, s = d.createElement('script'); s.src = 'https://shrinkingviolets.disqus.com/embed.js'; s.setAttribute('data-timestamp', +new Date()); (d.head || d.body).appendChild(s); })();
+</script>
+
+</body>
+</html>
