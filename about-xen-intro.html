@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="/.nekoweb-api/static/site.js" defer></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DigitalXenCafe</title>
+    <link href="https://fonts.googleapis.com/css2?family=Vampiro+One&family=Klee+One&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Klee One', cursive;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a0033 50%, #2d1b69 100%);
+            color: #fff;
+            overflow-x: auto;
+            height: 100vh;
+            position: relative;
+        }
+
+        /* Cosmic stars/bubbles */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(2px 2px at 20px 30px, #eee, transparent),
+                radial-gradient(2px 2px at 40px 70px, rgba(255,255,255,0.8), transparent),
+                radial-gradient(1px 1px at 90px 40px, #fff, transparent),
+                radial-gradient(1px 1px at 130px 80px, rgba(255,255,255,0.6), transparent);
+            background-repeat: repeat;
+            background-size: 200px 100px;
+            animation: float 20s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+
+        .title {
+            font-family: 'Vampiro One', cursive;
+            font-size: 3.5rem;
+            color: #fa8072;
+            text-align: center;
+            padding: 20px 0;
+            text-shadow: 0 0 20px rgba(250, 128, 114, 0.5);
+            position: relative;
+            z-index: 10;
+        }
+
+        .ticker {
+            background: rgba(0,0,0,0.3);
+            padding: 10px 0;
+            overflow: hidden;
+            white-space: nowrap;
+            box-shadow: 0 0 20px rgba(255,255,255,0.1);
+            position: relative;
+            z-index: 10;
+        }
+
+        .ticker span {
+            display: inline-block;
+            font-size: 1.5rem;
+            padding-left: 100%;
+            animation: ticker 6s linear infinite; /* Heartbeat pace ~10bpm */
+        }
+
+        @keyframes ticker {
+            0% { transform: translate3d(0, 0, 0); }
+            100% { transform: translate3d(-100%, 0, 0); }
+        }
+
+        .nav {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            padding: 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .nav-btn {
+            background: linear-gradient(145deg, #ff6b6b, #4ecdc4);
+            border: none;
+            padding: 15px 25px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #fff;
+            cursor: pointer;
+            border-radius: 8px;
+            box-shadow: 
+                0 8px 16px rgba(0,0,0,0.3),
+                inset 0 2px 4px rgba(255,255,255,0.2);
+            transform: rotate(-2deg);
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-btn:nth-child(odd) { transform: rotate(2deg); }
+        .nav-btn:nth-child(3) { transform: rotate(-1deg); }
+        .nav-btn:nth-child(4) { transform: rotate(3deg); }
+
+        .nav-btn:hover {
+            transform: rotate(0deg) scale(1.05);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.4);
+        }
+
+        .nav-btn.active {
+            background: linear-gradient(145deg, #ffd700, #ffed4e);
+            color: #333;
+            transform: translateY(10px) rotate(360deg);
+            animation: fall 0.6s ease-out;
+        }
+
+        @keyframes fall {
+            0% { transform: translateY(0) rotate(0deg); }
+            100% { transform: translateY(10px) rotate(360deg); }
+        }
+
+        .modules {
+            display: flex;
+            flex-wrap: nowrap;
+            justify-content: flex-start;
+            gap: 15px;
+            padding: 30px;
+            overflow-x: auto;
+            padding-bottom: 50px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .module {
+            min-width: 350px;
+            max-width: 350px;
+            background: linear-gradient(145deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 
+                0 20px 40px rgba(0,0,0,0.3),
+                inset 0 1px 0 rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.1);
+            opacity: 0;
+            transform: translateY(50px) scale(0.8);
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            animation: tetrisDrop 0.6s ease-out forwards;
+        }
+
+        .module.active {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        @keyframes tetrisDrop {
+            0% {
+                opacity: 0;
+                transform: translateY(100px) rotateX(90deg) scale(0.5);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) rotateX(0deg) scale(1);
+            }
+        }
+
+        .module h2 {
+            color: #fa8072;
+            margin-bottom: 20px;
+            font-family: 'Vampiro One', cursive;
+            font-size: 1.8rem;
+        }
+
+        .module p {
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            font-size: 0.9rem;
+        }
+
+        .shop-items {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .shop-item {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .shop-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .shop-item a {
+            color: #4ecdc4;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .shop-item a:hover {
+            color: #fff;
+        }
+
+        @media (max-width: 768px) {
+            .module { min-width: 300px; }
+            .nav { flex-wrap: wrap; }
+        }
+    </style>
+</head>
+<body>
+    <div class="title">DigitalXenCafe</div>
+    
+    <div class="ticker">
+        <span>enjoy your stay 　enjoy your stay 　enjoy your stay 　enjoy your stay</span>
+    </div>
+
+    <nav class="nav">
+        <button class="nav-btn" data-module="about">About</button>
+        <button class="nav-btn" data-module="story">Story</button>
+        <button class="nav-btn" data-module="characters">Characters</button>
+        <button class="nav-btn" data-module="relax">Relax</button>
+    </nav>
+
+    <div class="modules">
+        <div id="about" class="module">
+            <h2>About</h2>
+            <p>Welcome to DigitalXenCafe, where creativity flows like the finest espresso ☕✨</p>
+            <p>This is a digital haven run by chimera feline humans who craft enchanting stories over steaming cups of coffee and tea. Our cafe blends the mystical with the everyday, where cat-eared baristas serve tales as rich as our brews.</p>
+            <p>Every visit sparks imagination. Pull up a chair, sip something magical, and let the stories unfold...</p>
+        </div>
+
+        <div id="story" class="module">
+            <h2>Story</h2>
+            <p>In the neon-lit streets of Neo-Tokyo, DigitalXenCafe glows like a beacon for lost souls and dreamers. Our chimera feline family has served more than just coffee—they've served second chances, whispered secrets, and stories that rewrite destinies.</p>
+            <p>From the Great Caffeine Wars to the Tea Ceremony Revolution, our cafe has witnessed it all. Join us as we brew the next chapter together.</p>
+        </div>
+
+        <div id="characters" class="module">
+            <h2>Characters</h2>
+            <div class="info-grid">
+                <div>
+                    <strong>🖤 Lila (Coffee Queen)</strong><br>
+                    The fierce feline-human owner with midnight fur and golden eyes. Master of espresso artistry and cafe magic.
+                </div>
+                <div>
+                    <strong>🌸 Miko (Little Sister)</strong><br>
+                    Lila's playful sibling, always experimenting with latte art that comes alive.
+                </div>
+                <div>
+                    <strong>🌿 Miles (Zen Herbalist)</strong><br>
+                    Calm herbalist who crafts teas that heal body and soul. Speaks in haikus.
+                </div>
+                <div>
+                    <strong>🍵 Hans (Tea Etiquette Master)</strong><br>
+                    Obsessed with perfect tea ceremonies. Lives for the ritual, nothing else.
+                </div>
+            </div>
+            <div style="margin-top: 20px; padding: 15px; background: rgba(0,0,0,0.3); border-radius: 8px;">
+                <div><strong>Today's Date:</strong> <span id="date"></span></div>
+                <div><strong>Current Time:</strong> <span id="time"></span></div>
+            </div>
+        </div>
+
+        <div id="relax" class="module">
+            <h2>Relax & Shop</h2>
+            <div class="shop-items">
+                <div class="shop-item">
+                    <strong>Zen Teapot</strong><br>
+                    <a href="https://amzn.to/3example1" target="_blank">Shop Now →</a>
+                </div>
+                <div class="shop-item">
+                    <strong>Cozy Mug</strong><br>
+                    <a href="https://amzn.to/3example2" target="_blank">Shop Now →</a>
+                </div>
+                <div class="shop-item">
+                    <strong>Herbal Blend</strong><br>
+                    <a href="https://amzn.to/3example3" target="_blank">Shop Now →</a>
+                </div>
+                <div class="shop-item">
+                    <strong>Cafe Ambiance Candle</strong><br>
+                    <a href="https://amzn.to/3example4" target="_blank">Shop Now →</a>
+                </div>
+            </div>
+            <p style="margin-top: 20px; font-style: italic;">* Affiliate links - supports the cafe! ✨</p>
+        </div>
+    </div>
+
+    <script>
+        // Update date/time
+        function updateTime() {
+            const now = new Date();
+            document.getElementById('date').textContent = now.toLocaleDateString();
+            document.getElementById('time').textContent = now.toLocaleTimeString();
+        }
+        updateTime();
+        setInterval(updateTime, 1000);
+
+        // Module functionality
+        const buttons = document.querySelectorAll('.nav-btn');
+        const modules = document.querySelectorAll('.module');
+
+        buttons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const targetId = btn.dataset.module;
+                const targetModule = document.getElementById(targetId);
+                
+                // Activate clicked button
+                buttons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                // Show target module
+                modules.forEach((mod, index) => {
+                    if (mod.id === targetId) {
+                        mod.classList.add('active');
+                        mod.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    } else {
+                        mod.classList.remove('active');
+                    }
+                });
+            });
+        });
+
+        // Auto-show first module
+        document.querySelector('.nav-btn').click();
+    </script>
+</body>
+</html>
