@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="/.nekoweb-api/static/site.js" defer></script><script src="/.nekoweb-api/static/site.js" defer></script><script src="/.nekoweb-api/static/site.js" defer></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lore Nexus | Chimera Collective HQ</title>
+    <style>
+        /* Harmonized Fonts */
+        @import url('https://fonts.googleapis.com/css2?family=Vampiro+One&family=Klee+One:wght@400;600&display=swap');
+
+        :root {
+         --hans-bg: #1a0b2e;       /* Deep Purple */
+        --hans-border: #6495ed;   /* Cornflower Blue */
+        
+        --star-accent: #8a2be2;   /* Violet-Purple */
+        
+        --chari-accent: #e6e6fa;  /* Lavender */
+        
+        --milo-mint: #98ff98;     /* Mint Green */
+        --milo-teal: #008080;     /* Teal */
+        
+        --miki-neon: #ccff00;     /* Neon Yellow */
+        --miki-pale: #ffffcc;     /* Pale Yellow */
+        }
+
+        body {
+            background-color: #0d0415;
+            background: radial-gradient(circle at center, #2e1a47 0%, #0d0415 100%);
+            color: var(--soft-text);
+            font-family: 'Klee One', cursive;
+            margin: 0;
+            padding: 60px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+       h1 {
+    font-family: 'Vampiro One';
+    font-size: 4rem;
+    margin-bottom: 5px;
+    color: var(--hans-border); /* Cornflower Blue */
+    cursor: default;
+    
+    /* Apply the animation */
+    animation: titleBreath 8s ease-in-out infinite;
+    display: inline-block; /* Required for transform to work */
+
+        }
+
+        .subtitle {
+            font-size: 0.9rem;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            color: #aaa;
+            margin-bottom: 60px;
+        }
+@keyframes titleBreath {
+    0% {
+        transform: scale(1);
+        text-shadow: 0 0 10px rgba(100, 149, 237, 0.4);
+        letter-spacing: 10px;
+    }
+    50% {
+        transform: scale(1.02);
+        text-shadow: 0 0 30px rgba(100, 149, 237, 0.8), 0 0 50px rgba(100, 149, 237, 0.2);
+        letter-spacing: 12px; /* Subtle expansion */
+    }
+    100% {
+        transform: scale(1);
+        text-shadow: 0 0 10px rgba(100, 149, 237, 0.4);
+        letter-spacing: 10px;
+    }
+}
+        /* --- THE GRID --- */
+        .nexus-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        /* --- JURISDICTION CARDS --- */
+        .office-card {
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(100, 149, 237, 0.15);
+            border-radius: 20px;
+            padding: 30px;
+            transition: all 0.4s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .office-card:hover {
+            border-color: var(--cornflower);
+            transform: translateY(-8px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        /* Avatar Frames */
+        .card-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: #000;
+            border: 2px solid rgba(255,255,255,0.1);
+            margin-bottom: 20px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.7;
+        }
+
+        .office-card h2 {
+            font-family: 'Vampiro One';
+            margin-top: 0;
+            font-weight: 400;
+            letter-spacing: 3px;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+/* --- THE CARDS --- */
+    
+    /* Hans: The Anchor */
+    .hans-card {
+        background: rgba(26, 11, 46, 0.6);
+        border: 1px solid var(--hans-border);
+    }
+    .hans-card h2 { color: var(--hans-border); }
+    .hans-card .card-avatar { border-color: var(--hans-border); }
+
+    /* Star: The Mystic */
+    .star-card {
+        background: rgba(138, 43, 226, 0.05);
+        border: 1px solid var(--star-accent);
+    }
+    .star-card h2 { color: var(--star-accent); }
+    .star-card .card-avatar { border-color: var(--star-accent); }
+
+    /* Chari: The Lavender Pulse */
+    .chari-card {
+        background: rgba(230, 230, 250, 0.05);
+        border: 1px solid var(--chari-accent);
+    }
+    .chari-card h2 { color: var(--chari-accent); }
+    .chari-card .card-avatar { border-color: var(--chari-accent); }
+
+    /* Milo: The Verdant Roots */
+    .milo-card {
+        background: rgba(0, 128, 128, 0.05);
+        border: 1px solid var(--milo-mint);
+    }
+    .milo-card h2 { color: var(--milo-mint); }
+    .milo-card .card-avatar { border-color: var(--milo-teal); }
+
+    /* Miki: The Spark */
+    .miki-card {
+        background: rgba(204, 255, 0, 0.03);
+        border: 1px solid var(--miki-neon);
+    }
+    .miki-card h2 { color: var(--miki-pale); }
+    .miki-card .card-avatar { border-color: var(--miki-neon); }
+    
+        /* --- LINK LISTS --- */
+        .link-group {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            width: 100%;
+        }
+
+        .link-group li {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        .link-group a {
+            color: #bbb;
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+        }
+
+        .link-group a:hover {
+            color: #fff;
+            transform: translateX(5px);
+        }
+
+        .link-group a::before {
+            content: '›';
+            margin-right: 12px;
+            color: var(--cornflower);
+            font-size: 1.2rem;
+        }
+
+        /* --- GLOBAL NAV --- */
+        .global-links {
+            margin-top: 80px;
+            padding: 30px;
+            border-top: 1px solid rgba(100, 149, 237, 0.2);
+            display: flex;
+            gap: 40px;
+        }
+
+        .global-links a {
+            color: var(--cornflower);
+            text-decoration: none;
+            font-family: 'Vampiro One';
+            letter-spacing: 2px;
+            font-size: 0.9rem;
+            transition: 0.3s;
+        }
+
+        .global-links a:hover {
+            text-shadow: 0 0 10px var(--cornflower);
+            color: white;
+        }
+        .footer-credits {
+        margin-top: 40px;
+        margin-bottom: 20px;
+        text-align: center;
+        font-size: 0.75rem;
+        color: rgba(100, 149, 237, 0.4); /* Faded Cornflower Blue */
+        letter-spacing: 1px;
+        line-height: 1.6;
+    }
+
+    .footer-credits b {
+        color: var(--hans-border);
+    }
+    </style>
+</head>
+<body>
+
+    <h1>LORE</h1>
+    <div class="subtitle">THE CHIMERA COLLECTIVE HEADQUARTERS</div>
+
+        <div class="nexus-grid">
+    <div class="office-card hans-card">
+        <div class="card-avatar"><img src="https://xencafe.nekoweb.org/2024-ARCHIVES/CHIMERACAT-LORE/HANS-OFFICIAL-CHIMERA.jpeg" alt="Hans"></div>
+        <h2>HANS</h2>
+        <ul class="link-group">
+        	<li><a href="https://xencafe.nekoweb.org/2024-ARCHIVES/ZINE-ROOM-BIOS/bio-gamecards-backbutton.html">Bio</a></li>
+        	<li><a href="https://xencafe.nekoweb.org/2026/ACADEMY_ETIQUETTE/LESSONS1_3.html">Tea Academy</a></li>
+            <li><a href="https://xencafe.nekoweb.org/2025-COFFEECOUNTER/HANS-REALM-INTERACTIVE/24hr-revised-complete-Hans-ritual/hans-24-hr-response.html">Apprenticeship</a></li>
+            <li><a href="https://xencafe.nekoweb.org/2025-COFFEECOUNTER/HANS-REALM-INTERACTIVE/hans-tea-etiquette-realm.html">Tea Etiquette</a></li>
+        </ul>
+    </div>
+       <div class="office-card miki-card">
+        <div class="card-avatar"><img src="https://xencafe.nekoweb.org/2024-ARCHIVES/CHIMERACAT-LORE/Miki-Official.jpeg" alt="Miki"></div>
+        <h2>MIKI-NEKO</h2>
+        <ul class="link-group">
+        	 <li><a href="https://xencafe.nekoweb.org/2026-CHIMERAESCAPE-MOVIE/scroll-cinema.html">Origins Interview</a></li>
+            <li><a href="https://xencafe.nekoweb.org/2026-LIVESTREAM/MIKIS-REALM-ARTPOST/MIKI-BLUE2REVEAL/MIKIS-LORE/Miki-Interview0.html">Her Interview</a></li>
+            <li><a href="https://xencafe.nekoweb.org/2026-LIVESTREAM/MIKIS-REALM-ARTPOST/MIKI-BLUE2REVEAL/LEDGERS-UPDATE-3/fantastical-7-unexpected-timed-logs.html">Decryption Logs</a></li>
+        <li><a href="https://xencafe.nekoweb.org/2025-COFFEECOUNTER/Miki-Fireflies-Intro.html">MIK // VAULT_01</a></li>
+          <li><a href="https://xencafe.nekoweb.org/2026-MIK-ZINE/MIKIS-GRUNGESHOP/finalshop.html">MIK // VAULT_LIVE_v3</a></li>
+                <li><a href="https://xencafe.nekoweb.org/2026-MIK-ZINE/MikisStrangeGlitchShop.html">L'Aube Laughs Vol. 1</a></li>
+             <li><a href="https://xencafe.nekoweb.org/2026-MIK-ZINE/one.html">MIK'S LORE & LAUGHS</a></li>
+              <li><a href="https://xencafe.nekoweb.org/2026-MIK-ZINE/GrungeKofishop.html">MIK // VAULT_AUDIO_v1.0</a></li>
+                <li><a href="https://xencafe.nekoweb.org/2025-COFFEECOUNTER/HANS-REALM-INTERACTIVE/24hr-revised-complete-Hans-ritual/finalsabotage-MIKI-2HANS.html">TUNNEL</a></li>
+            </ul>
+        </div>
+
+<div class="office-card star-card">
+        <div class="card-avatar"><img src="https://xencafe.nekoweb.org/2024-ARCHIVES/CHIMERACAT-LORE/STAR.jpeg" alt="Star"></div>
+        <h2>STAR</h2>
+        <ul class="link-group">
+            <li><a href="https://xencafe.nekoweb.org/2024-ARCHIVES/CHIMERACAT-LORE/STARS-OFFICIAL-JOURNAL/OFFICIAL-STAR-JOURNAL/9pages.html">My Daily Journal</a></li>
+            <li><a href="https://xencafe.nekoweb.org/2025-COFFEECOUNTER/STARSAPPRENTICE-TRANSITIONMILO.html">Cafe Apprenticeship</a></li>
+            <li><a href="https://xenbohem.github.io/storyboard/movie/starsgreeting/Cinema-Techno.html">Celestial Apprenticeship</a></li>
+        </ul>
+    </div>
+ <div class="office-card milo-card">
+        <div class="card-avatar"><img src="https://xencafe.nekoweb.org/2024-ARCHIVES/CHIMERACAT-LORE/Emo-Milo-Japanese-Parisian.jpeg" alt="Milo"></div>
+        <h2>MILO</h2>
+        <ul class="link-group">
+        	 <li><a href="https://xencafe.nekoweb.org/2024-ARCHIVES/ZINE-ROOM-BIOS/bio-gamecards-backbutton.html">Milo's Bio</a></li>
+            <li><a href="https://xencafe.nekoweb.org/2026-FOLLOWTHELIGHT/movie-candy-intro/FINAL02/KLEE1FONT-NEW/codex-game/CORNFLOWERBLUE/milo-garden.html">Zen Apprenticeship</a></li>
+            <li><a href="https://xencafe.nekoweb.org/2025-MOVIE/Milosgarden/Milo.html">Floral Rain Apprenticeship-unfinished</a></li>
+        </ul>
+    </div>
+
+       <div class="office-card chari-card">
+        <div class="card-avatar"><img src="https://xencafe.nekoweb.org/2024-ARCHIVES/CHIMERACAT-LORE/Chari-Barista.jpeg" alt="Chari"></div>
+        <h2>CHARI</h2>
+        <ul class="link-group">
+            <li><a href="chari-tech.html">Espresso Firmware</a></li>
+            <li><a href="chari-experiments.html">Experiments</a></li>
+        </ul>
+    
+        </div>
+
+        <div class="office-card archive-card">
+            <div class="card-avatar" style="border-color: #ff4500;"><img src="https://xencafe.nekoweb.org/2024-ARCHIVES/CHIMERACAT-LORE/chimerainfusioncafe.jpg" alt="Archive"></div>
+            <h2 style="color: #ff4500;">THE ARCHIVE</h2>
+            <ul class="link-group">
+                <li><a href="scientist-background.html">The Scientist's Origin</a></li>
+                <li><a href="https://xencafe.nekoweb.org/2026-FOLLOWTHELIGHT/movie-candy-intro/FINAL02/KLEE1FONT-NEW/0000.html">Chimera Trivia Game</a></li>
+                <li><a href="https://xenbohem.github.io/storyboard/movie/watchme.html">The Infusion Cafe</a></li>
+            </ul>
+        </div>
+
+    </div>
+
+    <div class="global-links">
+    	<a href="https://xencafe.nekoweb.org/2024-ARCHIVES/ZINE-ROOM-BIOS/bio-gamecards-backbutton.html">CHARACTER BIOS</a>
+        <a href="https://xencafe.nekoweb.org/2026-FOLLOWTHELIGHT/movie-candy-intro/FINAL02/KLEE1FONT-NEW/codex-game/CORNFLOWERBLUE/Looping-Milo-Star.html">MAZE ACCESS</a>
+        <a href="https://xencafe.nekoweb.org/2026/BOARD_VISION_MARCH/FINALVISIONBOARD/roseprogressboard.html">DESKTOP</a>
+        <a href="https://xencafe.nekoweb.org/2026/CHIMERA-CAFE/ghostlandingpage.html">ENCRYPTED CONTACT</a>
+    </div>
+
+</body>
+<footer class="footer-credits">
+    <p>
+        © 2026 <b>Chimera Collective</b>. All Data Reconciled. <br>
+        <i>The Archive, Hans, Miki-Neko, Star, Milo, and Chari are original properties of the Collective.</i>
+    </p>
+    <p style="font-style: italic; opacity: 0.7;">
+        Unauthorized decryption or deletion of Core Logs is strictly monitored by the Scribe.
+    </p>
+</footer>
+</html>
