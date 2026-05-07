@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="/.nekoweb-api/static/site.js" defer></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Xen Dispatches</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Inter:wght@300;400&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg-dark: #0b0720;
+  --purple: #7c5cff;
+  --soft-purple: #a78bfa;
+  --text: #e5e7eb;
+  --muted: #c4b5fd;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  color: var(--text);
+  background:
+    radial-gradient(circle at 20% 30%, #2a1458, transparent 40%),
+    radial-gradient(circle at 80% 70%, #3b1d70, transparent 40%),
+    var(--bg-dark);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  padding: 40px 20px;
+}
+
+.container {
+  max-width: 900px;
+  width: 100%;
+  text-align: center;
+}
+
+/* LOGO */
+.logo {
+  width: 80px;
+  margin-bottom: 20px;
+  opacity: 0.9;
+}
+
+/* TITLE */
+h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 64px;
+  letter-spacing: 8px;
+}
+
+h2 {
+  font-family: 'Playfair Display', serif;
+  letter-spacing: 6px;
+  margin-top: 10px;
+  color: var(--muted);
+}
+
+/* DIVIDER */
+.divider {
+  margin: 30px auto;
+  width: 80%;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.divider::before,
+.divider::after {
+  content:"";
+  flex:1;
+  height:1px;
+  background: linear-gradient(to right, transparent, var(--purple), transparent);
+}
+
+.star { color: var(--purple); }
+
+/* TEXT */
+.subtitle { margin-top:20px; letter-spacing:2px; }
+.sub-italic { margin-top:10px; font-style:italic; color:var(--muted); }
+
+/* ENTER BUTTON */
+.enter-btn { margin-top:40px; }
+
+/* SUBSCRIBE */
+.subscribe-box {
+  margin-top:40px;
+  padding:25px;
+  border-radius:16px;
+  background: rgba(255,255,255,0.03);
+  border:1px solid rgba(124,92,255,0.2);
+  backdrop-filter: blur(10px);
+  display:none;
+  opacity:0;
+  transition:1s;
+}
+
+input {
+  padding:12px;
+  width:70%;
+  border-radius:8px;
+  border:none;
+  margin-right:10px;
+}
+
+button {
+  padding:12px 20px;
+  border-radius:8px;
+  border:none;
+  background: var(--purple);
+  color:white;
+  cursor:pointer;
+}
+
+button:hover {
+  box-shadow:0 0 15px var(--purple);
+}
+
+/* GRID */
+.grid {
+  margin-top:70px;
+  display:grid;
+  grid-template-columns: repeat(2,1fr);
+  gap:25px;
+  opacity:0;
+  transform: translateY(40px);
+  transition:1s;
+}
+
+.card {
+  display:block;
+  text-decoration:none;
+  color:inherit;
+  padding:25px;
+  border-radius:16px;
+  background: rgba(255,255,255,0.03);
+  border:1px solid rgba(124,92,255,0.2);
+  backdrop-filter: blur(10px);
+  text-align:left;
+  transition:0.3s;
+}
+
+.card:hover {
+  border-color: var(--purple);
+  box-shadow:0 0 20px rgba(124,92,255,0.2);
+  transform: translateY(-3px);
+}
+
+/* FOOTER */
+.footer { margin-top:60px; }
+
+.footer p {
+  font-family:'Playfair Display', serif;
+  font-size:20px;
+}
+
+.footer em {
+  display:block;
+  margin-top:10px;
+  color:var(--muted);
+}
+
+/* LEAVE BUTTON */
+#leaveSection {
+  margin-top:40px;
+  display:none;
+}
+
+/* MOBILE */
+@media(max-width:700px){
+  .grid { grid-template-columns:1fr; }
+
+  input {
+    width:100%;
+    margin-bottom:10px;
+  }
+
+  button { width:100%; }
+
+  h1 { font-size:42px; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <!-- LOGO -->
+  <img src="https://xencafe.nekoweb.org/XEN-MODE/home/favi0.png" class="logo">
+
+  <!-- TITLE -->
+  <h1>XEN</h1>
+  <h2>DISPATCHES</h2>
+
+  <div class="divider"><span class="star">✦</span></div>
+
+  <p class="subtitle">A SLOW-RELEASE MAGAZINE FROM THE CAFÉ</p>
+  <p class="sub-italic">curated by Xenusual</p>
+
+  <!-- ENTER -->
+  <div class="enter-btn" id="enterSection">
+    <button onclick="enterCafe()">Enter the Café</button>
+  </div>
+
+  <!-- SUBSCRIBE -->
+  <div class="subscribe-box" id="subscribeBox">
+    <p style="margin-bottom:15px;">Leave your presence to receive your first dispatch</p>
+
+    <form action="https://buttondown.com/api/emails/embed-subscribe/Xen" method="post" onsubmit="return handleSubscribe(event)">
+      <input type="email" id="emailInput" name="email" placeholder="your presence (email)" required>
+      <button type="submit">Request Entry</button>
+    </form>
+  </div>
+
+  <!-- GRID -->
+  <div class="grid" id="grid">
+
+    <a href="https://xencafe.nekoweb.org/XEN-MODE/XenMode/03-29-XENMODE-OFFICIAL/cafe.html" class="card">
+      <h3>☕ THE CAFÉ</h3>
+      <p>The world — its atmosphere, spaces, and hidden details.</p>
+    </a>
+
+    <a href="/academy.html" class="card">
+      <h3>📖 THE ACADEMY</h3>
+      <p>Lessons in awareness, presence, and the art of etiquette.</p>
+    </a>
+
+    <a href="/cast.html" class="card">
+      <h3>🎭 THE CAST</h3>
+      <p>Characters who shape the story and carry fragments of the lore.</p>
+    </a>
+
+    <a href="/collaborations.html" class="card">
+      <h3>🤝 THE COLLABORATIONS</h3>
+      <p>Rare partnerships aligned with the spirit of the Café.</p>
+    </a>
+
+  </div>
+
+  <!-- LEAVE -->
+  <div id="leaveSection">
+    <button onclick="leaveCafe()">Take Your Leave</button>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="divider"><span class="star">☾</span></div>
+    <p>Each dispatch is a quiet visit.</p>
+    <em>No rush. No noise. Just presence.</em>
+  </div>
+
+</div>
+
+<script>
+// ENTER FLOW
+function enterCafe() {
+  document.getElementById("enterSection").style.display = "none";
+
+  const box = document.getElementById("subscribeBox");
+  box.style.display = "block";
+
+  setTimeout(() => {
+    box.style.opacity = 1;
+  }, 100);
+}
+
+// SUBSCRIBE FLOW
+function handleSubscribe(e) {
+  const email = document.getElementById("emailInput").value;
+
+  localStorage.setItem("xen_member", "true");
+  localStorage.setItem("xen_email", email);
+
+  setTimeout(() => {
+    showGrid();
+  }, 300);
+
+  return true; // allow Buttondown submit
+}
+
+// SHOW GRID
+function showGrid() {
+  const grid = document.getElementById("grid");
+  const leave = document.getElementById("leaveSection");
+
+  grid.style.opacity = 1;
+  grid.style.transform = "translateY(0)";
+
+  leave.style.display = "block";
+}
+
+// LEAVE
+function leaveCafe() {
+  localStorage.removeItem("xen_member");
+  localStorage.removeItem("xen_email");
+  location.reload();
+}
+
+// RETURNING USER
+window.onload = function() {
+  if(localStorage.getItem("xen_member") === "true") {
+    document.getElementById("enterSection").style.display = "none";
+    document.getElementById("subscribeBox").style.display = "none";
+    showGrid();
+  }
+};
+</script>
+
+</body>
+</html>
