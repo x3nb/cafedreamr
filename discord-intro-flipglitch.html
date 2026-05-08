@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Stronger Glitch Effect</title>
+<style>
+  body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #8a7cc1, #bfa9e8);
+    font-family: Arial, sans-serif;
+  }
+
+  .card-container {
+    perspective: 1500px;
+    width: 450px;
+    height: 600px;
+  }
+
+  .flip-card {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transition: transform 0.8s ease;
+    transform-style: preserve-3d;
+  }
+
+  .flipped {
+    transform: rotateX(180deg);
+  }
+
+  .card-side {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 20px;
+    overflow: hidden;
+    backface-visibility: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .front {
+    background: linear-gradient(to bottom, rgba(216, 186, 255, 0.97), rgba(191, 169, 232, 0.97));
+  }
+
+  .back {
+    transform: rotateX(180deg);
+    background: white;
+  }
+
+  .front-img, .back-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    cursor: pointer;
+  }
+
+  /* Enhanced glitch/fizzle animation */
+  @keyframes glitchFizzle {
+    0% {
+      filter: brightness(1) contrast(1);
+      opacity: 1;
+      transform: scale(1);
+    }
+    10% {
+      filter: brightness(2) contrast(2);
+      opacity: 0.9;
+      transform: translate(2px, -2px) skew(0deg, 0deg);
+    }
+    20% {
+      filter: hue-rotate(20deg);
+      opacity: 0.8;
+      transform: translate(-2px, 2px) skew(0deg, 0deg);
+    }
+    30% {
+      filter: hue-rotate(-20deg);
+      opacity: 0.7;
+      transform: translate(4px, -4px) skew(0deg, 0deg);
+    }
+    40% {
+      filter: hue-rotate(15deg);
+      opacity: 0.6;
+      transform: translate(-4px, 4px) skew(0deg, 0deg);
+    }
+    50% {
+      filter: brightness(0) contrast(0);
+      opacity: 0;
+      transform: scale(0);
+    }
+    60% {
+      filter: brightness(1) contrast(1);
+      opacity: 1;
+      transform: translate(0, 0);
+    }
+    100% {
+      opacity: 0;
+      transform: scale(0);
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="card-container">
+  <div class="flip-card" id="flipCard">
+    <!-- Front -->
+    <div class="card-side front" id="frontSide">
+      <img src="https://3society.neocities.org/000THEVIBEZ_CAFE/VIBEZ_LOGO/vc.logo.png?text=Open" alt="Open" id="flipToBack" class="front-img" />
+    </div>
+    <!-- Back -->
+    <div class="card-side back" id="backSide">
+      <img src="https://3society.neocities.org/000THEVIBEZ_CAFE/DISCORD.CARD/join.jpeg?text=Join" alt="Join" class="back-img" />
+    </div>
+  </div>
+</div>
+
+<script>
+  const flipCard = document.getElementById('flipCard');
+  const frontImage = document.getElementById('flipToBack');
+
+function triggerGlitchAndRedirect() {
+  const joinImg = document.querySelector('.back-img');
+  joinImg.style.animation = 'glitchFizzle 1.5s forwards';
+
+  joinImg.addEventListener('animationend', () => {
+    window.open('https://discord.gg/0', '_blank');
+  }, { once: true });
+}
+
+// Flip and trigger glitch
+frontImage.addEventListener('click', () => {
+  flipCard.classList.toggle('flipped');
+  if (flipCard.classList.contains('flipped')) {
+    triggerGlitchAndRedirect();
+  }
+});
+</script>
+
+</body>
+</html>
