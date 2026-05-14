@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Chimera Café — 36 Portal Gallery</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+    body {
+        margin: 0;
+        background: #050007;
+        font-family: "Inter", sans-serif;
+        overflow-x: hidden;
+        color: white;
+    }
+
+    /* --- GRID STYLES --- */
+    .gallery {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        grid-gap: 6px;
+        padding: 6px;
+    }
+
+    .tile {
+        width: 100%;
+        padding-bottom: 100%;
+        position: relative;
+        cursor: pointer;
+        border-radius: 6px;
+        overflow: hidden;
+        background: #0f0019;
+        box-shadow: 0 0 10px #4a0082aa;
+        transition: transform .2s ease, box-shadow .2s ease;
+    }
+
+    .tile:hover {
+        transform: scale(1.03);
+        box-shadow: 0 0 30px #a473ffaa;
+    }
+
+    .tile-content {
+        position: absolute;
+        inset: 0;
+        background-size: cover;
+        background-position: center;
+        filter: brightness(0.95) contrast(1.05);
+    }
+
+    .overlay {
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(circle at center, #0000 50%, #2a006660 100%);
+        pointer-events: none;
+    }
+
+    /* POPUP */
+    .popup {
+        position: fixed;
+        inset: 0;
+        display: none;
+        background: rgba(0,0,0,0.75);
+        backdrop-filter: blur(10px);
+        justify-content: center;
+        align-items: center;
+        z-index: 20;
+    }
+    .popup.active { display: flex; }
+
+    .popup-content {
+        background: #1a002e;
+        border: 1px solid #9d71e4;
+        padding: 20px;
+        border-radius: 10px;
+        width: 80%;
+        max-width: 600px;
+        box-shadow: 0 0 20px #c7afff66;
+        animation: fadeIn .4s ease;
+    }
+
+    .close-btn {
+        float: right;
+        cursor: pointer;
+        color: #dcb5ff;
+        font-size: 22px;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: scale(.9); }
+        to { opacity: 1; transform: scale(1); }
+    }
+
+    /* GLITCH */
+    @keyframes glitch {
+        0% { transform: translate(0); }
+        20% { transform: translate(-4px, 3px); }
+        40% { transform: translate(5px, -2px); }
+        60% { transform: translate(-3px, 1px); }
+        80% { transform: translate(2px, -3px); }
+        100% { transform: translate(0); }
+    }
+    .glitching { animation: glitch .12s infinite; }
+
+</style>
+</head>
+
+<body>
+
+<!-- ==================== GALLERY ======================= -->
+<div class="gallery" id="gallery"></div>
+
+<!-- ==================== POPUP ========================= -->
+<div id="genericPopup" class="popup">
+    <div class="popup-content">
+        <span class="close-btn" onclick="closePopup()">&times;</span>
+        <div id="popupBody"></div>
+    </div>
+</div>
+
+<script>
+/* =============================================================== */
+/*                 NAMED THUMBNAIL IMAGE MAP                       */
+/* =============================================================== */
+/* Replace each value with your OWN image paths */
+
+const thumbnails = {
+    star: "images/star.png",
+    hans: "images/hans.png",
+    cafeExterior: "images/cafe-exterior.png",
+    cafeInterior: "images/cafe-interior.png",
+    loreRoom: "images/lore-room.png",
+    elevator: "images/elevator.png",
+    hallway: "images/hallway.png",
+    clue1: "images/clue1.png",
+    clue2: "images/clue2.png",
+    clue3: "images/clue3.png",
+    clue4: "images/clue4.png",
+
+    // You can create more as needed:
+    chimeraRoom: "images/chimera-room.png",
+    library: "images/library.png",
+    portal: "images/portal.png",
+    starPortrait: "images/star-portrait.png",
+    hansPortrait: "images/hans-portrait.png",
+
+    // fallback if you forget one:
+    default: "images/default-placeholder.png"
+};
+
+/* =============================================================== */
+/*                      TILE ACTION MAP                            */
+/* =============================================================== */
+/* 36 named tiles for full world-building */
+
+const actions = [
+    "cafeExterior", "cafeInterior", "hans_clue1", "portalView", "music", "star",
+    "hans_clue2", "guest", "hans", "loreRoom",
+    "glitch", "morph", "menu", "elevator", "hans_clue3", "anchor",
+    "academy", "warp", "rift", "chatbot",
+    "youtube", "secret", "void", "ascend", "guest2", "forum",
+    "social", "anchor2", "portalTwo", "hans_clue4",
+    "library", "chimeraRoom", "portalThree", "music2",
+    "darkHallway", "final"
+];
+
+/* =============================================================== */
+/*                     IMAGE ASSIGNMENT MAP                        */
+/* =============================================================== */
+/* These connect action names to thumbnail images */
+
+const tileImages = {
+    star: thumbnails.star,
+    hans: thumbnails.hans,
+    hans_clue1: thumbnails.clue1,
+    hans_clue2: thumbnails.clue2,
+    hans_clue3: thumbnails.clue3,
+    hans_clue4: thumbnails.clue4,
+
+    cafeExterior: thumbnails.cafeExterior,
+    cafeInterior: thumbnails.cafeInterior,
+    loreRoom: thumbnails.loreRoom,
+    elevator: thumbnails.elevator,
+    darkHallway: thumbnails.hallway,
+
+    library: thumbnails.library,
+    chimeraRoom: thumbnails.chimeraRoom,
+    portalView: thumbnails.portal,
+    portalTwo: thumbnails.portal,
+    portalThree: thumbnails.portal,
+
+    // fallback
+    default: thumbnails.default
+};
+
+/* =============================================================== */
+/*                  GENERATE 36 TILES USING MAP                    */
+/* =============================================================== */
+
+const gallery = document.getElementById("gallery");
+
+gallery.innerHTML = actions.map(action => {
+    const img = tileImages[action] || tileImages.default;
+    return `
+        <div class="tile" data-action="${action}">
+            <div class="tile-content" style="background-image:url('${img}')"></div>
+            <div class="overlay"></div>
+        </div>
+    `;
+}).join("");
+
+document.querySelectorAll(".tile").forEach(tile => {
+    tile.addEventListener("click", () => handleAction(tile.dataset.action, tile));
+});
+
+/* =============================================================== */
+/*                      POPUP + HELPERS                            */
+/* =============================================================== */
+
+const genericPopup = document.getElementById("genericPopup");
+const popupBody = document.getElementById("popupBody");
+
+function showPopup(html){
+    popupBody.innerHTML = html;
+    genericPopup.classList.add("active");
+}
+function closePopup(){
+    genericPopup.classList.remove("active");
+}
+
+/* =============================================================== */
+/*                  ACTION DISPATCHER (MAIN LOGIC)                 */
+/* =============================================================== */
+
+function handleAction(action, tile){
+    switch(action){
+
+        /* ------- STAR CHATBOT ------- */
+        case "star":
+            startStarChat();
+            break;
+
+        /* ------- HANS DIALOGUE ------- */
+        case "hans":
+            startHansChat();
+            break;
+
+        /* ------- HANS CLUES -------- */
+        case "hans_clue1":
+            showPopup("A faint waft of Earl Grey floats by… <br><br>Someone snobby must be near.");
+            break;
+        case "hans_clue2":
+            showPopup("You hear muttering: ‘Proper tea must steep in reverence…’");
+            break;
+        case "hans_clue3":
+            showPopup("Biscuit crumbs lead off-screen. Suspicious.");
+            break;
+        case "hans_clue4":
+            showPopup("A polished silver teaspoon lies abandoned… dramatic, British energy detected.");
+            break;
+
+        /* ---- BASIC ACTIONS (PLACEHOLDERS) ---- */
+        case "cafeExterior": showPopup("The café stands quiet under deep-purple night."); break;
+        case "cafeInterior": showPopup("Warm lights. Books. Purring. Sanctuary."); break;
+        case "loreRoom": showPopup("Shelves of old lore and glowing sigils."); break;
+        case "elevator": showPopup("A violet-lit elevator hums softly."); break;
+        case "portalView": showPopup("A shimmering portal pulses gently."); break;
+
+        /* ---- EFFECTS ---- */
+        case "glitch": glitchTile(tile); break;
+        case "morph": morphTile(tile); break;
+
+        default:
+            showPopup("This tile’s power has not yet been revealed.");
+    }
+}
+
+/* =============================================================== */
+/*                          HANS DIALOGUE                          */
+/* =============================================================== */
+
+const hansDialogue = {
+    start: {
+        text: `"Well well well… look what the chimera-cat dragged in."<br><br>
+        Hans adjusts his monocle dramatically.<br><br>
+        "Tell me, traveler, do you even know the difference between real tea and leaf-flavored disappointment?"`,
+        options: [
+            { label: "…Yes?", next: "yes1" },
+            { label: "No?", next: "no1" }
+        ]
+    },
+
+    yes1: {
+        text: `"Do you now? How utterly *precious*."`,
+        options: [{ label: "Continue", next: "end" }]
+    },
+
+    no1: {
+        text: `"Of course you don't. But at least you're honest."`,
+        options: [{ label: "Continue", next: "end" }]
+    },
+
+    end: {
+        text: `"Run along. I have tea to judge."`,
+        options: [{ label: "Close", next: "close" }]
+    }
+};
+
+function startHansChat(){
+    showPopup(`<div id="hansBox"></div>`);
+    runHans("start");
+}
+function runHans(node){
+    const box = document.getElementById("hansBox");
+    const d = hansDialogue[node];
+    let html = `<p>${d.text}</p><div>`;
+    d.options.forEach(o=>{
+        html += `<button onclick="handleHansChoice('${o.next}')">${o.label}</button>`;
+    });
+    html += `</div>`;
+    box.innerHTML = html;
+}
+function handleHansChoice(next){
+    if(next==="close"){ closePopup(); return; }
+    runHans(next);
+}
+
+/* =============================================================== */
+/*                           STAR DIALOGUE                         */
+/* =============================================================== */
+
+const starDialogue = {
+    start: {
+        text: `
+        <div style="display:flex;gap:12px;">
+            <img src="${thumbnails.starPortrait}" width="70" style="border-radius:10px;">
+            <div><b>Star — Owner of the Chimera Café</b><br>
+            Goth • Saved • Scholar</div>
+        </div>
+        <br>“Welcome to my sanctuary.”`,
+        options: [
+            { label: "Who are you?", next: "who" },
+            { label: "What is this place?", next: "place" }
+        ]
+    },
+
+    who: {
+        text: `"I’m Star. Once a chimera experiment… now adopted by Yeshua. Redeemed. Free."`,
+        options: [
+            { label: "Tell me about Hans", next: "hansTalk" },
+            { label: "Tell me about your past", next: "past" }
+        ]
+    },
+
+    place: {
+        text: `"The Chimera Café sits between worlds. A refuge for the lost and the learning."`,
+        options: [
+            { label: "Who works here?", next: "who" }
+        ]
+    },
+
+    hansTalk: {
+        text: `"Hans? Snobby but loyal. If he insulted you, consider that affection."`,
+        options: [{ label: "He did insult me", next: "end" }]
+    },
+
+    past: {
+        text: `"We escaped because Yeshua pulled us out Himself. Light in the dark."`,
+        options: [{ label: "That’s beautiful", next: "end" }]
+    },
+
+    end: {
+        text: `"Stay as long as you need. You’re safe here."`,
+        options: [{ label: "Close", next: "close" }]
+    }
+};
+
+function startStarChat(){
+    showPopup(`<div id="starBox"></div>`);
+    runStar("start");
+}
+function runStar(n){
+    const box = document.getElementById("starBox");
+    const d = starDialogue[n];
+    let html = `<p>${d.text}</p><div>`;
+    d.options.forEach(o=>{
+        html += `<button onclick="handleStarChoice('${o.next}')">${o.label}</button>`;
+    });
+    html += `</div>`;
+    box.innerHTML = html;
+}
+function handleStarChoice(next){
+    if(next==="close"){ closePopup(); return; }
+    runStar(next);
+}
+
+/* =============================================================== */
+/*                         TILE EFFECTS                            */
+/* =============================================================== */
+
+function glitchTile(tile){
+    tile.classList.add("glitching");
+    setTimeout(()=> tile.classList.remove("glitching"), 7000);
+}
+function morphTile(tile){
+    const img = tile.querySelector(".tile-content");
+    img.style.filter = "blur(8px)";
+    setTimeout(()=>{
+        img.style.backgroundImage = `url('${thumbnails.portal}')`;
+        img.style.filter = "none";
+    },700);
+}
+</script>
+
+</body>
+</html>
