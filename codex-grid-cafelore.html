@@ -1,0 +1,425 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Comfort Café — Chimera Grid (7×7)</title>
+<style>
+  :root{
+    --bg-1:#0c0c12;
+    --panel:#111;
+    --accent:#7a4bff;
+    --muted:#bfb7d6;
+    --tile-glow: 0 6px 30px rgba(122,75,255,0.12);
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; min-height:100vh; background:linear-gradient(180deg,var(--bg-1) 0%, #171226 80%);
+    color:#fff; font-family:Inter, "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    -webkit-font-smoothing:antialiased;
+    display:flex; align-items:center; justify-content:center; padding:18px;
+  }
+
+  /* Layout */
+  .wrap{ width:min(1300px,96vw); max-width:1300px; margin:0 auto; position:relative; }
+  header{ display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:12px; }
+  h1{ margin:0; font-weight:600; letter-spacing:0.6px; font-size:1.2rem; color:var(--muted); }
+
+  /* Login overlay */
+  #loginScreen{
+    position:fixed; inset:0; display:flex; align-items:center; justify-content:center;
+    background:rgba(0,0,0,0.7); z-index:9999; backdrop-filter:blur(6px);
+  }
+  .loginCard{ background:linear-gradient(180deg,#1a0f2b,#241235); padding:26px; border-radius:12px; box-shadow:0 10px 40px rgba(0,0,0,0.6); width:320px; text-align:center;}
+  .loginCard input{ width:100%; padding:10px 12px; border-radius:8px; border:1px solid rgba(255,255,255,0.06); background:rgba(0,0,0,0.18); color:#fff; margin:8px 0; }
+  .btn{ background:var(--accent); color:#fff; border:none; padding:10px 12px; border-radius:8px; cursor:pointer; font-weight:600; }
+  .btn.ghost{ background:transparent; border:1px solid rgba(255,255,255,0.06); color:var(--muted); }
+
+  /* top controls */
+  .controls{ display:flex; gap:10px; align-items:center; }
+  #codexBtn{ background:rgba(122,75,255,0.14); border:1px solid rgba(122,75,255,0.22); color:var(--accent); padding:8px 12px; border-radius:8px; cursor:pointer; }
+
+  /* grid */
+  #grid{
+    display:grid;
+    grid-template-columns:repeat(7,1fr);
+    gap:10px;
+    width:100%;
+    aspect-ratio:1/1;
+    transition:all .35s ease;
+    perspective:1200px;
+  }
+
+  .tile{
+    background:linear-gradient(180deg,#1a0f23,#1b102a);
+    border-radius:10px;
+    min-height:0;
+    display:flex; align-items:center; justify-content:center;
+    overflow:hidden; position:relative;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.02);
+    transform-origin:center;
+    cursor:pointer;
+    user-select:none;
+    transition: transform .28s cubic-bezier(.2,.9,.2,1), box-shadow .28s, filter .25s;
+  }
+  /* entrance animation (staggered) */
+  .tile.enter{ transform: translateY(18px) scale(.99); opacity:0; }
+  .tile.enter.show{ transform: translateY(0) scale(1); opacity:1; transition: transform .6s cubic-bezier(.2,.9,.25,1), opacity .6s; }
+  .tile:hover{ transform: translateY(-6px) scale(1.02); box-shadow:var(--tile-glow); filter:brightness(1.03); }
+
+  /* portrait placeholder */
+  .portraitStub{ width:84%; height:84%; border-radius:8px; display:flex; align-items:center; justify-content:center; font-family:Georgia,serif; color:#fff; font-weight:700; letter-spacing:0.6px; text-shadow:0 1px 0 rgba(0,0,0,0.5); }
+
+  /* portal styling */
+  .tile.portal{ box-shadow: 0 10px 40px rgba(140,100,220,0.14); border:1px solid rgba(200,160,250,0.06); }
+  .tile.portal.yeshua{ background:linear-gradient(180deg,#1a1320,#2b1733); }
+  .portalGlow{ position:absolute; inset:0; pointer-events:none; mix-blend-mode:screen; opacity:0; transition:opacity .6s; }
+  .tile.portal:hover .portalGlow{ opacity:1; }
+
+  /* popup overlay + modal */
+  #overlay{
+    position:fixed; inset:0; background:rgba(0,0,0,0.5); backdrop-filter:blur(4px);
+    display:none; align-items:center; justify-content:center; z-index:9998;
+  }
+  #overlay.active{ display:flex; }
+  .modal{
+    width:min(880px,94%); max-height:86vh; overflow:auto;
+    background:linear-gradient(180deg,#12061a,#1a0f2b); padding:18px; border-radius:12px; box-shadow:0 20px 80px rgba(0,0,0,0.6);
+    color:#fff;
+  }
+  .modal h2{ margin:0 0 8px 0; font-size:1.2rem; }
+  .modal .row{ display:flex; gap:14px; align-items:flex-start; }
+  .modal .left{ width:140px; flex:0 0 140px; }
+  .modal .bigPortrait{ width:140px; height:140px; border-radius:8px; background:#221132; display:flex; align-items:center; justify-content:center; font-weight:700; font-family:Georgia,serif; }
+  .modal p{ color:#d6cfe6; line-height:1.5; }
+
+  /* codex layout */
+  .codexFilters{ display:flex; gap:8px; margin-bottom:10px; }
+  .codexGrid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:10px; }
+  .codexEntry{ background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); padding:10px; border-radius:8px; border:1px solid rgba(255,255,255,0.02); }
+  .codexEntry h3{ margin:0 0 6px 0; font-size:1rem; color:#fff; }
+  .codexEntry p{ margin:0; font-size:0.92rem; color:#d4ccf1; }
+
+  /* small responsive */
+  @media (max-width:900px){
+    .modal .row{ flex-direction:column; }
+    .modal .left{ width:100%; flex:0 0 auto; }
+    #grid{ gap:8px; }
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>Comfort Café — Mini-Paris Grid</h1>
+      <div class="controls">
+        <button id="codexBtn" class="">Codex</button>
+      </div>
+    </header>
+
+    <main>
+      <div id="grid" aria-label="Chimera Grid"></div>
+    </main>
+  </div>
+
+  <!-- login screen -->
+  <div id="loginScreen" role="dialog" aria-modal="true">
+    <div class="loginCard">
+      <h2 style="margin:0 0 8px 0">Enter the Café</h2>
+      <input id="userInput" placeholder="Username (or Guest)" />
+      <div style="display:flex; gap:8px; justify-content:center; margin-top:8px;">
+        <button id="loginBtn" class="btn">Enter</button>
+        <button id="guestBtn" class="btn ghost">Guest</button>
+      </div>
+      <div style="margin-top:10px; color:var(--muted); font-size:0.9rem;">Your progress is stored locally in this browser.</div>
+    </div>
+  </div>
+
+  <!-- overlay + modal -->
+  <div id="overlay" aria-hidden="true">
+    <div class="modal" id="modalBox"></div>
+  </div>
+
+  <!-- hidden video/music -->
+  <div id="videoContainer" style="display:none; position:fixed; right:18px; bottom:18px; width:320px; z-index:9997;">
+    <video id="characterVideo" src="character_intro.mp4" playsinline></video>
+  </div>
+  <audio id="mikiTrack" src="cafespiritpulse.mp3"></audio>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  /* ---------- elements ---------- */
+  const grid = document.getElementById('grid');
+  const loginScreen = document.getElementById('loginScreen');
+  const loginBtn = document.getElementById('loginBtn');
+  const guestBtn = document.getElementById('guestBtn');
+  const userInput = document.getElementById('userInput');
+  const codexBtn = document.getElementById('codexBtn');
+  const overlay = document.getElementById('overlay');
+  const modalBox = document.getElementById('modalBox');
+  const videoContainer = document.getElementById('videoContainer');
+  const video = document.getElementById('characterVideo');
+  const mikiTrack = document.getElementById('mikiTrack');
+
+  /* ---------- configuration ---------- */
+  const GRID_SIZE = 7;           // 7x7
+  const TOTAL_TILES = GRID_SIZE * GRID_SIZE; // 49
+  // pick portal indexes (0-based)
+  const PORTALS = { hans: 6, yeshua: 20, miki: 42 };
+
+  /* ---------- character data (placeholders) ---------- */
+  const CHARACTERS = [
+    { key:'star', name:'Star', img:'placeholder_star.png', desc:'Star inherited the Comfort Café after Yeshua rescued the group. She keeps everyone safe.' },
+    { key:'hans', name:'Hans', img:'placeholder_hans.png', desc:'Hans is a witty tea snob and was once a vampire experiment.' },
+    { key:'chari', name:'Chari', img:'placeholder_chari.png', desc:'Chari is the rat-cat apprentice who keeps her support rats close.' },
+    { key:'milo', name:'Milo', img:'placeholder_milo.png', desc:'Milo tends the herb garden and follows Taoist calm.' },
+    { key:'miki', name:'Miki', img:'placeholder_miki.png', desc:'Miki is the musical alchemist — her frequencies open doors.' }
+  ];
+  function charForIndex(i){ return CHARACTERS[i % CHARACTERS.length]; }
+
+  /* ---------- codex (persistent) ---------- */
+  let codex = JSON.parse(localStorage.getItem('chimeraCodex_v2') || '[]');
+
+  function saveCodexEntry(title, desc, img, category){
+    if(!codex.some(e => e.title === title)){
+      codex.push({ title, desc, img, category, when: Date.now() });
+      localStorage.setItem('chimeraCodex_v2', JSON.stringify(codex));
+    }
+  }
+
+  /* ---------- helper UI functions ---------- */
+  function openModal(html){
+    modalBox.innerHTML = html;
+    overlay.classList.add('active');
+    overlay.setAttribute('aria-hidden','false');
+  }
+  function closeModal(){
+    overlay.classList.remove('active');
+    overlay.setAttribute('aria-hidden','true');
+    modalBox.innerHTML = '';
+    // stop audio/video if playing
+    try{ mikiTrack.pause(); mikiTrack.currentTime = 0; }catch(e){}
+    try{ if(!video.paused){ video.pause(); } }catch(e){}
+  }
+  overlay.addEventListener('click', (e)=> { if(e.target === overlay) closeModal(); });
+  document.addEventListener('keydown', (e)=> { if(e.key === 'Escape') closeModal(); });
+
+  /* ---------- codex UI ---------- */
+  function renderCodex(filter='all'){
+    let html = `<h2>Codex</h2><div style="margin-top:8px" class="codexFilters">
+      <button class="btn" id="filter_all">All</button>
+      <button class="btn" id="filter_char">Characters</button>
+      <button class="btn" id="filter_lore">Lore</button>
+      <button class="btn" id="filter_portal">Portals</button>
+    </div>`;
+    let entries = codex.slice().reverse(); // newest first
+    if(filter === 'character') entries = entries.filter(e => e.category === 'character');
+    if(filter === 'lore') entries = entries.filter(e => e.category === 'lore');
+    if(filter === 'portal') entries = entries.filter(e => e.category === 'portal');
+
+    html += `<div class="codexGrid" style="margin-top:10px">`;
+    if(entries.length === 0) html += `<div class="codexEntry"><p style="opacity:.85">No entries yet — explore the grid to collect lore and characters.</p></div>`;
+    else entries.forEach(en => {
+      html += `<div class="codexEntry">
+        ${en.img?`<div style="width:100%;height:80px;border-radius:6px;overflow:hidden;background:#11081a;margin-bottom:8px;display:flex;align-items:center;justify-content:center"><img src="${en.img}" alt="${en.title}" style="max-width:100%;max-height:100%"></div>`:''}
+        <h3>${escapeHtml(en.title)}</h3>
+        <p>${escapeHtml(en.desc)}</p>
+      </div>`;
+    });
+    html += `</div><div style="margin-top:12px;text-align:right"><button id="closeCodexBtn" class="btn">Close</button></div>`;
+    openModal(html);
+
+    // hook filters and close
+    document.getElementById('filter_all').onclick = ()=> { renderCodex('all'); };
+    document.getElementById('filter_char').onclick = ()=> { renderCodex('character'); };
+    document.getElementById('filter_lore').onclick = ()=> { renderCodex('lore'); };
+    document.getElementById('filter_portal').onclick = ()=> { renderCodex('portal'); };
+    document.getElementById('closeCodexBtn').onclick = closeModal;
+  }
+
+  codexBtn.addEventListener('click', renderCodex);
+
+  /* ---------- create grid with entrance animation ---------- */
+  function createGrid(){
+    grid.innerHTML = '';
+    for(let i=0;i<TOTAL_TILES;i++){
+      const tile = document.createElement('div');
+      tile.className = 'tile enter';
+      tile.dataset.index = i;
+
+      // character on even tiles (0,2,4...), lore on odds
+      if(i % 2 === 0){
+        tile.dataset.type = 'character';
+        const c = charForIndex(i/2);
+        tile.dataset.charKey = c.key;
+        // portrait stub
+        const stub = document.createElement('div');
+        stub.className = 'portraitStub';
+        stub.style.background = `linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01))`;
+        stub.textContent = c.name;
+        tile.appendChild(stub);
+      } else {
+        tile.dataset.type = 'lore';
+        const stub = document.createElement('div');
+        stub.className = 'portraitStub';
+        stub.style.fontSize = '0.95rem';
+        stub.textContent = 'Mystery';
+        tile.appendChild(stub);
+      }
+
+      // portals override
+      if(i === PORTALS.hans || i === PORTALS.yeshua || i === PORTALS.miki){
+        tile.classList.add('portal');
+        if(i === PORTALS.yeshua) tile.classList.add('yeshua');
+        // add subtle glow layer
+        const glow = document.createElement('div');
+        glow.className = 'portalGlow';
+        glow.style.background = i === PORTALS.yeshua
+          ? 'radial-gradient(circle at 50% 30%, rgba(255,240,200,0.12), transparent 15%), radial-gradient(circle at 80% 80%, rgba(170,130,240,0.06), transparent 30%)'
+          : 'radial-gradient(circle at 50% 50%, rgba(120,80,200,0.08), transparent 25%)';
+        tile.appendChild(glow);
+      }
+
+      tile.addEventListener('click', tileClick);
+      grid.appendChild(tile);
+
+      // staggered entrance
+      (function(t, idx){
+        setTimeout(()=> t.classList.add('show'), 50 + (idx * 20));
+      })(tile, i);
+    }
+  }
+
+  /* ---------- tile click behavior ---------- */
+  function tileClick(e){
+    const tile = e.currentTarget;
+    const idx = Number(tile.dataset.index);
+    // portals?
+    if(idx === PORTALS.hans) return openCharacterByKey('hans');
+    if(idx === PORTALS.miki) return openCharacterByKey('miki');
+    if(idx === PORTALS.yeshua) return openYeshua();
+
+    // type
+    if(tile.dataset.type === 'character'){
+      const key = tile.dataset.charKey;
+      openCharacterByKey(key);
+    } else {
+      openLoreFragment();
+    }
+  }
+
+  /* ---------- open character by key ---------- */
+  function findCharacter(key){
+    return CHARACTERS.find(c => c.key === key);
+  }
+
+  function openCharacterByKey(key){
+    const c = findCharacter(key);
+    if(!c) return;
+    const html = `
+      <div class="row">
+        <div class="left">
+          <div class="bigPortrait">${escapeHtml(c.name)}</div>
+        </div>
+        <div class="right">
+          <h2>${escapeHtml(c.name)}</h2>
+          <p>${escapeHtml(c.desc)}</p>
+          <div style="margin-top:10px">
+            ${key === 'hans' ? `<p style="font-style:italic; color:#d6cfe6">Hans: "Tea solves most things."</p>` : ''}
+          </div>
+          <div style="margin-top:12px; display:flex; gap:8px;">
+            ${c.key === 'miki' ? `<button id="playMiki" class="btn">Play Miki's Track</button>` : ''}
+            <button id="closeChar" class="btn">Close</button>
+          </div>
+        </div>
+      </div>`;
+    openModal(html);
+    saveCodexEntry(c.name, c.desc, c.img, 'character');
+
+    // hooks
+    const closeBtn = document.getElementById('closeChar');
+    if(closeBtn) closeBtn.onclick = closeModal;
+
+    if(c.key === 'miki'){
+      const pbtn = document.getElementById('playMiki');
+      pbtn.onclick = async () => {
+        try{
+          mikiTrack.currentTime = 0;
+          await mikiTrack.play();
+          // reveal small video container (hidden until Miki opened)
+          videoContainer.style.display = 'block';
+          try{ await video.play().catch(()=>{}); }catch(e){}
+        }catch(err){
+          // autoplay blocked — user clicked so should be OK
+        }
+      };
+      // also add a download link
+      const dl = document.createElement('a');
+      dl.href = 'cafespiritpulse.mp3';
+      dl.download = 'miki_sanctuary.mp3';
+      dl.textContent = 'Download Track';
+      dl.style.marginLeft = '10px';
+      dl.style.color = 'var(--accent)';
+      dl.className = 'btn';
+      document.querySelector('.modal .right').appendChild(dl);
+    }
+  }
+
+  /* ---------- open lore fragment ---------- */
+  function openLoreFragment(){
+    const fragments = [
+      'Mini-Paris was stitched from moonlight and cobblestones.',
+      'A faded lab token reads: "Atelier — experimental wing."',
+      'The Café floor sometimes remembers old songs.',
+      'A rat leaves a tiny key behind — Chari notices it.',
+      'Milo hums to the herbs; they unfurl like memories.'
+    ];
+    const chosen = fragments[Math.floor(Math.random() * fragments.length)];
+    openModal(`<h2>Mystery Fragment</h2><p>${escapeHtml(chosen)}</p><div style="text-align:right;margin-top:12px"><button id="closeLore" class="btn">Close</button></div>`);
+    saveCodexEntry('Mystery Fragment', chosen, '', 'lore');
+    document.getElementById('closeLore').onclick = closeModal;
+  }
+
+  /* ---------- open yeshua portal ---------- */
+  function openYeshua(){
+    const html = `<h2 style="color:#ffeaae">Eternal Light</h2>
+      <p style="opacity:0.95">You step into a soft, ethereal glow. Yeshua's presence feels like warm dawn.<br><br><em>“I came to heal the brokenhearted… and give rest to the weary.”</em><br><br><small>Romans: “Whoever calls on the name of the Lord shall be saved.”</small></p>
+      <div style="text-align:right;margin-top:14px"><button id="closeYeshua" class="btn">Return</button></div>`;
+    openModal(html);
+    saveCodexEntry('Yeshua', 'Soft ethereal presence and teaching.', '', 'portal');
+    document.getElementById('closeYeshua').onclick = closeModal;
+  }
+
+  /* ---------- login handlers ---------- */
+  loginBtn.onclick = () => {
+    const name = (userInput.value || '').trim();
+    if(!name){ alert('Please enter a name or click Guest'); return; }
+    loginScreen.style.display = 'none';
+    createGrid();
+    // greet (small)
+    setTimeout(()=> {
+      openModal(`<h2>Welcome, ${escapeHtml(name)}!</h2><p style="opacity:.9">Explore the grid — collect codex entries and meet the chimera cats.</p><div style="text-align:right;margin-top:10px"><button class="btn" id="welcomeClose">Close</button></div>`);
+      document.getElementById('welcomeClose').onclick = closeModal;
+    },200);
+  };
+  guestBtn.onclick = () => { userInput.value = 'Guest'; loginBtn.click(); };
+
+  /* ---------- utility ---------- */
+  function escapeHtml(s){
+    if(!s) return '';
+    return String(s).replace(/[&<>"'`]/g, (m) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;','`':'&#96;'}[m]));
+  }
+
+  /* ---------- start with login visible ---------- */
+  // optionally create grid early but hidden; we create after login for clarity
+  // pre-create video (hidden) so it doesn't block
+  videoContainer.style.display = 'none';
+  // ensure audio not autoplaying
+  mikiTrack.pause(); mikiTrack.currentTime = 0;
+
+  // ACCIDENT-PROOF: if user refreshed and had codex, they can open Codex even before login if desired:
+  // (keep codexBtn active — it opens and shows entries; if you'd like to lock to login, add check)
+});
+</script>
+</body>
+</html>
