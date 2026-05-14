@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="/.nekoweb-api/static/site.js" defer></script>
+    <script src="/.nekoweb-api/static/site.js" defer></script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CafeDream Community</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Klee+One&family=Vampiro+One&family=Gothic+A1&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+    <style>
+        :root {
+            --deep-purple: #1a0a4d; /* Main Website Background */
+            --dark-blend: #1a1a1a;   /* Disqus Section Background */
+            --accent-blue: #6495ed;  /* Cornflower Blue Content */
+            --accent-violet: #ee82ee;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Klee One', cursive;
+            background: var(--deep-purple);
+            color: var(--accent-blue);
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* 1. Hopping Coffee Cup Loader (7 Seconds) */
+        #loading {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: #111;
+            display: flex; align-items: center; justify-content: center;
+            flex-direction: column; z-index: 9999;
+            transition: opacity 0.8s ease;
+        }
+        .coffee-icon {
+            font-size: 70px;
+            animation: hop 0.6s infinite alternate ease-in-out;
+            filter: drop-shadow(0 0 10px var(--accent-blue));
+        }
+        @keyframes hop {
+            from { transform: translateY(0); }
+            to { transform: translateY(-40px); }
+        }
+
+        #main { display: none; }
+
+        /* Header */
+        .header {
+            text-align: center;
+            padding: 60px 20px;
+            background: linear-gradient(135deg, #111, var(--deep-purple));
+        }
+
+        .header h1 {
+            font-family: 'Vampiro One', cursive;
+            font-size: 3.5em;
+            margin-bottom: 15px;
+            background: linear-gradient(90deg, var(--accent-blue), var(--accent-violet));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .poem {
+            font-size: 1.2em;
+            font-style: italic;
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.5;
+        }
+
+        /* Slider */
+        .slider {
+            position: relative;
+            height: 500px;
+            overflow: hidden;
+            margin-top: 40px;
+            width: 100%;
+            border-top: 1px solid #333;
+            border-bottom: 1px solid #333;
+        }
+        .slides {
+            display: flex;
+            width: 6400px; 
+            animation: slide 20s linear infinite;
+        }
+        .slide {
+            flex: 0 0 1600px;
+            height: 500px;
+            background-size: cover;
+            background-position: center;
+        }
+        .slide1 { background-image: url('https://3society.neocities.org/PARIS.OCT25/images/Stellar111.jpeg'); }
+        .slide2 { background-image: url('https://3society.neocities.org/PARIS.OCT25/images/7.jpeg'); }
+        .slide3 { background-image: url('https://xencafe.nekoweb.org/2026/03XENTHEBOHEMIAN/blushedwallstreehouse4.jpeg'); }
+
+        @keyframes slide {
+            0% { transform: translateX(0); }
+            33% { transform: translateX(-1600px); }
+            66% { transform: translateX(-3200px); }
+            100% { transform: translateX(0); }
+        }
+
+        /* Side-by-Side Hub Layout */
+        .hub-flex-container {
+            display: flex;
+            max-width: 1400px;
+            margin: 50px auto;
+            gap: 25px;
+            padding: 0 20px;
+        }
+
+        /* Community Section */
+        #community {
+            flex: 2;
+            background: var(--dark-blend);
+            padding: 30px;
+            border-radius: 15px;
+            border: 1px solid #333;
+            color-scheme: dark; 
+        }
+
+        #community h2 {
+            text-align: center;
+            font-family: 'Vampiro One', cursive;
+            font-size: 2.2em;
+            margin-bottom: 10px;
+            color: var(--accent-blue);
+        }
+
+        /* Discord Sidebar */
+        #chat-sidebar {
+            flex: 1;
+            min-width: 350px;
+            background: #000;
+            border: 2px solid #333;
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            height: 800px;
+            position: sticky;
+            top: 20px;
+            overflow: hidden;
+        }
+
+        .chat-header {
+            font-family: 'Vampiro One', cursive;
+            padding: 15px;
+            background: #222;
+            color: var(--accent-blue);
+            text-align: center;
+        }
+
+        /* Music Section */
+        #music-section {
+            text-align: center;
+            padding: 30px;
+            background: #111;
+            border-radius: 10px;
+            max-width: 400px;
+            margin: 50px auto;
+            border: 1px solid #333;
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px;
+            background-color: #0d0d0d;
+            color: #555;
+            margin-top: 50px;
+        }
+
+        @media (max-width: 1000px) {
+            .hub-flex-container { flex-direction: column; }
+            #chat-sidebar { position: static; height: 500px; width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="loading">
+    <div class="coffee-icon">☕</div>
+    <h1 style="font-family: 'Vampiro One'; color: var(--accent-blue); margin-top: 20px; letter-spacing: 2px;">CafeDream</h1>
+    <p style="margin-top: 10px; font-style: italic;">Brewing the hub...</p>
+</div>
+
+<div id="main">
+    <div class="header">
+        <h1>CafeDream</h1>
+        <div class="poem">
+            <p>In a place where dreamers unite,<br>
+            Creation beckons to shape into flight.<br>
+            Our thoughts combined to create anew,<br>
+            Foundation in our dreamr's cafe.</p>
+        </div>
+    </div>
+
+    <div class="slider">
+        <div class="slides">
+            <div class="slide slide1"></div>
+            <div class="slide slide2"></div>
+            <div class="slide slide3"></div>
+        </div>
+    </div>
+
+    <section id="music-section">
+        <h3 style="margin-bottom: 15px; color: var(--accent-blue);">Mood Playlist</h3>
+        <audio id="music" src="starlightcafe.mp3"></audio>
+        <div class="controls">
+            <button id="playBtn" style="padding:10px 20px; background:#444; border:none; border-radius:5px; color:#ccc; cursor:pointer;"><i class="fas fa-play"></i></button>
+            <button id="stopBtn" style="padding:10px 20px; background:#444; border:none; border-radius:5px; color:#ccc; cursor:pointer;"><i class="fas fa-stop"></i></button>
+            <button id="shareBtn" style="padding:10px 20px; background:#444; border:none; border-radius:5px; color:#ccc; cursor:pointer;"><i class="fas fa-share-alt"></i></button>
+        </div>
+        <div id="shareMsg" style="color: var(--accent-blue); margin-top:10px; display:none;">Link copied!</div>
+    </section>
+
+    <div class="hub-flex-container">
+        <section id="community">
+            <h2>Join the Conversation</h2>
+            <div id="disqus_thread"></div>
+        </section>
+
+        <aside id="chat-sidebar">
+            <div class="chat-header">Dream Chat</div>
+            <iframe
+                src="https://e.widgetbot.io/channels/1498131914798665829"
+                height="100%"
+                width="100%"
+                allowtransparency="true"
+                frameborder="0"
+            ></iframe>
+        </aside>
+    </div>
+
+    <footer>&copy; 2026 CafeDream Hub. All rights reserved.</footer>
+</div>
+
+<script>
+    // 7-Second Loading Logic
+    window.addEventListener('load', () => {
+        setTimeout(() => {
+            const loader = document.getElementById('loading');
+            loader.style.opacity = '0';
+            setTimeout(() => {
+                loader.style.display = 'none';
+                document.getElementById('main').style.display = 'block';
+            }, 800);
+        }, 7000);
+    });
+
+    // Audio Controls
+    const audio = document.getElementById('music');
+    document.getElementById('playBtn').onclick = () => audio.play();
+    document.getElementById('stopBtn').onclick = () => { audio.pause(); audio.currentTime = 0; };
+    document.getElementById('shareBtn').onclick = () => {
+        navigator.clipboard.writeText(window.location.href);
+        document.getElementById('shareMsg').style.display = 'block';
+        setTimeout(() => { document.getElementById('shareMsg').style.display = 'none'; }, 2000);
+    };
+
+   // Disqus embed script (replace 'YOUR_DISQUS_SHORTNAME')
+  var disqus_config = function () {
+    this.page.url = window.location.href;  // Current page URL
+    this.page.identifier = 'fashion-community'; // Unique ID for this page
+  };
+  (function() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://shrinkingviolets.disqus.com/embed.js'; // <-- Replace this
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  
+    })();
+</script>
+
+</body>
+</html>
