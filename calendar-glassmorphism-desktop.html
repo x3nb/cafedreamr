@@ -26,6 +26,7 @@
     }
 
     body {
+      overflow: auto;
       font-family: 'Quicksand', sans-serif;
       color: var(--text);
       min-height: 100vh;
@@ -110,16 +111,18 @@
     .desktop {
       position: relative;
       width: 100%;
-      height: 100vh;
-      overflow: hidden;
+      min-height: 1800px;
+      overflow-x: auto;
+      overflow-y: auto;
       padding-top: 90px;
     }
 
     .desktop-space {
       position: relative;
-      width: 100%;
-      height: calc(100vh - 90px);
-      overflow: hidden;
+      width: 1800px;
+      min-height: 1700px;
+      overflow: visible;
+      padding-bottom: 300px;
     }
 
     .dock {
@@ -153,7 +156,7 @@
     .main-grid {
       position: relative;
       width: 100%;
-      height: 100%;
+      min-height: 1600px;
     }
 
     .window {
@@ -601,7 +604,7 @@
 
   </main>
 
-  <aside class="sidebar" style="position:absolute; top:20px; right:20px; width:320px; z-index:6;">
+  <aside class="sidebar" style="position:absolute; top:20px; left:1350px; width:320px; z-index:6;">
 
     <div class="widget">
       <h3>🎧 Now Playing</h3>
