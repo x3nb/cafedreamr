@@ -421,18 +421,21 @@ button {
   </main>
 
   <aside class="sidebar">
-<section class="card status-card">
+    <section class="card status-card">
   <div class="panel-header">🫶 Online Now</div>
-  <div class="panel-content" style="padding:0; height: 500px;">
+  <div class="panel-content discord-hover-wrapper">
+    <div class="status-placeholder">
+      <div class="pulse-icon"></div>
+      <p>Hover to see who's awake...</p>
+    </div>
+
     <iframe 
-      src="https://e.widgetbot.io/channels/149813191479866582" 
-      height="100%" 
-      width="100%" 
-      style="border:none;">
+      src="https://e.widgetbot.io/channels/SERVER_ID/CHANNEL_ID" 
+      class="discord-member-iframe"
+      allow="clipboard-write; fullscreen">
     </iframe>
   </div>
 </section>
-
 <style>
 /* Styling to keep it glassmorphic */
 .status-card {
