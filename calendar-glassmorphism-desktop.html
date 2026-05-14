@@ -109,20 +109,20 @@
     }
 
     .desktop {
-      position: relative;
-      width: 100%;
-      min-height: 1800px;
+      display: flex;
+      gap: 24px;
+      padding: 110px 24px 140px;
+      min-height: 100vh;
       overflow-x: auto;
-      overflow-y: auto;
-      padding-top: 90px;
+      align-items: flex-start;
     }
 
     .desktop-space {
-      position: relative;
-      width: 1800px;
-      min-height: 1700px;
-      overflow: visible;
-      padding-bottom: 300px;
+      display: flex;
+      gap: 24px;
+      align-items: flex-start;
+      min-width: 1100px;
+      width: 100%;
     }
 
     .dock {
@@ -154,18 +154,19 @@
     }
 
     .main-grid {
-      position: relative;
-      width: 100%;
-      min-height: 1600px;
+      flex: 1;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(320px, 1fr));
+      gap: 24px;
+      min-width: 0;
     }
 
     .window {
-      position: absolute;
-      resize: both;
-      overflow: auto;
-      min-width: 320px;
+      position: relative;
+      resize: vertical;
+      overflow: hidden;
+      min-width: 0;
       min-height: 220px;
-      cursor: default;
       transition: box-shadow 0.25s ease, transform 0.2s ease;
       background: rgba(255,255,255,0.08);
       border: 1px solid rgba(255,255,255,0.15);
@@ -178,6 +179,7 @@
 
     .window.large {
       min-height: 340px;
+      grid-column: span 2;
     }
 
     .window.active-window {
@@ -299,6 +301,7 @@
     }
 
     .today {
+      cursor: pointer;
       background: linear-gradient(135deg, #ffb4e0, #c7a4ff);
       color: #24152f;
       font-weight: bold;
@@ -323,6 +326,7 @@
     }
 
     .calendar-note-panel {
+      overflow: visible;
       position: fixed;
       top: 50%;
       left: 50%;
@@ -522,7 +526,7 @@
 
   <main class="main-grid">
 
-    <div class="window large draggable-window" style="top:20px; left:20px; width:820px; z-index:5;">
+    <div class="window large">
       <div class="window-header drag-handle">
         <div class="dot red"></div>
         <div class="dot yellow"></div>
@@ -544,7 +548,7 @@
       </div>
     </div>
 
-    <div class="window draggable-window" style="top:420px; left:40px; width:420px; z-index:3;">
+    <div class="window">
       <div class="window-header drag-handle">
         <div class="dot red"></div>
         <div class="dot yellow"></div>
@@ -573,7 +577,7 @@
       </div>
     </div>
 
-    <div class="window draggable-window" style="top:420px; left:500px; width:420px; z-index:3;">
+    <div class="window">
       <div class="window-header drag-handle">
         <div class="dot red"></div>
         <div class="dot yellow"></div>
@@ -604,7 +608,7 @@
 
   </main>
 
-  <aside class="sidebar" style="position:absolute; top:20px; left:1350px; width:320px; z-index:6;">
+  <aside class="sidebar">
 
     <div class="widget">
       <h3>🎧 Now Playing</h3>
@@ -639,7 +643,7 @@
 
   </aside>
 
-    <div class="window draggable-window" style="top:760px; left:200px; width:620px; z-index:4;">
+    <div class="window">
       <div class="window-header drag-handle">
         <div class="dot red"></div>
         <div class="dot yellow"></div>
@@ -766,48 +770,6 @@
 </div>
 
 <script>
-
-  let highestZ = 10;
-
-  document.querySelectorAll('.draggable-window').forEach(windowEl => {
-    const handle = windowEl.querySelector('.drag-handle');
-
-    let isDragging = false;
-    let offsetX = 0;
-    let offsetY = 0;
-
-    handle.addEventListener('mousedown', (e) => {
-      if(e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'BUTTON') return;
-
-      isDragging = true;
-      highestZ++;
-
-      document.querySelectorAll('.window').forEach(w => {
-        w.classList.remove('active-window');
-      });
-
-      windowEl.classList.add('active-window');
-      windowEl.style.zIndex = highestZ;
-
-      offsetX = e.clientX - windowEl.offsetLeft;
-      offsetY = e.clientY - windowEl.offsetTop;
-    });
-
-    document.addEventListener('mousemove', (e) => {
-      if (!isDragging) return;
-
-      const x = e.clientX - offsetX;
-      const y = e.clientY - offsetY;
-
-      windowEl.style.left = `${Math.max(0, x)}px`;
-      windowEl.style.top = `${Math.max(90, y)}px`;
-    });
-
-    document.addEventListener('mouseup', () => {
-      isDragging = false;
-    });
-  });
-
 
   function openDreamCalendar() {
     document.getElementById('calendar-panel').style.display = 'block';
