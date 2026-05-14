@@ -312,6 +312,32 @@ button {
     font-size: 2.7rem;
   }
 }
+
+/* Add these styles to your <style> tag to ensure the glass look stays intact */
+.discord-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 450px; /* Adjust height as needed */
+}
+
+.discord-wrapper {
+  flex: 1;
+  padding: 0; /* Remove padding so the iframe hits the edges */
+  overflow: hidden;
+}
+
+.discord-wrapper iframe {
+  border: none;
+  background: transparent;
+  /* This filter helps blend the iframe if it's too bright */
+  filter: saturate(0.8) opacity(0.9); 
+}
+
+/* Optional: Add a slight glow to the chat card */
+.discord-container:hover {
+  border-color: var(--pink);
+  transition: border-color 0.4s ease;
+}
 </style>
 </head>
 <body>
@@ -341,7 +367,17 @@ button {
   </aside>
 
   <main class="main">
-
+<section class="card discord-container">
+  <div class="panel-header">💬 Live Café Chat</div>
+  <div class="panel-content discord-wrapper">
+    <iframe 
+      src="https://e.widgetbot.io/channels/1498131914798665829"
+      allow="clipboard-write; fullscreen" 
+      height="100%" 
+      width="100%">
+    </iframe>
+  </div>
+</section>
     <section class="card hero">
       <h2>Good evening, Dreamr ✨</h2>
       <p>
@@ -356,29 +392,9 @@ button {
       </div>
     </section>
 
-    <section class="card">
-      <div class="panel-header">💬 Live Café Chat</div>
-
-      <div class="panel-content">
-        <div class="chat-messages" id="chat-box">
-          <div class="message">
-            <strong>Luna</strong>
-            this place feels magical tonight 🌙
-          </div>
-
-          <div class="message">
-            <strong>DreamWeaver</strong>
-            movie night starts in 20 minutes ☕
-          </div>
-        </div>
-
-        <div class="chat-input">
-          <input type="text" id="chat-input" placeholder="say something dreamy...">
-          <button onclick="sendMessage()">Send</button>
-        </div>
-      </div>
-    </section>
-
+    
+        
+    
     <section class="card">
       <div class="panel-header">📅 Dream Calendar</div>
 
