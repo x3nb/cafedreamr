@@ -108,11 +108,18 @@
     }
 
     .desktop {
-      display: grid;
-      grid-template-columns: 90px 1fr 320px;
-      gap: 24px;
-      padding: 110px 24px 24px;
-      min-height: 100vh;
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      overflow: hidden;
+      padding-top: 90px;
+    }
+
+    .desktop-space {
+      position: relative;
+      width: 100%;
+      height: calc(100vh - 90px);
+      overflow: hidden;
     }
 
     .dock {
@@ -145,11 +152,8 @@
 
     .main-grid {
       position: relative;
-      min-height: 1200px;
-      border-radius: 32px;
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.06);
-      overflow: hidden;
+      width: 100%;
+      height: 100%;
     }
 
     .window {
@@ -159,6 +163,7 @@
       min-width: 320px;
       min-height: 220px;
       cursor: default;
+      transition: box-shadow 0.25s ease, transform 0.2s ease;
       background: rgba(255,255,255,0.08);
       border: 1px solid rgba(255,255,255,0.15);
       border-radius: 28px;
@@ -169,8 +174,14 @@
     }
 
     .window.large {
-      grid-column: span 2;
       min-height: 340px;
+    }
+
+    .window.active-window {
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,0.12),
+        0 25px 70px rgba(0,0,0,0.55),
+        0 0 40px rgba(216,185,255,0.18);
     }
 
     .window-header {
@@ -494,6 +505,7 @@
 </header>
 
 <section class="desktop">
+  <div class="desktop-space">
 
   <aside class="dock">
     <div class="dock-icon">🏠</div>
@@ -589,7 +601,7 @@
 
   </main>
 
-  <aside class="sidebar">
+  <aside class="sidebar" style="position:absolute; top:20px; right:20px; width:320px; z-index:6;">
 
     <div class="widget">
       <h3>🎧 Now Playing</h3>
@@ -624,7 +636,7 @@
 
   </aside>
 
-    <div class="window draggable-window" style="top:760px; left:200px; width:540px; z-index:4;">
+    <div class="window draggable-window" style="top:760px; left:200px; width:620px; z-index:4;">
       <div class="window-header drag-handle">
         <div class="dot red"></div>
         <div class="dot yellow"></div>
@@ -719,6 +731,7 @@
 
   </aside>
 
+</div>
 </section>
 
 <div class="calendar-overlay" id="calendar-overlay" onclick="closeDreamCalendar()"></div>
@@ -761,8 +774,16 @@
     let offsetY = 0;
 
     handle.addEventListener('mousedown', (e) => {
+      if(e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'BUTTON') return;
+
       isDragging = true;
       highestZ++;
+
+      document.querySelectorAll('.window').forEach(w => {
+        w.classList.remove('active-window');
+      });
+
+      windowEl.classList.add('active-window');
       windowEl.style.zIndex = highestZ;
 
       offsetX = e.clientX - windowEl.offsetLeft;
@@ -772,8 +793,11 @@
     document.addEventListener('mousemove', (e) => {
       if (!isDragging) return;
 
-      windowEl.style.left = `${e.clientX - offsetX}px`;
-      windowEl.style.top = `${e.clientY - offsetY}px`;
+      const x = e.clientX - offsetX;
+      const y = e.clientY - offsetY;
+
+      windowEl.style.left = `${Math.max(0, x)}px`;
+      windowEl.style.top = `${Math.max(90, y)}px`;
     });
 
     document.addEventListener('mouseup', () => {
