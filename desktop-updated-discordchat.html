@@ -422,24 +422,39 @@ button {
 
   <aside class="sidebar">
 
-    <section class="card">
-      <div class="panel-header">🫶 Online Friends</div>
+    <section class="card status-card">
+  <div class="panel-header">🫶 Online Now</div>
+  <div class="panel-content status-wrapper">
+    <iframe 
+      src="https://discord.com/widget?id=SERVER_ID&theme=dark" 
+      width="100%" 
+      height="400" 
+      allowtransparency="true" 
+      frameborder="0" 
+      sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts">
+    </iframe>
+  </div>
+</section>
 
-      <div class="panel-content">
-        <div class="friend">
-          <span><span class="status"></span> Luna</span>
-          <span>online</span>
-        </div>
+<style>
+/* Styling to keep it glassmorphic */
+.status-card {
+  min-height: 300px;
+}
 
-        <div class="friend">
-          <span><span class="status"></span> Pixel Panda</span>
-          <span>drawing</span>
-        </div>
+.status-wrapper {
+  padding: 0; /* Let the widget fill the space */
+  overflow: hidden;
+}
 
-        <div class="friend">
-          <span><span class="status"></span> DreamWeaver</span>
-          <span>music room</span>
-        </div>
+.status-wrapper iframe {
+  /* Using a mix-blend-mode or filter to make the widget's dark 
+     background feel more like a glass layer on your site */
+  filter: saturate(0.9) contrast(1.1);
+  opacity: 0.85;
+}
+</style>
+     
       </div>
     </section>
 
