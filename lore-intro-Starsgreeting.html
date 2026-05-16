@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CHIMERA ESCAPE // The Sanctuary</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Uncial+Antiqua&family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --deep-purple: #1a0033;
+            --cornflower: #6495ED;
+            --glow: #7b2cbf;
+            --text: #e0aaff;
+            --overlay: rgba(26, 0, 51, 0.9);
+        }
+
+        body, html { 
+            margin: 0; padding: 0; background: #050505; 
+            color: var(--text); overflow: hidden;
+            display: flex; justify-content: center; align-items: center; height: 100vh;
+        }
+
+        /* --- THE CINEMA ENCLOSURE (80s Movie Dimension) --- */
+        #cinema-frame {
+            position: relative;
+            width: 95vw; height: 53.4vw; /* 16:9 Aspect Ratio */
+            max-width: 1100px; max-height: 620px;
+            background: radial-gradient(circle, var(--deep-purple) 0%, #000 100%);
+            border: 12px solid #1a1a1a;
+            border-radius: 12px;
+            box-shadow: 0 0 50px rgba(100, 149, 237, 0.15), inset 0 0 100px #000;
+            overflow: hidden;
+        }
+
+        /* Scanline Overlay for Retro Texture */
+        .scanlines {
+            position: absolute; inset: 0; pointer-events: none;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.15) 50%);
+            background-size: 100% 4px; z-index: 100;
+        }
+
+        .stage {
+            position: absolute; inset: 0;
+            display: none; flex-direction: column;
+            align-items: center; justify-content: center;
+            padding: 40px; text-align: center;
+        }
+
+        /* --- STAGE 1: THE MEDIEVAL SCROLL --- */
+        #stage-scroll { display: flex; z-index: 10; opacity: 1; transition: opacity 1s; }
+        
+        .scroll-window {
+            height: 350px; overflow: hidden; position: relative; width: 85%;
+        }
+
+        .medieval-text {
+            font-family: 'Uncial Antiqua', cursive;
+            color: var(--cornflower);
+            font-size: 1.8rem; line-height: 2.2;
+            text-shadow: 0 0 12px var(--glow);
+            position: absolute; width: 100%; top: 100%;
+            text-align: center;
+        }
+
+        .animate-scroll { animation: scrollUp 14s linear forwards; }
+
+        @keyframes scrollUp {
+            0% { top: 100%; }
+            100% { top: -140%; }
+        }
+
+        /* --- STAGE 2: STAR'S WELCOME --- */
+        #stage-star { opacity: 0; transition: opacity 1.5s; z-index: 20; }
+        
+        .welcome-card {
+            border: 1px solid var(--cornflower);
+            padding: 45px; background: var(--overlay);
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.8);
+            border-radius: 4px;
+            max-width: 600px;
+        }
+
+        .video-wrapper {
+            position: relative; width: 190px; margin: 0 auto 25px;
+        }
+
+        .star-video-container {
+            width: 180px; height: 180px;
+            border-radius: 50%; border: 3px solid var(--cornflower);
+            overflow: hidden; box-shadow: 0 0 30px var(--glow);
+            background: #000;
+        }
+
+        .star-video-container video { width: 100%; height: 100%; object-fit: cover; }
+
+        /* Replay Favicon Star */
+        .replay-icon {
+            position: absolute; bottom: 8px; right: 8px;
+            width: 38px; height: 38px;
+            background: var(--deep-purple); border: 2px solid var(--cornflower);
+            border-radius: 50%; color: var(--cornflower);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; font-size: 1.3rem; transition: 0.3s; z-index: 110;
+        }
+
+        .replay-icon:hover {
+            transform: scale(1.1) rotate(72deg);
+            background: var(--cornflower); color: var(--deep-purple);
+            box-shadow: 0 0 15px var(--cornflower);
+        }
+
+        h2 { font-family: 'Cinzel', serif; letter-spacing: 5px; color: var(--cornflower); margin: 0 0 15px 0; }
+
+        .choice-btns { display: flex; gap: 20px; justify-content: center; margin-top: 30px; }
+        
+        .btn {
+            background: transparent; border: 1px solid var(--cornflower);
+            color: var(--cornflower); padding: 14px 28px;
+            font-family: 'Cinzel', serif; cursor: pointer; transition: 0.3s;
+            text-transform: uppercase; letter-spacing: 2px;
+        }
+
+        .btn:hover {
+            background: var(--cornflower); color: var(--deep-purple);
+            box-shadow: 0 0 20px var(--cornflower);
+        }
+    </style>
+</head>
+<body>
+
+<div id="cinema-frame">
+    <div class="scanlines"></div>
+
+    <div id="stage-scroll" class="stage">
+        <div class="scroll-window">
+            <div id="scroller" class="medieval-text">
+                THE PARIS DISCLOSURE<br><br>
+                Escaping the undisclosed shadows...<br>
+                Three kittens found in the ruins...<br>
+                Blessed by Yeshua's hand...<br>
+                Reborn as the Archive Keepers.<br><br>
+                The Chimera Sanctuary awaits.
+            </div>
+        </div>
+    </div>
+
+    <div id="stage-star" class="stage">
+        <div class="welcome-card">
+            
+            <div class="video-wrapper">
+                <div class="star-video-container">
+                    <video id="starGreeting" playsinline>
+                        <source src="StarSipsCoffeezooms.mp4" type="video/mp4">
+                    </video>
+                </div>
+                <div class="replay-icon" onclick="replayStar()" title="Replay Star's Welcome">★</div>
+            </div>
+
+            <h2>Welcome to the Sanctuary</h2>
+            <p style="font-family: 'Uncial Antiqua'; font-size: 1.2rem; color: var(--cornflower); margin-bottom: 10px;">
+                "I am Star. I keep the keys to the Cafe."
+            </p>
+            <p style="font-family: 'Cinzel'; font-size: 0.9rem; line-height: 1.6;">
+                The kittens are safe. The archives are open.<br>How do you wish to proceed, traveler?
+            </p>
+            
+            <div class="choice-btns">
+                <button class="btn" onclick="location.href='/shop'">Shop the Cafe</button>
+                <button class="btn" onclick="location.href='https://xenbohem.github.io/storyboard/movie/interview/index.html'">Begin Apprenticeship</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<audio id="bgPulse" loop>
+    <source src="preludethememusic.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+    const scroller = document.getElementById('scroller');
+    const scrollStage = document.getElementById('stage-scroll');
+    const starStage = document.getElementById('stage-star');
+    const starVideo = document.getElementById('starGreeting');
+    const bgAudio = document.getElementById('bgPulse');
+
+    window.onload = () => {
+        // Start the medieval scroll animation
+        scroller.classList.add('animate-scroll');
+
+        // TIMING SEQUENCE:
+        // Scroll takes 14s. 
+        // We wait 14s + 4s (your requested gap) = 18s total.
+        setTimeout(() => {
+            // Fade out the scroll
+            scrollStage.style.opacity = "0";
+            
+            setTimeout(() => {
+                scrollStage.style.display = "none";
+                revealStar();
+            }, 1000);
+        }, 18000); 
+    };
+
+    function revealStar() {
+        starStage.style.display = "flex";
+        setTimeout(() => {
+            starStage.style.opacity = "1";
+            replayStar();
+            // Start background audio if desired
+            bgAudio.play().catch(e => console.log("Audio waiting for user click."));
+        }, 100);
+    }
+
+    function replayStar() {
+        starVideo.currentTime = 0;
+        starVideo.play().catch(error => {
+            console.log("Video play requires user interaction first.");
+        });
+    }
+
+    // DEV SKIP: Double-click to skip the scroll
+    window.addEventListener('dblclick', () => {
+        scrollStage.style.display = "none";
+        revealStar();
+    });
+</script>
+
+</body>
+</html>
