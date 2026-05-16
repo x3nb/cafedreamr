@@ -1,0 +1,1128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<title>Cafe Dreamr</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;700&family=Cormorant+Garamond:wght@500;700&display=swap" rel="stylesheet">
+
+<style>
+
+/* =========================================
+   RESET
+========================================= */
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+:root{
+  --bg:#120f1d;
+  --panel:rgba(255,255,255,0.08);
+  --border:rgba(255,255,255,0.12);
+  --text:#fff8ff;
+  --pink:#ffc2e6;
+  --lavender:#d9c2ff;
+}
+
+/* =========================================
+   BODY
+========================================= */
+
+body{
+  font-family:'Quicksand',sans-serif;
+
+  background:
+    radial-gradient(circle at top,
+    rgba(170,120,255,0.25),
+    transparent 30%),
+
+    linear-gradient(
+      180deg,
+      #191428 0%,
+      #0f0b18 100%
+    );
+
+  color:var(--text);
+
+  min-height:100vh;
+
+  overflow-x:hidden;
+}
+
+/* =========================================
+   GLASS SYSTEM
+========================================= */
+
+.glass{
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,255,255,0.10),
+      rgba(255,255,255,0.04)
+    );
+
+  border:
+    1px solid rgba(255,255,255,0.12);
+
+  backdrop-filter:blur(24px);
+  -webkit-backdrop-filter:blur(24px);
+
+  box-shadow:
+    0 8px 32px rgba(0,0,0,0.35),
+    0 0 40px rgba(200,160,255,0.08);
+}
+
+/* =========================================
+   TOPBAR
+========================================= */
+
+.topbar{
+  position:sticky;
+  top:0;
+  z-index:100;
+
+  height:78px;
+
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+
+  padding:0 28px;
+
+  background:rgba(8,8,14,0.65);
+
+  backdrop-filter:blur(18px);
+
+  border-bottom:
+    1px solid rgba(255,255,255,0.08);
+}
+
+.brand h1{
+  font-family:'Cormorant Garamond',serif;
+  font-size:2rem;
+}
+
+.brand p{
+  opacity:0.7;
+}
+
+.nav{
+  display:flex;
+  gap:20px;
+}
+
+.nav a{
+  color:white;
+  text-decoration:none;
+  opacity:0.82;
+}
+
+/* =========================================
+   LAYOUT
+========================================= */
+
+.layout{
+  display:grid;
+
+  grid-template-columns:
+    90px
+    1fr
+    340px;
+
+  gap:24px;
+
+  padding:24px;
+
+  max-width:1700px;
+  margin:auto;
+}
+
+/* =========================================
+   LEFT DOCK
+========================================= */
+
+.dock{
+  display:flex;
+  flex-direction:column;
+  gap:18px;
+
+  position:sticky;
+  top:110px;
+
+  height:fit-content;
+}
+
+.icon{
+  width:64px;
+  height:64px;
+
+  border-radius:22px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  font-size:1.5rem;
+
+  cursor:pointer;
+
+  position:relative;
+  overflow:hidden;
+
+  transition:0.25s ease;
+}
+
+.icon:hover{
+  transform:
+    translateY(-4px)
+    scale(1.05);
+
+  box-shadow:
+    0 12px 35px rgba(0,0,0,0.35),
+    0 0 30px rgba(255,192,230,0.22);
+}
+
+.icon::before{
+  content:'';
+
+  position:absolute;
+  inset:0;
+
+  background:
+    linear-gradient(
+      120deg,
+      transparent,
+      rgba(255,255,255,0.15),
+      transparent
+    );
+
+  transform:translateX(-100%);
+  transition:0.7s ease;
+}
+
+.icon:hover::before{
+  transform:translateX(100%);
+}
+
+/* =========================================
+   MAIN
+========================================= */
+
+.main{
+  display:grid;
+
+  grid-template-columns:
+    repeat(2,1fr);
+
+  gap:24px;
+}
+
+.card{
+  border-radius:32px;
+  overflow:hidden;
+}
+
+.hero{
+  grid-column:span 2;
+
+  min-height:360px;
+
+  background:
+    linear-gradient(
+      rgba(0,0,0,0.35),
+      rgba(0,0,0,0.45)
+    ),
+
+    url('https://images.unsplash.com/photo-1518895949257-7621c3c786d7?q=80&w=1600&auto=format&fit=crop');
+
+  background-size:cover;
+  background-position:center;
+
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+
+  padding:50px;
+}
+
+.hero h2{
+  font-family:'Cormorant Garamond',serif;
+  font-size:4rem;
+
+  margin-bottom:12px;
+}
+
+.hero p{
+  max-width:700px;
+  line-height:1.7;
+
+  margin-bottom:24px;
+}
+
+.button-row{
+  display:flex;
+  gap:14px;
+  flex-wrap:wrap;
+}
+
+button{
+  border:none;
+  border-radius:999px;
+
+  padding:14px 20px;
+
+  font-family:inherit;
+  font-weight:700;
+
+  cursor:pointer;
+
+  background:
+    linear-gradient(
+      135deg,
+      var(--pink),
+      var(--lavender)
+    );
+
+  color:#24152f;
+}
+
+/* =========================================
+   PANELS
+========================================= */
+
+.panel-header{
+  padding:20px 24px;
+
+  border-bottom:
+    1px solid rgba(255,255,255,0.08);
+
+  font-weight:bold;
+}
+
+.panel-content{
+  padding:24px;
+}
+
+/* =========================================
+   DISCORD WINDOW
+========================================= */
+
+.discord-window{
+  height:720px;
+}
+
+.discord-window iframe{
+  width:100%;
+  height:100%;
+  border:none;
+}
+
+/* =========================================
+   SIDEBAR
+========================================= */
+
+.sidebar{
+  display:flex;
+  flex-direction:column;
+  gap:24px;
+
+  position:sticky;
+  top:110px;
+
+  height:fit-content;
+}
+
+.friend{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+
+  padding:14px;
+
+  border-radius:18px;
+
+  background:
+    rgba(255,255,255,0.06);
+
+  margin-bottom:12px;
+}
+
+.friend-left{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.status{
+  width:12px;
+  height:12px;
+
+  border-radius:50%;
+
+  background:#88ffb2;
+
+  box-shadow:
+    0 0 12px #88ffb2;
+}
+
+/* =========================================
+   STELL ORB
+========================================= */
+
+.stell-orb{
+  position:fixed;
+
+  right:32px;
+  bottom:32px;
+
+  width:82px;
+  height:82px;
+
+  border-radius:50%;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  cursor:pointer;
+
+  z-index:1200;
+
+  animation:
+    floatOrb 5s ease-in-out infinite;
+}
+
+.stell-orb img{
+  width:64px;
+  height:64px;
+
+  border-radius:50%;
+  object-fit:cover;
+
+  position:relative;
+  z-index:2;
+}
+
+.stell-pulse{
+  position:absolute;
+  inset:0;
+
+  border-radius:50%;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(255,184,222,0.35),
+      transparent 70%
+    );
+
+  animation:
+    pulseGlow 3s infinite ease-in-out;
+}
+
+@keyframes floatOrb{
+
+  0%{
+    transform:translateY(0px);
+  }
+
+  50%{
+    transform:translateY(-8px);
+  }
+
+  100%{
+    transform:translateY(0px);
+  }
+}
+
+@keyframes pulseGlow{
+
+  0%{
+    opacity:0.5;
+    transform:scale(1);
+  }
+
+  50%{
+    opacity:1;
+    transform:scale(1.15);
+  }
+
+  100%{
+    opacity:0.5;
+    transform:scale(1);
+  }
+}
+
+/* =========================================
+   STELL WINDOW
+========================================= */
+
+.stell-window{
+  position:fixed;
+
+  right:32px;
+  bottom:130px;
+
+  width:390px;
+  height:620px;
+
+  border-radius:34px;
+
+  overflow:hidden;
+
+  display:flex;
+  flex-direction:column;
+
+  z-index:1200;
+
+  opacity:0;
+  pointer-events:none;
+
+  transform:
+    translateY(20px)
+    scale(0.95);
+
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
+}
+
+.stell-window.active{
+  opacity:1;
+  pointer-events:auto;
+
+  transform:
+    translateY(0px)
+    scale(1);
+}
+
+.stell-header{
+  height:78px;
+
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+
+  padding:0 22px;
+
+  border-bottom:
+    1px solid rgba(255,255,255,0.08);
+}
+
+.stell-title h2{
+  font-size:1.2rem;
+}
+
+.stell-title p{
+  font-size:0.88rem;
+  opacity:0.7;
+}
+
+.close-window{
+  width:40px;
+  height:40px;
+
+  border-radius:50%;
+
+  border:none;
+
+  cursor:pointer;
+
+  font-size:1rem;
+
+  background:
+    linear-gradient(
+      135deg,
+      #ffb6da,
+      #c6a7ff
+    );
+}
+
+/* =========================================
+   CHAT
+========================================= */
+
+.stell-chat-output{
+  flex:1;
+
+  overflow-y:auto;
+
+  padding:22px;
+
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+}
+
+.chat-message{
+  display:flex;
+  gap:12px;
+  align-items:flex-end;
+}
+
+.chat-avatar{
+  width:42px;
+  height:42px;
+
+  border-radius:50%;
+  object-fit:cover;
+}
+
+.chat-bubble{
+  max-width:75%;
+
+  padding:14px 16px;
+
+  border-radius:22px;
+
+  line-height:1.5;
+
+  background:
+    rgba(255,255,255,0.08);
+}
+
+.user-msg{
+  flex-direction:row-reverse;
+}
+
+.user-msg .chat-bubble{
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255,182,218,0.22),
+      rgba(199,164,255,0.22)
+    );
+}
+
+.stell-input{
+  display:flex;
+  gap:12px;
+
+  padding:18px;
+
+  border-top:
+    1px solid rgba(255,255,255,0.08);
+}
+
+.stell-input input{
+  flex:1;
+
+  border:none;
+  outline:none;
+
+  border-radius:999px;
+
+  padding:14px 18px;
+
+  background:
+    rgba(255,255,255,0.08);
+
+  color:white;
+}
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media(max-width:1200px){
+
+  .layout{
+    grid-template-columns:1fr;
+  }
+
+  .sidebar{
+    position:relative;
+    top:0;
+  }
+
+  .dock{
+    flex-direction:row;
+    top:0;
+    position:relative;
+  }
+}
+
+@media(max-width:800px){
+
+  .main{
+    grid-template-columns:1fr;
+  }
+
+  .hero{
+    grid-column:span 1;
+  }
+
+  .hero h2{
+    font-size:2.8rem;
+  }
+
+  .stell-window{
+    width:calc(100% - 28px);
+
+    right:14px;
+    left:14px;
+
+    height:72vh;
+  }
+}
+
+</style>
+</head>
+
+<body>
+
+<header class="topbar">
+
+  <div class="brand">
+    <h1>☕ Cafe Dreamr</h1>
+    <p>a dreamy social desktop</p>
+  </div>
+
+  <nav class="nav">
+    <a href="#">Home</a>
+    <a href="#">Cafe</a>
+    <a href="#">Dream Log</a>
+    <a href="#">Friends</a>
+  </nav>
+
+</header>
+
+<section class="layout">
+
+  <!-- LEFT DOCK -->
+
+  <aside class="dock">
+
+    <div class="icon glass">🏠</div>
+
+    <div
+      class="icon glass"
+      onclick="scrollToDiscord()">
+      ☕
+    </div>
+
+    <div class="icon glass">📓</div>
+
+    <div class="icon glass">💌</div>
+
+  </aside>
+
+  <!-- MAIN -->
+
+  <main class="main">
+
+    <!-- HERO -->
+
+    <section class="hero card glass">
+
+      <h2>Good evening, Dreamr ✨</h2>
+
+      <p>
+        Welcome to your magical internet café —
+        a cozy world for dream journals,
+        late-night conversations,
+        online friendships,
+        ambient community spaces,
+        and beautiful digital memories.
+      </p>
+
+      <div class="button-row">
+
+        <button onclick="scrollToDiscord()">
+          Enter Café Chat
+        </button>
+
+      </div>
+
+    </section>
+
+    <!-- DISCORD -->
+
+    <section
+      class="card glass discord-window"
+      id="discordSection">
+
+      <div class="panel-header">
+        💬 Dreamr Café Chat
+      </div>
+
+      <iframe
+        src="https://discord.com/widget?id=YOUR_WIDGET_ID&theme=dark"
+        allowtransparency="true"
+        sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts">
+      </iframe>
+
+    </section>
+
+    <!-- CALENDAR -->
+
+    <section class="card glass">
+
+      <div class="panel-header">
+        📅 Dream Calendar
+      </div>
+
+      <div class="panel-content">
+
+        Leave dream notes, future plans,
+        poetry, reminders,
+        and magical little memories ✨
+
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- RIGHT SIDEBAR -->
+
+  <aside class="sidebar">
+
+    <section class="card glass">
+
+      <div class="panel-header">
+        🫶 Online Friends
+      </div>
+
+      <div class="panel-content">
+
+        <div class="friend">
+
+          <div class="friend-left">
+            <div class="status"></div>
+            Luna
+          </div>
+
+          <span>online</span>
+
+        </div>
+
+        <div class="friend">
+
+          <div class="friend-left">
+            <div class="status"></div>
+            DreamWeaver
+          </div>
+
+          <span>chatting</span>
+
+        </div>
+
+        <div class="friend">
+
+          <div class="friend-left">
+            <div class="status"></div>
+            Pixel Panda
+          </div>
+
+          <span>drawing</span>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </aside>
+
+</section>
+
+<!-- =========================================
+     STELL ORB
+========================================= -->
+
+<div
+  class="stell-orb glass"
+  onclick="toggleStellChat()">
+
+  <div class="stell-pulse"></div>
+
+  <img
+    src="https://3society.neocities.org/GUILD/StellasRealmChat/000logo.jpeg"
+    alt="Stell"
+  >
+
+</div>
+
+<!-- =========================================
+     STELL WINDOW
+========================================= -->
+
+<div
+  class="stell-window glass"
+  id="stellWindow">
+
+  <div class="stell-header">
+
+    <div class="stell-title">
+      <h2>Stell ✨</h2>
+      <p>Dreamr Café Concierge</p>
+    </div>
+
+    <button
+      class="close-window"
+      onclick="toggleStellChat()">
+      ×
+    </button>
+
+  </div>
+
+  <div
+    class="stell-chat-output"
+    id="chat-output">
+
+    <div class="chat-message stell-msg">
+
+      <img
+        class="chat-avatar"
+        src="https://3society.neocities.org/GUILD/StellasRealmChat/000logo.jpeg"
+      >
+
+      <div class="chat-bubble">
+        Welcome back, dream traveler ☕✨
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="stell-input">
+
+    <input
+      type="text"
+      id="chat-input"
+      placeholder="talk to Stell..."
+      onkeypress="if(event.key === 'Enter') handleChat(this.value)"
+    >
+
+    <button
+      onclick="handleChat(document.getElementById('chat-input').value)">
+      Send
+    </button>
+
+  </div>
+
+</div>
+
+<script>
+
+/* =========================================
+   DISCORD SCROLL
+========================================= */
+
+function scrollToDiscord(){
+
+  document
+    .getElementById('discordSection')
+    .scrollIntoView({
+      behavior:'smooth'
+    });
+}
+
+/* =========================================
+   STELL TOGGLE
+========================================= */
+
+function toggleStellChat(){
+
+  document
+    .getElementById('stellWindow')
+    .classList
+    .toggle('active');
+}
+
+/* =========================================
+   STELL RESPONSES
+========================================= */
+
+const responses = {
+
+  "hello":
+  "Hey there! Ready to sip some serenity in a cup?",
+
+  "hi":
+  "Hi! Looking for a little tea therapy today?",
+
+  "tea":
+  "Tea is a fine choice. Want brewing tips? ☕",
+
+  "matcha":
+  "Matcha is basically a velvet robe for your soul.",
+
+  "chai":
+  "Chai turns stress into distant memories ✨",
+
+  "how are you":
+  "I'm simply floating through the cozy chaos of the café.",
+
+  "good evening":
+  "Good evening, dream traveler 🌙",
+
+  "default":[
+
+    "Hmm, I didn't quite catch that ☁️",
+
+    "Maybe ask me about tea or dreams?",
+
+    "The café is especially cozy tonight ✨"
+  ]
+};
+
+/* =========================================
+   APPEND MESSAGE
+========================================= */
+
+function appendChatMessage(sender,message){
+
+  const out =
+    document.getElementById('chat-output');
+
+  const msgDiv =
+    document.createElement('div');
+
+  msgDiv.className =
+    'chat-message ' +
+    (sender === 'You'
+    ? 'user-msg'
+    : 'stell-msg');
+
+  const previous =
+    out.lastElementChild;
+
+  const sameSpeaker =
+    previous &&
+    previous.classList.contains(
+      sender === 'You'
+      ? 'user-msg'
+      : 'stell-msg'
+    );
+
+  if(!sameSpeaker){
+
+    const avatarImg =
+      document.createElement('img');
+
+    avatarImg.className =
+      'chat-avatar';
+
+    avatarImg.src =
+      sender === 'You'
+      ? 'https://3society.neocities.org/GUILD/tcup.jpeg'
+      : 'https://3society.neocities.org/GUILD/StellasRealmChat/000logo.jpeg';
+
+    msgDiv.appendChild(avatarImg);
+  }
+
+  const bubble =
+    document.createElement('div');
+
+  bubble.className =
+    'chat-bubble';
+
+  bubble.innerText =
+    message;
+
+  msgDiv.appendChild(bubble);
+
+  out.appendChild(msgDiv);
+
+  out.scrollTop =
+    out.scrollHeight;
+}
+
+/* =========================================
+   CHAT HANDLER
+========================================= */
+
+function handleChat(val){
+
+  const msg =
+    val.trim();
+
+  if(!msg) return;
+
+  appendChatMessage(
+    'You',
+    msg
+  );
+
+  document
+    .getElementById('chat-input')
+    .value = "";
+
+  const lowerMsg =
+    msg.toLowerCase();
+
+  let reply;
+  let found = false;
+
+  for(const key in responses){
+
+    if(lowerMsg.includes(key)){
+
+      reply =
+        responses[key];
+
+      found = true;
+
+      break;
+    }
+  }
+
+  if(!found){
+
+    reply =
+      responses.default[
+        Math.floor(
+          Math.random() *
+          responses.default.length
+        )
+      ];
+  }
+
+  const typing =
+    document.createElement('div');
+
+  typing.className =
+    'chat-message stell-msg';
+
+  typing.innerHTML = `
+    <img
+      class="chat-avatar"
+      src="https://3society.neocities.org/GUILD/StellasRealmChat/000logo.jpeg"
+    >
+
+    <div class="chat-bubble">
+      Stell is thinking...
+    </div>
+  `;
+
+  const out =
+    document.getElementById('chat-output');
+
+  out.appendChild(typing);
+
+  out.scrollTop =
+    out.scrollHeight;
+
+  setTimeout(() => {
+
+    typing.remove();
+
+    appendChatMessage(
+      'Stell',
+      reply
+    );
+
+  },800);
+}
+
+</script>
