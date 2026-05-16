@@ -1,0 +1,513 @@
+<!-- ========================================= -->
+<!-- STELL FLOATING AI ASSISTANT -->
+<!-- Add BELOW your existing app windows -->
+<!-- Existing code remains untouched -->
+<!-- ========================================= -->
+
+<div class="stell-orb" onclick="toggleStellChat()">
+
+  <div class="stell-pulse"></div>
+
+  <img
+    src="https://3society.neocities.org/GUILD/StellasRealmChat/000logo.jpeg"
+    alt="Stell"
+  >
+
+</div>
+
+<!-- ========================================= -->
+<!-- STELL CHAT WINDOW -->
+<!-- ========================================= -->
+
+<div class="stell-window glass-window" id="stellWindow">
+
+  <div class="stell-header">
+
+    <div class="stell-title">
+
+      <img
+        src="https://3society.neocities.org/GUILD/StellasRealmChat/000logo.jpeg"
+      >
+
+      <div>
+        <h2>Stell ✨</h2>
+        <p>Dreamr Café Concierge</p>
+      </div>
+
+    </div>
+
+    <button
+      class="close-window"
+      onclick="toggleStellChat()">
+      ×
+    </button>
+
+  </div>
+
+  <div class="stell-chat-output" id="chat-output">
+
+    <div class="chat-message stell-msg">
+
+      <img
+        class="chat-avatar"
+        src="https://3society.neocities.org/GUILD/StellasRealmChat/000logo.jpeg"
+      >
+
+      <div class="chat-bubble">
+        Welcome back, dream traveler ☕✨
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="stell-input-area">
+
+    <input
+      type="text"
+      id="chat-input"
+      placeholder="talk to Stell..."
+      onkeypress="if(event.key === 'Enter') handleChat(this.value)"
+    >
+
+    <button onclick="handleChat(document.getElementById('chat-input').value)">
+      Send
+    </button>
+
+  </div>
+
+</div>
+
+<style>
+
+/* =========================================
+   STELL FLOATING ORB
+========================================= */
+
+.stell-orb {
+
+  position: fixed;
+
+  right: 34px;
+  bottom: 34px;
+
+  width: 84px;
+  height: 84px;
+
+  border-radius: 50%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+
+  z-index: 1200;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,255,255,0.18),
+      rgba(255,255,255,0.06)
+    );
+
+  backdrop-filter: blur(24px);
+
+  border: 1px solid rgba(255,255,255,0.14);
+
+  box-shadow:
+    0 0 40px rgba(214,180,255,0.24),
+    0 10px 40px rgba(0,0,0,0.35);
+
+  animation:
+    floatOrb 5s ease-in-out infinite;
+}
+
+.stell-orb img {
+
+  width: 64px;
+  height: 64px;
+
+  object-fit: cover;
+
+  border-radius: 50%;
+
+  position: relative;
+  z-index: 2;
+}
+
+.stell-pulse {
+
+  position: absolute;
+  inset: 0;
+
+  border-radius: 50%;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(255,184,222,0.35),
+      transparent 70%
+    );
+
+  animation:
+    pulseGlow 3s infinite ease-in-out;
+}
+
+@keyframes floatOrb {
+
+  0% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-8px);
+  }
+
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+@keyframes pulseGlow {
+
+  0% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.15);
+  }
+
+  100% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+}
+
+/* =========================================
+   STELL WINDOW
+========================================= */
+
+.stell-window {
+
+  position: fixed;
+
+  right: 34px;
+  bottom: 130px;
+
+  width: 390px;
+  height: 620px;
+
+  display: flex;
+  flex-direction: column;
+
+  border-radius: 34px;
+
+  overflow: hidden;
+
+  z-index: 1200;
+
+  opacity: 0;
+  pointer-events: none;
+
+  transform:
+    translateY(20px)
+    scale(0.95);
+
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
+}
+
+.stell-window.active {
+
+  opacity: 1;
+  pointer-events: auto;
+
+  transform:
+    translateY(0px)
+    scale(1);
+}
+
+.stell-header {
+
+  height: 82px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 0 22px;
+
+  border-bottom:
+    1px solid rgba(255,255,255,0.08);
+
+  background:
+    rgba(255,255,255,0.04);
+}
+
+.stell-title {
+
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.stell-title img {
+
+  width: 52px;
+  height: 52px;
+
+  border-radius: 50%;
+}
+
+.stell-title h2 {
+
+  font-size: 1.2rem;
+  color: white;
+}
+
+.stell-title p {
+
+  color: rgba(255,255,255,0.7);
+  font-size: 0.88rem;
+}
+
+.stell-chat-output {
+
+  flex: 1;
+
+  overflow-y: auto;
+
+  padding: 22px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.chat-message {
+
+  display: flex;
+  gap: 12px;
+
+  align-items: flex-end;
+}
+
+.chat-avatar {
+
+  width: 42px;
+  height: 42px;
+
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.chat-bubble {
+
+  max-width: 75%;
+
+  padding: 14px 16px;
+
+  border-radius: 22px;
+
+  line-height: 1.5;
+
+  background:
+    rgba(255,255,255,0.08);
+
+  color: white;
+}
+
+.user-msg {
+
+  flex-direction: row-reverse;
+}
+
+.user-msg .chat-bubble {
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255,182,218,0.25),
+      rgba(199,164,255,0.25)
+    );
+}
+
+.stell-input-area {
+
+  display: flex;
+  gap: 12px;
+
+  padding: 18px;
+
+  border-top:
+    1px solid rgba(255,255,255,0.08);
+}
+
+.stell-input-area input {
+
+  flex: 1;
+
+  border: none;
+
+  border-radius: 999px;
+
+  padding: 14px 18px;
+
+  background:
+    rgba(255,255,255,0.08);
+
+  color: white;
+
+  outline: none;
+}
+
+/* MOBILE */
+
+@media (max-width: 768px) {
+
+  .stell-window {
+
+    width: calc(100% - 28px);
+
+    right: 14px;
+    left: 14px;
+
+    bottom: 110px;
+
+    height: 72vh;
+  }
+
+}
+
+</style>
+
+<script>
+
+/* =========================================
+   STELL WINDOW TOGGLE
+========================================= */
+
+function toggleStellChat() {
+
+  document
+    .getElementById('stellWindow')
+    .classList
+    .toggle('active');
+}
+
+/* =========================================
+   STELL MOOD SYSTEM
+========================================= */
+
+function getTimeMood() {
+
+  const hour = new Date().getHours();
+
+  if(hour >= 0 && hour < 5) {
+    return "late-night";
+  }
+
+  if(hour >= 5 && hour < 12) {
+    return "morning";
+  }
+
+  if(hour >= 12 && hour < 18) {
+    return "afternoon";
+  }
+
+  return "evening";
+}
+
+/* =========================================
+   ENHANCED CHAT HANDLER
+========================================= */
+
+const originalHandleChat = handleChat;
+
+handleChat = function(val) {
+
+  const msg = val.trim();
+
+  if (!msg) return;
+
+  appendChatMessage('You', msg);
+
+  document.getElementById('chat-input').value = "";
+
+  const typingBubble = document.createElement('div');
+
+  typingBubble.className =
+    'chat-message stell-msg typing-msg';
+
+  typingBubble.innerHTML = `
+    <img
+      class="chat-avatar"
+      src="https://3society.neocities.org/GUILD/StellasRealmChat/000logo.jpeg"
+    >
+
+    <div class="chat-bubble">
+      Stell is thinking...
+    </div>
+  `;
+
+  const out =
+    document.getElementById('chat-output');
+
+  out.appendChild(typingBubble);
+
+  out.scrollTop = out.scrollHeight;
+
+  const lowerMsg = msg.toLowerCase();
+
+  let reply;
+  let found = false;
+
+  for (const key in responses) {
+
+    if (lowerMsg.includes(key)) {
+
+      reply = responses[key];
+      found = true;
+      break;
+    }
+  }
+
+  if (!found) {
+
+    reply =
+      responses.default[
+        Math.floor(
+          Math.random() *
+          responses.default.length
+        )
+      ];
+  }
+
+  const mood = getTimeMood();
+
+  if(mood === 'late-night') {
+    reply += " 🌙";
+  }
+
+  if(mood === 'morning') {
+    reply += " ☀️";
+  }
+
+  setTimeout(() => {
+
+    typingBubble.remove();
+
+    appendChatMessage(
+      'Stell',
+      reply
+    );
+
+  }, 900 + Math.random() * 900);
+};
+
+</script>
