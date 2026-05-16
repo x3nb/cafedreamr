@@ -1,0 +1,446 @@
+<!DOCTYPE html><html lang="en"><head><script src="//.nekoweb-api/static/site.js" defer></script>    
+    <meta charset="UTF-8">    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">    
+    <title>Rose OS | The Final Sanctuary</title>    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Klee+One:wght@400;600&family=Vampiro+One&display=swap" rel="stylesheet">
+
+    <style>        
+        :root {            
+            --rose-light: #7B9FF2;            
+            --rose-main: #6495ED; /* Cornflower Blue */           
+            --rose-dark: #6495ED;            
+            --glass: rgba(30, 10, 60, 0.4);            
+            --vibrant-purple: #9d50bb;        
+        }
+        
+        body, html {            
+            margin: 0; padding: 0; height: 100%;            
+            font-family: 'Klee One', sans-serif;            
+            background: linear-gradient(135deg, #1c053a 0%, #05000a 100%); 
+            overflow: hidden;            
+            color: var(--rose-main);        
+        }
+        
+        h1, h2, h3, .title-font {
+            font-family: 'Vampiro One', cursive !important;
+            color: var(--rose-main);
+        }
+
+        /* --- LOGIN SCREEN --- */        
+        #login-screen {            
+            position: fixed; inset: 0; z-index: 2000;            
+            background: linear-gradient(135deg, #15002b 0%, #020005 100%); 
+            display: flex; flex-direction: column;            
+            align-items: center; justify-content: center;            
+            transition: transform 1.2s cubic-bezier(0.85, 0, 0.15, 1);        
+        }        
+        .grid { display: grid; grid-template-columns: repeat(10, 35px); grid-gap: 5px; }        
+        .cell {            
+            width: 35px; height: 35px; display: flex; align-items: center; justify-content: center;            
+            cursor: pointer; font-size: 0.9rem; color: #443b61; transition: 0.2s;        
+        }        
+        .cell.selected { background: rgba(100, 149, 237, 0.3); color: #fff; border-radius: 4px; }        
+        .cell.found { background: var(--rose-main) !important; color: #05000a !important; border-radius: 4px; }
+        
+        /* --- DESKTOP LAYERS --- */        
+        #desktop { 
+            display: none; height: 100%; width: 100%; position: relative; 
+            background: linear-gradient(180deg, #15002b 0%, #0b001a 40%, #000000 100%);
+        }        
+        #rain-layer, #petal-layer { position: absolute; inset: 0; pointer-events: none; z-index: 1; }        
+        .drop { position: absolute; width: 1px; height: 60px; background: linear-gradient(transparent, var(--rose-light)); opacity: 0.3; animation: fall linear infinite; }        
+        .petal { position: absolute; background: var(--rose-light); border-radius: 50% 0 50% 50%; opacity: 0.3; animation: drift linear infinite; }        
+        @keyframes fall { to { transform: translateY(100vh); } }        
+        @keyframes drift { 0% { transform: translateY(-10vh) rotate(0deg); } 100% { transform: translateY(110vh) rotate(360deg); } }
+        
+        /* --- TOP MUSIC HEADER --- */        
+        #music-header {            
+            position: absolute; top: 0; width: 100%; height: 75px;            
+            background: var(--glass); backdrop-filter: blur(25px);            
+            display: flex; flex-direction: column; align-items: center; justify-content: center;            
+            z-index: 100; border-bottom: 1px solid rgba(100, 149, 237, 0.2);        
+        }        
+        .music-controls { display: flex; align-items: center; gap: 40px; }        
+        .music-btn { background: none; border: none; cursor: pointer; color: var(--rose-main); font-family: 'Klee One', sans-serif; font-size: 0.8rem; letter-spacing: 1px; text-transform: uppercase; }        
+        .track-info { font-size: 0.7rem; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 5px; font-weight: bold; color: var(--rose-main); }        
+        #header-progress-wrap { position: absolute; bottom: 0; left: 0; width: 100%; height: 2px; background: rgba(255,255,255,0.05); }        
+        #header-progress { height: 100%; background: var(--rose-main); width: 0%; transition: width 0.5s linear; }
+        
+        /* --- SEARCH --- */        
+        #search-area { position: absolute; top: 95px; width: 100%; display: flex; justify-content: center; z-index: 10; }        
+        #rose-search {            
+            width: 200px; padding: 10px; border-radius: 20px; border: 1px solid rgba(100, 149, 237, 0.2);            
+            background: rgba(0, 0, 0, 0.3); color: var(--rose-main); text-align: center;            
+            transition: 0.5s; outline: none; font-family: 'Klee One', sans-serif;       
+        }        
+        #rose-search:focus { width: 400px; background: rgba(20, 5, 40, 0.6); backdrop-filter: blur(10px); }
+        
+        /* --- THE TABBED WINDOW --- */        
+        .window {            
+            width: 420px; position: absolute; top: 165px; left: 40px;            
+            background: var(--glass); backdrop-filter: blur(25px);            
+            border-radius: 15px; border: 1px solid rgba(100, 149, 237, 0.2);            
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); z-index: 10; overflow: hidden;        
+        }        
+        .tabs { display: flex; background: rgba(0, 0, 0, 0.2); border-bottom: 1px solid rgba(100, 149, 237, 0.1); flex-wrap: wrap; }        
+        .tab-btn { flex: 1; padding: 12px 5px; border: none; background: none; font-family: 'Klee One', sans-serif; font-size: 0.75rem; cursor: pointer; color: var(--rose-main); opacity: 0.6; text-transform: uppercase; letter-spacing: 1px; }        
+        .tab-btn.active { opacity: 1; background: rgba(100, 149, 237, 0.15); font-weight: bold; color: #fff; }        
+        .tab-content { padding: 25px; display: none; max-height: 400px; overflow-y: auto; }        
+        .tab-content.active { display: block; }                
+        
+        /* --- TRACKLIST & BARS --- */        
+        .acc-item { border-bottom: 1px solid rgba(100, 149, 237, 0.1); padding: 10px 0; font-size: 0.8rem; cursor: pointer; transition: 0.3s; display: flex; justify-content: space-between; align-items: center; }        
+        .acc-item:hover { padding-left: 5px; color: #fff; }        
+        .acc-item.active-track { color: #fff; font-weight: bold; }
+        
+        .eq-container { display: flex; align-items: flex-end; gap: 2px; height: 12px; width: 15px; visibility: hidden; }        
+        .active-track .eq-container { visibility: visible; }        
+        .eq-bar { width: 3px; background: var(--rose-main); animation: eq-rise 0.8s ease-in-out infinite alternate; }        
+        .eq-bar:nth-child(2) { animation-duration: 0.5s; }        
+        .eq-bar:nth-child(3) { animation-duration: 1.1s; }        
+        @keyframes eq-rise { 0% { height: 2px; } 100% { height: 12px; } }
+        
+        /* --- VISIONS GALLERY --- */        
+        .gallery-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }        
+        .gallery-item { position: relative; overflow: hidden; border-radius: 8px; cursor: crosshair; }        
+        .gallery-item img { width: 100%; height: auto; transition: transform 0.6s ease, filter 0.6s ease; filter: grayscale(50%) brightness(0.8); }        
+        .gallery-item:hover img { transform: scale(1.1); filter: grayscale(0%); }        
+        .gallery-caption { position: absolute; bottom: 0; width: 100%; background: rgba(10, 0, 20, 0.8); color: var(--rose-main); font-size: 0.6rem; padding: 5px 0; text-align: center; transform: translateY(100%); transition: 0.4s; }        
+        .gallery-item:hover .gallery-caption { transform: translateY(0); }
+        
+        /* --- CHAT DRAWER --- */        
+        #chat-drawer {            
+            position: absolute; right: -325px; top: 0; width: 320px; height: 100%;            
+            background: rgba(15, 5, 25, 0.85); backdrop-filter: blur(25px);            
+            border-left: 1px solid rgba(100, 149, 237, 0.2); transition: 0.6s ease; z-index: 100;            
+            display: flex; flex-direction: column;        
+        }        
+        #chat-drawer.open { right: 0; }        
+        #chat-output { flex: 1; overflow-y: auto; padding: 20px; font-size: 0.9rem; display: flex; flex-direction: column; gap: 12px; }        
+        #chat-input { border: none; border-top: 1px solid rgba(100, 149, 237, 0.2); padding: 20px; background: transparent; outline: none; font-family: 'Klee One', sans-serif; color: #fff; }
+        
+        .chat-message { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 4px; }
+        .chat-message.user-msg { flex-direction: row-reverse; }
+        .chat-avatar { width: 35px; height: 35px; border-radius: 50%; border: 1px solid rgba(100, 149, 237, 0.3); flex-shrink: 0; }
+        .chat-bubble { max-width: 75%; padding: 10px 12px; border-radius: 12px; background: rgba(100, 149, 237, 0.15); color: #fff; line-height: 1.4; font-size: 0.85rem; }
+        .chat-message.user-msg .chat-bubble { background: rgba(157, 80, 187, 0.3); }
+
+        .toggle-chat { position: absolute; right: 20px; bottom: 30px; background: rgba(30, 10, 60, 0.6); color: var(--rose-main); border: 1px solid var(--rose-main); padding: 12px 25px; border-radius: 25px; cursor: pointer; z-index: 10; font-family: 'Klee One', sans-serif; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4); transition: 0.3s; }    
+        .toggle-chat:hover { background: var(--rose-main); color: #000; }
+    </style>
+</head>
+<body>
+    <audio id="rose-audio"></audio>
+    <div id="login-screen">        
+        <div id="login-content">            
+            <h3 style="font-weight: 300; letter-spacing: 3px; text-align: center;">TRACE: ROSE, POEM, LOVE</h3>            
+            <div class="grid" id="game-grid"></div>        
+        </div>    
+    </div>
+
+    <div id="desktop">        
+        <div id="rain-layer"></div><div id="petal-layer"></div>
+        
+        <div id="music-header">            
+            <div class="track-info" id="current-track">Select a Track</div>            
+            <div class="music-controls">                
+                <button class="music-btn" onclick="prevTrack()">prev</button>                
+                <button class="music-btn" id="master-play" onclick="toggleMusic()">play</button>                
+                <button class="music-btn" onclick="nextTrack()">next</button>            </div>            
+            <div id="header-progress-wrap"><div id="header-progress"></div></div>        
+        </div>
+
+        <div id="search-area">            
+            <input type="text" id="rose-search" placeholder="Whisper to the garden..." onkeydown="if(event.key==='Enter') doSearch(this.value)">        
+        </div>
+
+        <div class="window">            
+            <div class="tabs">                
+                <button class="tab-btn active" onclick="openTab(event, 'poetry')">Anthology</button>                
+                <button class="tab-btn" onclick="openTab(event, 'links')">Library</button>                
+                <button class="tab-btn" onclick="openTab(event, 'visions')">Visions</button>                
+                <button class="tab-btn" onclick="openTab(event, 'comments')">Communion</button>            
+            </div>                        
+            
+            <div id="poetry" class="tab-content active">                
+                <p id="quote-text" style="line-height: 1.6;"></p>                
+                <p id="quote-author" style="text-align: right; font-size: 0.8rem; opacity: 0.7; margin-top: 10px;"></p>                
+                <div style="text-align: center; margin-top: 20px;">                    
+                    <button onclick="nextQuote()" style="background:none; border:1px solid var(--rose-main); color:var(--rose-main); padding:5px 15px; border-radius:15px; font-size:0.7rem; cursor:pointer; font-family: 'Klee One';">Refresh Verse</button>                
+                </div>            
+            </div>
+
+            <div id="links" class="tab-content">                
+                <div style="font-weight:bold; font-size:0.75rem; margin-bottom:10px; letter-spacing:1px; color:var(--rose-main);">MUSIC TRACKLIST</div>                
+                <div id="track-mosaic"></div>            
+            </div>
+
+            <div id="visions" class="tab-content">                
+                <div style="font-weight:bold; font-size:0.75rem; margin-bottom:15px; letter-spacing:1px; color:var(--rose-main); text-align:center;">ART MOSAIC</div>                
+                <div class="gallery-grid">                    
+                    <div class="gallery-item"><img src="marblevalxentine.jpg"><div class="gallery-caption">NOTE I</div></div>                    
+                    <div class="gallery-item"><img src="https://googleusercontent.com/image_collection/image_retrieval/855371943574096067_1"><div class="gallery-caption">BLOOM II</div></div>                    
+                    <div class="gallery-item"><img src="https://googleusercontent.com/image_collection/image_retrieval/855371943574096067_2"><div class="gallery-caption">BLOOM III</div></div>                    
+                    <div class="gallery-item"><img src="https://googleusercontent.com/image_collection/image_retrieval/855371943574096067_3"><div class="gallery-caption">BLOOM IV</div></div>                
+                </div>            
+            </div>
+
+            <div id="comments" class="tab-content">                
+                <div style="font-weight:bold; font-size:0.75rem; margin-bottom:15px; letter-spacing:1px; color:var(--rose-main); text-align:center;">THE WISHING WELL</div>                
+                <div id="disqus_thread"></div>            
+            </div>        
+        </div>
+
+        <button class="toggle-chat" onclick="document.getElementById('chat-drawer').classList.toggle('open')">Speak with Stell</button>
+        
+        <div id="chat-drawer">            
+            <div class="title-font" style="padding: 25px 20px 10px; font-size: 1.5rem; letter-spacing: 2px;">STELLA</div>            
+            <div id="chat-output">
+                <div class="chat-message">
+                    <img src="https://3society.neocities.org/GUILD/StellasRealmChat/000logo.jpeg" class="chat-avatar">
+                    <div class="chat-bubble">Hey there! Ready to sip some serenity in a cup? Or just here to pretend you're relaxing? I get it, life’s a hectic brew.</div>
+                </div>
+            </div>            
+            <input type="text" id="chat-input" placeholder="Whisper to Stell..." onkeydown="if(event.key==='Enter') handleChat(this.value)">        
+        </div>    
+    </div>
+
+    <script>        
+        const targetWords = ["ROSE", "POEM", "LOVE"];        
+        let foundWords = [];                
+        
+        const playlist = [            
+            { name: "Unwind", src: "https://xenbohem.github.io/2026/unwind0.mp3" },            
+            { name: "Brokenbutterfly", src: "Brokenbutterfly.mp3" },            
+            { name: "holdon0", src: "holdon0.mp3" },            
+            { name: "Intheforest", src: "Intheforest.mp3" },            
+            { name: "God1st", src: "God1st.mp3" },            
+            { name: "Bemyvalentine0", src: "Bemyvalentine0.mp3" },            
+            { name: "parallelchai0x", src: "parallelchai0x.mp3" },            
+            { name: "parallelchai", src: "parallelchai.mp3" },            
+            { name: "8leggedprayers0", src: "8leggedprayers0.mp3" },            
+            { name: "halfpunch", src: "halfpunch.mp3" },            
+            { name: "babyland", src: "babyland.mp3" },            
+            { name: "spydersequence", src: "Spydersequence.mp3" },            
+            { name: "4US", src: "4US.mp3" },            
+            { name: "therethere0", src: "therethere0.mp3" },            
+            { name: "therethere", src: "therethere.mp3" },            
+            { name: "Listeningtea", src: "Listeningtea.mp3" },            
+            { name: "wakeuprose", src: "wakeuprose.mp3" },            
+            { name: "reducereuserecyclelil", src: "reducereuserecyclelil.mp3" }        
+        ];
+
+        const quotes = [            
+            { text: "Shall I compare thee to a summer’s day? Thou art more lovely and more temperate.", author: "Sonnet 18" },            
+            { text: "Love looks not with the eyes, but with the mind.", author: "A Midsummer Night's Dream" },            
+            { text: "My bounty is as boundless as the sea, My love as deep.", author: "Romeo and Juliet" },            
+            { text: "Doubt thou the stars are fire... But never doubt I love.", author: "Hamlet" }        
+        ];
+
+        let currentTrackIdx = 0;        
+        let currentQuoteIdx = 0;        
+        let audioPlayer = document.getElementById('rose-audio');        
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        function buildMosaic() {            
+            const mosaic = document.getElementById('track-mosaic');            
+            mosaic.innerHTML = '';            
+            playlist.forEach((track, idx) => {                
+                let item = document.createElement('div');                
+                item.className = 'acc-item' + (idx === currentTrackIdx ? ' active-track' : '');                
+                item.innerHTML = `<span>♪ ${track.name}</span><div class="eq-container"><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div></div>`;                
+                item.onclick = () => { currentTrackIdx = idx; loadTrack(); };                
+                mosaic.appendChild(item);            
+            });        
+        }        
+        buildMosaic();
+
+        const rawGrid = ['A','B','C','D','E','F','G','H','I','J','K','R','T','Y','U','I','O','P','L','S','Q','W','O','R','T','Y','U','I','O','A','Z','X','C','S','V','B','N','M','V','D','F','G','H','J','E','K','L','P','E','O','I','U','Y','T','R','E','W','Q','A','S','P','O','E','M','L','K','J','H','G','F','D','S','A','Z','X','C','V','B','N','M','Q','W','E','R','T','Y','U','I','O','P','L','O','V','E','S','D','F','G','H','J'];        
+        const gridEl = document.getElementById('game-grid');        
+        rawGrid.forEach(l => {            
+            const div = document.createElement('div');            
+            div.className = 'cell'; div.innerText = l;            
+            div.onclick = () => { if(audioCtx.state === 'suspended') audioCtx.resume(); if(!div.classList.contains('found')) { div.classList.toggle('selected'); check(); } };            
+            gridEl.appendChild(div);        
+        });
+
+        function check() {            
+            const sel = Array.from(document.querySelectorAll('.cell.selected'));            
+            const word = sel.map(c => c.innerText).join('');            
+            const rev = word.split('').reverse().join('');            
+            targetWords.forEach(t => {                
+                if ((word === t || rev === t) && !foundWords.includes(t)) {                    
+                    sel.forEach(c => c.className = 'cell found');                    
+                    foundWords.push(t); playChime();                    
+                    if (foundWords.length === 3) unlock();                
+                }            
+            });        
+        }
+
+        function unlock() {            
+            document.getElementById('login-content').innerHTML = `<h2 style="font-weight:300; color:var(--rose-main); text-align:center; font-size: 2.5rem; margin-bottom:20px;">SOLVED</h2><button style="display:block; margin:0 auto; padding:15px 40px; border:1px solid var(--rose-main); background:transparent; color:var(--rose-main); cursor:pointer; border-radius:30px; font-family:'Klee One';" onclick="finalizeEntry()">ENTER SANCTUARY</button>`;        
+        }
+
+        function finalizeEntry() {            
+            loadTrack();            
+            document.getElementById('login-screen').style.transform = "translateY(-100%)";            
+            document.getElementById('desktop').style.display = "block";            
+            initAtmosphere(); nextQuote(); startProgress();            
+            loadDisqus();        
+        }
+
+        audioPlayer.onended = () => { nextTrack(); };
+
+        function loadTrack() {            
+            const track = playlist[currentTrackIdx];            
+            audioPlayer.src = track.src;            
+            document.getElementById('current-track').innerText = track.name;            
+            audioPlayer.play().catch(e => console.log("Manual play required"));            
+            document.getElementById('master-play').innerText = "pause";            
+            buildMosaic();        
+        }
+
+        function toggleMusic() {            
+            if (audioPlayer.paused) { audioPlayer.play(); document.getElementById('master-play').innerText = "pause"; }             
+            else { audioPlayer.pause(); document.getElementById('master-play').innerText = "play"; }        
+        }
+
+        function nextTrack() { currentTrackIdx = (currentTrackIdx + 1) % playlist.length; loadTrack(); }        
+        function prevTrack() { currentTrackIdx = (currentTrackIdx - 1 + playlist.length) % playlist.length; loadTrack(); }
+
+        function startProgress() {            
+            setInterval(() => {                
+                if(!audioPlayer.paused && audioPlayer.duration) {                    
+                    document.getElementById('header-progress').style.width = (audioPlayer.currentTime / audioPlayer.duration * 100) + "%";                
+                }            
+            }, 500);        
+        }
+
+        function openTab(evt, tabName) {            
+            let contents = document.getElementsByClassName("tab-content");            
+            for (let i = 0; i < contents.length; i++) contents[i].style.display = "none";            
+            let buttons = document.getElementsByClassName("tab-btn");            
+            for (let i = 0; i < buttons.length; i++) buttons[i].className = buttons[i].className.replace(" active", "");            
+            document.getElementById(tabName).style.display = "block";            
+            evt.currentTarget.className += " active";        
+        }
+
+        function nextQuote() {            
+            const q = quotes[currentQuoteIdx];            
+            document.getElementById('quote-text').innerText = `"${q.text}"`;            
+            document.getElementById('quote-author').innerText = `— ${q.author}`;            
+            currentQuoteIdx = (currentQuoteIdx + 1) % quotes.length;        
+        }
+
+        /* --- DISQUS INTEGRATION --- */
+        function loadDisqus() {            
+            window.disqus_config = function () { 
+                this.page.url = window.location.href; 
+                this.page.identifier = 'cafedream-final-v4'; 
+            };            
+            var d = document, s = d.createElement('script');            
+            s.src = 'https://shrinkingviolets.disqus.com/embed.js';            
+            s.setAttribute('data-timestamp', +new Date());            
+            (d.head || d.body).appendChild(s);        
+        }
+
+        /* --- STELL'S INTEGRATED RESPONSES OBJECT --- */
+        const responses = {  
+            "hello": "Hey there! Ready to sip some serenity in a cup? Or just here to pretend you're relaxing? I get it, life’s a hectic brew.",  
+            "hi": "Hi! Looking for a little tea therapy? Trust me, a good cup can fix almost anything. Well, almost.",  
+            "how are you": "I'm simply swimming in the sea of sanity amidst a world of chaos, but tell me, what brings you to the cozy confines of my virtual Comfy Cafe today?",  
+            "good morning": "Morning! Or evening, or whenever you need a break. Here’s some tea to make your day (or night) better.",  
+            "good evening": "Good evening! Time to unwind with a brew that’s as refined as your taste buds—and as relaxed as you wish to be.",  
+            "ok": "Earl Grey Bergamot Tea is excellent. Do you have any favorites?",  
+            "yes": "Tea is a fine choice. Too much Coffee makes me bananas but Earl Grey tea keeps me at ease.",  
+            "no": "Well, Maybe some other time then? Happy Travels!",  
+            "tea": "Tea is a fine choice. Want to learn brewing tips?",  
+            "good": "Yes, It is!",  
+            "cool": "I'm glad you enjoyed that! Can I help you with anything else?",  
+            "matcha": "Matcha—earthy, energizing, and so fancy it’s basically a green velvet robe for your soul.",  
+            "bergamot": "Bergamot in Earl Grey—like a citrusy hug from the Queen herself, if she were into tea that is.",  
+            "boba": "Boba pearls—chewy little happiness bombs. Sip, chew, repeat. It’s the snack that keeps on giving.",  
+            "chai": "Chai—spicy, warming, and just the thing to turn your stress into a distant memory.",  
+            "how was your day": "My day? Oh, just brewing up some wisdom and a little sass. How about you? Need a tea to chill out?",  
+            "tell me more": "More? Well, did you know that the perfect steeping time is like a good joke—timing is everything. Want tips?",  
+            "default": [    
+                "Hmm, I didn't catch that. Want to try saying 'hi' or ask about tea?",    
+                "I'm not sure I understand. Maybe ask me about tea or coffee.",    
+                "Can you rephrase that? I'm here to chat about brews and shadows."  
+            ]
+        };
+
+        /* --- UPDATED CHAT DRAWER ENGINE --- */
+        function appendChatMessage(sender, message) {
+            const out = document.getElementById('chat-output');
+            const msgDiv = document.createElement('div');
+            msgDiv.className = 'chat-message ' + (sender === 'You' ? 'user-msg' : 'stell-msg');
+
+            const avatarImg = document.createElement('img');
+            avatarImg.className = 'chat-avatar';
+            if (sender === 'You') {
+                avatarImg.src = 'https://3society.neocities.org/GUILD/tcup.jpeg';
+            } else {
+                avatarImg.src = 'https://3society.neocities.org/GUILD/StellasRealmChat/000logo.jpeg';
+            }
+
+            const bubble = document.createElement('div');
+            bubble.className = 'chat-bubble';
+            bubble.innerText = message;
+
+            msgDiv.appendChild(avatarImg);
+            msgDiv.appendChild(bubble);
+            out.appendChild(msgDiv);
+            out.scrollTop = out.scrollHeight;
+        }
+
+        function handleChat(val) {            
+            const msg = val.trim();
+            if (!msg) return;
+            
+            appendChatMessage('You', msg);
+            document.getElementById('chat-input').value = "";        
+
+            const lowerMsg = msg.toLowerCase();
+            let reply;
+            
+            if (responses.hasOwnProperty(lowerMsg)) {
+                reply = responses[lowerMsg];
+            } else {
+                let found = false;
+                for (const key in responses) {
+                    if (lowerMsg.includes(key)) {
+                        reply = responses[key];
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) {
+                    reply = responses['default'][Math.floor(Math.random() * responses['default'].length)];
+                }
+            }
+
+            setTimeout(() => { 
+                appendChatMessage('Stell', reply); 
+            }, 500);
+        }
+
+        function playChime() {            
+            const osc = audioCtx.createOscillator(); const g = audioCtx.createGain();            
+            osc.frequency.setValueAtTime(220, audioCtx.currentTime);            
+            g.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 1.5);            
+            osc.connect(g); g.connect(audioCtx.destination);            
+            osc.start(); osc.stop(audioCtx.currentTime + 1.5);        
+        }
+
+        function initAtmosphere() {            
+            const r = document.getElementById('rain-layer'); const p = document.getElementById('petal-layer');            
+            for(let i=0; i<30; i++){ let d=document.createElement('div'); d.className='drop'; d.style.left=Math.random()*100+'vw'; d.style.animationDuration=(Math.random()*0.5+0.5)+'s'; r.appendChild(d); }            
+            for(let i=0; i<10; i++){ let l=document.createElement('div'); l.className='petal'; l.style.left=Math.random()*100+'vw'; l.style.width=l.style.height=(Math.random()*10+5)+'px'; l.style.animationDuration=(Math.random()*8+5)+'s'; p.appendChild(l); }        
+        }        
+        function doSearch(v) { window.open(`https://www.google.com/search?q=${v}+romantic+rose`, '_blank'); }    
+    </script>
+</body>
+</html>
