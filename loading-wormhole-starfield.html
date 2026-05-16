@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/.nekoweb-api/static/site.js" defer></script>
+
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<title>Stumbled Upon: CafeDreamr</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<link href="https://fonts.googleapis.com/css2?family=Vampiro+One&family=Klee+One:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+
+body {
+    background:
+        radial-gradient(circle at top, rgba(80,0,120,0.15), transparent 40%),
+        radial-gradient(circle at bottom, rgba(0,120,255,0.08), transparent 40%),
+        #0d001a;
+
+    font-family: 'Klee One', cursive;
+
+    color: #6495ED;
+
+    overflow: hidden;
+
+    margin: 0;
+}
+
+/* =========================
+   WORMHOLE CANVAS
+========================= */
+
+#wormhole {
+
+    position: fixed;
+
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+
+    z-index: -2;
+
+    opacity: 0.9;
+
+    filter:
+        blur(0.3px)
+        saturate(140%);
+}
+
+/* =========================
+   TYPOGRAPHY
+========================= */
+
+h1, h2, h3 {
+    font-family: 'Vampiro One', cursive;
+}
+
+.shimmer {
+
+    color: #ffffff;
+
+    text-shadow:
+        0 0 10px #6495ED,
+        0 0 20px #6495ED;
+
+    animation:
+        pulse-glow 3s infinite alternate;
+}
+
+@keyframes pulse-glow {
+
+    from {
+        opacity: 0.8;
+        text-shadow: 0 0 10px #6495ED;
+    }
+
+    to {
+        opacity: 1;
+
+        text-shadow:
+            0 0 25px #EE82EE,
+            0 0 40px #EE82EE;
+    }
+}
+
+/* =========================
+   GLASSMORPHISM
+========================= */
+
+.glass-panel {
+
+    background: rgba(26, 0, 51, 0.78);
+
+    border:
+        1px solid rgba(255,255,255,0.08);
+
+    backdrop-filter: blur(18px);
+
+    border-radius: 24px;
+
+    box-shadow:
+        0 0 20px rgba(100,149,237,0.08),
+        0 0 60px rgba(191,64,191,0.05);
+
+    animation:
+        portal-breathe 6s ease-in-out infinite;
+}
+
+@keyframes portal-breathe {
+
+    0% {
+        transform: scale(1);
+
+        box-shadow:
+            0 0 20px rgba(100,149,237,0.08),
+            0 0 60px rgba(191,64,191,0.05);
+    }
+
+    50% {
+
+        transform: scale(1.01);
+
+        box-shadow:
+            0 0 35px rgba(100,149,237,0.18),
+            0 0 90px rgba(191,64,191,0.12);
+    }
+
+    100% {
+
+        transform: scale(1);
+
+        box-shadow:
+            0 0 20px rgba(100,149,237,0.08),
+            0 0 60px rgba(191,64,191,0.05);
+    }
+}
+
+/* =========================
+   LOADING SCREEN
+========================= */
+
+#loading-screen {
+
+    background:
+        radial-gradient(circle at center,
+        rgba(100,149,237,0.12),
+        transparent 50%),
+        #0d001a;
+
+    font-family: monospace;
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+
+    align-items: center;
+
+    z-index: 100;
+
+    position: fixed;
+
+    inset: 0;
+
+    transition:
+        opacity 1s ease-in-out;
+}
+
+.typewriter {
+
+    overflow: hidden;
+
+    border-right:
+        .15em solid #EE82EE;
+
+    white-space: nowrap;
+
+    letter-spacing: .15em;
+
+    width: 0;
+
+    animation:
+        typing 1.5s steps(30, end) forwards,
+        blink-caret .75s step-end infinite;
+}
+
+@keyframes typing {
+
+    from { width: 0 }
+
+    to { width: 100% }
+}
+
+@keyframes blink-caret {
+
+    from, to {
+        border-color: transparent
+    }
+
+    50% {
+        border-color: #EE82EE;
+    }
+}
+
+/* =========================
+   BUTTONS
+========================= */
+
+.btn-dreamer {
+
+    background:
+        rgba(46, 0, 79, 0.6);
+
+    border:
+        1px solid currentColor;
+
+    transition:
+        all 0.4s ease;
+
+    cursor: pointer;
+
+    padding:
+        0.75rem 2.5rem;
+
+    border-radius: 9999px;
+
+    text-transform: uppercase;
+
+    position: relative;
+
+    overflow: hidden;
+}
+
+.btn-dreamer::before {
+
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: -100%;
+
+    width: 100%;
+    height: 100%;
+
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255,255,255,0.2),
+        transparent
+    );
+
+    transition: 0.8s;
+}
+
+.btn-dreamer:hover::before {
+    left: 100%;
+}
+
+.btn-dreamer:hover {
+
+    background: white;
+
+    color: #0d001a !important;
+
+    box-shadow:
+        0 0 15px currentColor,
+        0 0 40px rgba(255,255,255,0.2);
+
+    transform:
+        translateY(-2px);
+}
+/* =========================
+   PORTAL LINKS
+========================= */
+
+.portal-link {
+
+    position: relative;
+
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    padding:
+        0.85rem 1.4rem;
+
+    border-radius: 999px;
+
+    background:
+        rgba(255,255,255,0.04);
+
+    border:
+        1px solid rgba(255,255,255,0.08);
+
+    backdrop-filter: blur(14px);
+
+    text-decoration: none;
+
+    transition:
+        all 0.4s ease;
+
+    overflow: hidden;
+
+    box-shadow:
+        0 0 15px rgba(255,255,255,0.03);
+}
+
+.portal-link::before {
+
+    content: "";
+
+    position: absolute;
+
+    inset: 0;
+
+    background:
+        linear-gradient(
+            120deg,
+            transparent,
+            rgba(255,255,255,0.12),
+            transparent
+        );
+
+    transform: translateX(-120%);
+
+    transition:
+        transform 0.8s ease;
+}
+
+.portal-link:hover::before {
+    transform: translateX(120%);
+}
+
+.portal-link:hover {
+
+    transform:
+        translateY(-3px)
+        scale(1.03);
+
+    background:
+        rgba(255,255,255,0.08);
+
+    box-shadow:
+        0 0 20px currentColor,
+        0 0 50px rgba(255,255,255,0.08);
+}
+
+.portal-icon {
+
+    font-size: 1.1rem;
+
+    animation:
+        iconFloat 4s ease-in-out infinite;
+}
+
+@keyframes iconFloat {
+
+    0% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-3px);
+    }
+
+    100% {
+        transform: translateY(0px);
+    }
+}
+
+/* =========================
+   COLORS
+========================= */
+
+.text-star { color: #BF40BF; }
+.text-monte { color: #98FB98; }
+.text-chimeny { color: #FFF0F5; }
+
+/* =========================
+   FADE
+========================= */
+
+.fade-in {
+
+    animation:
+        fadeIn 1.5s ease forwards;
+}
+
+@keyframes fadeIn {
+
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0px);
+    }
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* =========================
+   AVATARS
+========================= */
+
+.avatar-frame {
+
+    width: 120px;
+    height: 120px;
+
+    border-radius: 50%;
+
+    border: 2px solid currentColor;
+
+    margin: 0 auto 1.5rem;
+
+    padding: 4px;
+
+    overflow: hidden;
+
+    box-shadow:
+        0 0 20px currentColor,
+        0 0 50px rgba(255,255,255,0.08);
+
+    animation:
+        avatarFloat 5s ease-in-out infinite;
+}
+
+@keyframes avatarFloat {
+
+    0% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-6px);
+    }
+
+    100% {
+        transform: translateY(0px);
+    }
+}
+
+.avatar-frame img {
+
+    width: 100%;
+    height: 100%;
+
+    border-radius: 50%;
+
+    object-fit: cover;
+}
+
+/* =========================
+   PORTAL
+========================= */
+
+.portal-ring {
+
+    position: fixed;
+
+    width: 200px;
+    height: 200px;
+
+    border-radius: 50%;
+
+    border:
+        2px solid rgba(191,64,191,0.4);
+
+    box-shadow:
+        0 0 30px rgba(191,64,191,0.4),
+        inset 0 0 20px rgba(100,149,237,0.2);
+
+    animation:
+        portalExpand 3s ease-out forwards;
+
+    pointer-events: none;
+
+    z-index: 99;
+
+    mix-blend-mode: screen;
+}
+
+@keyframes portalExpand {
+
+    0% {
+        transform: scale(0.4);
+        opacity: 0;
+    }
+
+    20% {
+        opacity: 1;
+    }
+
+    100% {
+        transform: scale(5);
+        opacity: 0;
+    }
+}
+
+/* =========================
+   WARP ENTRY
+========================= */
+
+@keyframes warpEntry {
+
+    0% {
+        transform: scale(1.08);
+        filter: blur(8px);
+    }
+
+    100% {
+        transform: scale(1);
+        filter: blur(0px);
+    }
+}
+
+</style>
+</head>
+
+<body class="min-h-screen flex flex-col items-center justify-center p-4">
+
+<!-- WORMHOLE -->
+
+<canvas id="wormhole"></canvas>
+
+<!-- LOADING -->
+
+<div id="loading-screen">
+
+    <div class="text-lg space-y-4 max-w-lg">
+
+        <p id="L1" class="typewriter">
+            > Searching quiet frequencies...
+        </p>
+
+        <p id="L2" class="hidden">
+            > Signal found: [SOLITUDE]
+        </p>
+
+        <p id="L3" class="hidden">
+            > Signal found: [ARTISTIC ECHO]
+        </p>
+
+        <p id="L4" class="hidden">
+            > Opening
+            <span class="shimmer">
+                CafeDreamr
+            </span>
+            portal...
+        </p>
+
+    </div>
+
+</div>
+
+<!-- STAR -->
+
+<div id="star-greeting"
+class="hidden glass-panel w-full max-w-2xl p-10 text-center fade-in">
+
+    <div class="avatar-frame text-star">
+        <img src="STAR-PERF.jpeg" alt="Star">
+    </div>
+
+    <h2 class="text-3xl text-star mb-4">
+        Hello, traveler.
+    </h2>
+
+    <p class="text-xl mb-8 text-white">
+        You've stumbled upon a fold in the digital fabric.
+        We call it
+        <span class="shimmer">CafeDreamr</span>.
+    </p>
+
+    <p class="mb-8 italic opacity-80 text-star">
+        "I am Star. We've been waiting for a frequency like yours.
+        Shall we see if you fit the dream?"
+    </p>
+<!-- =========================
+     SOCIAL / PORTAL LINKS
+========================= -->
+
+<div class="mt-10 flex flex-wrap justify-center gap-4">
+
+    <!-- DISCORD -->
+
+    <a href="https://discord.gg/YOURINVITE"
+       target="_blank"
+       rel="noopener noreferrer"
+       class="portal-link text-star">
+
+        <span class="portal-icon">✦</span>
+        Discord Gateway
+
+    </a>
+
+    <!-- WEBSITE -->
+
+    <a href="https://x3nb.github.io/cafedreamr/"
+       target="_blank"
+       rel="noopener noreferrer"
+       class="portal-link text-monte">
+
+        <span class="portal-icon">☾</span>
+        Dream Archive
+
+    </a>
+
+    <!-- NEKOWEB -->
+
+    <a href="https://xencafe.nekoweb.org/"
+       target="_blank"
+       rel="noopener noreferrer"
+       class="portal-link text-chimeny">
+
+        <span class="portal-icon">⌘</span>
+        NekoWeb Node
+
+    </a>
+
+    <!-- MUSIC / PLAYLIST -->
+
+    <a href="https://open.spotify.com/"
+       target="_blank"
+       rel="noopener noreferrer"
+       class="portal-link text-star">
+
+        <span class="portal-icon">♫</span>
+        Frequency Feed
+
+    </a>
+
+</div>
+
+
+</div>
+
+<script>
+
+/* =========================
+   WORMHOLE STARFIELD
+========================= */
+
+const canvas = document.getElementById('wormhole');
+
+const ctx2 = canvas.getContext('2d');
+
+let stars = [];
+
+let warpSpeed = 0.4;
+
+function resizeCanvas() {
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+}
+
+resizeCanvas();
+
+window.addEventListener(
+    'resize',
+    resizeCanvas
+);
+
+for (let i = 0; i < 900; i++) {
+
+    stars.push({
+
+        x:
+            (Math.random() - 0.5)
+            * canvas.width,
+
+        y:
+            (Math.random() - 0.5)
+            * canvas.height,
+
+        z:
+            Math.random() * canvas.width
+    });
+}
+
+function animateStars() {
+
+    ctx2.fillStyle =
+        "rgba(13,0,26,0.22)";
+
+    ctx2.fillRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+
+    for (let star of stars) {
+
+        star.z -= warpSpeed;
+
+        if (star.z <= 0) {
+            star.z = canvas.width;
+        }
+
+        let k = 128 / star.z;
+
+        let x =
+            star.x * k
+            + canvas.width / 2;
+
+        let y =
+            star.y * k
+            + canvas.height / 2;
+
+        if (
+            x >= 0 &&
+            x <= canvas.width &&
+            y >= 0 &&
+            y <= canvas.height
+        ) {
+
+            let size =
+                (1 - star.z / canvas.width)
+                * 3;
+
+            ctx2.beginPath();
+
+            ctx2.fillStyle =
+                `rgba(180,220,255,${
+                    1 - star.z / canvas.width
+                })`;
+
+            ctx2.arc(
+                x,
+                y,
+                size,
+                0,
+                Math.PI * 2
+            );
+
+            ctx2.fill();
+        }
+    }
+
+    requestAnimationFrame(animateStars);
+}
+
+animateStars();
+
+/* =========================
+   PORTAL SYNTH
+========================= */
+
+let audioStarted = false;
+
+function createPortalSound() {
+
+    if (audioStarted) return;
+
+    audioStarted = true;
+
+    warpSpeed = 18;
+
+    setTimeout(() => {
+        warpSpeed = 4;
+    }, 1200);
+
+    setTimeout(() => {
+        warpSpeed = 0.6;
+    }, 3500);
+
+    const AudioContext =
+        window.AudioContext ||
+        window.webkitAudioContext;
+
+    const ctx = new AudioContext();
+
+    const master = ctx.createGain();
+
+    master.gain.value = 0.18;
+
+    master.connect(ctx.destination);
+
+    const osc1 = ctx.createOscillator();
+
+    osc1.type = 'sawtooth';
+
+    osc1.frequency.setValueAtTime(
+        110,
+        ctx.currentTime
+    );
+
+    const osc2 = ctx.createOscillator();
+
+    osc2.type = 'triangle';
+
+    osc2.frequency.setValueAtTime(
+        220,
+        ctx.currentTime
+    );
+
+    const lfo = ctx.createOscillator();
+
+    lfo.type = 'sine';
+
+    lfo.frequency.value = 3.5;
+
+    const lfoGain = ctx.createGain();
+
+    lfoGain.gain.value = 18;
+
+    const filter = ctx.createBiquadFilter();
+
+    filter.type = 'lowpass';
+
+    filter.frequency.value = 1200;
+
+    filter.Q.value = 8;
+
+    const delay = ctx.createDelay();
+
+    delay.delayTime.value = 0.28;
+
+    const feedback = ctx.createGain();
+
+    feedback.gain.value = 0.35;
+
+    const gainNode = ctx.createGain();
+
+    gainNode.gain.setValueAtTime(
+        0.0001,
+        ctx.currentTime
+    );
+
+    osc1.connect(filter);
+    osc2.connect(filter);
+
+    filter.connect(gainNode);
+
+    gainNode.connect(master);
+
+    gainNode.connect(delay);
+
+    delay.connect(feedback);
+
+    feedback.connect(delay);
+
+    delay.connect(master);
+
+    lfo.connect(lfoGain);
+
+    lfoGain.connect(filter.frequency);
+
+    gainNode.gain.exponentialRampToValueAtTime(
+        0.35,
+        ctx.currentTime + 1.8
+    );
+
+    osc1.frequency.exponentialRampToValueAtTime(
+        220,
+        ctx.currentTime + 2.5
+    );
+
+    osc2.frequency.exponentialRampToValueAtTime(
+        440,
+        ctx.currentTime + 2.5
+    );
+
+    gainNode.gain.exponentialRampToValueAtTime(
+        0.0001,
+        ctx.currentTime + 5.5
+    );
+
+    osc1.start();
+    osc2.start();
+    lfo.start();
+
+    osc1.stop(ctx.currentTime + 6);
+    osc2.stop(ctx.currentTime + 6);
+    lfo.stop(ctx.currentTime + 6);
+}
+
+/* =========================
+   PORTAL VISUAL
+========================= */
+
+function createPortalVisual() {
+
+    const portal =
+        document.createElement('div');
+
+    portal.className = 'portal-ring';
+
+    portal.style.left =
+        (window.innerWidth / 2 - 100)
+        + 'px';
+
+    portal.style.top =
+        (window.innerHeight / 2 - 100)
+        + 'px';
+
+    document.body.appendChild(portal);
+
+    setTimeout(() => {
+        portal.remove();
+    }, 3000);
+}
+
+/* =========================
+   NAVIGATION
+========================= */
+
+const navigate = {
+
+    showStar: () => {
+
+        document.body.style.animation =
+            "warpEntry 4s ease-out forwards";
+
+        document
+            .getElementById('loading-screen')
+            .classList.add('hidden');
+
+        document
+            .getElementById('star-greeting')
+            .classList.remove('hidden');
+
+        createPortalVisual();
+
+        createPortalSound();
+    }
+};
+
+/* =========================
+   INTRO
+========================= */
+
+async function runIntro() {
+
+    const wait =
+        (ms) =>
+        new Promise(r =>
+            setTimeout(r, ms));
+
+    await wait(1800);
+
+    document
+        .getElementById('L2')
+        .classList.remove('hidden');
+
+    document
+        .getElementById('L2')
+        .classList.add('typewriter');
+
+    await wait(1800);
+
+    document
+        .getElementById('L3')
+        .classList.remove('hidden');
+
+    document
+        .getElementById('L3')
+        .classList.add('typewriter');
+
+    await wait(1800);
+
+    document
+        .getElementById('L4')
+        .classList.remove('hidden');
+
+    document
+        .getElementById('L4')
+        .classList.add('typewriter');
+
+    await wait(1600);
+
+    document
+        .getElementById('loading-screen')
+        .style.opacity = '0';
+
+    await wait(1000);
+
+    navigate.showStar();
+}
+
+window.onload = runIntro;
+
+</script>
