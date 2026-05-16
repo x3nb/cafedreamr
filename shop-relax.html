@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Just Relax - Premium Teas & Wellness Products</title>
+    <link href="https://fonts.googleapis.com/css2?family=Vampiro+One&family=Klee+One&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            width: 100%;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #000000 0%, #663399 50%, #000000 100%);
+            font-family: 'Klee One', cursive;
+            color: #6495ED;
+            overflow-x: hidden;
+        }
+
+        /* Cosmic Stars Background */
+        .stars {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 0;
+        }
+
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 3s infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+
+        /* Main Container */
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px 60px 20px;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            font-family: 'Vampiro One', cursive;
+            font-size: 4rem;
+            color: #6495ED;
+            margin-bottom: 15px;
+            text-shadow: 0 0 20px rgba(100, 149, 237, 0.5);
+            animation: glow 2s ease-in-out infinite;
+            letter-spacing: 2px;
+        }
+
+        @keyframes glow {
+            0%, 100% { text-shadow: 0 0 20px rgba(100, 149, 237, 0.5); }
+            50% { text-shadow: 0 0 30px rgba(102, 51, 153, 0.8); }
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: #6495ED;
+            opacity: 0.9;
+        }
+
+        /* Search Bar Container */
+        .search-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 40px;
+        }
+
+        .search-wrapper {
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 20px;
+            border: 2px solid #6495ED;
+            border-radius: 25px;
+            background: rgba(0, 0, 0, 0.7);
+            color: #6495ED;
+            font-family: 'Klee One', cursive;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px rgba(100, 149, 237, 0.3);
+        }
+
+        .search-input::placeholder {
+            color: rgba(100, 149, 237, 0.6);
+        }
+
+        .search-input:focus {
+            outline: none;
+            box-shadow: 0 0 20px rgba(100, 149, 237, 0.8);
+            border-color: #663399;
+        }
+
+        /* Products Grid */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        /* Product Card */
+        .product-card {
+            background: rgba(0, 0, 0, 0.6);
+            border: 2px solid #6495ED;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(100, 149, 237, 0.2);
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            opacity: 1;
+            max-height: none;
+            overflow: hidden;
+        }
+
+        .product-card.hidden {
+            display: none;
+        }
+
+        .product-card:hover {
+            background: rgba(102, 51, 153, 0.3);
+            box-shadow: 0 0 25px rgba(100, 149, 237, 0.6);
+            transform: translateY(-5px);
+            border-color: #663399;
+        }
+
+        .product-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            background: rgba(102, 51, 153, 0.2);
+        }
+
+        .product-name {
+            font-family: 'Vampiro One', cursive;
+            font-size: 1.2rem;
+            color: #6495ED;
+            margin-bottom: 10px;
+            line-height: 1.4;
+            text-shadow: 0 0 10px rgba(100, 149, 237, 0.3);
+        }
+
+        .product-description {
+            font-size: 0.95rem;
+            color: #6495ED;
+            opacity: 0.85;
+            margin-bottom: 15px;
+            flex-grow: 1;
+        }
+
+        .product-price {
+            font-family: 'Vampiro One', cursive;
+            font-size: 1.3rem;
+            color: #663399;
+            margin-bottom: 15px;
+            text-shadow: 0 0 10px rgba(102, 51, 153, 0.5);
+        }
+
+        .amazon-link {
+            display: inline-block;
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #6495ED, #663399);
+            color: #000000;
+            text-decoration: none;
+            border-radius: 20px;
+            font-family: 'Vampiro One', cursive;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(100, 149, 237, 0.4);
+            font-weight: bold;
+        }
+
+        .amazon-link:hover {
+            box-shadow: 0 0 25px rgba(100, 149, 237, 0.8);
+            transform: scale(1.05);
+        }
+
+        /* No Results Message */
+        .no-results {
+            text-align: center;
+            padding: 60px 20px;
+            font-size: 1.2rem;
+            color: #6495ED;
+        }
+
+        /* Footer Disclosure */
+        footer {
+            position: relative;
+            z-index: 1;
+            background: rgba(0, 0, 0, 0.5);
+            border-top: 1px solid rgba(100, 149, 237, 0.3);
+            padding: 30px 20px;
+            text-align: center;
+            margin-top: 60px;
+        }
+
+        .disclosure {
+            font-size: 0.85rem;
+            color: rgba(100, 149, 237, 0.8);
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .disclosure-title {
+            font-family: 'Vampiro One', cursive;
+            font-size: 0.95rem;
+            color: #6495ED;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            .products-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                gap: 20px;
+            }
+
+            .search-wrapper {
+                max-width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px 15px 50px 15px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .product-card {
+                padding: 15px;
+            }
+
+            footer {
+                padding: 20px 15px;
+            }
+
+            .disclosure {
+                font-size: 0.8rem;
+            }
+        }
+
+        /* Back to Home Link */
+        .back-link {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 10;
+            padding: 10px 20px;
+            border: 2px solid #6495ED;
+            color: #6495ED;
+            text-decoration: none;
+            border-radius: 20px;
+            font-family: 'Vampiro One', cursive;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px rgba(100, 149, 237, 0.3);
+        }
+
+        .back-link:hover {
+            background-color: #6495ED;
+            color: #000000;
+            box-shadow: 0 0 20px rgba(100, 149, 237, 0.8);
+        }
+    </style>
+</head>
+<body>
+    <div class="stars" id="starsContainer"></div>
+
+    <a href="contents.html" class="back-link">← Contents</a>
+
+    <div class="container">
+        <div class="header">
+            <h1>JUST RELAX</h1>
+            <p class="subtitle">Discover Premium Teas & Wellness Products</p>
+        </div>
+
+        <div class="search-container">
+            <div class="search-wrapper">
+                <input 
+                    type="text" 
+                    id="searchInput" 
+                    class="search-input" 
+                    placeholder="Search: stress relief, tea, calming..."
+                >
+            </div>
+        </div>
+
+        <div class="products-grid" id="productsGrid">
+            <!-- Products will be populated here by JavaScript -->
+        </div>
+
+        <div class="no-results" id="noResults" style="display: none;">
+            No products found. Try different keywords!
+        </div>
+    </div>
+
+    <footer>
+        <div class="disclosure">
+            <div class="disclosure-title">Affiliate Disclosure</div>
+            <p>As an Amazon Associate I earn from qualifying purchases. The products featured on this page are handpicked recommendations, and we may earn a commission when you purchase through our links at no additional cost to you.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Premium Tea & Wellness Products
+        const products = [
+            {
+                name: "Harney & Sons Hot Cinnamon Spice Tea",
+                description: "Luxury blend with warming spices",
+                price: "$8.99",
+                image: "https://images-na.ssl-images-amazon.com/images/I/81nBSwqBB6L._AC_SY679_.jpg",
+                link: "https://amazon.com/s?k=Harney+Sons+Cinnamon+Spice+Tea",
+                keywords: ["teas", "calming", "stress"]
+            },
+            {
+                name: "Twinings Chamomile Stress Relief",
+                description: "Soothing chamomile blend for relaxation",
+                price: "$5.99",
+                image: "https://images-na.ssl-images-amazon.com/images/I/81XfmXUZf0L._AC_SY679_.jpg",
+                link: "https://amazon.com/s?k=Twinings+Chamomile",
+                keywords: ["teas", "calming", "relax", "stress"]
+            },
+            {
+                name: "Traditional Medicinals Stress Ease Tea",
+                description: "Herbal blend to ease tension and stress",
+                price: "$6.49",
+                image: "https://images-na.ssl-images-amazon.com/images/I/81x5k5vWu9L._AC_SY679_.jpg",
+                link: "https://amazon.com/s?k=Traditional+Medicinals+Stress",
+                keywords: ["teas", "stress", "relax", "calming"]
+            },
+            {
+                name: "Pukka Three Mint Organic Tea",
+                description: "Refreshing mint blend for mental clarity",
+                price: "$7.99",
+                image: "https://images-na.ssl-images-amazon.com/images/I/91jfF0yqJwL._AC_SY679_.jpg",
+                link: "https://amazon.com/s?k=Pukka+Three+Mint+Tea",
+                keywords: ["teas", "calming", "relax"]
+            },
+            {
+                name: "Celestial Seasonings Sleepytime Tea",
+                description: "Calming blend with chamomile and passionflower",
+                price: "$4.99",
+                image: "https://images-na.ssl-images-amazon.com/images/I/91l9vVe6qHL._AC_SY679_.jpg",
+                link: "https://amazon.com/s?k=Celestial+Sleepytime+Tea",
+                keywords: ["teas", "calming", "stress", "relax"]
+            },
+            {
+                name: "Gaia Herbs Stress Response Tea",
+                description: "Adaptogenic herbal blend",
+                price: "$9.99",
+                image: "https://images-na.ssl-images-amazon.com/images/I/81KqzSmVc7L._AC_SY679_.jpg",
+                link: "https://amazon.com/s?k=Gaia+Stress+Response",
+                keywords: ["teas", "stress", "relax", "calming"]
+            },
+            {
+                name: "Yogi Stress Relief Tea with Ashwagandha",
+                description: "Premium blend with adaptogenic herbs",
+                price: "$6.99",
+                image: "https://images-na.ssl-images-amazon.com/images/I/81jVvW-YQCL._AC_SY679_.jpg",
+                link: "https://amazon.com/s?k=Yogi+Stress+Relief",
+                keywords: ["teas", "stress", "calming", "relax"]
+            },
+            {
+                name: "David's Tea Relax Blend",
+                description: "Aromatic herbal mix for peaceful moments",
+                price: "$7.49",
+                image: "https://images-na.ssl-images-amazon.com/images/I/91Xw8bC4SkL._AC_SY679_.jpg",
+                link: "https://amazon.com/s?k=Davids+Tea+Relax",
+                keywords: ["teas", "relax", "calming"]
+            },
+            {
+                name: "Aromatherapy Associates Stress Relief Bath",
+                description: "Luxury bath soak with essential oils",
+                price: "$35.00",
+                image: "https://images-na.ssl-images-amazon.com/images/I/81Qm5kFWx7L._AC_SY679_.jpg",
+                link: "https://amazon.com/s?k=Aromatherapy+Associates+Stress",
+                keywords: ["stress", "relax", "calming"]
+            },
+            {
+                name: "Thorne ResoundSleep Premium Formula",
+                description: "High-end sleep and relaxation supplement",
+                price: "$44.95",
+                image: "https://images-na.ssl-images-amazon.com/images/I/81-yC9lNxWL._AC_SY679_.jpg",
+                link: "https://amazon.com/s?k=Thorne+ResoundSleep",
+                keywords: ["stress", "relax", "calming"]
+            },
+            {
+                name: "DoTERRA Balance Essential Oil",
+                description: "Grounding blend for stress relief",
+                price: "$29.99",
+                image: "https://images-na.ssl-images-amazon.com/images/I/81r8F7jjpLL._AC_SY679_.jpg",
+                link: "https://amazon.com/s?k=doTERRA+Balance+Oil",
+                keywords: ["stress", "relax", "calming"]
+            },
+            {
+                name: "Harney & Sons Decaffeinated Green Tea",
+                description: "Smooth green tea without caffeine",
+                price: "$7.99",
+                image: "https://images-na.ssl-images-amazon.com/images/I/81nQl7vK7UL._AC_SY679_.jpg",
+                link: "https://amazon.com/s?k=Harney+Decaf+Green+Tea",
+                keywords: ["teas", "calming", "relax"]
+            },
+            {
+                name: "Kusmi Tea Sleep Blend",
+                description: "Premium herbal tea for restful nights",
+                price: "$12.00",
+                image: "https://images-na.ssl-images-amazon.com/images/I/91nKGR7r0IL._AC_SY679_.jpg",
+                link: "https://amazon.com/s?k=Kusmi+Tea+Sleep",
+                keywords: ["teas", "calming", "relax", "stress"]
+            }
+        ];
+
+        const searchInput = document.getElementById('searchInput');
+        const productsGrid = document.getElementById('productsGrid');
+        const noResults = document.getElementById('noResults');
+
+        // Generate Stars
+        function generateStars() {
+            const starsContainer = document.getElementById('starsContainer');
+            const starCount = 100;
+
+            for (let i = 0; i < starCount; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 3 + 's';
+                starsContainer.appendChild(star);
+            }
+        }
+
+        // Display Products
+        function displayProducts(productsToShow) {
+            productsGrid.innerHTML = '';
+
+            if (productsToShow.length === 0) {
+                noResults.style.display = 'block';
+                return;
+            }
+
+            noResults.style.display = 'none';
+
+            productsToShow.forEach(product => {
+                const productCard = document.createElement('div');
+                productCard.className = 'product-card';
+                productCard.innerHTML = `
+                    <img src="${product.image}" alt="${product.name}" class="product-image" onerror="this.src='https://via.placeholder.com/200?text=Tea+Product'">
+                    <h3 class="product-name">${product.name}</h3>
+                    <p class="product-description">${product.description}</p>
+                    <p class="product-price">${product.price}</p>
+                    <a href="${product.link}" target="_blank" rel="noopener noreferrer" class="amazon-link">View on Amazon</a>
+                `;
+                productsGrid.appendChild(productCard);
+            });
+        }
+
+        // Search Functionality
+        searchInput.addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase().trim();
+
+            if (searchTerm === '') {
+                displayProducts(products);
+                return;
+            }
+
+            const filteredProducts = products.filter(product => {
+                return product.keywords.some(keyword => 
+                    keyword.includes(searchTerm) || searchTerm.includes(keyword)
+                ) || 
+                product.name.toLowerCase().includes(searchTerm) ||
+                product.description.toLowerCase().includes(searchTerm);
+            });
+
+            displayProducts(filteredProducts);
+        });
+
+        // Initialize
+        window.addEventListener('load', () => {
+            generateStars();
+            displayProducts(products);
+        });
+    </script>
+</body>
+</html>
