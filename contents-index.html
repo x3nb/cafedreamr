@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Café Dreamr - Contents</title>
+    <link href="https://fonts.googleapis.com/css2?family=Vampiro+One&family=Klee+One&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            width: 100%;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #000000 0%, #663399 50%, #000000 100%);
+            font-family: 'Klee One', cursive;
+            color: #6495ED;
+            overflow-x: hidden;
+        }
+
+        /* Cosmic Stars Background */
+        .stars {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 0;
+        }
+
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 3s infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+
+        /* Main Container */
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 60px 30px;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        h1 {
+            font-family: 'Vampiro One', cursive;
+            font-size: 4rem;
+            color: #6495ED;
+            margin-bottom: 20px;
+            text-shadow: 0 0 20px rgba(100, 149, 237, 0.5);
+            animation: glow 2s ease-in-out infinite;
+            letter-spacing: 3px;
+        }
+
+        @keyframes glow {
+            0%, 100% { text-shadow: 0 0 20px rgba(100, 149, 237, 0.5); }
+            50% { text-shadow: 0 0 30px rgba(102, 51, 153, 0.8); }
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: #6495ED;
+            opacity: 0.8;
+            font-style: italic;
+        }
+
+        /* Decorative Line */
+        .divider {
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #6495ED, transparent);
+            margin: 40px 0;
+        }
+
+        /* Menu Items */
+        .menu {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .menu-item {
+            display: grid;
+            grid-template-columns: 180px 1fr;
+            gap: 30px;
+            align-items: start;
+            padding: 25px;
+            background: rgba(0, 0, 0, 0.4);
+            border-left: 4px solid #6495ED;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .menu-item:hover {
+            background: rgba(102, 51, 153, 0.3);
+            border-left: 4px solid #663399;
+            box-shadow: 0 0 20px rgba(100, 149, 237, 0.4);
+            transform: translateX(10px);
+        }
+
+        .menu-link {
+            text-decoration: none;
+            color: #6495ED;
+        }
+
+        .menu-title {
+            font-family: 'Vampiro One', cursive;
+            font-size: 1.8rem;
+            color: #6495ED;
+            text-shadow: 0 0 15px rgba(100, 149, 237, 0.3);
+            transition: all 0.3s ease;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .menu-item:hover .menu-title {
+            color: #663399;
+            text-shadow: 0 0 20px rgba(102, 51, 153, 0.6);
+        }
+
+        .menu-number {
+            font-size: 0.9rem;
+            color: rgba(100, 149, 237, 0.6);
+            font-family: 'Klee One', cursive;
+            margin-bottom: 5px;
+        }
+
+        .menu-description {
+            font-size: 1rem;
+            color: #6495ED;
+            opacity: 0.85;
+            line-height: 1.6;
+            text-align: left;
+        }
+
+        .menu-item:hover .menu-description {
+            opacity: 1;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 40px 20px;
+            }
+
+            h1 {
+                font-size: 2.8rem;
+            }
+
+            .subtitle {
+                font-size: 1rem;
+            }
+
+            .menu-item {
+                grid-template-columns: 1fr;
+                gap: 15px;
+                padding: 20px;
+            }
+
+            .menu-title {
+                font-size: 1.5rem;
+            }
+
+            .menu-description {
+                font-size: 0.95rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 30px 15px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .header {
+                margin-bottom: 40px;
+            }
+
+            .menu {
+                gap: 20px;
+            }
+
+            .menu-item {
+                padding: 15px;
+            }
+
+            .menu-title {
+                font-size: 1.3rem;
+            }
+
+            .menu-description {
+                font-size: 0.9rem;
+            }
+        }
+
+        /* Home Button */
+        .home-link {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 10;
+            padding: 10px 20px;
+            border: 2px solid #6495ED;
+            color: #6495ED;
+            text-decoration: none;
+            border-radius: 20px;
+            font-family: 'Vampiro One', cursive;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px rgba(100, 149, 237, 0.3);
+        }
+
+        .home-link:hover {
+            background-color: #6495ED;
+            color: #000000;
+            box-shadow: 0 0 20px rgba(100, 149, 237, 0.8);
+        }
+    </style>
+</head>
+<body>
+    <div class="stars" id="starsContainer"></div>
+
+    <a href="https://x3nb.github.io/CAFEDREAMR1/index.html" class="home-link">🏠 Home</a>
+
+    <div class="container">
+        <div class="header">
+            <h1>CONTENTS</h1>
+            <p class="subtitle">Your Gateway to the Dreamr Universe</p>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="menu">
+           
+            <!-- ABOUT -->
+            <a href="https://cafedreamr.pika.page/" class="menu-link" target="_blank" rel="noopener noreferrer">
+                <div class="menu-item">
+                    <div>
+                        <span class="menu-number">II</span>
+                        <span class="menu-title">ABOUT</span>
+                    </div>
+                    <div class="menu-description">
+                        Discover what Café Dreamr is—a vibrant collaboration station for dreamers, creators, and visionaries. Explore the mission, vision, and passion behind this creative space where ideas flow like warm tea and inspiration never runs dry.
+                    </div>
+                </div>
+            </a>
+
+            <!-- LETTER -->
+            <a href="https://letterbird.co/cafedreamr" class="menu-link">
+                <div class="menu-item">
+                    <div>
+                        <span class="menu-number">III</span>
+                        <span class="menu-title">LETTER</span>
+                    </div>
+                    <div class="menu-description">
+                       Write a letter to our CafeDreamr desk. Please let us know your skillset and what projects you'd be interested in participating in. Game Development, StoryBoarding, Animatiing, Game Music, Character Development or Character Design -  NPC.
+                    </div>
+                </div>
+            </a>
+
+            <!-- COLAB -->
+            <a href="https://www.youtube.com/@cafedreamer" class="menu-link" target="_blank" rel="noopener noreferrer">
+                <div class="menu-item">
+                    <div>
+                        <span class="menu-number">IV</span>
+                        <span class="menu-title">COLAB</span>
+                    </div>
+                    <div class="menu-description">
+                        Join the collaboration movement. Watch exclusive collaborations, behind-the-scenes content, and creative projects with fellow dreamers. Subscribe to stay updated on all new releases.
+                    </div>
+                </div>
+            </a>
+
+            <!-- SHOP -->
+            <a href="products.html" class="menu-link">
+                <div class="menu-item">
+                    <div>
+                        <span class="menu-number">V</span>
+                        <span class="menu-title">SHOP</span>
+                    </div>
+                    <div class="menu-description">
+                        Explore our curated collection of premium teas and stress-relieving wellness products. Each item is handpicked to bring relaxation and peace into your creative journey.
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="divider"></div>
+    </div>
+
+    <script>
+        // Generate Stars
+        function generateStars() {
+            const starsContainer = document.getElementById('starsContainer');
+            const starCount = 100;
+
+            for (let i = 0; i < starCount; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 3 + 's';
+                starsContainer.appendChild(star);
+            }
+        }
+
+        // Initialize
+        window.addEventListener('load', generateStars);
+    </script>
+</body>
+</html>
