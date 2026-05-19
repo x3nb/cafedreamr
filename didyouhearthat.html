@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+<title>4AM STAR PORTAL</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+
+    overflow:hidden;
+
+    height:100vh;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-family:'Inter',sans-serif;
+
+    color:white;
+
+    background:
+    radial-gradient(circle at top,
+    #23254f 0%,
+    #121326 35%,
+    #070711 70%,
+    #030308 100%);
+}
+
+/* =========================================
+INTRO CINEMATIC
+========================================= */
+
+#intro-scene{
+
+    position:fixed;
+    inset:0;
+
+    background:
+    radial-gradient(circle at center,
+    rgba(12,12,20,0.94),
+    rgba(0,0,0,0.99));
+
+    z-index:99999;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    overflow:hidden;
+
+    transition:opacity 5s ease;
+}
+
+/* =========================================
+FILM GRAIN
+========================================= */
+
+#intro-scene::after{
+
+    content:"";
+
+    position:absolute;
+    inset:0;
+
+    background-image:
+    url("https://grainy-gradients.vercel.app/noise.svg");
+
+    opacity:0.08;
+
+    mix-blend-mode:soft-light;
+}
+
+/* =========================================
+FOG
+========================================= */
+
+.fog-layer{
+
+    position:absolute;
+    inset:-20%;
+
+    background:
+    radial-gradient(circle,
+    rgba(255,255,255,0.05),
+    transparent 70%);
+
+    filter:blur(120px);
+
+    opacity:0.3;
+}
+
+.fog-1{
+    animation:fogMove 120s linear infinite;
+}
+
+.fog-2{
+    animation:fogMoveReverse 150s linear infinite;
+}
+
+@keyframes fogMove{
+
+    from{
+        transform:translateX(-5%) translateY(0%);
+    }
+
+    to{
+        transform:translateX(5%) translateY(-2%);
+    }
+}
+
+@keyframes fogMoveReverse{
+
+    from{
+        transform:translateX(5%) translateY(2%);
+    }
+
+    to{
+        transform:translateX(-5%) translateY(-2%);
+    }
+}
+
+/* =========================================
+TIMESTAMP
+========================================= */
+
+#time-stamp{
+
+    position:absolute;
+
+    top:12%;
+
+    font-size:0.75rem;
+
+    letter-spacing:8px;
+
+    color:
+    rgba(255,255,255,0.35);
+
+    font-family:'Orbitron',sans-serif;
+
+    animation:fadeInSlow 4s ease;
+}
+
+/* =========================================
+DIALOGUE
+========================================= */
+
+#dialogue{
+
+    max-width:720px;
+
+    text-align:center;
+
+    font-size:1rem;
+
+    line-height:2.2;
+
+    letter-spacing:1px;
+
+    color:
+    rgba(255,255,255,0.82);
+
+    padding:40px;
+
+    opacity:0;
+
+    transition:opacity 2s ease;
+
+    z-index:10;
+}
+
+@keyframes fadeInSlow{
+
+    from{
+        opacity:0;
+    }
+
+    to{
+        opacity:1;
+    }
+}
+
+/* =========================================
+COSMOS ORBIT BACKGROUND
+========================================= */
+
+.cosmos-orbit{
+
+    position:fixed;
+    inset:0;
+
+    overflow:hidden;
+
+    z-index:0;
+
+    background:
+    radial-gradient(circle at center,
+    #24295a 0%,
+    #121428 35%,
+    #070710 72%,
+    #020204 100%);
+}
+
+/* =========================================
+ORBIT RINGS
+========================================= */
+
+.orbit-layer{
+
+    position:absolute;
+
+    left:50%;
+    top:50%;
+
+    transform-style:preserve-3d;
+
+    border-radius:50%;
+
+    border:
+    1px solid rgba(180,190,255,0.05);
+
+    box-shadow:
+    0 0 40px rgba(160,180,255,0.04);
+
+    mix-blend-mode:screen;
+}
+
+/* giant orbit */
+
+.orbit-1{
+
+    width:1400px;
+    height:1400px;
+
+    margin-left:-700px;
+    margin-top:-700px;
+
+    animation:
+    rotateOrbit 140s linear infinite;
+}
+
+/* middle orbit */
+
+.orbit-2{
+
+    width:1050px;
+    height:1050px;
+
+    margin-left:-525px;
+    margin-top:-525px;
+
+    border-color:
+    rgba(200,180,255,0.06);
+
+    animation:
+    rotateOrbitReverse 110s linear infinite;
+}
+
+/* inner orbit */
+
+.orbit-3{
+
+    width:760px;
+    height:760px;
+
+    margin-left:-380px;
+    margin-top:-380px;
+
+    border-color:
+    rgba(170,200,255,0.07);
+
+    animation:
+    rotateOrbit 90s linear infinite;
+}
+
+@keyframes rotateOrbit{
+
+    from{
+        transform:rotate(0deg);
+    }
+
+    to{
+        transform:rotate(360deg);
+    }
+
+}
+
+@keyframes rotateOrbitReverse{
+
+    from{
+        transform:rotate(360deg);
+    }
+
+    to{
+        transform:rotate(0deg);
+    }
+
+}
+
+/* =========================================
+MICRO STARS
+========================================= */
+
+.tiny-star{
+
+    position:absolute;
+
+    width:2px;
+    height:2px;
+
+    border-radius:50%;
+
+    background:
+    radial-gradient(circle,
+    rgba(230,230,255,0.95),
+    rgba(170,190,255,0.6));
+
+    box-shadow:
+    0 0 10px rgba(180,180,255,0.5);
+
+    opacity:0.6;
+}
+
+.s1{
+    top:18%;
+    left:24%;
+    animation:starPulse 4s ease-in-out infinite;
+}
+
+.s2{
+    top:30%;
+    right:20%;
+    animation:starPulse 7s ease-in-out infinite;
+}
+
+.s3{
+    bottom:20%;
+    left:18%;
+    animation:starPulse 5s ease-in-out infinite;
+}
+
+.s4{
+    bottom:26%;
+    right:24%;
+    animation:starPulse 6s ease-in-out infinite;
+}
+
+.s5{
+    top:50%;
+    left:10%;
+    animation:starPulse 8s ease-in-out infinite;
+}
+
+.s6{
+    top:62%;
+    right:12%;
+    animation:starPulse 5.5s ease-in-out infinite;
+}
+
+@keyframes starPulse{
+
+    0%,100%{
+        opacity:0.3;
+        transform:scale(1);
+    }
+
+    50%{
+        opacity:1;
+        transform:scale(1.8);
+    }
+
+}
+
+/* =========================================
+PORTAL ORB
+========================================= */
+
+.portal-orb{
+
+    position:relative;
+
+    width:820px;
+    height:820px;
+
+    border-radius:50%;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    background:
+    radial-gradient(circle at top left,
+    rgba(255,255,255,0.16),
+    rgba(255,255,255,0.04) 25%,
+    rgba(255,255,255,0.02) 40%,
+    rgba(120,130,255,0.08) 70%,
+    rgba(255,255,255,0.03) 100%);
+
+    backdrop-filter:blur(28px);
+
+    border:
+    1px solid rgba(255,255,255,0.14);
+
+    box-shadow:
+    inset 0 0 80px rgba(255,255,255,0.05),
+    0 0 120px rgba(140,150,255,0.12),
+    0 0 240px rgba(120,100,255,0.08);
+
+    overflow:hidden;
+
+    z-index:2;
+
+    opacity:0;
+
+    transform:scale(0.75);
+
+    transition:
+    opacity 6s ease,
+    transform 8s ease;
+}
+
+.portal-awaken{
+
+    opacity:1 !important;
+
+    transform:scale(1);
+}
+
+/* soft outer glow */
+
+.portal-orb::before{
+
+    content:"";
+
+    position:absolute;
+
+    inset:-80px;
+
+    border-radius:50%;
+
+    background:
+    radial-gradient(circle,
+    rgba(180,170,255,0.10),
+    rgba(120,160,255,0.06),
+    transparent 70%);
+
+    filter:blur(100px);
+
+    z-index:-1;
+}
+
+/* glass reflection */
+
+.portal-orb::after{
+
+    content:"";
+
+    position:absolute;
+
+    top:8%;
+    left:12%;
+
+    width:38%;
+    height:18%;
+
+    border-radius:50%;
+
+    background:
+    linear-gradient(
+    to bottom,
+    rgba(255,255,255,0.22),
+    rgba(255,255,255,0.02));
+
+    transform:rotate(-14deg);
+
+    filter:blur(8px);
+
+    opacity:0.55;
+}
+
+/* =========================================
+ATMOSPHERE
+========================================= */
+
+.orb-atmosphere{
+
+    position:absolute;
+    inset:0;
+
+    border-radius:50%;
+
+    background:
+    radial-gradient(circle at center,
+    rgba(255,255,255,0.02),
+    rgba(160,180,255,0.04),
+    rgba(120,90,255,0.08));
+
+    mix-blend-mode:screen;
+
+    animation:orbPulse 10s ease-in-out infinite;
+}
+
+@keyframes orbPulse{
+
+    0%,100%{
+        opacity:0.75;
+        transform:scale(1);
+    }
+
+    50%{
+        opacity:1;
+        transform:scale(1.02);
+    }
+
+}
+
+/* =========================================
+VIDEO CORE
+========================================= */
+
+.star-core{
+
+    position:relative;
+
+    width:430px;
+    height:430px;
+
+    border-radius:50%;
+
+    overflow:hidden;
+
+    z-index:10;
+
+    border:
+    1px solid rgba(255,255,255,0.16);
+
+    box-shadow:
+    0 0 50px rgba(170,180,255,0.12),
+    inset 0 0 40px rgba(255,255,255,0.06);
+
+    backdrop-filter:blur(12px);
+}
+
+.star-video{
+
+    width:100%;
+    height:100%;
+
+    object-fit:cover;
+
+    filter:
+    saturate(1.03)
+    contrast(1.02)
+    brightness(1.02);
+}
+
+/* =========================================
+NAVIGATION
+========================================= */
+
+.orb-nav{
+
+    position:absolute;
+
+    width:100%;
+    height:100%;
+
+    pointer-events:none;
+}
+
+.nav-link{
+
+    position:absolute;
+
+    padding:10px 18px;
+
+    border-radius:999px;
+
+    background:
+    rgba(255,255,255,0.05);
+
+    backdrop-filter:blur(18px);
+
+    border:
+    1px solid rgba(255,255,255,0.10);
+
+    color:
+    rgba(230,235,255,0.82);
+
+    font-size:0.72rem;
+
+    letter-spacing:2px;
+
+    text-transform:uppercase;
+
+    text-decoration:none;
+
+    transition:0.4s ease;
+
+    pointer-events:auto;
+}
+
+.nav-link:hover{
+
+    background:
+    rgba(255,255,255,0.10);
+
+    border:
+    1px solid rgba(255,255,255,0.18);
+
+    transform:
+    scale(1.05);
+
+    box-shadow:
+    0 0 24px rgba(180,180,255,0.16);
+}
+
+.nav-1{
+    top:18%;
+    left:20%;
+}
+
+.nav-2{
+    top:22%;
+    right:18%;
+}
+
+.nav-3{
+    bottom:22%;
+    left:18%;
+}
+
+.nav-4{
+    bottom:18%;
+    right:20%;
+}
+
+/* =========================================
+FLOATING PARTICLES
+========================================= */
+
+.particle{
+
+    position:absolute;
+
+    width:2px;
+    height:2px;
+
+    border-radius:50%;
+
+    background:
+    rgba(220,220,255,0.8);
+
+    opacity:0.5;
+
+    animation:floatParticle linear infinite;
+}
+
+.p1{
+    top:20%;
+    left:30%;
+    animation-duration:12s;
+}
+
+.p2{
+    top:70%;
+    left:60%;
+    animation-duration:16s;
+}
+
+.p3{
+    top:40%;
+    left:78%;
+    animation-duration:14s;
+}
+
+@keyframes floatParticle{
+
+    0%{
+        transform:translateY(0px);
+        opacity:0;
+    }
+
+    20%{
+        opacity:0.5;
+    }
+
+    100%{
+        transform:translateY(-40px);
+        opacity:0;
+    }
+
+}
+
+/* =========================================
+RESPONSIVE
+========================================= */
+
+@media(max-width:950px){
+
+    .portal-orb{
+        width:92vw;
+        height:92vw;
+    }
+
+    .star-core{
+        width:48vw;
+        height:48vw;
+    }
+
+}
+
+@media(max-width:700px){
+
+    .nav-link{
+        font-size:0.58rem;
+        padding:8px 12px;
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- =========================================
+INTRO SCENE
+========================================= -->
+
+<div id="intro-scene">
+
+    <div class="fog-layer fog-1"></div>
+    <div class="fog-layer fog-2"></div>
+
+    <div id="time-stamp">
+        4:03 AM
+    </div>
+
+    <div id="dialogue"></div>
+
+</div>
+
+<!-- =========================================
+COSMIC BACKGROUND
+========================================= -->
+
+<div class="cosmos-orbit">
+
+    <div class="orbit-layer orbit-1"></div>
+    <div class="orbit-layer orbit-2"></div>
+    <div class="orbit-layer orbit-3"></div>
+
+    <div class="tiny-star s1"></div>
+    <div class="tiny-star s2"></div>
+    <div class="tiny-star s3"></div>
+    <div class="tiny-star s4"></div>
+    <div class="tiny-star s5"></div>
+    <div class="tiny-star s6"></div>
+
+</div>
+
+<!-- =========================================
+PORTAL ORB
+========================================= -->
+
+<div class="portal-orb">
+
+    <div class="orb-atmosphere"></div>
+
+    <!-- NAVIGATION -->
+
+    <div class="orb-nav">
+
+        <a href="#" class="nav-link nav-1">About</a>
+
+        <a href="#" class="nav-link nav-2">Guidelines</a>
+
+        <a href="#" class="nav-link nav-3">Guild</a>
+
+        <a href="#" class="nav-link nav-4">Desktop</a>
+
+    </div>
+
+    <!-- FLOATING PARTICLES -->
+
+    <div class="particle p1"></div>
+    <div class="particle p2"></div>
+    <div class="particle p3"></div>
+
+    <!-- VIDEO -->
+
+    <div class="star-core">
+
+        <video
+            class="star-video"
+            autoplay
+            muted
+            loop
+            playsinline>
+
+            <source
+            src="StarSipsCoffeezooms.mp4"
+            type="video/mp4">
+
+        </video>
+
+    </div>
+
+</div>
+
+<!-- =========================================
+AMBIENT AUDIO
+========================================= -->
+
+<audio autoplay loop id="theme-music">
+
+    <!-- replace with your own -->
+
+    <source src="theme.mp3" type="audio/mp3">
+
+</audio>
+
+<!-- =========================================
+BREATHING AUDIO
+========================================= -->
+
+<audio id="breathing-sound">
+
+    <!-- replace with subtle breathing -->
+
+    <source src="breathing.mp3" type="audio/mp3">
+
+</audio>
+
+<!-- =========================================
+SCRIPT
+========================================= -->
+
+<script>
+
+/* =========================================
+DIALOGUE
+========================================= */
+
+const dialogue = document.getElementById("dialogue");
+
+const lines = [
+
+"...did you grind the espresso already?",
+
+"mhm.",
+
+"you left the lights on again.",
+
+"it's four in the morning.",
+
+"...",
+
+"did you hear that?",
+
+"...",
+
+"someone's breathing."
+
+];
+
+let index = 0;
+
+function showLine(){
+
+    if(index >= lines.length){
+
+        revealPortal();
+        return;
+    }
+
+    dialogue.style.opacity = 0;
+
+    setTimeout(()=>{
+
+        dialogue.innerText = lines[index];
+
+        dialogue.style.opacity = 1;
+
+        /* trigger breathing */
+
+        if(lines[index] === "someone's breathing."){
+
+            document
+            .getElementById("breathing-sound")
+            .play();
+
+        }
+
+        index++;
+
+    },1000);
+
+}
+
+/* =========================================
+START SEQUENCE
+========================================= */
+
+showLine();
+
+setInterval(showLine, 5000);
+
+/* =========================================
+PORTAL REVEAL
+========================================= */
+
+function revealPortal(){
+
+    document
+    .querySelector(".portal-orb")
+    .classList.add("portal-awaken");
+
+    document
+    .getElementById("intro-scene")
+    .style.opacity = "0";
+
+    setTimeout(()=>{
+
+        document
+        .getElementById("intro-scene")
+        .style.display = "none";
+
+    },5000);
+
+}
+
+</script>
+
+</body>
+</html>
