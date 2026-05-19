@@ -569,7 +569,108 @@ RESPONSIVE
     }
 
 }
+/* =========================================
+MUSIC BUTTON
+========================================= */
 
+.music-control{
+
+    position:absolute;
+
+    top:50%;
+    left:50%;
+
+    transform:
+    translate(-50%, 290px);
+
+    width:58px;
+    height:58px;
+
+    border-radius:50%;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    background:
+    rgba(255,255,255,0.06);
+
+    backdrop-filter:blur(18px);
+
+    border:
+    1px solid rgba(255,255,255,0.12);
+
+    box-shadow:
+    0 0 24px rgba(180,180,255,0.08),
+    inset 0 0 20px rgba(255,255,255,0.05);
+
+    cursor:pointer;
+
+    transition:0.4s ease;
+
+    z-index:50;
+}
+
+.music-control:hover{
+
+    transform:
+    translate(-50%, 290px)
+    scale(1.08);
+
+    background:
+    rgba(255,255,255,0.10);
+
+    border:
+    1px solid rgba(255,255,255,0.22);
+
+    box-shadow:
+    0 0 40px rgba(180,190,255,0.18);
+}
+
+/* icon */
+
+.music-control span{
+
+    font-size:0.9rem;
+
+    color:
+    rgba(235,235,255,0.92);
+
+    margin-left:2px;
+
+    letter-spacing:1px;
+}
+
+/* glow pulse */
+
+.music-glow{
+
+    position:absolute;
+
+    inset:-8px;
+
+    border-radius:50%;
+
+    border:
+    1px solid rgba(190,190,255,0.08);
+
+    animation:
+    musicPulse 6s ease-in-out infinite;
+}
+
+@keyframes musicPulse{
+
+    0%,100%{
+        opacity:0.3;
+        transform:scale(1);
+    }
+
+    50%{
+        opacity:0.7;
+        transform:scale(1.08);
+    }
+
+}
 </style>
 </head>
 
