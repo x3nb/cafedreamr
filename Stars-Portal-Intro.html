@@ -764,6 +764,59 @@ THEME MUSIC
     <source src="music/Dreamy.mp3" type="audio/mp3">
 
 </audio>
+<script>
 
+const music =
+document.getElementById('theme-music');
+
+const toggle =
+document.getElementById('music-toggle');
+
+const icon =
+document.getElementById('music-icon');
+
+let playing = false;
+
+/* start music after first interaction */
+
+document.body.addEventListener('click', () => {
+
+    if(!playing){
+
+        music.volume = 0.6;
+
+        music.play();
+
+        playing = true;
+
+        icon.innerHTML = "❚❚";
+    }
+
+}, { once:true });
+
+/* manual toggle */
+
+toggle.addEventListener('click', () => {
+
+    if(playing){
+
+        music.pause();
+
+        icon.innerHTML = "▶";
+
+        playing = false;
+
+    } else {
+
+        music.play();
+
+        icon.innerHTML = "❚❚";
+
+        playing = true;
+    }
+
+});
+
+</script>
 </body>
 </html>
