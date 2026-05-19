@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="/.nekoweb-api/static/site.js" defer></script>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+<title>STAR GLASS PORTAL</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    overflow:hidden;
+    background:
+    radial-gradient(circle at top,
+    #23254f 0%,
+    #121326 35%,
+    #070711 70%,
+    #030308 100%);
+
+    height:100vh;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-family:'Inter',sans-serif;
+
+    color:white;
+}
+
+/* =========================================
+TINY STARFIELD
+========================================= */
+
+/* =========================================
+COSMOS ORBIT BACKGROUND
+========================================= */
+
+.cosmos-orbit{
+    position:fixed;
+    inset:0;
+
+    overflow:hidden;
+
+    z-index:0;
+
+    background:
+    radial-gradient(circle at center,
+    #24295a 0%,
+    #121428 35%,
+    #070710 72%,
+    #020204 100%);
+}
+
+/* =========================================
+ORBIT RINGS
+========================================= */
+
+.orbit-layer{
+    position:absolute;
+
+    left:50%;
+    top:50%;
+
+    transform-style:preserve-3d;
+
+    border-radius:50%;
+
+    border:
+    1px solid rgba(180,190,255,0.05);
+
+    box-shadow:
+    0 0 40px rgba(160,180,255,0.04);
+
+    mix-blend-mode:screen;
+}
+
+/* giant orbit */
+
+.orbit-1{
+
+    width:1400px;
+    height:1400px;
+
+    margin-left:-700px;
+    margin-top:-700px;
+
+    animation:
+    rotateOrbit 120s linear infinite;
+}
+
+/* middle orbit */
+
+.orbit-2{
+
+    width:1050px;
+    height:1050px;
+
+    margin-left:-525px;
+    margin-top:-525px;
+
+    border-color:
+    rgba(200,180,255,0.06);
+
+    animation:
+    rotateOrbitReverse 90s linear infinite;
+}
+
+/* inner orbit */
+
+.orbit-3{
+
+    width:760px;
+    height:760px;
+
+    margin-left:-380px;
+    margin-top:-380px;
+
+    border-color:
+    rgba(170,200,255,0.07);
+
+    animation:
+    rotateOrbit 60s linear infinite;
+}
+
+@keyframes rotateOrbit{
+
+    from{
+        transform:rotate(0deg);
+    }
+
+    to{
+        transform:rotate(360deg);
+    }
+
+}
+
+@keyframes rotateOrbitReverse{
+
+    from{
+        transform:rotate(360deg);
+    }
+
+    to{
+        transform:rotate(0deg);
+    }
+
+}
+
+/* =========================================
+MICROSCOPIC STARS
+========================================= */
+
+.tiny-star{
+
+    position:absolute;
+
+    width:2px;
+    height:2px;
+
+    border-radius:50%;
+
+    background:
+    radial-gradient(circle,
+    rgba(230,230,255,0.95),
+    rgba(170,190,255,0.6));
+
+    box-shadow:
+    0 0 8px rgba(180,180,255,0.5);
+
+    opacity:0.7;
+}
+
+/* STAR POSITIONS */
+
+.s1{
+    top:18%;
+    left:24%;
+
+    animation:
+    starPulse 4s ease-in-out infinite;
+}
+
+.s2{
+    top:30%;
+    right:20%;
+
+    animation:
+    starPulse 7s ease-in-out infinite;
+}
+
+.s3{
+    bottom:20%;
+    left:18%;
+
+    animation:
+    starPulse 5s ease-in-out infinite;
+}
+
+.s4{
+    bottom:26%;
+    right:24%;
+
+    animation:
+    starPulse 6s ease-in-out infinite;
+}
+
+.s5{
+    top:50%;
+    left:10%;
+
+    animation:
+    starPulse 8s ease-in-out infinite;
+}
+
+.s6{
+    top:62%;
+    right:12%;
+
+    animation:
+    starPulse 5.5s ease-in-out infinite;
+}
+
+@keyframes starPulse{
+
+    0%,100%{
+        opacity:0.3;
+        transform:scale(1);
+    }
+
+    50%{
+        opacity:1;
+        transform:scale(1.8);
+    }
+
+}
+/* =========================================
+MAIN GLASS ORB
+========================================= */
+
+.portal-orb{
+
+    position:relative;
+
+    width:820px;
+    height:820px;
+
+    border-radius:50%;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    background:
+    radial-gradient(circle at top left,
+    rgba(255,255,255,0.16),
+    rgba(255,255,255,0.04) 25%,
+    rgba(255,255,255,0.02) 40%,
+    rgba(120,130,255,0.08) 70%,
+    rgba(255,255,255,0.03) 100%);
+
+    backdrop-filter:blur(28px);
+
+    border:
+    1px solid rgba(255,255,255,0.14);
+
+    box-shadow:
+    inset 0 0 80px rgba(255,255,255,0.05),
+    0 0 120px rgba(140,150,255,0.12),
+    0 0 240px rgba(120,100,255,0.08);
+
+    overflow:hidden;
+
+    z-index:2;
+}
+
+/* soft outer glow */
+
+.portal-orb::before{
+    content:"";
+    position:absolute;
+
+    inset:-80px;
+
+    border-radius:50%;
+
+    background:
+    radial-gradient(circle,
+    rgba(180,170,255,0.10),
+    rgba(120,160,255,0.06),
+    transparent 70%);
+
+    filter:blur(90px);
+
+    z-index:-1;
+}
+
+/* glass reflections */
+
+.portal-orb::after{
+    content:"";
+
+    position:absolute;
+
+    top:8%;
+    left:12%;
+
+    width:38%;
+    height:18%;
+
+    border-radius:50%;
+
+    background:
+    linear-gradient(
+    to bottom,
+    rgba(255,255,255,0.22),
+    rgba(255,255,255,0.02));
+
+    transform:rotate(-14deg);
+
+    filter:blur(8px);
+
+    opacity:0.55;
+}
+
+/* =========================================
+INNER ATMOSPHERE
+========================================= */
+
+.orb-atmosphere{
+    position:absolute;
+    inset:0;
+
+    border-radius:50%;
+
+    background:
+    radial-gradient(circle at center,
+    rgba(255,255,255,0.02),
+    rgba(160,180,255,0.04),
+    rgba(120,90,255,0.08));
+
+    mix-blend-mode:screen;
+
+    animation:orbPulse 8s ease-in-out infinite;
+}
+
+@keyframes orbPulse{
+
+    0%,100%{
+        opacity:0.75;
+        transform:scale(1);
+    }
+
+    50%{
+        opacity:1;
+        transform:scale(1.015);
+    }
+
+}
+
+/* =========================================
+STAR VIDEO CENTER
+========================================= */
+
+.star-core{
+
+    position:relative;
+
+    width:430px;
+    height:430px;
+
+    border-radius:50%;
+
+    overflow:hidden;
+
+    z-index:10;
+
+    border:
+    1px solid rgba(255,255,255,0.16);
+
+    box-shadow:
+    0 0 50px rgba(170,180,255,0.12),
+    inset 0 0 40px rgba(255,255,255,0.06);
+
+    backdrop-filter:blur(12px);
+}
+
+.star-video{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+
+    filter:
+    saturate(1.03)
+    contrast(1.02)
+    brightness(1.02);
+}
+
+/* =========================================
+SOFT FLOATING NAVIGATION
+========================================= */
+
+.orb-nav{
+    position:absolute;
+
+    width:100%;
+    height:100%;
+
+    pointer-events:none;
+}
+
+/* nav links */
+
+.nav-link{
+    position:absolute;
+
+    padding:10px 18px;
+
+    border-radius:999px;
+
+    background:
+    rgba(255,255,255,0.05);
+
+    backdrop-filter:blur(18px);
+
+    border:
+    1px solid rgba(255,255,255,0.10);
+
+    color:
+    rgba(230,235,255,0.82);
+
+    font-size:0.72rem;
+
+    letter-spacing:2px;
+
+    text-transform:uppercase;
+
+    text-decoration:none;
+
+    transition:0.4s ease;
+
+    pointer-events:auto;
+}
+
+.nav-link:hover{
+
+    background:
+    rgba(255,255,255,0.10);
+
+    border:
+    1px solid rgba(255,255,255,0.18);
+
+    transform:
+    scale(1.05);
+
+    box-shadow:
+    0 0 24px rgba(180,180,255,0.16);
+}
+
+/* positions */
+
+.nav-1{
+    top:18%;
+    left:20%;
+}
+
+.nav-2{
+    top:22%;
+    right:18%;
+}
+
+.nav-3{
+    bottom:22%;
+    left:18%;
+}
+
+.nav-4{
+    bottom:18%;
+    right:20%;
+}
+
+/* =========================================
+SUBTLE FLOATING PARTICLES
+========================================= */
+
+.particle{
+    position:absolute;
+
+    width:2px;
+    height:2px;
+
+    border-radius:50%;
+
+    background:
+    rgba(220,220,255,0.8);
+
+    opacity:0.5;
+
+    animation:floatParticle linear infinite;
+}
+
+.p1{
+    top:20%;
+    left:30%;
+    animation-duration:12s;
+}
+
+.p2{
+    top:70%;
+    left:60%;
+    animation-duration:16s;
+}
+
+.p3{
+    top:40%;
+    left:78%;
+    animation-duration:14s;
+}
+
+@keyframes floatParticle{
+
+    0%{
+        transform:translateY(0px);
+        opacity:0;
+    }
+
+    20%{
+        opacity:0.5;
+    }
+
+    100%{
+        transform:translateY(-40px);
+        opacity:0;
+    }
+
+}
+
+/* =========================================
+RESPONSIVE
+========================================= */
+
+@media(max-width:950px){
+
+    .portal-orb{
+        width:92vw;
+        height:92vw;
+    }
+
+    .star-core{
+        width:48vw;
+        height:48vw;
+    }
+
+}
+
+@media(max-width:700px){
+
+    .nav-link{
+        font-size:0.58rem;
+        padding:8px 12px;
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- =========================================
+REPLACE THE OLD STARFIELD SECTION
+WITH THIS COSMIC ORBIT VERSION
+========================================= -->
+
+<div class="cosmos-orbit">
+
+    <div class="orbit-layer orbit-1"></div>
+    <div class="orbit-layer orbit-2"></div>
+    <div class="orbit-layer orbit-3"></div>
+
+    <!-- tiny drifting stars -->
+
+    <div class="tiny-star s1"></div>
+    <div class="tiny-star s2"></div>
+    <div class="tiny-star s3"></div>
+    <div class="tiny-star s4"></div>
+    <div class="tiny-star s5"></div>
+    <div class="tiny-star s6"></div>
+
+</div>
+
+<div class="portal-orb">
+
+    <div class="orb-atmosphere"></div>
+
+    <!-- FLOATING NAV -->
+    <div class="orb-nav">
+
+    <a href="#" class="nav-link nav-1">About</a>
+
+    <a href="#" class="nav-link nav-2">Guidelines</a>
+
+    <a href="#" class="nav-link nav-3">Guild</a>
+
+    <a href="#" class="nav-link nav-4">Desktop</a>
+
+</div>
+
+   
+    <!-- FLOATING PARTICLES -->
+
+    <div class="particle p1"></div>
+    <div class="particle p2"></div>
+    <div class="particle p3"></div>
+
+    <!-- STAR VIDEO -->
+
+    <div class="star-core">
+
+        <video
+            class="star-video"
+            autoplay
+            muted
+            loop
+            playsinline>
+
+            <!-- REPLACE WITH STAR'S VIDEO -->
+            <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+
+        </video>
+
+    </div>
+
+</div>
+<!-- =========================================
+THEME MUSIC
+========================================= -->
+
+<audio autoplay loop id="theme-music">
+
+    <!-- REPLACE WITH YOUR OWN MUSIC FILE -->
+
+    <source src="theme.mp3" type="audio/mp3">
+
+</audio>
+
+</body>
+</html>
