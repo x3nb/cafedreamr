@@ -193,6 +193,63 @@ DIALOGUE
 }
 
 /* =========================================
+SKIP BUTTON
+========================================= */
+
+#skip-intro{
+
+    position:absolute;
+
+    bottom:10%;
+
+    padding:12px 22px;
+
+    border-radius:999px;
+
+    border:
+    1px solid rgba(255,255,255,0.10);
+
+    background:
+    rgba(255,255,255,0.04);
+
+    backdrop-filter:blur(12px);
+
+    color:
+    rgba(255,255,255,0.6);
+
+    font-size:0.7rem;
+
+    letter-spacing:3px;
+
+    text-transform:uppercase;
+
+    cursor:pointer;
+
+    opacity:0;
+
+    transition:
+    opacity 3s ease,
+    background 0.4s ease,
+    transform 0.4s ease;
+
+    z-index:50;
+}
+
+#skip-intro:hover{
+
+    background:
+    rgba(255,255,255,0.10);
+
+    transform:scale(1.04);
+
+    color:white;
+}
+
+.skip-visible{
+    opacity:1 !important;
+}
+
+/* =========================================
 COSMOS ORBIT BACKGROUND
 ========================================= */
 
@@ -237,8 +294,6 @@ ORBIT RINGS
     mix-blend-mode:screen;
 }
 
-/* giant orbit */
-
 .orbit-1{
 
     width:1400px;
@@ -250,8 +305,6 @@ ORBIT RINGS
     animation:
     rotateOrbit 140s linear infinite;
 }
-
-/* middle orbit */
 
 .orbit-2{
 
@@ -267,8 +320,6 @@ ORBIT RINGS
     animation:
     rotateOrbitReverse 110s linear infinite;
 }
-
-/* inner orbit */
 
 .orbit-3{
 
@@ -438,8 +489,6 @@ PORTAL ORB
     transform:scale(1);
 }
 
-/* soft outer glow */
-
 .portal-orb::before{
 
     content:"";
@@ -460,8 +509,6 @@ PORTAL ORB
 
     z-index:-1;
 }
-
-/* glass reflection */
 
 .portal-orb::after{
 
@@ -648,7 +695,7 @@ NAVIGATION
 }
 
 /* =========================================
-FLOATING PARTICLES
+PARTICLES
 ========================================= */
 
 .particle{
@@ -751,6 +798,10 @@ INTRO SCENE
 
     <div id="dialogue"></div>
 
+    <button id="skip-intro">
+        i've been here before
+    </button>
+
 </div>
 
 <!-- =========================================
@@ -780,8 +831,6 @@ PORTAL ORB
 
     <div class="orb-atmosphere"></div>
 
-    <!-- NAVIGATION -->
-
     <div class="orb-nav">
 
         <a href="#" class="nav-link nav-1">About</a>
@@ -794,13 +843,9 @@ PORTAL ORB
 
     </div>
 
-    <!-- FLOATING PARTICLES -->
-
     <div class="particle p1"></div>
     <div class="particle p2"></div>
     <div class="particle p3"></div>
-
-    <!-- VIDEO -->
 
     <div class="star-core">
 
@@ -812,7 +857,7 @@ PORTAL ORB
             playsinline>
 
             <source
-            src="StarSipsCoffeezooms.mp4"
+            src="https://www.w3schools.com/html/mov_bbb.mp4"
             type="video/mp4">
 
         </video>
@@ -827,8 +872,6 @@ AMBIENT AUDIO
 
 <audio autoplay loop id="theme-music">
 
-    <!-- replace with your own -->
-
     <source src="theme.mp3" type="audio/mp3">
 
 </audio>
@@ -838,8 +881,6 @@ BREATHING AUDIO
 ========================================= -->
 
 <audio id="breathing-sound">
-
-    <!-- replace with subtle breathing -->
 
     <source src="breathing.mp3" type="audio/mp3">
 
@@ -852,10 +893,23 @@ SCRIPT
 <script>
 
 /* =========================================
-DIALOGUE
+ELEMENTS
 ========================================= */
 
 const dialogue = document.getElementById("dialogue");
+const skipButton = document.getElementById("skip-intro");
+const introScene = document.getElementById("intro-scene");
+
+/* =========================================
+RETURNING VISITOR MEMORY
+========================================= */
+
+const returningVisitor =
+localStorage.getItem("visitedBefore");
+
+/* =========================================
+DIALOGUE LINES
+========================================= */
 
 const lines = [
 
@@ -878,6 +932,11 @@ const lines = [
 ];
 
 let index = 0;
+let dialogueInterval;
+
+/* =========================================
+SHOW DIALOGUE
+========================================= */
 
 function showLine(){
 
@@ -895,7 +954,7 @@ function showLine(){
 
         dialogue.style.opacity = 1;
 
-        /* trigger breathing */
+        /* breathing trigger */
 
         if(lines[index] === "someone's breathing."){
 
@@ -912,36 +971,79 @@ function showLine(){
 }
 
 /* =========================================
-START SEQUENCE
-========================================= */
-
-showLine();
-
-setInterval(showLine, 5000);
-
-/* =========================================
-PORTAL REVEAL
+REVEAL PORTAL
 ========================================= */
 
 function revealPortal(){
+
+    clearInterval(dialogueInterval);
 
     document
     .querySelector(".portal-orb")
     .classList.add("portal-awaken");
 
-    document
-    .getElementById("intro-scene")
-    .style.opacity = "0";
+    introScene.style.opacity = "0";
 
     setTimeout(()=>{
 
-        document
-        .getElementById("intro-scene")
-        .style.display = "none";
+        introScene.style.display = "none";
 
     },5000);
 
 }
+
+/* =========================================
+SKIP BUTTON
+========================================= */
+
+skipButton.addEventListener("click", ()=>{
+
+    revealPortal();
+
+});
+
+/* =========================================
+FIRST VISIT
+========================================= */
+
+if(!returningVisitor){
+
+    showLine();
+
+    dialogueInterval =
+    setInterval(showLine, 5000);
+
+    setTimeout(()=>{
+
+        skipButton.classList.add("skip-visible");
+
+    },7000);
+
+}
+
+/* =========================================
+RETURNING VISITOR
+========================================= */
+
+else{
+
+    skipButton.classList.add("skip-visible");
+
+    dialogue.innerText =
+    "welcome back.";
+
+    dialogue.style.opacity = 1;
+
+}
+
+/* =========================================
+SAVE VISIT
+========================================= */
+
+localStorage.setItem(
+    "visitedBefore",
+    true
+);
 
 </script>
 
