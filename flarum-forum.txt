@@ -1,0 +1,98 @@
+/* ============================================================
+   1. CORE ATMOSPHERE & FONTS
+   ============================================================ */
+@import url('https://fonts.googleapis.com/css2?family=Vampiro+One&family=Klee+One:wght@400;600&display=swap');
+
+html, body {
+  height: 100%;
+  margin: 0;
+  background: linear-gradient(180deg, #301934 0%, #000000 100%) no-repeat fixed;
+  background-attachment: fixed;
+  color: #D1B3FF; /* Powder Purple */
+  font-family: 'Klee One', sans-serif;
+}
+
+/* ============================================================
+   2. NEON PURPLE TITLES
+   ============================================================ */
+h1, h2, h3, h4, 
+.DiscussionListItem-title, 
+.Hero-title,
+.App-titleControl,
+.DiscussionHero-title {
+  font-family: 'Vampiro One', cursive !important;
+  color: #bc13fe !important; 
+  text-shadow: 0 0 10px rgba(188, 19, 254, 0.7);
+  letter-spacing: 2px;
+}
+
+/* ============================================================
+   3. CERULEAN SYSTEM (Replaces Red/Warning Boxes)
+   ============================================================ */
+.Hero, .Alert, .Alert--warning, .Alert--error, .Announcement {
+  background: rgba(0, 123, 167, 0.15) !important;
+  border: 2px solid #007ba7 !important;
+  color: #007ba7 !important;
+  box-shadow: 0 0 15px rgba(0, 123, 167, 0.4);
+}
+
+.Hero-title, .Hero-subtitle, .Alert-content {
+  color: #007ba7 !important;
+}
+
+.Button--danger, .Alert-dismiss {
+  color: #007ba7 !important;
+  border-color: #007ba7 !important;
+  background: transparent !important;
+}
+
+/* ============================================================
+   4. DISCUSSION CARDS (Tron Trails)
+   ============================================================ */
+.DiscussionListItem {
+  background: rgba(0, 0, 0, 0.4) !important;
+  border-left: 3px solid #bc13fe !important; 
+  margin-bottom: 8px !important;
+  transition: transform 0.3s ease;
+}
+
+.DiscussionListItem:hover {
+  border-left: 3px solid #00ffff !important; 
+  box-shadow: -5px 0 20px rgba(0, 255, 255, 0.3);
+  transform: translateX(5px);
+}
+
+/* ============================================================
+   5. REPLY BOX & UI
+   ============================================================ */
+.Composer {
+  background: rgba(0, 0, 0, 0.95) !important;
+  border-top: 2px solid #00ffff !important;
+}
+
+.FormControl:focus {
+  background: rgba(0, 255, 255, 0.05) !important;
+  border-color: #00ffff !important;
+  color: #00ffff !important;
+}
+
+.App-header {
+  background: rgba(0, 0, 0, 0.8) !important;
+  border-bottom: 1px solid #bc13fe !important;
+}
+
+/* ============================================================
+   6. POST TEXT
+   ============================================================ */
+.Post-body {
+  font-size: 18px !important;
+  line-height: 1.7;
+  color: #D1B3FF !important; 
+}
+
+.Button--primary {
+  background: transparent !important;
+  border: 1px solid #bc13fe !important;
+  color: #bc13fe !important;
+  font-family: 'Vampiro One' !important;
+}
