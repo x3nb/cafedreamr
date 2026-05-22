@@ -1,0 +1,222 @@
+/* --- Header Fix: Aligning Stats & Navigation --- */
+header#header {
+  margin-top: 0; /* Ensures no gap at the top */
+}
+
+.grid-status-bar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  background: #000;
+  border-bottom: 1px solid #bc13fe;
+  padding: 8px 0;
+  font-family: monospace;
+  font-size: 11px;
+  position: relative;
+  z-index: 10; /* Keeps it above other elements */
+}
+
+/* Fix for the white space/misalignment of the User Navigation */
+.App-navigation {
+  margin-top: 0 !important;
+}
+
+.Header-controls {
+  padding-right: 15px; /* Gives the bell and search icon some breathing room */
+}
+
+/* Ensure icons (Bell, Search) stay Neon */
+.Header-controls .Button--link {
+  color: #00ffff !important;
+  text-shadow: 0 0 5px #00ffff;
+}
+
+/* ============================================================
+   1. CORE FONTS & ATMOSPHERE
+   ============================================================ */
+@import url('https://fonts.googleapis.com/css2?family=Vampiro+One&family=Klee+One:wght@400;600&display=swap');
+
+html, body {
+  height: 100%;
+  margin: 0;
+  background: linear-gradient(180deg, #301934 0%, #000000 100%) no-repeat fixed !important;
+  color: #D1B3FF; /* Powder Purple */
+  font-family: 'Klee One', sans-serif;
+}
+
+/* ============================================================
+   2. GLOBAL NEON TITLES
+   ============================================================ */
+h1, h2, h3, h4, 
+.DiscussionListItem-title, 
+.App-titleControl,
+.DiscussionHero-title {
+  font-family: 'Vampiro One', cursive !important;
+  color: #bc13fe !important; 
+  text-shadow: 0 0 10px rgba(188, 19, 254, 0.7);
+  letter-spacing: 2px;
+}
+
+/* ============================================================
+   3. THE WELCOME BOX & HERO
+   ============================================================ */
+.Hero {
+  background: rgba(20, 10, 25, 0.8) !important; 
+  border-bottom: 2px solid #bc13fe !important;
+  text-align: center;
+}
+
+.Hero-subtitle {
+  color: #D1B3FF !important;
+  font-family: 'Klee One', sans-serif !important;
+}
+
+/* ============================================================
+   4. MEMBER WINDOWS (DIRECTORY CARDS)
+   ============================================================ */
+.UserCard {
+  background: rgba(48, 25, 52, 0.7) !important;
+  border: 1px solid #bc13fe !important;
+  box-shadow: 0 0 15px rgba(188, 19, 254, 0.3);
+  backdrop-filter: blur(10px);
+}
+
+.UserCard:hover {
+  border-color: #00ffff !important;
+  box-shadow: 0 0 25px rgba(0, 255, 255, 0.5);
+}
+
+/* ============================================================
+   5. LORE ARCHIVE: THE DECRYPTION EFFECT
+   ============================================================ */
+/* This targets the title ONLY when inside the Lore tag */
+.TagHero--lore .Hero-title {
+  display: inline-block; /* Required for typing animation */
+  overflow: hidden;
+  white-space: nowrap;
+  border-right: 3px solid #00ffff; /* The Cursor */
+  width: 0; /* Starting state */
+  animation: 
+    typing 2.5s steps(30, end) forwards,
+    blink-caret .75s step-end infinite;
+}
+
+@keyframes typing {
+  from { width: 0 }
+  to { width: 100% }
+}
+
+@keyframes blink-caret {
+  from, to { border-color: transparent }
+  50% { border-color: #00ffff }
+}
+
+/* ============================================================
+   6. CERULEAN SYSTEM (Alerts & Buttons)
+   ============================================================ */
+.Alert, .Alert--warning, .Alert--error {
+  background: rgba(0, 123, 167, 0.2) !important;
+  border: 1px solid #007ba7 !important;
+  color: #007ba7 !important;
+}
+
+.Button--primary {
+  background: transparent !important;
+  border: 1px solid #bc13fe !important;
+  color: #bc13fe !important;
+}
+
+/* ============================================================
+   7. DISCUSSION LIST & POSTS
+   ============================================================ */
+.DiscussionListItem {
+  background: rgba(0, 0, 0, 0.4) !important;
+  border-left: 3px solid #bc13fe !important;
+  transition: all 0.3s ease;
+}
+
+.DiscussionListItem:hover {
+  border-left: 3px solid #00ffff !important;
+  transform: translateX(5px);
+}
+
+.Post-body {
+  font-size: 18px !important;
+  color: #D1B3FF !important;
+}
+
+
+/* --- The Nuclear "Typing" Fix --- */
+.Hero--tag.TagHero--lore .Hero-title {
+  display: block !important;
+  width: 0;
+  margin: 0 auto !important;
+  white-space: nowrap;
+  overflow: hidden;
+  border-right: 3px solid #00ffff;
+  animation: typing-effect 3s steps(30, end) forwards, blink-cursor .75s step-end infinite;
+}
+
+@keyframes typing-effect {
+  from { width: 0; }
+  to { width: 100%; }
+}
+
+@keyframes blink-cursor {
+  from, to { border-color: transparent; }
+  50% { border-color: #00ffff; }
+}
+
+/* --- Eliminating the "White Space" and Header Sync --- */
+
+.App-header, .Header-title, .Header-controls, .App-navigation {
+  background: transparent !important; /* Forces the background gradient to show through */
+  box-shadow: none !important;        /* Removes any shadow lines */
+  border: none !important;            /* Removes default borders */
+}
+
+/* Ensure the main navigation bar is also dark */
+.App-navigation {
+  background: #000000 !important; 
+  border-bottom: 1px solid #bc13fe !important; /* Keeps your purple line */
+}
+
+/* Force icons to be Cyan instead of Grey/White */
+.Header-controls .Button--link, 
+.Header-controls .Button--flat,
+.NotificationsDropdown-action {
+  color: #00ffff !important;
+  text-shadow: 0 0 5px #00ffff;
+}
+
+/* Fix for the Search Bar input area potentially being white */
+.Search-input input {
+  background: rgba(48, 25, 52, 0.5) !important;
+  border: 1px solid #bc13fe !important;
+  color: #D1B3FF !important;
+}
+
+/* --- Generalized Archive Decryption --- */
+
+/* This will target the title of the tag you are currently viewing */
+.Hero-title {
+  display: inline-block !important;
+  white-space: nowrap;
+  overflow: hidden;
+  border-right: 3px solid #00ffff; /* The Cursor */
+  width: 0;
+  animation: 
+    grid-type 3s steps(30, end) forwards,
+    grid-blink .75s step-end infinite;
+}
+
+@keyframes grid-type {
+  from { width: 0; }
+  to { width: 100%; }
+}
+
+@keyframes grid-blink {
+  from, to { border-color: transparent; }
+  50% { border-color: #00ffff; }
+}
