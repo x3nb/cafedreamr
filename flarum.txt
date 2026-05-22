@@ -1,0 +1,106 @@
+/* ============================================================
+   1. IMPORTS & GLOBAL ATMOSPHERE
+   ============================================================ */
+@import url('https://fonts.googleapis.com/css2?family=Vampiro+One&family=Klee+One:wght@400;600&display=swap');
+
+html, body {
+  height: 100%;
+  margin: 0;
+  // The Ombre Effect: Deep Purple (#301934) to Black
+  background: linear-gradient(180deg, #301934 0%, #000000 100%) no-repeat fixed;
+  background-attachment: fixed;
+  color: #6495ED; 
+  font-family: 'Klee One', sans-serif;
+  font-size: 108%; 
+}
+
+/* ============================================================
+   2. THE NEON PURPLE TITLES (Vampiro One)
+   ============================================================ */
+h1, h2, h3, h4, 
+.DiscussionListItem-title, 
+.Hero-title,
+.App-titleControl,
+.DiscussionHero-title {
+  font-family: 'Vampiro One', cursive !important;
+  color: #bc13fe !important; 
+  text-shadow: 0 0 10px rgba(188, 19, 254, 0.7), 0 0 20px rgba(188, 19, 254, 0.4);
+  letter-spacing: 2px;
+}
+
+/* ============================================================
+   3. THE CERULEAN SYSTEM (Announcements & Alerts)
+   ============================================================ */
+// This replaces all Red/Warning boxes with Cerulean Blue
+.Hero,
+.Alert,
+.Alert--warning,
+.Alert--error,
+.Alert--discussion,
+.Announcement {
+  background: rgba(0, 123, 167, 0.15) !important;
+  border: 2px solid #007ba7 !important;
+  color: #007ba7 !important;
+  box-shadow: 0 0 15px rgba(0, 123, 167, 0.4), inset 0 0 15px rgba(0, 123, 167, 0.1) !important;
+  border-radius: 4px;
+}
+
+.Hero-title, .Hero-subtitle, .Alert-content {
+  color: #007ba7 !important;
+  text-shadow: 0 0 8px rgba(0, 123, 167, 0.8) !important;
+}
+
+/* Cerulean Buttons & Dismiss Icons */
+.Alert-controls .Button, 
+.Alert-dismiss, 
+.Button--danger {
+  color: #007ba7 !important;
+  border-color: #007ba7 !important;
+  background: transparent !important;
+  
+  &:hover {
+    background: #007ba7 !important;
+    color: #ffffff !important;
+  }
+}
+
+/* Announcements Tag in Sidebar */
+.TagNavItem.item-tag-announcements a {
+  color: #007ba7 !important;
+  text-shadow: 0 0 8px rgba(0, 123, 167, 0.5);
+}
+
+/* ============================================================
+   4. DISCUSSION LIST (Tron Light-Trails)
+   ============================================================ */
+.DiscussionListItem {
+  background: rgba(0, 0, 0, 0.4) !important;
+  border-left: 3px solid #bc13fe !important; /* Default Purple Trail */
+  margin-bottom: 8px !important;
+  transition: all 0.3s ease;
+}
+
+.DiscussionListItem:hover {
+  border-left: 3px solid #00ffff !important; /* Cyan Hover Trail */
+  box-shadow: -5px 0 20px rgba(0, 255, 255, 0.3);
+  transform: translateX(5px);
+}
+
+/* ============================================================
+   5. THE "CONSOLE" REPLY BOX
+   ============================================================ */
+.Composer {
+  background: rgba(0, 0, 0, 0.95) !important;
+  border-top: 2px solid #00ffff !important;
+  box-shadow: 0 -10px 30px rgba(0, 255, 255, 0.2);
+}
+
+.FormControl:focus {
+  background: rgba(0, 255, 255, 0.05) !important;
+  border-color: #00ffff !important;
+  box-shadow: 0 0 10px rgba(0, 255, 255, 0.3) !important;
+  color: #00ffff !important;
+}
+
+/* ============================================================
+   6. POSTS
