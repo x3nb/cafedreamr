@@ -65,3 +65,27 @@
     border-radius: 10px;
     width: 60%;
 }
+document.getElementById('send-whisper').addEventListener('click', function() {
+    const input = document.getElementById('whisper-input');
+    const text = input.value;
+    
+    if (text.trim() !== "") {
+        createLeaf(text);
+        input.value = "";
+    }
+});
+
+function createLeaf(text) {
+    const container = document.getElementById('bubble-container');
+    const leaf = document.createElement('div');
+    leaf.className = 'whisper-leaf';
+    leaf.innerText = text;
+    
+    // Randomize starting position so they are spread out
+    leaf.style.left = Math.random() * 80 + 10 + "%";
+    
+    container.appendChild(leaf);
+    
+    // Remove the element after animation to keep the site fast
+    setTimeout(() => { leaf.remove(); }, 15000);
+}
