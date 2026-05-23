@@ -1,0 +1,165 @@
+/* ============================================================
+   1. GOTHIC-GRID FONTS & GLOBAL ATMOSPHERE
+   ============================================================ */
+@import url('https://fonts.googleapis.com/css2?family=UnifrakturCook:wght@700&family=Almendra:ital,wght@0,400;0,700;1,400&display=swap');
+
+html, body {
+  background: linear-gradient(180deg, #301934 0%, #000000 100%) no-repeat fixed !important;
+  color: #D1B3FF !important;
+  font-family: 'Almendra', serif !important;
+  font-size: 18px;
+}
+
+/* Force the App background to remain dark on all pages */
+#app, .App, .App-content {
+    background-color: transparent !important;
+}
+
+/* ============================================================
+   2. NEON BLACKLETTER TITLES
+   ============================================================ */
+h1, h2, h3, 
+.DiscussionListItem-title, 
+.Hero-title, 
+.UserDirectory-title,
+.WelcomeBox-title {
+  font-family: 'UnifrakturCook', cursive !important;
+  color: #bc13fe !important; 
+  text-shadow: 2px 2px 10px rgba(188, 19, 254, 0.8);
+  letter-spacing: 1px;
+  font-weight: 700;
+  text-transform: none;
+}
+
+/* ============================================================
+   3. HEADER & SYSTEM STATUS BAR
+   ============================================================ */
+.App-header, .Header-title, .Header-controls, .App-navigation {
+  background: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+.App-navigation {
+  background: #000000 !important;
+  border-bottom: 1px solid #bc13fe !important;
+}
+
+.grid-status-bar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  background: #000;
+  padding: 8px 0;
+  font-family: monospace;
+  font-size: 11px;
+}
+
+.status-window {
+  border: 1px solid rgba(188, 19, 254, 0.4);
+  padding: 4px 12px;
+  background: rgba(48, 25, 52, 0.6);
+  color: #bc13fe;
+}
+
+/* Cyan Glowing Controls (Bell, Search) */
+.Header-controls .Button--link, 
+.Header-controls .Button--flat {
+  color: #00ffff !important;
+  text-shadow: 0 0 8px #00ffff;
+}
+
+/* ============================================================
+   4. DECRYPTING LORE ARCHIVES (Typing Effect)
+   ============================================================ */
+.Hero-title {
+  display: inline-block !important;
+  white-space: nowrap;
+  overflow: hidden;
+  border-right: 3px solid #00ffff;
+  width: 0;
+  animation: 
+    grid-type 3.5s steps(40, end) forwards,
+    grid-blink .75s step-end infinite;
+}
+
+@keyframes grid-type {
+  from { width: 0; }
+  to { width: 100%; }
+}
+
+@keyframes grid-blink {
+  from, to { border-color: transparent; }
+  50% { border-color: #00ffff; }
+}
+
+/* ============================================================
+   5. DIRECTORY & USER CARDS (The Void Protocol)
+   ============================================================ */
+body.template-user-directory, 
+.UserDirectoryPage, 
+.UserDirectoryList {
+    background: transparent !important;
+}
+
+.UserDirectoryList-content {
+    background: rgba(20, 10, 25, 0.8) !important;
+    border: 1px solid #bc13fe !important;
+    border-radius: 10px;
+    padding: 20px;
+}
+
+.UserCard {
+  background: rgba(48, 25, 52, 0.7) !important;
+  border: 1px solid #bc13fe !important;
+  box-shadow: 0 0 15px rgba(188, 19, 254, 0.3);
+  backdrop-filter: blur(10px);
+  transition: all 0.4s ease;
+}
+
+.UserCard:hover {
+  border-color: #00ffff !important;
+  box-shadow: 0 0 25px rgba(0, 255, 255, 0.5);
+  transform: scale(1.02);
+}
+
+/* ============================================================
+   6. DISCUSSION LIST & ALERTS
+   ============================================================ */
+.DiscussionListItem {
+  background: rgba(0, 0, 0, 0.3) !important;
+  border-left: 3px solid #bc13fe !important;
+  margin-bottom: 5px;
+}
+
+.DiscussionListItem:hover {
+  border-left: 3px solid #00ffff !important;
+}
+
+/* The In-Stream Alert Box */
+.Alert.Alert--discussion {
+  background: rgba(0, 123, 167, 0.1) !important;
+  border: 1px solid #00ffff !important;
+  color: #00ffff !important;
+  font-family: monospace;
+  text-align: center;
+  margin: 20px 0;
+  box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
+}
+
+/* ============================================================
+   7. GUEST WELCOME BOX PULSE
+   ============================================================ */
+.fof-welcome-box-guest {
+  animation: pulse-border 4s infinite;
+  border: 1px solid #bc13fe;
+  background-size: cover !important;
+  background-position: center !important;
+}
+
+@keyframes pulse-border {
+  0% { box-shadow: 0 0 5px rgba(188, 19, 254, 0.4); }
+  50% { box-shadow: 0 0 20px rgba(0, 255, 255, 0.6); border-color: #00ffff; }
+  100% { box-shadow: 0 0 5px rgba(188, 19, 254, 0.4); }
+}
