@@ -1,0 +1,146 @@
+/* ============================================================
+   1. GLOBAL TYPOGRAPHY: THE SHADOW SCHOLAR
+   ============================================================ */
+@import url('https://fonts.googleapis.com/css2?family=Almendra:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
+html, body {
+  background: linear-gradient(180deg, #301934 0%, #000000 100%) no-repeat fixed !important;
+  color: #D1B3FF !important;
+  font-family: 'Almendra', serif !important;
+  font-size: 18px;
+  line-height: 1.6;
+}
+
+/* Force the App background to remain dark */
+#app, .App, .App-content {
+    background-color: transparent !important;
+}
+
+/* ============================================================
+   2. REFINED TITLES (No More All-Caps)
+   ============================================================ */
+h1, h2, h3, 
+.DiscussionListItem-title, 
+.Hero-title, 
+.UserDirectory-title,
+.WelcomeBox-title,
+.Button {
+  font-family: 'Almendra', serif !important;
+  font-weight: 700 !important;
+  color: #bc13fe !important; 
+  text-shadow: 0 0 8px rgba(188, 19, 254, 0.5);
+  text-transform: none !important; /* Kills the All-Caps */
+  letter-spacing: 0.5px;
+}
+
+/* Make thread titles slightly larger and more "Glowy" */
+.DiscussionListItem-title {
+  font-size: 1.2em;
+}
+
+/* ============================================================
+   3. HEADER & SYSTEM STATUS BAR
+   ============================================================ */
+.App-header, .Header-title, .Header-controls, .App-navigation {
+  background: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+.App-navigation {
+  background: #000000 !important;
+  border-bottom: 1px solid #bc13fe !important;
+}
+
+.grid-status-bar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  background: #000;
+  padding: 8px 0;
+  font-family: monospace; /* Kept monospace for the "System" feel */
+  font-size: 11px;
+}
+
+.status-window {
+  border: 1px solid rgba(188, 19, 254, 0.4);
+  padding: 4px 12px;
+  background: rgba(48, 25, 52, 0.6);
+  color: #bc13fe;
+}
+
+.Header-controls .Button--link, 
+.Header-controls .Button--flat {
+  color: #00ffff !important;
+  text-shadow: 0 0 8px #00ffff;
+}
+
+/* ============================================================
+   4. DECRYPTING LORE ARCHIVES (Almendra Typing)
+   ============================================================ */
+.Hero-title {
+  display: inline-block !important;
+  white-space: nowrap;
+  overflow: hidden;
+  border-right: 3px solid #00ffff;
+  width: 0;
+  animation: 
+    grid-type 3s steps(35, end) forwards,
+    grid-blink .75s step-end infinite;
+}
+
+@keyframes grid-type {
+  from { width: 0; }
+  to { width: 100%; }
+}
+
+@keyframes grid-blink {
+  from, to { border-color: transparent; }
+  50% { border-color: #00ffff; }
+}
+
+/* ============================================================
+   5. DIRECTORY & USER CARDS
+   ============================================================ */
+body.template-user-directory, 
+.UserDirectoryPage, 
+.UserDirectoryList {
+    background: transparent !important;
+}
+
+.UserDirectoryList-content {
+    background: rgba(20, 10, 25, 0.8) !important;
+    border: 1px solid #bc13fe !important;
+    border-radius: 10px;
+    padding: 20px;
+}
+
+.UserCard {
+  background: rgba(48, 25, 52, 0.7) !important;
+  border: 1px solid #bc13fe !important;
+  box-shadow: 0 0 15px rgba(188, 19, 254, 0.3);
+  backdrop-filter: blur(10px);
+}
+
+.UserCard:hover {
+  border-color: #00ffff !important;
+  box-shadow: 0 0 25px rgba(0, 255, 255, 0.5);
+}
+
+/* ============================================================
+   6. POST CONTENT & ALERTS
+   ============================================================ */
+.Post-body {
+  font-family: 'Almendra', serif !important;
+  font-size: 19px !important; /* Slightly larger for easier reading */
+}
+
+.Alert.Alert--discussion {
+  background: rgba(0, 123, 167, 0.1) !important;
+  border: 1px solid #00ffff !important;
+  color: #00ffff !important;
+  font-family: 'Almendra', serif !important;
+  text-align: center;
+  margin: 20px 0;
+}
