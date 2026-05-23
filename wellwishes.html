@@ -6,3 +6,62 @@
         <button id="send-whisper">Release</button>
     </div>
 </div>
+#whispering-well {
+    position: relative;
+    height: 600px;
+    width: 100%;
+    background: radial-gradient(circle at bottom, #1e1b4b 0%, #050a14 100%);
+    overflow: hidden;
+    border-radius: 20px;
+    border: 2px solid #20b2aa;
+}
+
+.whisper-leaf {
+    position: absolute;
+    bottom: -50px;
+    padding: 10px 15px;
+    background: rgba(127, 255, 212, 0.1);
+    color: #7fffd4;
+    border: 1px solid rgba(127, 255, 212, 0.3);
+    border-radius: 20px;
+    font-family: 'Patrick Hand', cursive;
+    font-size: 18px;
+    white-space: nowrap;
+    pointer-events: none;
+    animation: floatUp 15s linear forwards;
+    box-shadow: 0 0 10px rgba(127, 255, 212, 0.2);
+}
+
+@keyframes floatUp {
+    0% {
+        transform: translateY(0) translateX(0) rotate(0deg);
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    90% {
+        opacity: 1;
+    }
+    100% {
+        /* This moves the message up and adds a gentle sway */
+        transform: translateY(-700px) translateX(40px) rotate(10deg);
+        opacity: 0;
+    }
+}
+
+.well-input-area {
+    position: absolute;
+    bottom: 20px;
+    width: 100%;
+    text-align: center;
+}
+
+#whisper-input {
+    background: rgba(0,0,0,0.5);
+    border: 1px solid #20b2aa;
+    color: #7fffd4;
+    padding: 10px;
+    border-radius: 10px;
+    width: 60%;
+}
