@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gallery</title>
+    <style>
+        body {
+            background: linear-gradient(135deg, #2E1A47, #4B0082, #2F2F2F, #4169E1);
+            color: #E0E0E0;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1 {
+            color: #B0C4DE;
+        }
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 10px;
+            max-width: 800px;
+        }
+        .image-container {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            overflow: hidden;
+            border: 2px solid #6495ED;
+            border-radius: 5px;
+        }
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: grayscale(100%);
+            transition: filter 0.3s ease, opacity 0.5s ease;
+        }
+        img:hover {
+            filter: grayscale(0%);
+        }
+        .glitch {
+            animation: gentle-glitch 0.5s infinite;
+        }
+        @keyframes gentle-glitch {
+            0% { transform: translate(0); }
+            25% { transform: translate(-1px, 1px); }
+            50% { transform: translate(0); }
+            75% { transform: translate(1px, -1px); }
+            100% { transform: translate(0); }
+        }
+        .vanished {
+            opacity: 0;
+        }
+        #off-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: #800080;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #off-button:hover {
+            background: #4B0082;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .modal-content {
+            background: #333;
+            padding: 20px;
+            border-radius: 5px;
+            text-align: center;
+            color: white;
+            max-width: 400px;
+            width: 90%;
+        }
+        .modal button {
+            margin: 10px;
+            padding: 10px 20px;
+            background: #800080;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .modal button:hover {
+            background: #4B0082;
+        }
+        .character-gallery {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            max-width: 600px;
+        }
+        .character-img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border: 2px solid #6495ED;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .bio-modal .modal-content {
+            max-width: 500px;
+            text-align: left;
+        }
+        .bio-modal p {
+            margin-bottom: 10px;
+        }
+        .chatbot-modal .modal-content {
+            max-width: 600px;
+            width: 90%;
+            text-align: left;
+        }
+        .chatbot {
+            display: flex;
+            flex-direction: column;
+            height: 400px;
+        }
+        .chatbot-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-bottom: 10px;
+            background: #6495ED;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+        }
+        .chat-window {
+            flex: 1;
+            border: 1px solid #555;
+            padding: 10px;
+            overflow-y: auto;
+            background: #222;
+            margin-bottom: 10px;
+        }
+        .chat-message {
+            margin-bottom: 10px;
+        }
+        .chat-input {
+            display: flex;
+        }
+        .chat-input input {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 5px 0 0 5px;
+        }
+        .chat-input button {
+            padding: 10px;
+            border: none;
+            border-radius: 0 5px 5px 0;
+            background: #800080;
+            color: white;
+            cursor: pointer;
+        }
+        .chat-input button:hover {
+            background: #4B0082;
+        }
+    </style>
+</head>
+<body>
+    <h1>Gallery</h1>
+    <div class="gallery" id="gallery">
+        <!-- 36 image containers will be generated by JS -->
+    </div>
+    <button id="off-button">Off (Stop All Music)</button>
+
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <p id="modal-message">Do you want to join our Discord server?</p>
+            <button id="yes-button">Yes</button>
+            <button id="no-button">No</button>
+            <button id="close-button" style="display: none;">Close</button>
+        </div>
+    </div>
+
+    <div id="character-gallery-modal" class="modal">
+        <div class="modal-content">
+            <h2>Character Gallery</h2>
+            <div class="character-gallery" id="character-gallery">
+                <!-- 5 character images will be generated by JS -->
+            </div>
+            <button id="close-character-gallery">Close</button>
+        </div>
+    </div>
+
+    <div id="bio-modal" class="modal bio-modal">
+        <div class="modal-content">
+            <h2 id="bio-name"></h2>
+            <img id="bio-img" src="" alt="" style="width: 100px; height: 100px; border-radius: 5px; margin: 10px 0;">
+            <p id="bio-text"></p>
+            <button id="social-link">Visit Social Media</button>
+            <button id="close-bio">Close</button>
+        </div>
+    </div>
+
+    <div id="chatbot-modal" class="modal chatbot-modal">
+        <div class="modal-content">
+            <div class="chatbot">
+                <div class="chatbot-avatar">✨</div>
+                <div class="chat-window" id="chat-window">
+                    <div class="chat-message"><strong>Star:</strong> Hello! How can I help you today?</div>
+                </div>
+                <div class="chat-input">
+                    <input type="text" id="chat-input" placeholder="Type your message...">
+                    <button id="send-button">Send</button>
+                </div>
+            </div>
+            <button id="close-chatbot" style="margin-top: 10px;">Close</button>
+        </div>
+    </div>
+
+    <script>
+        const gallery = document.getElementById('gallery');
+        const offButton = document.getElementById('off-button');
+        const modal = document.getElementById('modal');
+        const modalMessage = document.getElementById('modal-message');
+        const yesButton = document.getElementById('yes-button');
+        const noButton = document.getElementById('no-button');
+        const closeButton = document.getElementById('close-button');
+        const characterGalleryModal = document.getElementById('character-gallery-modal');
+        const characterGallery = document.getElementById('character-gallery');
+        const closeCharacterGallery = document.getElementById('close-character-gallery');
+        const bioModal = document.getElementById('bio-modal');
+        const bioName = document.getElementById('bio-name');
+        const bioImg = document.getElementById('bio-img');
+        const bioText = document.getElementById('bio-text');
+        const socialLink = document.getElementById('social-link');
+        const closeBio = document.getElementById('close-bio');
+        const chatbotModal = document.getElementById('chatbot-modal');
+        const chatWindow = document.getElementById('chat-window');
+        const chatInput = document.getElementById('chat-input');
+        const sendButton = document.getElementById('send-button');
+        const closeChatbot = document.getElementById('close-chatbot');
+        let audioContexts = []; // To keep track of audio for stopping
+        let askedSubscribe = false;
+
+        const characters = [
+            {
+                name: 'Star',
+                bio: 'Chimeracat coffee shop owner. Star runs a cozy coffee shop where dreams and brews come together.',
+                img: 'https://picsum.photos/200/200?random=star',
+                social: 'https://twitter.com/star_example' // Replace with actual link
+            },
+            {
+                name: 'Milo',
+                bio: 'Herb gardener who studies Taoism. Milo finds peace in the garden, balancing nature and ancient wisdom.',
+                img: 'https://picsum.photos/200/200?random=milo',
+                social: 'https://twitter.com/milo_example' // Replace with actual link
+            },
+            {
+                name: 'Chari',
+                bio: 'Coffee shop apprentice. Chari is learning the art of coffee-making under Star\'s guidance.',
+                img: 'https://picsum.photos/200/200?random=chari',
+                social: 'https://twitter.com/chari_example' // Replace with actual link
+            },
+            {
+                name: 'Hans',
+                bio: 'Vampire foxhybrid who escaped the lab. Hans is a mysterious figure with a dark past, now seeking freedom.',
+                img: 'https://picsum.photos/200/200?random=hans',
+                social: 'https://twitter.com/hans_example' // Replace with actual link
+            },
+            {
+                name: 'Miki',
+                bio: 'A DJ chimeracat human who loves to party. Miki spins beats that light up the night.',
+                img: 'https://picsum.photos/200/200?random=miki',
+                social: 'https://twitter.com/miki_example' // Replace with actual link
+            }
+        ];
+
+        // Function to create a simple tone using Web Audio API
+        function playTone(frequency, duration) {
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+
+            oscillator.frequency.value = frequency;
+            oscillator.type = 'sine';
+
+            gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + duration);
+
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + duration);
+
+            audioContexts.push(audioContext); // Store for stopping
+        }
+
+        function showModal() {
+            modal.style.display = 'flex';
+            yesButton.style.display = 'inline-block';
+            noButton.style.display = 'inline-block';
+            closeButton.style.display = 'none';
+            modalMessage.textContent = 'Do you want to join our Discord server?';
+        }
+
+        function closeModal() {
+            modal.style.display = 'none';
+        }
+
+        function showCharacterGallery() {
+            characterGalleryModal.style.display = 'flex';
+        }
+
+        function closeCharacterGalleryModal() {
+            characterGalleryModal.style.display = 'none';
+        }
+
+        function showBio(character) {
+            bioName.textContent = character.name;
+            bioImg.src = character.img;
+            bioText.textContent = character.bio;
+            socialLink.onclick = () => window.open(character.social, '_blank');
+            bioModal.style.display = 'flex';
+        }
+
+        function closeBioModal() {
+            bioModal.style.display = 'none';
+        }
+
+        function showChatbot() {
+            chatbotModal.style.display = 'flex';
+            askedSubscribe = false;
+        }
+
+        function closeChatbotModal() {
+            chatbotModal.style.display = 'none';
+        }
+
+        function addMessage(sender, message) {
+            const msgDiv = document.createElement('div');
+            msgDiv.className = 'chat-message';
+            msgDiv.innerHTML = `<strong>${sender}:</strong> ${message}`;
+            chatWindow.appendChild(msgDiv);
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+        }
+
+        function botResponse(userMessage) {
+            const lowerMsg = userMessage.toLowerCase();
+            let response = '';
+
+            if (lowerMsg.includes('hi') || lowerMsg.includes('hello')) {
+                response = 'Hi there! Nice to meet you.';
+            } else if (lowerMsg.includes('how are you')) {
+                response = 'I\'m doing great, thanks for asking! How about you?';
+            } else if (lowerMsg.includes('bye')) {
+                response = 'Goodbye! Have a wonderful day!';
+            } else if (askedSubscribe && (lowerMsg.includes('yes') || lowerMsg.includes('ok'))) {
+                response = 'Awesome! Opening the YouTube channel now.';
+                setTimeout(() => {
+                    window.open('https://www.youtube.com/@cafedreamer', '_blank'); // Replace with actual YouTube channel link
+                }, 1000);
+            } else if (askedSubscribe && lowerMsg.includes('no')) {
+                response = 'No worries! Feel free to come back anytime.';
+            } else {
+                response = 'I\'m not sure about that. Try saying hi, hello, how are you, or bye!';
+            }
+
+            if (!askedSubscribe && (lowerMsg.includes('hi') || lowerMsg.includes('hello') || lowerMsg.includes('how are you'))) {
+                setTimeout(() => {
+                    addMessage('Bot', 'By the way, would you like to subscribe to our YouTube channel?');
+                    askedSubscribe = true;
+                }, 1000);
+            }
+
+            if (response) {
+                setTimeout(() => addMessage('Bot', response), 500);
+            }
+        }
+
+        // Generate character gallery
+        characters.forEach(character => {
+            const img = document.createElement('img');
+            img.src = character.img;
+            img.alt = character.name;
+            img.className = 'character-img';
+            img.addEventListener('click', () => showBio(character));
+            characterGallery.appendChild(img);
+        });
+
+        yesButton.addEventListener('click', () => {
+            window.open('https://discord.gg/example', '_blank'); // Replace with actual Discord invite link
+            closeModal();
+        });
+
+        noButton.addEventListener('click', () => {
+            modalMessage.textContent = 'Maybe next time!';
+            yesButton.style.display = 'none';
+            noButton.style.display = 'none';
+            closeButton.style.display = 'inline-block';
+        });
+
+        closeButton.addEventListener('click', closeModal);
+
+        closeCharacterGallery.addEventListener('click', closeCharacterGalleryModal);
+
+        closeBio.addEventListener('click', closeBioModal);
+
+        sendButton.addEventListener('click', () => {
+            const message = chatInput.value.trim();
+            if (message) {
+                addMessage('You', message);
+                botResponse(message);
+                chatInput.value = '';
+            }
+        });
+
+        chatInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendButton.click();
+            }
+        });
+
+        closeChatbot.addEventListener('click', closeChatbotModal);
+
+        // Generate 36 images
+        for (let i = 0; i < 36; i++) {
+            const container = document.createElement('div');
+            container.className = 'image-container';
+
+            const img = document.createElement('img');
+            img.src = `https://picsum.photos/100/100?random=${i}`; // Placeholder images
+            img.alt = `Image ${i + 1}`;
+
+            // Only the first image (index 0) opens the character gallery
+            if (i === 0) {
+                img.addEventListener('click', showCharacterGallery);
+            } else if (i % 2 !== 0) { // Odd-indexed ones vanish
+                setTimeout(() => {
+                    img.classList.add('vanished');
+                    setTimeout(() => {
+                        img.classList.remove('vanished');
+                    }, 30000); // Reappear after 30 seconds
+                }, 7000); // Vanish after 7 seconds
+            }
+
+            // Some images play music on click (every 3rd one)
+            if ((i + 1) % 3 === 0) {
+                img.addEventListener('click', () => {
+                    playTone(440 + (i * 10), 1); // Play a tone based on index
+                });
+            }
+
+            // At least 5 images reveal a message chat on click (indices 5,10,15,20,25)
+            const chatIndices = [5, 10, 15, 20, 25];
+            if (chatIndices.includes(i)) {
+                img.addEventListener('click', showModal);
+            }
+
+            // One image (index 18, center) opens the chatbot
+            if (i === 18) {
+                img.addEventListener('click', showChatbot);
+            }
+
+            container.appendChild(img);
+            gallery.appendChild(container);
+        }
+
+        // Off button to stop all audio
+        offButton.addEventListener('click', () => {
+            audioContexts.forEach(context => {
+                context.close();
+            });
+            audioContexts = [];
+        });
+    </script>
+</body>
+</html>
