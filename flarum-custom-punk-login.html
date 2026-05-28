@@ -1,0 +1,509 @@
+# Headless Punk Flarum Setup (GitHub Pages Frontend)
+
+YES — this architecture is actually perfect for what you're building.
+
+You would have:
+
+## FRONTEND
+
+Hosted on:
+
+* GitHub Pages
+* Nekoweb
+* Netlify
+* Vercel
+
+This is your:
+
+* punk homepage
+* CRT desktop
+* custom aesthetic
+* weird internet world
+* login screen
+
+---
+
+## BACKEND
+
+Hosted separately:
+
+* Self-hosted Flarum
+* Railway
+* DigitalOcean
+* Render
+* Docker VPS
+
+This powers:
+
+* accounts
+* discussions
+* replies
+* notifications
+* permissions
+
+---
+
+# WHAT USERS EXPERIENCE
+
+Instead of:
+
+> seeing a normal forum first
+
+They see:
+
+* your custom homepage
+* custom login screen
+* underground aesthetic
+* portal interface
+* handmade internet vibes
+
+THEN:
+
+after login:
+
+* discussion boards
+* artist channels
+* developer rooms
+* introductions
+* gallery threads
+
+Everything still runs through Flarum.
+
+---
+
+# IMPORTANT REALITY CHECK
+
+GitHub Pages CANNOT:
+
+* run PHP
+* host Flarum itself
+* handle databases
+* manage backend auth alone
+
+GitHub Pages ONLY hosts:
+
+* HTML
+* CSS
+* JavaScript
+
+So:
+
+## Your frontend lives on GitHub
+
+## Your Flarum backend lives elsewhere
+
+This is called:
+
+# HEADLESS FLARUM
+
+or:
+
+# DECOUPLED FRONTEND
+
+---
+
+# THE STRUCTURE
+
+## FRONTEND
+
+```text
+GitHub Pages
+│
+├── index.html
+├── style.css
+├── app.js
+└── assets/
+```
+
+---
+
+## BACKEND
+
+```text
+yourflarum.com
+│
+├── /api/discussions
+├── /api/posts
+├── /api/token
+└── users/auth
+```
+
+---
+
+# STEP 1 — HOST FLARUM
+
+You will eventually need:
+
+* VPS hosting
+  OR
+* Railway
+  OR
+* Render
+
+Recommended beginner option:
+
+## Railway
+
+[https://railway.app](https://railway.app)
+
+Why:
+
+* simple deployment
+* Docker support
+* easier than VPS
+* good for experiments
+
+---
+
+# STEP 2 — ENABLE API ACCESS
+
+Inside Flarum:
+
+Edit:
+
+```text
+config.php
+```
+
+Allow:
+
+```php
+'allow_origin' => ['https://yourgithubpage.github.io']
+```
+
+This enables:
+
+# CORS
+
+Without this:
+GitHub Pages cannot talk to your Flarum backend.
+
+---
+
+# STEP 3 — BUILD CUSTOM LOGIN
+
+# index.html
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dreamr Cafe</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: white;
+    color: black;
+    font-family: 'Space Mono', monospace;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.05;
+    background:
+      repeating-linear-gradient(
+        to bottom,
+        rgba(0,0,0,0.05),
+        rgba(0,0,0,0.05) 1px,
+        transparent 1px,
+        transparent 3px
+      );
+}
+
+.portal {
+    border: 4px solid black;
+    padding: 60px;
+    width: 90%;
+    max-width: 700px;
+    background: white;
+    transform: rotate(-1deg);
+    box-shadow: 15px 15px 0 black;
+}
+
+h1 {
+    font-size: clamp(3rem, 8vw, 6rem);
+    text-transform: uppercase;
+    line-height: 0.9;
+    margin-bottom: 20px;
+    transform: rotate(-2deg);
+}
+
+.subtitle {
+    margin-bottom: 40px;
+    line-height: 1.8;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+input {
+    border: 3px solid black;
+    background: white;
+    padding: 18px;
+    font-family: inherit;
+    font-size: 1rem;
+}
+
+button {
+    border: 3px solid black;
+    background: black;
+    color: white;
+    padding: 18px;
+    font-family: inherit;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: white;
+    color: black;
+}
+
+.status {
+    margin-top: 20px;
+    font-size: 0.9rem;
+    min-height: 20px;
+}
+
+</style>
+</head>
+<body>
+
+<div class="portal">
+
+    <h1>
+        Dreamr<br>
+        Cafe
+    </h1>
+
+    <p class="subtitle">
+        Underground digital cafe for artists, developers,
+        archivists, musicians, and terminal wanderers.
+    </p>
+
+    <form id="loginForm">
+
+        <input
+            type="text"
+            id="username"
+            placeholder="USERNAME OR EMAIL"
+            required
+        >
+
+        <input
+            type="password"
+            id="password"
+            placeholder="PASSWORD"
+            required
+        >
+
+        <button type="submit">
+            ENTER NETWORK
+        </button>
+
+    </form>
+
+    <div class="status" id="status"></div>
+
+</div>
+
+<script>
+
+const FLARUM_URL = 'https://YOUR-FLARUM-URL.com';
+
+const form = document.getElementById('loginForm');
+const statusText = document.getElementById('status');
+
+form.addEventListener('submit', async (e) => {
+
+    e.preventDefault();
+
+    statusText.innerText = 'CONNECTING TO TERMINAL...';
+
+    try {
+
+        const response = await fetch(`${FLARUM_URL}/api/token`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                identification: document.getElementById('username').value,
+                password: document.getElementById('password').value
+            })
+        });
+
+        const data = await response.json();
+
+        if (data.token) {
+
+            localStorage.setItem('dreamr_token', data.token);
+            localStorage.setItem('dreamr_user', JSON.stringify(data.userId));
+
+            statusText.innerText = 'ACCESS GRANTED';
+
+            setTimeout(() => {
+                window.location.href = 'terminal.html';
+            }, 1000);
+
+        } else {
+
+            statusText.innerText = 'ACCESS DENIED';
+
+        }
+
+    } catch (err) {
+
+        console.error(err);
+        statusText.innerText = 'NETWORK ERROR';
+
+    }
+
+});
+
+</script>
+
+</body>
+</html>
+```
+
+---
+
+# STEP 4 — CREATE YOUR TERMINAL PAGE
+
+After login:
+
+Users enter:
+
+```text
+terminal.html
+```
+
+This page can show:
+
+* Introduce Yourself
+* Dreamr Cafe News
+* Artists
+* Developers
+* Music
+* Zines
+* Archives
+
+---
+
+# EXAMPLE DISCUSSION FETCH
+
+```javascript
+const token = localStorage.getItem('dreamr_token');
+
+fetch('https://YOUR-FLARUM.com/api/discussions', {
+    headers: {
+        Authorization: `Token ${token}`
+    }
+})
+.then(res => res.json())
+.then(data => {
+    console.log(data);
+});
+```
+
+---
+
+# YOUR CATEGORIES
+
+Inside Flarum you would create tags:
+
+* Introductions
+* Dreamr Cafe
+* Artists
+* Developers
+* Music
+* Experimental Web
+* Night Radio
+* Projects
+
+Then your frontend displays them however you want.
+
+---
+
+# THE REALLY COOL PART
+
+You are NOT stuck with forum layouts anymore.
+
+Discussions could look like:
+
+* cassette labels
+* terminal logs
+* photocopied flyers
+* draggable windows
+* desktop folders
+* BBS entries
+* pirate radio broadcasts
+
+Flarum simply stores the data.
+
+YOU control presentation.
+
+---
+
+# SECURITY NOTES
+
+DO NOT:
+
+* store passwords yourself
+* create your own auth system
+* bypass Flarum auth
+
+DO:
+
+* use Flarum tokens
+* use HTTPS
+* store only auth tokens
+
+---
+
+# THE FUTURE OF THIS PROJECT
+
+Eventually this could become:
+
+* digital clubhouse
+* cyberpunk cafe
+* underground art collective
+* weird internet social network
+* multimedia portal
+* experimental web desktop
+
+Honestly?
+
+Your aesthetic direction fits this architecture perfectly because the frontend becomes:
+
+# THE WORLD
+
+while Flarum becomes:
+
+# THE INVISIBLE MACHINE
