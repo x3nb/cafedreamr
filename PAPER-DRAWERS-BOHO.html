@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Poetry & Rebellion Scene</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Special+Elite&display=swap" />
+
+<style>
+body {
+  margin: 0;
+  background-color: #fff; /* White background for visibility */
+  font-family: 'Special Elite', monospace;
+  color: #000; /* Black text for clear reading */
+  overflow: hidden;
+}
+
+/* Icons vertically on the left, spaced out */
+#iconContainer {
+  position: fixed; top: 50%; left: 20px; transform: translateY(-50%);
+  display: flex; flex-direction: column; gap: 15px; z-index: 9999;
+}
+#iconContainer div {
+  font-size: 2.5em; cursor: pointer; padding: 5px; border-radius: 50%;
+  background: rgba(0,0,0,0.1);
+}
+
+/* Drawer styles (left and right) with jagged, torn effect */
+#leftDrawer, #rightDrawer {
+  position: fixed;
+  top: 0;
+  width: 250px;
+  height: 100%;
+  background: rgba(255,255,255,0.95);
+  box-shadow: 4px 0 15px #4B0082;
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 0 80%, 5% 75%, 0 70%, 5% 65%, 0 60%, 5% 55%, 0 50%, 5% 45%, 0 40%, 5% 35%, 0 30%, 5% 25%, 0 20%, 5% 15%, 0 10%);
+  transition: all 0.3s ease;
+  overflow-y: auto;
+  padding: 20px;
+  z-index: 9998;
+}
+
+/* Left drawer hidden by default, slides in */
+#leftDrawer { left: -250px; }
+#leftDrawer.open { left: 0; }
+
+/* Right drawer hidden by default, slides in from right */
+#rightDrawer { right: -250px; }
+#rightDrawer.open { right: 0; }
+
+/* Style for menu buttons inside left drawer */
+button.menu-item {
+  display: block;
+  width: 100%;
+  margin: 8px 0;
+  padding: 10px;
+  background: transparent;
+  border: 2px dashed #4B0082;
+  font-family: 'Special Elite';
+  cursor: pointer;
+}
+button.menu-item:hover { background: rgba(75, 0, 130, 0.1); }
+
+/* Content container in center, scrolling vertically, with elevator slide effect */
+#contentContainer {
+  position: absolute; top: 0; left: 250px; right: 250px; bottom: 0;
+  overflow-y: auto;
+  display: flex; justify-content: center; align-items: start;
+  padding: 20px;
+  box-sizing: border-box;
+}
+#content {
+  max-width: 700px;
+  width: 100%;
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px #4B0082;
+  transform: translateY(20px);
+  opacity: 0;
+  transition: all 0.8s ease;
+}
+#content.show {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* Optional: add a scrollbar style for aesthetics */
+</style>
+</head>
+<body>
+
+<!-- Icon buttons on the left side, vertically -->
+<div id="iconContainer">
+  <div id="iconMenu" title="Menu 🖤">🖤</div>
+  <div id="iconMusic" title="Music 🎵">🎵</div>
+  <div id="iconSocial" title="Social 🌐">🌐</div>
+</div>
+
+<!-- Left drawer for menu -->
+<div id="leftDrawer">
+  <button class="menu-item" onclick="loadRoom('intro')">Intro</button>
+  <button class="menu-item" onclick="loadRoom('poetry')">Poems</button>
+  <button class="menu-item" onclick="loadRoom('elderScroll')">Elder Scroll</button>
+  <button class="menu-item" onclick="loadRoom('labCats')">Lab Cats</button>
+  <button class="menu-item" onclick="loadRoom('love')">Love Letters</button>
+</div>
+
+<!-- Content area in center -->
+<div id="contentContainer">
+  <div id="content"></div>
+</div>
+
+<!-- Right drawer: social media & playlist -->
+<div id="rightDrawer">
+  <div id="socialLinks">
+    <h3>Follow & Listen</h3>
+    <a href="https://instagram.com" target="_blank">Instagram</a>
+    <a href="https://twitter.com" target="_blank">Twitter</a>
+    <a href="https://facebook.com" target="_blank">Facebook</a>
+  </div>
+  <div id="playlist">
+    <h4>Playlist Radio</h4>
+    <audio id="audioPlayer" controls style="width:100%;">
+      <source src="https://www.w3schools.com/html/horse.mp3" type="audio/mpeg" />
+    </audio>
+    <button onclick="playPause()">Play/Pause</button>
+    <button onclick="muteUnmute()">Mute/Unmute</button>
+    <div>
+      <button onclick="changeSong(1)">Song 1</button>
+      <button onclick="changeSong(2)">Song 2</button>
+      <button onclick="changeSong(3)">Song 3</button>
+      <button onclick="changeSong(4)">Song 4</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const leftDrawer = document.getElementById('leftDrawer');
+const rightDrawer = document.getElementById('rightDrawer');
+
+const iconMenu = document.getElementById('iconMenu');
+const iconMusic = document.getElementById('iconMusic');
+const iconSocial = document.getElementById('iconSocial');
+
+// Toggle drawers
+iconMenu.onclick = () => { leftDrawer.classList.toggle('open'); };
+iconMusic.onclick = () => { rightDrawer.classList.toggle('open'); };
+iconSocial.onclick = () => { rightDrawer.classList.toggle('open'); };
+
+// Load content with elevator slide effect
+function loadRoom(roomName) {
+  const container = document.getElementById('content');
+  let content = '';
+
+  if (roomName === 'intro') {
+    content = `<h2>Zen, the Bohemian</h2>
+    <p>Zen is an artist, poet, and coder who finds beauty in chaos and calm alike. His world is a canvas of endless creativity and peaceful rebellion.</p>`;
+  } else if (roomName === 'poetry') {
+    content = `<h2>Poems by Shakespeare</h2>
+    <p>"Shall I compare thee to a summer's day?"</p>
+    <p>"Love looks not with the eyes, but with the mind." - Shakespeare</p>`;
+  } else if (roomName === 'elderScroll') {
+    content = `<h2>Elder Scroll Quotes</h2>
+    <p>"The hero is always the most vulnerable."</p>
+    <p>"Knowledge is the key to unlocking the future."</p>`;
+  } else if (roomName === 'labCats') {
+    content = `<h2>Lab Cats Turned Humans</h2>
+    <p>Once lab experiments, four curious cats magically transform into humans, embarking on adventures beyond the lab. <a href="#" target="_blank">Read more</a></p>`;
+  } else if (roomName === 'love') {
+    showLoveLetters();
+    return; // updates content directly
+  }
+
+  // Animate slide up
+  const contentDiv = document.getElementById('content');
+  contentDiv.innerHTML = `<div style="opacity:0; transform:translateY(20px); transition:all 0.8s;">${content}</div>`;
+  contentDiv.classList.remove('show');
+  setTimeout(() => {
+    if(contentDiv.firstChild) {
+      contentDiv.firstChild.style.opacity=1;
+      contentDiv.firstChild.style.transform='translateY(0)';
+      contentDiv.classList.add('show');
+    }
+  }, 50);
+}
+
+// Show love letters dynamically
+function showLoveLetters() {
+  const container = document.getElementById('content');
+  container.innerHTML = '';
+
+  const letters = [
+    { from: 'Venice', content: 'My dearest, your love is like the Venice canals—endless and deep.' },
+    { from: 'Paris', content: 'In the city of lights, your smile outshines everything.' },
+    { from: 'Tokyo', content: 'Across the neon-lit streets, my heart beats only for you.' },
+    { from: 'New York', content: 'In the chaos of the city, your love is my calm.' },
+    { from: 'Rome', content: 'Like the eternal city, my love for you is everlasting.' }
+  ];
+
+  // Show each love letter with delay
+  letters.forEach((letter, index) => {
+    setTimeout(() => {
+      const div = document.createElement('div');
+      div.style.border = '2px dashed #4B0082';
+      div.style.padding = '10px';
+      div.style.margin = '10px 0';
+      div.style.background = 'rgba(255,255,255,0.8)';
+      div.innerHTML = `<strong>From ${letter.from}:</strong><br>${letter.content}`;
+      container.appendChild(div);
+    }, index * 1500);
+  });
+}
+
+// Load default content initially
+loadRoom('intro');
+
+// Playlist controls
+const audio = document.getElementById('audioPlayer');
+
+function playPause() {
+  if(audio.paused){ audio.play(); } else { audio.pause(); }
+}
+function muteUnmute() {
+  audio.muted = !audio.muted;
+}
+function changeSong(n) {
+  const sources = [
+    'https://www.w3schools.com/html/horse.mp3',
+    'https://www.w3schools.com/html/horse.mp3',
+    'https://www.w3schools.com/html/horse.mp3',
+    'https://www.w3schools.com/html/horse.mp3'
+  ];
+  audio.src = sources[n-1];
+  audio.play();
+}
+</script>
+</body>
+</html>
