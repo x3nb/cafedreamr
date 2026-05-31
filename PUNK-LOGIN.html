@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Punk Vision Board</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+
+<style>
+body {
+  margin: 0;
+  background: #222; /* darker background for papercut effect */
+  font-family: 'Press Start 2P', monospace;
+  color: #333; /* base text color */
+}
+
+/* AUTH */
+#auth {
+  height: 100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.auth-box {
+  border: 3px solid #4B0082; /* deep purple border for papercut style */
+  padding: 30px;
+  background:#f0f0f0; /* light grey for papercut look */
+  box-shadow: inset 4px 4px 8px #999, inset -4px -4px 8px #fff; /* shading for depth */
+  text-align:center;
+  border-radius: 10px;
+  max-width: 300px;
+}
+
+.auth-box h2 {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 1.2em;
+  margin-bottom: 20px;
+  color: #4B0082; /* deep purple text */
+}
+
+.auth-box input {
+  width: 90%;
+  margin: 8px 0;
+  padding: 10px;
+  background:#f0f0f0;
+  color:#333;
+  border:2px solid #999; /* grey border for papercut look */
+  font-family:inherit;
+  border-radius: 5px;
+  box-shadow: inset 2px 2px 5px #ccc, inset -2px -2px 5px #fff;
+}
+
+.auth-box button {
+  margin-top:10px;
+  padding:10px 20px;
+  background:#4B0082; /* deep purple */
+  color:#fff;
+  border:none;
+  cursor:pointer;
+  border-radius: 5px;
+  box-shadow: 2px 2px 5px #999, -2px -2px 5px #fff; /* papercut shading */
+  font-family: 'Press Start 2P', monospace;
+}
+
+/* BOARD styles */
+#board {
+  padding:20px;
+  background: #222;
+}
+
+header {
+  display:flex;
+  align-items:center;
+  gap:15px;
+  margin-bottom:20px;
+  padding: 10px;
+  background: #444;
+  box-shadow: inset 4px 4px 8px #222, inset -4px -4px 8px #666;
+  border-radius: 10px;
+}
+
+header img {
+  width:60px;
+  height:60px;
+  border-radius:50%;
+  border:3px solid #4B0082;
+  object-fit:cover;
+  box-shadow: 2px 2px 4px #222, -2px -2px 4px #ccc;
+}
+
+#welcome {
+  color:#eee;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.8em;
+}
+
+#notes {
+  display:flex;
+  flex-wrap:wrap;
+  gap:15px;
+}
+
+.note {
+  width:140px;
+  min-height:110px;
+  padding:10px;
+  background:#d3d3d3;
+  color:#222;
+  transform: rotate(var(--r));
+  box-shadow: inset 4px 4px 8px #999, inset -4px -4px 8px #fff;
+  font-size:0.6em;
+  border-radius: 8px;
+}
+
+/* Textarea styling with papercut shading */
+textarea {
+  width:100%;
+  margin-top:15px;
+  padding:10px;
+  background:#f0f0f0;
+  color:#333;
+  border:2px dashed #999;
+  font-family:inherit;
+  border-radius: 5px;
+  box-shadow: inset 2px 2px 5px #ccc, inset -2px -2px 5px #fff;
+}
+</style>
+</head>
+<body>
+
+<!-- AUTH -->
+<div id="auth">
+  <div class="auth-box">
+    <h2>PUNK ZEN</h2>
+    <input id="username" placeholder="username (signup only)">
+    <input id="email" placeholder="email">
+    <input id="password" type="password" placeholder="password">
+    <button onclick="signup()">SIGN UP</button>
+    <button onclick="login()">LOG IN</button>
+  </div>
+</div>
+
+<!-- BOARD -->
+<div id="board" class="hidden">
+  <header>
+    <img id="avatar" src="https://placehold.co/100x100" />
+    <div>
+      <div id="welcome"></div>
+      <input type="file" onchange="uploadAvatar(event)">
+    </div>
+  </header>
+
+  <div id="notes"></div>
+
+  <textarea id="noteInput" placeholder="Leave your mark..."></textarea>
+  <button onclick="postNote()">POST NOTE</button>
+</div>
+
+<script>
+const supabase = supabase.createClient(
+  'https://YOUR_SUPABASE_URL', // <-- Replace with your Supabase URL
+  'YOUR_PUBLIC_ANON_KEY'      // <-- Replace with your Supabase anon key
+);
+
+let user = null;
+
+/* AUTH */
+async function signup() {
+  const email = emailInput().value.trim();
+  const password = passwordInput().value.trim();
+  const username = usernameInput().value.trim();
+
+  if (!email || !password || !username) {
+    alert('Please fill in all fields.');
+    return;
+  }
+
+  // Sign up user
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: {
+      data: { username }
+    }
+  });
+
+  if (error) {
+    alert('Error during sign up: ' + error.message);
+    return;
+  }
+
+  // After signup, create profile record in your profiles table
+  const userId = data.user.id;
+  const { error: profileError } = await supabase
+    .from('profiles')
+    .insert({ id: userId, username: username });
+
+  if (profileError) {
+    alert('Error creating profile: ' + profileError.message);
+    return;
+  }
+
+  alert('Check your email to confirm registration.');
+}
+
+/* LOGIN */
+async function login() {
+  const emailVal = emailInput().value.trim();
+  const passwordVal = passwordInput().value.trim();
+
+  if (!emailVal || !passwordVal) {
+    alert('Please enter email and password.');
+    return;
+  }
+
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email: emailVal,
+    password: passwordVal
+  });
+
+  if (error) {
+    alert('Login error: ' + error.message);
+  } else {
+    init(data.user);
+  }
+}
+
+/* SESSION */
+supabase.auth.onAuthStateChange((_, session) => {
+  if (session?.user) {
+    init(session.user);
+  }
+});
+
+async function init(u) {
+  user = u;
+  document.getElementById('auth').classList.add('hidden');
+  document.getElementById('board').classList.remove('hidden');
+
+  document.getElementById('welcome').innerText =
+    `welcome ${user.user_metadata?.username || ''}`;
+
+  loadProfile();
+  loadNotes();
+}
+
+/* PROFILE */
+async function loadProfile() {
+  const { data } = await supabase
+    .from('profiles')
+    .select('avatar_url')
+    .eq('id', user.id)
+    .single();
+
+  document.getElementById('avatar').src =
+    data?.avatar_url || 'https://placehold.co/100x100';
+}
+
+async function uploadAvatar(e) {
+  const file = e.target.files[0];
+  const path = `${user.id}.png`;
+
+  await supabase.storage.from('avatars').upload(path, file, {
+    upsert:true
+  });
+
+  const url = supabase.storage.from('avatars')
+    .getPublicUrl(path).data.publicUrl;
+
+  await supabase.from('profiles').upsert({
+    id:user.id,
+    avatar_url:url
+  });
+
+  loadProfile();
+}
+
+/* NOTES */
+async function loadNotes() {
+  const { data } = await supabase
+    .from('chalkboard_notes')
+    .select('*')
+    .order('created_at', { ascending:false });
+
+  const board = document.getElementById('notes');
+  board.innerHTML = '';
+
+  data.forEach(n => {
+    const d = document.createElement('div');
+    d.className = 'note';
+    d.style.setProperty('--r', `${n.rotation}deg`);
+    d.innerHTML = `<strong>${n.username}</strong><br>${n.message}`;
+    board.appendChild(d);
+  });
+}
+
+async function postNote() {
+  const msg = noteInput().value.trim();
+  if (!msg) return;
+
+  await supabase.from('chalkboard_notes').insert({
+    user_id:user.id,
+    username:user.user_metadata.username,
+    message:msg,
+    rotation:Math.random()*10-5
+  });
+
+  noteInput().value='';
+  loadNotes();
+}
+
+/* HELPERS */
+const emailInput = () => document.getElementById('email');
+const passwordInput = () => document.getElementById('password');
+const usernameInput = () => document.getElementById('username');
+const noteInput = () => document.getElementById('noteInput');
+</script>
+
+</body>
+</html>
