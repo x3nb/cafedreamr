@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Valentine's Riddle Rooms</title>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Courier New', monospace;
+            background: linear-gradient(135deg, #ff69b4, #8a2be2); /* Rose-red to violet ombre */
+            color: #fff;
+            overflow-x: hidden;
+        }
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 105, 180, 0.8); /* Semi-transparent rose-red */
+            backdrop-filter: blur(10px); /* Gaussian blur */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            animation: fadeOut 3s ease-in-out 2s forwards;
+        }
+        .loading h1 {
+            font-family: 'Great Vibes', cursive;
+            font-size: 4em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+        .loading p {
+            font-size: 1.2em;
+            text-align: center;
+        }
+        @keyframes fadeOut {
+            to { opacity: 0; visibility: hidden; }
+        }
+        .riddle {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(138, 43, 226, 0.9); /* Semi-transparent violet */
+            backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+        }
+        .riddle h2 {
+            font-family: 'Great Vibes', cursive;
+            font-size: 3em;
+            margin-bottom: 20px;
+        }
+        .riddle input {
+            padding: 10px;
+            font-size: 1em;
+            margin: 10px;
+            border: none;
+            border-radius: 5px;
+        }
+        .riddle button {
+            padding: 10px 20px;
+            font-size: 1em;
+            background: #ff69b4;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .rooms {
+            display: none;
+            padding: 20px;
+        }
+        .room {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+        .room h3 {
+            font-family: 'Great Vibes', cursive;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+        .drawer-icon {
+            width: 50px;
+            height: 50px;
+            background: #ff69b4;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            font-size: 2em;
+            color: #fff;
+        }
+        .drawer {
+            display: none;
+            position: absolute;
+            bottom: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+        }
+        .drawer audio {
+            width: 100%;
+        }
+        .mosaic {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin: 20px 0;
+        }
+        .mosaic img {
+            width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+        .video-container {
+            margin: 20px 0;
+        }
+        .video-container video {
+            width: 100%;
+            max-width: 600px;
+        }
+        .social-links {
+            margin: 20px 0;
+        }
+        .social-links a {
+            color: #ff69b4;
+            text-decoration: none;
+            margin: 0 10px;
+            font-size: 1.2em;
+        }
+        .social-links a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="loading">
+        <h1>Happy Valentine's Day</h1>
+        <p>Loading your romantic adventure...</p>
+    </div>
+    <div class="riddle">
+        <h2>Riddle of Love</h2>
+        <p>What is the name of the potion Juliet drinks to fake her death?</p>
+        <input type="text" id="riddle-answer" placeholder="Your answer">
+        <button onclick="checkRiddle()">Submit</button>
+    </div>
+    <div class="rooms" id="rooms">
+        <div class="room" style="background-image: url('https://via.placeholder.com/1920x1080/ff69b4/ffffff?text=Entrance');">
+            <h3>Entrance</h3>
+            <p>Welcome to the house of love.</p>
+            <div class="drawer-icon" onclick="toggleDrawer(1)">❤️</div>
+            <div class="drawer" id="drawer1">
+                <audio controls>
+                    <source src="https://www.soundjay.com/misc/sounds/bell-ringing-05.wav" type="audio/wav"> <!-- Placeholder music file -->
+                    Your browser does not support the audio element.
+                </audio>
+            </div>
+        </div>
+        <div class="room" style="background-image: url('https://via.placeholder.com/1920x1080/8a2be2/ffffff?text=Living+Room');">
+            <h3>Living Room</h3>
+            <p>A cozy place for romance.</p>
+            <div class="drawer-icon" onclick="toggleDrawer(2)">❤️</div>
+            <div class="drawer" id="drawer2">
+                <audio controls>
+                    <source src="https://www.soundjay.com/misc/sounds/bell-ringing-05.wav" type="audio/wav"> <!-- Placeholder music file -->
+                    Your browser does not support the audio element.
+                </audio>
+            </div>
+        </div>
+        <div class="room" style="background-image: url('https://via.placeholder.com/1920x1080/ff1493/ffffff?text=Bedroom');">
+            <h3>Bedroom</h3>
+            <p>Where dreams of love unfold.</p>
+            <div class="drawer-icon" onclick="toggleDrawer(3)">❤️</div>
+            <div class="drawer" id="drawer3">
+                <audio controls>
+                    <source src="https://www.soundjay.com/misc/sounds/bell-ringing-05.wav" type="audio/wav"> <!-- Placeholder music file -->
+                    Your browser does not support the audio element.
+                </audio>
+            </div>
+        </div>
+        <div class="room" style="background-image: url('https://via.placeholder.com/1920x1080/dc143c/ffffff?text=Kitchen');">
+            <h3>Kitchen</h3>
+            <p>Cooking up sweet moments.</p>
+            <div class="drawer-icon" onclick="toggleDrawer(4)">❤️</div>
+            <div class="drawer" id="drawer4">
+                <audio controls>
+                    <source src="https://www.soundjay.com/misc/sounds/bell-ringing-05.wav" type="audio/wav"> <!-- Placeholder music file -->
+                    Your browser does not support the audio element.
+                </audio>
+            </div>
+        </div>
+        <div class="room" style="background-image: url('https://via.placeholder.com/1920x1080/4b0082/ffffff?text=Basement');">
+            <h3>Basement</h3>
+            <p>The depths of eternal love.</p>
+            <div class="drawer-icon" onclick="toggleDrawer(5)">❤️</div>
+            <div class="drawer" id="drawer5">
+                <audio controls>
+                    <source src="https://www.soundjay.com/misc/sounds/bell-ringing-05.wav" type="audio/wav"> <!-- Placeholder music file -->
+                    Your browser does not support the audio element.
+                </audio>
+            </div>
+            <div class="mosaic">
+                <img src="https://via.placeholder.com/300x200/ff69b4/ffffff?text=Love+Letter+1" alt="Love Letter 1">
+                <img src="https://via.placeholder.com/300x200/8a2be2/ffffff?text=Love+Letter+2" alt="Love Letter 2">
+                <img src="https://via.placeholder.com/300x200/ff1493/ffffff?text=Love+Letter+3" alt="Love Letter 3">
+                <img src="https://via.placeholder.com/300x200/dc143c/ffffff?text=Love+Letter+4" alt="Love Letter 4">
+                <img src="https://via.placeholder.com/300x200/4b0082/ffffff?text=Love+Letter+5" alt="Love Letter 5">
+                <img src="https://via.placeholder.com/300x200/ff69b4/ffffff?text=Love+Letter+6" alt="Love Letter 6">
+            </div>
+            <div class="video-container">
+                <video controls loop>
+                    <source src="https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4" type="video/mp4"> <!-- Placeholder video URL -->
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+            <div class="social-links">
+                <a href="https://instagram.com/yourprofile" target="_blank">Instagram</a>
+                <a href="https://twitter.com/yourprofile" target="_blank">Twitter</a>
+                <a href="https://facebook.com/yourprofile" target="_blank">Facebook</a>
+            </div>
+        </div>
+    </div>
+    <script>
+        function checkRiddle() {
+            const answer = document.getElementById('riddle-answer').value.toLowerCase();
+            if (answer === 'sleeping potion' || answer === 'potion') {
+                document.querySelector('.riddle').style.display = 'none';
+                document.getElementById('rooms').style.display = 'block';
+            } else {
+                alert('Wrong answer! Try again.');
+            }
+        }
+        function toggleDrawer(id) {
+            const drawer = document.getElementById('drawer' + id);
+            drawer.style.display = drawer.style.display === 'block' ? 'none' : 'block';
+        }
+    </script>
+</body>
+</html>
