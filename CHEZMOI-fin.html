@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Chez Xen — Realm Blueprint</title>
+
+<!-- CINZEL font -->
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --violet:#7c3aed;
+    --hotpink:#ff77a9;
+    --deep-purple: rgba(48,0,48,0.6);
+    --glass-border: linear-gradient(45deg, var(--violet), var(--hotpink));
+  }
+  /* Basic reset */
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: #000;
+    color: #fff;
+    font-family: Inter, Arial, sans-serif;
+    -webkit-font-smoothing:antialiased;
+    scroll-behavior: smooth;
+    padding-top: 50px; /* space for top banner */
+    min-height:100vh;
+  }
+
+  /* Starfield background */
+  body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    background:
+      radial-gradient(circle, rgba(255,255,255,0.08) 1px, transparent 2px),
+      radial-gradient(circle at 70% 30%, rgba(255,255,255,0.05) 1px, transparent 2px);
+    background-size: 200px 200px, 300px 300px;
+    animation: drift 60s linear infinite;
+    z-index:-1;
+    opacity:0.28;
+  }
+  @keyframes drift{ from{transform:translate(0,0)} to{transform:translate(-300px,-300px)} }
+
+  /* Top banner (slim) */
+  .top-banner{
+    position:fixed;
+    top:0; left:0; right:0;
+    height:50px;
+    background: rgba(0,0,0,0.7);
+    border-bottom: 2px solid var(--violet);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    z-index:2000;
+    backdrop-filter: blur(4px);
+  }
+  .top-banner h1{
+    margin:0;
+    font-family:'Cinzel', serif;
+    color: var(--hotpink);
+    font-size:1.15rem;
+    text-shadow: 0 0 6px var(--violet), 0 0 10px var(--hotpink);
+    letter-spacing:0.6px;
+  }
+
+  /* Nav (below banner) */
+  nav{
+    position:sticky;
+    top:50px;
+    z-index:1500;
+    display:flex;
+    justify-content:center;
+    gap:18px;
+    padding:18px;
+    background: rgba(0,0,0,0.55);
+    border-bottom: 2px solid var(--violet);
+  }
+  nav a{
+    color:#fff;
+    text-decoration:none;
+    padding:8px 12px;
+    border-radius:8px;
+    border: 2px solid var(--violet);
+    transition: color .18s ease, box-shadow .18s;
+    font-weight:600;
+    font-size:0.92rem;
+  }
+  nav a:hover, nav a.active{ color: var(--hotpink); box-shadow: 0 0 8px var(--violet); }
+
+  /* Section layout (image left, panel right) */
+  section.room {
+    width: min(1100px, 90%);
+    margin: 36px auto;
+    display:flex;
+    gap:20px;
+    align-items:flex-start;
+    border-radius:12px;
+    padding:18px;
+    border: 2px solid var(--violet);
+    position:relative;
+    background: transparent;
+  }
+  /* responsive: stack on narrow screens */
+  @media (max-width:900px){
+    section.room { flex-direction:column; padding:14px; width:92%; }
+    .room-panel { margin-left:0; margin-top:12px; }
+  }
+
+  .room-image {
+    flex:1 1 420px;
+    min-width:300px;
+    height:300px;
+    border-radius:8px;
+    border:2px solid var(--hotpink);
+    background-size:cover;
+    background-position:center;
+    position:relative;
+    overflow:hidden;
+  }
+  .lights-off { filter: brightness(.22) !important; transition: filter .45s ease; }
+
+  .room-panel {
+    flex:1 1 360px;
+    min-width:240px;
+    background: var(--deep-purple);
+    border: 2px solid var(--violet);
+    border-radius:12px;
+    padding:18px;
+    backdrop-filter: blur(10px);
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+  .room-panel h3{ margin:0 0 4px 0; color: #f7c9e0; }
+  .room-panel p{ margin:0; color: rgba(255,255,255,0.92); line-height:1.45; font-size:0.95rem; }
+  .buttons { margin-top:8px; display:flex; gap:8px; flex-wrap:wrap; }
+  .switch, .info-btn{
+    padding:8px 14px;
+    border-radius:8px;
+    border:none;
+    cursor:pointer;
+    font-weight:700;
+  }
+  .switch { background: var(--violet); color:#000; }
+  .switch:hover{ background: var(--hotpink); color:#000; }
+  .info-btn{ background: var(--hotpink); color:#000; }
+  .info-btn:hover{ background: var(--violet); color:#fff; }
+
+  /* modals */
+  .info-modal {
+    display:none;
+    position:fixed; inset:0;
+    background: rgba(0,0,0,0.78);
+    z-index:3000;
+    align-items:center; justify-content:center;
+  }
+  .info-modal.open{ display:flex; }
+  .info-content {
+    width:min(520px,92%);
+    background:#0b0b0b;
+    border:2px solid var(--violet);
+    border-radius:12px;
+    padding:18px;
+    color:#fff;
+  }
+  .info-content .close{ float:right; color:var(--hotpink); font-size:26px; cursor:pointer; }
+
+  /* mini-map (right) */
+  .mini-map {
+    position:fixed;
+    right:20px; bottom:20px;
+    width:140px;
+    background: rgba(12,10,18,0.86);
+    border:2px solid var(--violet);
+    border-radius:12px;
+    padding:10px;
+    font-size:0.72rem;
+    z-index:2500;
+  }
+  .mini-map h3{ margin:0 0 6px 0; text-align:center; color:var(--hotpink); font-size:0.8rem; }
+  .floorplan{ display:flex; flex-direction:column; gap:6px; }
+  .row { display:flex; gap:6px; }
+  .floorplan a {
+    flex:1;
+    height:26px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-decoration:none;
+    color:#fff;
+    border-radius:6px;
+    border:2px solid var(--violet);
+    font-weight:700;
+    transition: all .25s;
+    font-size:0.65rem;
+    border-image: var(--glass-border) 1;
+  }
+  .floorplan a:hover{ color:var(--hotpink); box-shadow:0 0 8px var(--violet); }
+  .floorplan a.active{ animation:glowPulse 2s infinite alternate; color:var(--hotpink); }
+  @keyframes glowPulse {
+    from{ box-shadow:0 0 8px var(--violet); }
+    to{ box-shadow:0 0 20px var(--hotpink); }
+  }
+
+  /* back to top button (floats above mini-map) */
+  .back-to-top {
+    position:fixed;
+    right:20px;
+    bottom:110px; /* above mini-map */
+    z-index:2600;
+    width:46px;height:46px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    background: rgba(138,43,226,0.88);
+    color:#fff;
+    font-weight:800;
+    text-decoration:none;
+    border:2px solid var(--hotpink);
+    box-shadow:0 0 12px var(--violet);
+    transition: transform .18s ease;
+    animation: floatXY 4s ease-in-out infinite;
+  }
+  .back-to-top:hover{ transform: translateY(-4px); background:var(--hotpink); color:#000; }
+  @keyframes floatXY{
+    0%,100%{ transform:translate(0,0); } 25%{ transform:translate(-4px,-8px);} 50%{ transform:translate(8px,4px);} 75%{ transform:translate(-4px,8px); }
+  }
+
+  /* === Room-specific particles & animations === */
+
+  /* Tea leaves (Tea Room) */
+  .tea-leaf{
+    position:absolute;
+    width:22px;height:22px;
+    background-image:url('https://i.ibb.co/0tVgqfL/tea-leaf.png');
+    background-size:contain;
+    background-repeat:no-repeat;
+    pointer-events:none;
+    opacity:0;
+    transform:translateY(0) rotate(0deg);
+    animation: teaFloat linear infinite;
+  }
+  @keyframes teaFloat{
+    0%{ opacity:1; transform: translateY(0) rotate(0deg); }
+    60%{ opacity:0.8; transform: translateY(-120px) rotate(25deg); }
+    100%{ opacity:0; transform: translateY(-220px) rotate(60deg); }
+  }
+
+  /* brush strokes (Art Room) */
+  .brush-stroke {
+    position:absolute;
+    height:22px;
+    width:160px;
+    border-radius:10px;
+    background: linear-gradient(90deg, rgba(255,255,255,0.06), rgba(255,192,203,0.28));
+    transform: rotate(20deg);
+    opacity:0.85;
+    pointer-events:none;
+    animation: strokeMove linear infinite;
+  }
+  @keyframes strokeMove {
+    0%{ transform: translateX(-220px) rotate(20deg); opacity:0.1; }
+    30%{ opacity:0.8; }
+    100%{ transform: translateX(900px) rotate(20deg); opacity:0; }
+  }
+
+  /* Office flicker: little paper outlines */
+  .doc{
+    position:absolute;
+    width:60px;height:40px;
+    border:2px solid rgba(255,255,255,0.08);
+    top:14px; right:14px;
+    transform:rotate(-6deg);
+    border-radius:4px;
+    opacity:0.9;
+    box-shadow: 0 0 6px rgba(124,58,237,0.04);
+    animation: docFlicker 3s infinite;
+    pointer-events:none;
+  }
+  @keyframes docFlicker {
+    0%{ opacity:0.25; transform:translateY(0) rotate(-6deg); box-shadow:0 0 6px rgba(124,58,237,0.02); }
+    50%{ opacity:0.85; transform:translateY(-6px) rotate(-3deg); box-shadow:0 0 18px rgba(255,119,169,0.18); }
+    100%{ opacity:0.25; transform:translateY(0) rotate(-6deg); box-shadow:0 0 6px rgba(124,58,237,0.02); }
+  }
+
+  /* Favorites: stars/hearts */
+  .fav-particle {
+    position:absolute;
+    width:10px; height:10px; border-radius:50%;
+    background: linear-gradient(180deg, #fff0, var(--hotpink));
+    box-shadow: 0 0 8px var(--hotpink);
+    opacity:0.0;
+    pointer-events:none;
+    animation: favFloat linear infinite;
+  }
+  @keyframes favFloat {
+    0%{ transform: translateY(0) scale(.8); opacity:0; }
+    10%{ opacity:1; }
+    60%{ transform: translateY(-90px) scale(1.2); opacity:0.9; }
+    100%{ transform: translateY(-160px) scale(.5); opacity:0; }
+  }
+
+  /* Cellar: glowing sparks/fireflies */
+  .spark {
+    position:absolute;
+    width:8px;height:8px;border-radius:50%;
+    background: radial-gradient(circle, #fff, var(--hotpink));
+    box-shadow: 0 0 8px var(--hotpink);
+    opacity:0;
+    pointer-events:none;
+    animation: sparkFloat linear infinite;
+  }
+  @keyframes sparkFloat {
+    0%{ transform: translateY(0) scale(.6); opacity:0; }
+    20%{ opacity:1; }
+    60%{ transform: translateY(-160px) scale(1); opacity:0.9; }
+    100%{ transform: translateY(-300px) scale(.3); opacity:0; }
+  }
+
+  /* reduce motion */
+  @media (prefers-reduced-motion: reduce){
+    * { animation-duration: 0.001ms !important; animation-iteration-count:1 !important; transition:none !important; }
+    body::before { animation: none; }
+  }
+
+</style>
+</head>
+<body>
+
+<!-- Top banner -->
+<div class="top-banner"><h1>Chez-Xen</h1></div>
+
+<!-- Nav -->
+<nav>
+  <a id="nav-tea" href="#tea-room">Tea Room</a>
+  <a id="nav-office" href="#office">Office</a>
+  <a id="nav-art" href="#art-room">Art Room</a>
+  <a id="nav-fav" href="#favorites">Favorites</a>
+  <a id="nav-cellar" href="#cellar">Cellar</a>
+</nav>
+
+<!-- TEA ROOM -->
+<section id="tea-room" class="room">
+  <div class="room-image" id="teaImg" style="background-image:url('https://3society.neocities.org/X_EN.TEA.2026/ROOMS/Breakfast.TeaRoom.PastelLavenderPillow.jpeg');">
+    <!-- floating leaves; duplicates with different timings -->
+    <div class="tea-leaf" style="left:40px; bottom:20px; animation-duration:6s; animation-delay:0s;"></div>
+    <div class="tea-leaf" style="left:110px; bottom:10px; animation-duration:7s; animation-delay:1.2s;"></div>
+    <div class="tea-leaf" style="left:200px; bottom:30px; animation-duration:5.6s; animation-delay:2.6s;"></div>
+    <div class="tea-leaf" style="left:270px; bottom:24px; animation-duration:8s; animation-delay:0.8s;"></div>
+  </div>
+
+  <div class="room-panel">
+    <h3>Tea Room</h3>
+    <p>My cozy tea sanctuary. I brew thoughts, photos, and character ideas around my love of tea.</p>
+    <div class="buttons">
+      <button class="switch" onclick="toggleLight('teaImg')">Toggle Light</button>
+      <button class="info-btn" onclick="showInfo('teaInfo')">More Info</button>
+    </div>
+  </div>
+</section>
+
+<div id="teaInfo" class="info-modal" aria-hidden="true">
+  <div class="info-content">
+    <span class="close" onclick="closeInfo('teaInfo')">&times;</span>
+    <h2>Tea Room — Extras</h2>
+    <p>Photos of blends, brewing notes, character sketches inspired by tea rituals, and polls for visitors.</p>
+  </div>
+</div>
+
+<!-- OFFICE -->
+<section id="office" class="room">
+  <div class="room-image" id="officeImg" style="background-image:url('https://3society.neocities.org/X_EN.TEA.2026/ROOMS/officespacetwo.jpeg');">
+    <div class="doc" style="top:18px; right:18px; animation-duration:3.6s;"></div>
+    <div class="doc" style="top:72px; right:60px; width:50px;height:36px; transform:rotate(-10deg); animation-duration:4.4s; animation-delay:0.8s;"></div>
+  </div>
+
+  <div class="room-panel">
+    <h3>Office</h3>
+    <p>Where ideas, planning, and spiritual notes meet. A place for collaborators and project links.</p>
+    <div class="buttons">
+      <button class="switch" onclick="toggleLight('officeImg')">Toggle Light</button>
+      <button class="info-btn" onclick="showInfo('officeInfo')">More Info</button>
+    </div>
+  </div>
+</section>
+
+<div id="officeInfo" class="info-modal" aria-hidden="true">
+  <div class="info-content">
+    <span class="close" onclick="closeInfo('officeInfo')">&times;</span>
+    <h2>Office — Extras</h2>
+    <p>Project tracking, notes, and ways to reach out for collaboration.</p>
+  </div>
+</div>
+
+<!-- ART ROOM -->
+<section id="art-room" class="room">
+  <div class="room-image" id="artImg" style="background-image:url('https://3society.neocities.org/X_EN.TEA.2026/ROOMS/ARTROOM1.jpeg');">
+    <div class="brush-stroke" style="top:40px; left:-220px; animation-duration:10s;"></div>
+    <div class="brush-stroke" style="top:120px; left:-260px; animation-duration:8s; animation-delay:1.2s;"></div>
+    <div class="brush-stroke" style="top:210px; left:-180px; animation-duration:12s; animation-delay:0.6s;"></div>
+  </div>
+
+  <div class="room-panel">
+    <h3>Art Room</h3>
+    <p>Paintings, sketches, and process notes. Creativity in motion — sometimes messy, always heartfelt.</p>
+    <div class="buttons">
+      <button class="switch" onclick="toggleLight('artImg')">Toggle Light</button>
+      <button class="info-btn" onclick="showInfo('artInfo')">More Info</button>
+    </div>
+  </div>
+</section>
+
+<div id="artInfo" class="info-modal" aria-hidden="true">
+  <div class="info-content">
+    <span class="close" onclick="closeInfo('artInfo')">&times;</span>
+    <h2>Art Room — Extras</h2>
+    <p>Sketches, WIPs, and inspiration notes. You might find process GIFs and quick polls here.</p>
+  </div>
+</div>
+
+<!-- FAVORITES -->
+<section id="favorites" class="room">
+  <div class="room-image" id="favImg" style="background-image:url('https://3society.neocities.org/X_EN.TEA.2026/ROOMS/favs3.jpeg');">
+    <!-- favorites particles (stars/hearts) -->
+    <div class="fav-particle" style="left:40px; bottom:18px; animation-duration:6s; animation-delay:0.2s; border-radius:2px;"></div>
+    <div class="fav-particle" style="left:140px; bottom:40px; animation-duration:5.2s; animation-delay:0.8s;"></div>
+    <div class="fav-particle" style="left:220px; bottom:25px; animation-duration:7s; animation-delay:1.6s;"></div>
+    <div class="fav-particle" style="left:300px; bottom:60px; animation-duration:5.6s; animation-delay:2.2s;"></div>
+  </div>
+
+  <div class="room-panel">
+    <h3>Favorites</h3>
+    <p>Books, music, and reference collections that hold my heart and help shape my projects.</p>
+    <div class="buttons">
+      <button class="switch" onclick="toggleLight('favImg')">Toggle Light</button>
+      <button class="info-btn" onclick="showInfo('favInfo')">More Info</button>
+    </div>
+  </div>
+</section>
+
+<div id="favInfo" class="info-modal" aria-hidden="true">
+  <div class="info-content">
+    <span class="close" onclick="closeInfo('favInfo')">&times;</span>
+    <h2>Favorites — Extras</h2>
+    <p>Collections, playlists, recommended reading — a window into what keeps me creating.</p>
+  </div>
+</div>
+
+<!-- CELLAR -->
+<section id="cellar" class="room">
+  <div class="room-image" id="cellarImg" style="background-image:url('https://3society.neocities.org/GEISHA/cellar3.jpeg');">
+    <!-- several tiny sparks -->
+    <div class="spark" style="left:40px; bottom:18px; animation-duration:6s; animation-delay:0.2s;"></div>
+    <div class="spark" style="left:120px; bottom:8px; animation-duration:5.2s; animation-delay:0.6s;"></div>
+    <div class="spark" style="left:200px; bottom:30px; animation-duration:6.8s; animation-delay:1.2s;"></div>
+    <div class="spark" style="left:280px; bottom:18px; animation-duration:7.6s; animation-delay:2.0s;"></div>
+  </div>
+
+  <div class="room-panel">
+    <h3>The Cellar</h3>
+    <p>Ideas incubate here — brainstorming, Q&amp;A, collaboration invites, and project lists.</p>
+    <div class="buttons">
+      <button class="switch" onclick="toggleLight('cellarImg')">Toggle Light</button>
+      <button class="info-btn" onclick="showInfo('cellarInfo')">More Info</button>
+    </div>
+  </div>
+</section>
+
+<div id="cellarInfo" class="info-modal" aria-hidden="true">
+  <div class="info-content">
+    <span class="close" onclick="closeInfo('cellarInfo')">&times;</span>
+    <h2>The Cellar — Extras</h2>
+    <p>Collab forms, active project notes, and idea submission — the bustling workshop.</p>
+  </div>
+</div>
+
+<!-- Mini-map -->
+<div class="mini-map" role="navigation" aria-label="Site mini-map">
+  <h3>Floorplan</h3>
+  <div class="floorplan">
+    <div class="row"><a href="#tea-room">Tea</a></div>
+    <div class="row">
+      <a href="#office">Office</a>
+      <a href="#art-room">Art</a>
+      <a href="#favorites">Fav</a>
+    </div>
+    <div class="row"><a href="#cellar">Cellar</a></div>
+  </div>
+</div>
+
+<!-- Back to top -->
+<a class="back-to-top" href="#top" aria-label="Back to top">↑</a>
+
+<!-- Scripts: toggles & active highlighting -->
+<script>
+  // Toggle room lights
+  function toggleLight(id){
+    const el = document.getElementById(id);
+    if(!el) return;
+    el.classList.toggle('lights-off');
+  }
+
+  // Modal controls
+  function showInfo(id){
+    const m = document.getElementById(id);
+    if(!m) return;
+    m.classList.add('open');
+    m.setAttribute('aria-hidden','false');
+  }
+  function closeInfo(id){
+    const m = document.getElementById(id);
+    if(!m) return;
+    m.classList.remove('open');
+    m.setAttribute('aria-hidden','true');
+  }
+
+  // Active link highlighting (nav + mini-map)
+  (function(){
+    const sections = document.querySelectorAll('section.room');
+    const navIds = {
+      'tea-room':'nav-tea',
+      'office':'nav-office',
+      'art-room':'nav-art',
+      'favorites':'nav-fav',
+      'cellar':'nav-cellar'
+    };
+    const miniLinks = document.querySelectorAll('.mini-map .floorplan a');
+    const navLinks = Object.values(navIds).map(id => document.getElementById(id));
+
+    function onScroll(){
+      let current = '';
+      sections.forEach(sec=>{
+        const top = sec.offsetTop - 170;
+        const height = sec.offsetHeight;
+        if(window.pageYOffset >= top && window.pageYOffset < top + height){
+          current = sec.id;
+        }
+      });
+      // remove classes
+      navLinks.forEach(a=>a && a.classList.remove('active'));
+      miniLinks.forEach(a=>a.classList.remove('active'));
+      if(current){
+        const navEl = document.getElementById(navIds[current]);
+        if(navEl) navEl.classList.add('active');
+        // map active index
+        const names = Object.keys(navIds);
+        const idx = names.indexOf(current);
+        if(idx >= 0 && miniLinks[idx]) miniLinks[idx].classList.add('active');
+      }
+    }
+
+    window.addEventListener('scroll', onScroll, {passive:true});
+    window.addEventListener('load', onScroll);
+    // also set focus on clicks (for keyboard users)
+    document.querySelectorAll('a[href^="#"]').forEach(a=>{
+      a.addEventListener('click', ()=> setTimeout(onScroll, 100));
+    });
+  })();
+</script>
+
+</body>
+</html>
