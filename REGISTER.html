@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Background Image Example</title>
+<style>
+  /* Reset */
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { height: 100%; font-family: Arial, sans-serif; }
+
+  /* Background container with fallback color */
+  .video-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #4B0082; /* fallback color */
+    overflow: hidden;
+    z-index: -1;
+  }
+
+  /* Make image cover the entire background */
+  .video-background img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;          /* cover the container preserving aspect ratio */
+    transform: translate(-50%, -50%);
+    -o-object-fit: cover;
+  }
+
+  /* Optional: use background-image approach instead (alternative) */
+  /* .video-background {
+       background-image: url('YOUR_IMAGE.jpg');
+       background-size: cover;
+       background-position: center;
+       background-repeat: no-repeat;
+     } */
+
+  .content-overlay {
+    position: relative;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    text-align: center;
+    background: rgba(0,0,0,0.3);
+    z-index: 1;
+    padding: 20px;
+  }
+
+  h1 { font-size: 3em; margin-bottom: 30px; }
+
+  .buttons { display: flex; gap: 20px; }
+
+  .btn { padding: 15px 30px; font-size: 1.2em; color: white; text-decoration: none; border-radius: 8px; transition: all 0.3s ease; cursor: pointer; }
+
+  .btn-register {
+    background: linear-gradient(45deg, #6a0dad, #8a2be2);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    font-weight: bold;
+    position: relative;
+    overflow: hidden;
+  }
+  .btn-register:hover {
+    background: linear-gradient(45deg, #8a2be2, #6a0dad);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+    transform: translateY(-2px);
+  }
+  .btn-register::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -75%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(120deg, rgba(255,255,255,0.3), rgba(255,255,255,0));
+    transform: skewX(-20deg);
+    animation: shine 2s infinite;
+  }
+  @keyframes shine { 0% { left: -75%; } 100% { left: 125%; } }
+</style>
+</head>
+<body>
+
+<div class="video-background">
+  <img src="https://xencafe.nekoweb.org/2026/JUNE-COMMUNITY-2026/monochrombuttrt.jpg" alt="Background" />
+  <!-- Or remove the <img> and uncomment the background-image CSS above -->
+</div>
+
+<div class="content-overlay">
+  <h1>Welcome to Our Site</h1>
+  <div class="buttons">
+    <a href="register.html" class="btn btn-register">Register</a>
+    <a href="login.html" class="btn btn-login">Login</a>
+  </div>
+</div>
+
+</body>
+</html>
