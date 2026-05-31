@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Colored Tea & Herb Catalog</title>
+<style>
+  body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(135deg, #f0f4f8, #d9e2ec);
+    margin: 20px;
+    color: #333;
+  }
+  h1 {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 20px;
+  }
+
+  /* Colorful sections */
+  #form-section, #browse-section {
+    background: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  }
+
+  /* Inputs styling with colors */
+  input, select {
+    margin: 5px 10px;
+    padding: 8px;
+    border: 2px solid #3498db;
+    border-radius: 4px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  input:focus, select:focus {
+    border-color: #2980b9;
+  }
+
+  /* Buttons styling */
+  button {
+    padding: 8px 16px;
+    margin-top: 10px;
+    background-color: #2980b9;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  button:hover {
+    background-color: #3498db;
+  }
+
+  /* Collection display styles */
+  #collection {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .item {
+    background: #fff;
+    border-radius: 8px;
+    padding: 15px;
+    margin: 10px;
+    width: 260px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+  }
+
+  /* Header and status colors */
+  #status {
+    margin-top: 10px;
+    font-weight: bold;
+    color: #27ae60;
+  }
+
+  /* Remove search interface, add new style for heading */
+  #search-section {
+    display: none; /* Hidden for now */
+  }
+</style>
+<!-- Include libraries for PDF and Image saving -->
+<script src="https://cdn.jsdelivr.net/npm/html2pdf.js@0.10.1/dist/html2pdf.bundle.min.js"></script>
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+</head>
+<body>
+
+<h1>Colorful Tea & Herb Catalog</h1>
+
+<!-- Entry Form -->
+<div id="form-section">
+  <h2>Add New Entry</h2>
+  <input type="text" id="name" placeholder="Name (e.g., Green Tea)" />
+  <input type="text" id="origin" placeholder="Origin" />
+  <input type="text" id="flavor" placeholder="Flavor Profile" />
+  <input type="number" id="price" placeholder="Price in USD" />
+  <select id="type">
+    <option value="Tea">Tea</option>
+    <option value="Herb">Herb</option>
+  </select>
+  <button onclick="addEntry()">Add Entry</button>
+</div>
+
+<!-- Optional Search Section (hidden now) -->
+<div id="search-section">
+  <!-- Hidden for now, can be re-enabled later -->
+</div>
+
+<!-- Buttons to filter or view all -->
+<div id="browse-section">
+  <h2>View Collection</h2>
+  <button onclick="showCollection()">Show All</button>
+  <button onclick="filterByType('Tea')">Show Teas</button>
+  <button onclick="filterByType('Herb')">Show Herbs</button>
+</div>
+
+<!-- Export Buttons -->
+<div style="margin-bottom:20px; text-align:center;">
+  <button onclick="saveAsPDF()">Save as PDF</button>
+  <button onclick="saveAsImage()">Save as Image</button>
+</div>
+
+<!-- Display collection -->
+<div id="collection"></div>
+<div id="status"></div>
+
+<script>
+class Item {
+  constructor(index, previousHash, data) {
+    this.index = index;
+    this.previousHash = previousHash;
+    this.data = data;
+    this.timestamp = Date.now();
+    this.hash = this.calculateHash();
+  }
+  calculateHash() {
+    const str = this.index + this.previousHash + JSON.stringify(this.data) + this.timestamp;
+    return sha256(str);
+  }
+}
+
+class Blockchain {
+  constructor() {
+    this.chain = [this.createGenesisBlock()];
+  }
+  createGenesisBlock() {
+    const data = {name: "Genesis", origin: "", flavor: "", price: 0, type: ""};
+    return new Item(0, "0", data);
+  }
+  getLatestBlock() {
+    return this.chain[this.chain.length -1];
+  }
+  addItem(data) {
+    const previousBlock = this.getLatestBlock();
+    const newItem = new Item(this.chain.length, previousBlock.hash, data);
+    this.chain.push(newItem);
+  }
+  verifyChain() {
+    for(let i=1; i<this.chain.length; i++) {
+      const current = this.chain[i];
+      const previous = this.chain[i-1];
+      if(current.hash !== current.calculateHash()) return false;
+      if(current.previousHash !== previous.hash) return false;
+    }
+    return true;
+  }
+  getAllItems() {
+    return this.chain.slice(1);
+  }
+}
+
+const myBlockchain = new Blockchain();
+
+async function sha256(message) {
+  const buffer = new TextEncoder().encode(message);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', buffer);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+// Add new product
+async function addEntry() {
+  const name = document.getElementById('name').value.trim();
+  const origin = document.getElementById('origin').value.trim();
+  const flavor = document.getElementById('flavor').value.trim();
+  const price = parseFloat(document.getElementById('price').value);
+  const type = document.getElementById('type').value;
+
+  if(!name || isNaN(price)){
+    alert('Please enter valid name and price.');
+    return;
+  }
+
+  const data = { name, origin, flavor, price, type };
+  await sha256(JSON.stringify(data)).then(() => {
+    myBlockchain.addItem(data);
+    clearForm();
+    showCollection();
+  });
+}
+
+function clearForm() {
+  document.getElementById('name').value = '';
+  document.getElementById('origin').value = '';
+  document.getElementById('flavor').value = '';
+  document.getElementById('price').value = '';
+}
+
+// Show all or filtered collection
+let currentFilterType = null;
+function showCollection() {
+  const container = document.getElementById('collection');
+  container.innerHTML = '';
+  let items = myBlockchain.getAllItems();
+  if(currentFilterType) {
+    items = items.filter(item => item.data.type === currentFilterType);
+  }
+  displayItems(items);
+}
+
+// Filter by type
+function filterByType(type){
+  currentFilterType = type;
+  showCollection();
+}
+
+// Display items in the container
+function displayItems(items) {
+  const container = document.getElementById('collection');
+  container.innerHTML = '';
+
+  if(items.length === 0){
+    container.innerHTML = '<p>No entries found.</p>';
+    return;
+  }
+
+  items.forEach(item => {
+    const div = document.createElement('div');
+    div.className = 'item';
+    div.innerHTML = `
+      <h3 style="color:#2980b9;">${item.data.name}</h3>
+      <p><strong>Type:</strong> ${item.data.type}</p>
+      <p><strong>Origin:</strong> ${item.data.origin}</p>
+      <p><strong>Flavor:</strong> ${item.data.flavor}</p>
+      <p><strong>Price:</strong> $${item.data.price.toFixed(2)}</p>
+    `;
+    container.appendChild(div);
+  });
+}
+
+// Save as PDF
+function saveAsPDF() {
+  const element = document.getElementById('collection');
+  html2pdf().from(element).save('collection.pdf');
+}
+
+// Save as PNG Image
+function saveAsImage() {
+  const element = document.getElementById('collection');
+  html2canvas(element).then(canvas => {
+    const dataUrl = canvas.toDataURL('image/png');
+    const link = document.createElement('a');
+    link.href = dataUrl;
+    link.download = 'collection.png';
+    link.click();
+  });
+}
+
+// Initialize display
+showCollection();
+</script>
+
+</body>
+</html>
