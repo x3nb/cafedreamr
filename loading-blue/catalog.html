@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NARRATOR QUEST - Interactive Book Adventure</title>
+    <style>
+        /* Retro Game Theme - Inspired by 8/16-bit gaming */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Courier New', monospace;
+            background-color: #000000; /* Black background */
+            background-image: 
+                linear-gradient(to bottom, #007BA7 0%, #808080 50%, #6495ED 100%), /* Cerulean blue to medium grey to cornflower blue */
+                radial-gradient(circle at 20% 80%, #007BA7 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, #6495ED 0%, transparent 50%);
+            color: #e0e0ff; /* Light blue text */
+            min-height: 100vh;
+            padding: 1rem;
+            image-rendering: pixelated;
+            overflow: hidden; /* Prevent scrolling during loading */
+        }
+        
+        /* CRT screen effect */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
+            background-size: 100% 4px;
+            z-index: 1000;
+            pointer-events: none;
+            opacity: 0.3;
+        }
+        
+        /* Scan lines for retro effect */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to bottom, 
+                rgba(255,255,255,0.03) 0%,
+                rgba(255,255,255,0.06) 50%,
+                rgba(255,255,255,0.03) 100%);
+            background-size: 100% 3px;
+            z-index: 1001;
+            pointer-events: none;
+        }
+
+        /* Loading Screen - Full screen overlay */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, #000000, #007BA7);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+            opacity: 1;
+            transform: scale(1);
+        }
+        .loading-screen.hidden {
+            opacity: 0;
+            transform: scale(0.95);
+            pointer-events: none;
+        }
+        
+        /* Loading logo/title */
+        .loading-title {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #fff;
+            text-shadow: 
+                3px 3px 0 #007BA7,
+                6px 6px 0 #000;
+            letter-spacing: 3px;
+            margin-bottom: 1rem;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+        @keyframes glow {
+            from { text-shadow: 3px 3px 0 #007BA7, 6px 6px 0 #000, 0 0 10px #6495ED; }
+            to { text-shadow: 3px 3px 0 #6495ED, 6px 6px 0 #000, 0 0 20px #808080; }
+        }
+        
+        /* Loading status text */
+        .loading-text {
+            color: #e0e0ff;
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            text-shadow: 1px 1px 0 #000;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+        
+        /* Loading progress bar */
+        .loading-progress {
+            width: 300px;
+            height: 20px;
+            background: #333;
+            border: 3px solid #007BA7;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 1rem;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+        .loading-fill {
+            height: 100%;
+            background: linear-gradient(to right, #808080, #6495ED);
+            width: 0%;
+            transition: width 0.1s linear;
+            position: relative;
+        }
+        .loading-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, 
+                transparent 0%, 
+                rgba(255,255,255,0.4) 50%, 
+                transparent 100%);
+            animation: shine 1.5s infinite;
+        }
+        @keyframes shine {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+        
+        /* Spinner for extra flair */
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #007BA7;
+            border-top: 4px solid #808080;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 1rem;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 2rem auto;
+            background-color: rgba(30, 30, 60, 0.9);
+            border-radius: 8px;
+            border: 4px solid #6495ED;
+            box-shadow: 
+                0 0 20px rgba(100, 149, 237, 0.6),
+                inset 0 0 20px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            position: relative;
+            padding: 0;
+            opacity: 0; /* Hidden initially */
+            transform: translateY(20px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        .container.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Pixel art decorations */
+        .pixel-corner {
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            background: linear-gradient(45deg, #6495ED, #007BA7);
+            image-rendering: pixelated;
+        }
+        .corner-tl { top: -4px; left: -4px; }
+        .corner-tr { top: -4px; right: -4px; }
+        .corner-bl { bottom: -4px; left: -4px; }
+        .corner-br { bottom: -4px; right: -4px; }
+
+        /* Header - Game Title Screen Style */
+        .header {
+            background: linear-gradient(to bottom, #007BA7, #6495ED);
+            padding: 2rem 1.5rem;
+            text-align: center;
+            border-bottom: 4px solid #808080;
+            position: relative;
+        }
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #fff;
+            text-shadow: 
+                2px 2px 0 #007BA7,
+                4px 4px 0 #000;
+            letter-spacing: 2px;
+            margin-bottom: 0.5rem;
+        }
+        .header p {
+            font-size: 1rem;
+            color: #e0e0ff;
+            text-shadow: 1px 1px 0 #007BA7;
+            opacity: 0.9;
+        }
+        
+        /* Health bar style progress indicator */
+        .health-bar {
+            position: absolute;
+            bottom: -2px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 8px;
+            background: #333;
+            border: 2px solid #000;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .health-fill {
+            height: 100%;
+            background: linear-gradient(to right, #808080, #6495ED);
+            width: 100%;
+            transition: width 0.3s;
+        }
+
+        /* Main content area */
+        .main {
+            padding: 2rem;
+            background: rgba(20, 20, 40, 0.8);
+        }
+
+        /* Game UI Terminal */
+        .terminal {
+            background: #1a1a2a;
+            color: #00ff88; /* Retro green */
+            padding: 1rem;
+            border-radius: 6px;
+            margin-bottom: 2rem;
+            border: 2px solid #007BA7;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+            font-family: 'Courier New', monospace;
+        }
+        .terminal-content {
+            display: flex;
+            align-items: center;
+            font-size: 1.1rem;
+        }
+        .prompt {
+            color: #808080; /* Grey prompt */
+            margin-right: 0.5rem;
+            font-weight: bold;
+        }
+        .cursor {
+            animation: blink 1s step-start infinite;
+            color: #00ff88;
+        }
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+        .command {
+            margin-left: 0.5rem;
+            color: #e0e0ff;
+        }
+
+        /* Level Select (Table of Contents) */
+        .level-select {
+            margin-bottom: 2rem;
+        }
+        .level-select h2 {
+            font-size: 1.5rem;
+            color: #808080;
+            text-shadow: 1px 1px 0 #000;
+            margin-bottom: 1rem;
+            text-align: center;
+            border-bottom: 2px solid #007BA7;
+            padding-bottom: 0.5rem;
+        }
+        .level-list {
+            display: grid;
+            gap: 0.8rem;
+        }
+        .level-item {
+            padding: 1rem;
+            background: rgba(50, 50, 80, 0.6);
+            border: 2px solid #007BA7;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .level-item:hover {
+            background: rgba(70, 70, 120, 0.8);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 123, 167, 0.4);
+        }
+        .level-item.active {
+            background: rgba(100, 149, 237, 0.3);
+            border-color: #808080;
+            box-shadow: 0 0 15px rgba(128, 128, 128, 0.6);
+        }
+        .level-item.completed::before {
+            content: '✓';
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            color: #00ff88;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        .level-row {
+            display: flex;
+            align-items: center;
+        }
+        .level-number {
+            width: 2rem;
+            height: 2rem;
+            background: #007BA7;
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            font-weight: bold;
+            font-size: 1rem;
+            border: 2px solid #6495ED;
+        }
+        .level-item.active .level-number {
+            background: #808080;
+            border-color: #6495ED;
+        }
+        .level-title {
+            color: #e0e0ff;
+            flex: 1;
+            font-weight: 500;
+        }
+        .level-item.active .level-title {
+            color: #fff;
+            font-weight: bold;
+        }
+        .playing-status {
+            margin-left: auto;
+            color: #00ff88;
+            font-weight: bold;
+            animation: pulse 1s infinite;
+        }
+
+        /* Game Controls */
+        .game-controls {
+            background: rgba(40, 40, 70, 0.8);
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 2px solid #6495ED;
+            box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.4);
+        }
+        .controls-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #007BA7;
+            padding-bottom: 0.5rem;
+        }
+        .controls-header h3 {
+            font-size: 1.2rem;
+            color: #808080;
+            text-shadow: 1px 1px 0 #000;
+        }
+        .chapter-info {
+            font-size: 0.9rem;
+            color: #e0e0ff;
+            background: #007BA7;
+            padding: 0.3rem 0.8rem;
+            border-radius: 12px;
+            font-weight: bold;
+        }
+        .controls-content {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+        .play-button {
+            width: 4rem;
+            height: 4rem;
+            background: linear-gradient(45deg, #808080, #6495ED);
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 2rem;
+            box-shadow: 
+                0 4px 8px rgba(0, 0, 0, 0.3),
+                inset 0 2px 4px rgba(255, 255, 255, 0.3);
+            border: 2px solid #fff;
+        }
+        .play-button:hover {
+            transform: scale(1.05);
+            box-shadow: 
+                0 6px 12px rgba(0, 0, 0, 0.4),
+                inset 0 2px 4px rgba(255, 255, 255, 0.4);
+        }
+        .play-button:active {
+            transform: scale(0.95);
+        }
+        .audio-info {
+            flex: 1;
+        }
+        .current-title {
+            font-size: 1rem;
+            font-weight: bold;
+            color: #fff;
+            margin-bottom: 0.8rem;
+            text-shadow: 1px 1px 0 #000;
+        }
+        .xp-bar {
+            width: 100%;
+            height: 0.8rem;
+            background: #333;
+            border-radius: 4px;
+            overflow: hidden;
+            border: 2px solid #000;
+            position: relative;
+        }
+        .xp-fill {
+            height: 100%;
+            background: linear-gradient(to right, #00ff88, #88ffaa);
+            width: 0%;
+            transition: width 0.3s;
+            position: relative;
+        }
+        .xp-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, 
+                transparent 0%, 
+                rgba(255,255,255,0.2) 50%, 
+                transparent 100%);
+            animation: shine 2s infinite;
+        }
+
+        /* Footer - Status Bar */
+        .footer {
+            background: linear-gradient(to top, #007BA7, #6495ED);
+            color: #fff;
+            padding: 1rem;
+            text-align: center;
+            font-size: 0.9rem;
+            border-top: 2px solid #808080;
+        }
+        .status-indicator {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.8rem;
+        }
+        .status-dot {
+            width: 0.8rem;
+            height: 0.8rem;
+            background: #00ff88;
+            border-radius: 50%;
+            animation: pulse 1s infinite;
+            box-shadow: 0 0 8px #00ff88;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .loading-title {
+                font-size: 2.5rem;
+            }
+            .loading-progress {
+                width: 250px;
+            }
+            .header h1 {
+                font-size: 2rem;
+            }
+            .main {
+                padding: 1rem;
+            }
+            .controls-content {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            .play-button {
+                width: 3.5rem;
+                height: 3.5rem;
+            }
+        }
+
+        /* Hide audio element */
+        audio {
+            display: none;
+        }
+
+        /* Pulse animation for loading text */
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+    </style>
+</head>
+ <body>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loading-screen">
+        <div class="loading-spinner"></div>
+        <div class="loading-title">NARRATOR QUEST</div>
+        <div class="loading-text" id="loading-text">Initializing Adventure...</div>
+        <div class="loading-progress">
+            <div class="loading-fill" id="loading-fill"></div>
+        </div>
+    </div>
+
+    <!-- Main Container (hidden until loading completes) -->
+    <div class="container" id="main-container">
+        <!-- Pixel corners for game aesthetic -->
+        <div class="pixel-corner corner-tl"></div>
+        <div class="pixel-corner corner-tr"></div>
+        <div class="pixel-corner corner-bl"></div>
+        <div class="pixel-corner corner-br"></div>
+
+        <!-- Header -->
+        <div class="header">
+            <h1>NARRATOR QUEST</h1>
+            <p>Interactive Story Adventure</p>
+            <div class="health-bar">
+                <div class="health-fill" id="health-bar"></div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main">
+            <!-- Game Terminal -->
+            <div class="terminal">
+                <div class="terminal-content">
+                    <span class="prompt">></span>
+                    <span class="cursor">_</span>
+                    <span class="command" id="current-command">select_level(1)</span>
+                </div>
+            </div>
+
+            <!-- Level Select (Table of Contents) -->
+            <div class="level-select">
+                <h2>LEVEL SELECT</h2>
+                <div class="level-list" id="level-list">
+                    <!-- Levels will be populated by JS -->
+                </div>
+            </div>
+
+            <!-- Game Controls -->
+            <div class="game-controls">
+                <div class="controls-header">
+                    <h3>CURRENT MISSION</h3>
+                    <span class="chapter-info" id="chapter-counter">LEVEL 1/4</span>
+                </div>
+                <div class="controls-content">
+                    <button class="play-button" id="play-button">
+                        <!-- Play icon -->
+                        <svg class="play-icon" fill="currentColor" viewBox="0 0 20 20" style="display: block;">
+                            <path d="M8 5v10l7-5z"/>
+                        </svg>
+                        <!-- Pause icon (hidden initially) -->
+                        <svg class="pause-icon" fill="currentColor" viewBox="0 0 20 20" style="display: none;">
+                            <path d="M6 5h2v10H6V5zm6 0h2v10h-2V5z"/>
+                        </svg>
+                    </button>
+                    <div class="audio-info">
+                        <div class="current-title" id="current-title">Chapter 1: Introduction</div>
+                        <div class="xp-bar">
+                            <div class="xp-fill" id="progress-fill"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hidden audio element -->
+            <audio id="audio-player" preload="metadata"></audio>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <div class="status-indicator">
+                <div class="status-dot"></div>
+                <span>AUDIO SYSTEM: READY</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Loading Screen Logic
+        const loadingScreen = document.getElementById('loading-screen');
+        const loadingText = document.getElementById('loading-text');
+        const loadingFill = document.getElementById('loading-fill');
+        const mainContainer = document.getElementById('main-container');
+
+        // Simulate loading progress (fake steps for demo)
+        const loadingSteps = [
+            'Loading game engine...',
+            'Initializing audio system...',
+            'Loading story levels...',
+            'Preparing narrator...',
+            'Adventure ready!'
+        ];
+        let stepIndex = 0;
+        let progress = 0;
+
+        function updateLoading() {
+            if (stepIndex < loadingSteps.length) {
+                loadingText.textContent = loadingSteps[stepIndex];
+                progress += (100 / loadingSteps.length);
+                loadingFill.style.width = Math.min(progress, 100) + '%';
+                
+                stepIndex++;
+                setTimeout(updateLoading, 600); // Next step after 600ms
+            } else {
+                // Loading complete - fade out screen and show main content
+                setTimeout(() => {
+                    loadingScreen.classList.add('hidden');
+                    mainContainer.classList.add('visible');
+                    // Re-enable scrolling
+                    document.body.style.overflow = 'auto';
+                }, 800); // Brief pause before fade
+            }
+        }
+
+        // Start loading simulation
+        updateLoading();
+
+        // Game Logic (rest of the script)
+        const songs = [
+            "audio/ch1_intro.mp3",
+            "audio/ch2_thejourney.mp3",
+            "audio/ch3_secrets.mp3",
+            "audio/ch4_cliffhanger.mp3"
+        ];
+
+        const titles = [
+            "Chapter 1: Introduction",
+            "Chapter 2: The Journey",
+            "Chapter 3: Secrets",
+            "Chapter 4: Cliffhanger"
+        ];
+
+        let currentChapter = 0;
+        let isPlaying = false;
+        let completedChapters = new Set();
+        const audio = document.getElementById('audio-player');
+        const playButton = document.getElementById('play-button');
+        const playIcon = playButton.querySelector('.play-icon');
+        const pauseIcon = playButton.querySelector('.pause-icon');
+        const levelList = document.getElementById('level-list');
+        const currentCommand = document.getElementById('current-command');
+        const chapterCounter = document.getElementById('chapter-counter');
+        const currentTitle = document.getElementById('current-title');
+        const progressFill = document.getElementById('progress-fill');
+        const healthBar = document.getElementById('health-bar');
+
+        // Wait for main content to be visible before initializing game
+        mainContainer.addEventListener('transitionend', () => {
+            initializeGame();
+        });
+
+        function initializeGame() {
+            // Populate level select
+            populateLevels();
+            updateUI();
+
+            // Optional: Preload audio metadata for smoother playback
+            songs.forEach((song, index) => {
+                const tempAudio = new Audio(song);
+                tempAudio.preload = 'metadata';
+            });
+        }
+
+        // Populate level select
+        function populateLevels() {
+            levelList.innerHTML = '';
+            titles.forEach((title, index) => {
+                const levelItem = document.createElement('div');
+                levelItem.className = `level-item ${completedChapters.has(index) ? 'completed' : ''}`;
+                levelItem.innerHTML = `
+                    <div class="level-row">
+                        <span class="level-number">${index + 1}</span>
+                        <span class="level-title">${title}</span>
+                        <span class="playing-status" style="display: none;">▶ PLAYING</span>
+                    </div>
+                `;
+                levelItem.addEventListener('click', () => selectLevel(index));
+                levelList.appendChild(levelItem);
+            });
+            updateLevels();
+        }
+
+        // Select level
+        function selectLevel(index) {
+            currentChapter = index;
+            isPlaying = true;
+            updateLevels();
+            updateUI();
+
+            audio.src = songs[index];
+            audio.load();
+            audio.play().catch(error => {
+                console.error("Audio playback failed:", error);
+                isPlaying = false;
+                updateUI();
+            });
+        }
+
+        // Update level highlighting
+        function updateLevels() {
+            const items = levelList.querySelectorAll('.level-item');
+            items.forEach((item, index) => {
+                if (index === currentChapter) {
+                    item.classList.add('active');
+                    const status = item.querySelector('.playing-status');
+                    if (isPlaying) {
+                        status.style.display = 'inline';
+                    }
+                } else {
+                    item.classList.remove('active');
+                    const status = item.querySelector('.playing-status');
+                    status.style.display = 'none';
+                }
+                // Update completion status
+                if (completedChapters.has(index)) {
+                    item.classList.add('completed');
+                }
+            });
+        }
+
+        // Update UI elements
+        function updateUI() {
+            currentCommand.textContent = `select_level(${currentChapter + 1})`;
+            chapterCounter.textContent = `LEVEL ${currentChapter + 1}/4`;
+            currentTitle.textContent = titles[currentChapter];
+            
+            // Update health bar based on overall progress (chapters completed)
+            const totalProgress = ((completedChapters.size + (isPlaying ? 1 : 0)) / songs.length) * 100;
+            healthBar.style.width = totalProgress + '%';
+            
+            if (isPlaying) {
+                playIcon.style.display = 'none';
+                pauseIcon.style.display = 'block';
+            } else {
+                playIcon.style.display = 'block';
+                pauseIcon.style.display = 'none';
+            }
+            updateLevels();
+        }
+
+        // Toggle play/pause
+        playButton.addEventListener('click', () => {
+            if (audio.paused) {
+                audio.play().catch(error => {
+                    console.error("Audio playback failed:", error);
+                });
+            } else {
+                audio.pause();
+            }
+        });
+
+        // Audio event listeners
+        audio.addEventListener('play', () => {
+            isPlaying = true;
+            updateUI();
+        });
+
+        audio.addEventListener('pause', () => {
+            isPlaying = false;
+            updateUI();
+        });
+
+        audio.addEventListener('ended', () => {
+            isPlaying = false;
+            completedChapters.add(currentChapter);
+            updateLevels();
+            updateUI();
+            
+            // Auto-advance to next level if available (with 1-second delay)
+            if (currentChapter < songs.length - 1) {
+                setTimeout(() => selectLevel(currentChapter + 1), 1000);
+            }
+        });
+
+        // Update progress bar in real-time
+        audio.addEventListener('timeupdate', () => {
+            if (audio.duration) {
+                const progress = (audio.currentTime / audio.duration) * 100;
+                progressFill.style.width = progress + '%';
+            }
+        });
+
+        // Add hover sound effect simulation (optional - could add real audio if desired)
+        document.querySelectorAll('.level-item').forEach(item => {
+            item.addEventListener('mouseenter', () => {
+                item.style.transform = 'translateY(-2px) scale(1.02)';
+            });
+            item.addEventListener('mouseleave', () => {
+                if (!item.classList.contains('active')) {
+                    item.style.transform = 'translateY(0) scale(1)';
+                }
+            });
+        });
+
+        // Note: Ensure audio files are in the correct path relative to this HTML file.
+        // The loading screen will auto-hide after ~3 seconds (adjustable in updateLoading()).
+    </script>
+</body>
+</html>
