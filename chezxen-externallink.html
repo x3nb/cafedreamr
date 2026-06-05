@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>X-en's Interactive Home</title>
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: black;
+  color: white;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+
+/* Starfield */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0; left: 0;
+  width: 200%; height: 200%;
+  background: radial-gradient(circle, rgba(255,255,255,0.8) 1px, transparent 1px);
+  background-size: 50px 50px;
+  animation: drift 60s linear infinite;
+  z-index: -1;
+  opacity: 0.3;
+}
+@keyframes drift { 0% { transform: translate(0,0); } 100% { transform: translate(-500px,-500px); } }
+
+/* Navigation */
+nav {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  padding: 20px;
+  background: rgba(0,0,0,0.6);
+  border-bottom: 2px solid violet;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+nav a { color: white; text-decoration: none; padding: 8px 12px; border: 2px solid violet; border-radius: 6px; transition:0.3s;}
+nav a:hover, nav a.active { color: hotpink; }
+
+/* Sections layout */
+section { display: flex; flex-wrap: wrap; align-items: flex-start; margin:40px auto; border:2px solid violet; padding:20px; border-radius:10px; width:80%; position:relative; }
+.room-image { flex:1; min-width:300px; height:300px; background-size: cover; background-position:center; margin-bottom:10px; border:2px solid hotpink; transition:filter 0.5s ease; position:relative; overflow:hidden; }
+.lights-off { filter: brightness(0.2); }
+
+/* Dynamic content panel */
+.room-panel {
+  flex:1; min-width:250px; margin-left:20px; background: rgba(48,0,48,0.6); backdrop-filter: blur(10px); border:2px solid violet; border-radius:12px; padding:20px; color:white; display:flex; flex-direction:column; justify-content:flex-start;
+}
+.room-panel h3 { margin-top:0; }
+.room-panel button { margin-bottom:10px; }
+
+/* Buttons */
+.switch, .info-btn { cursor:pointer; padding:8px 16px; border:none; border-radius:6px; font-weight:bold; }
+.switch { background: violet; color:black; } .switch:hover { background: hotpink; color:white; }
+.info-btn { background: hotpink; color:black; } .info-btn:hover { background: violet; color:white; }
+
+/* Modal */
+.info-modal { display:none; position:fixed; z-index:1000; left:0; top:0; width:100%; height:100%; overflow:auto; background-color: rgba(0,0,0,0.8);}
+.info-content { background-color:#111; margin:15% auto; padding:20px; border:2px solid violet; border-radius:12px; width:80%; max-width:500px; color:white; }
+.close { color:hotpink; float:right; font-size:28px; cursor:pointer; }
+
+/* Back-to-top above mini-map */
+.back-to-top { position:fixed; bottom:100px; right:20px; text-decoration:none; background:rgba(138,43,226,0.8); color:white; padding:12px 18px; border-radius:50%; font-size:1.2em; font-weight:bold; border:2px solid hotpink; box-shadow:0 0 10px violet,0 0 20px hotpink; transition:0.3s; animation:floatXY 4s ease-in-out infinite;}
+.back-to-top:hover { background:hotpink; color:black; box-shadow:0 0 25px violet,0 0 40px hotpink;}
+@keyframes floatXY { 0%,100%{transform:translate(0,0);} 25%{transform:translate(-5px,-10px);} 50%{transform:translate(10px,5px);} 75%{transform:translate(-5px,10px);} }
+
+/* Mini-map blueprint on right */
+.mini-map { position:fixed; bottom:20px; right:20px; left:auto; background:rgba(20,20,30,0.8); border:2px solid violet; border-radius:12px; padding:10px; font-size:0.7rem; z-index:1000; width:140px; }
+.mini-map h3 { margin:0 0 5px 0; text-align:center; }
+.floorplan { display:flex; flex-direction:column; gap:4px; }
+.row { display:flex; gap:4px; }
+.floorplan a { flex:1; height:25px; border:2px solid violet; display:flex; align-items:center; justify-content:center; text-decoration:none; color:white; font-size:0.6rem; font-weight:bold; transition:0.3s; border-image: linear-gradient(45deg, violet, hotpink) 1;}
+.floorplan a.active { animation:glowPulse 2s infinite alternate; }
+@keyframes glowPulse { 0%{box-shadow:0 0 10px violet,0 0 20px hotpink;} 100%{box-shadow:0 0 20px violet,0 0 40px hotpink;} }
+.floorplan a:hover { color:hotpink; box-shadow:0 0 10px violet,0 0 20px hotpink; }
+
+/* Floating tea leaves in Tea Room */
+.tea-leaf {
+  position:absolute; width:20px; height:20px; background:url('https://3society.neocities.org/X_EN.TEA.2026/ROOMS/teacup.png') no-repeat center/contain; animation:floatLeaf 6s linear infinite;
+}
+@keyframes floatLeaf {
+  0% { transform: translate(0,0) rotate(0deg); opacity:1; }
+  50% { transform: translate(20px,-100px) rotate(45deg); opacity:0.7; }
+  100% { transform: translate(-20px,-200px) rotate(90deg); opacity:0; }
+}
+
+/* Brush strokes in Art Room */
+.brush-stroke {
+  position:absolute; width:150px; height:20px; background: linear-gradient(90deg, rgba(255,255,255,0.1), rgba(255,192,203,0.3)); transform: rotate(25deg); animation:moveStroke 8s linear infinite;
+}
+@keyframes moveStroke {
+  0% { transform:translateX(-200px) rotate(25deg); opacity:0.3; }
+  50% { opacity:0.7; }
+  100% { transform:translateX(800px) rotate(25deg); opacity:0; }
+}
+
+</style>
+</head>
+<body>
+<div id="top"></div>
+
+<nav>
+  <a href="#tea-room" id="nav-tea">Tea Room</a>
+  <a href="#office" id="nav-office">Office</a>
+  <a href="#art-room" id="nav-art">Art Room</a>
+  <a href="#favorites" id="nav-fav">Favorites</a>
+  <a href="#cellar" id="nav-cellar">The Cellar</a>
+</nav>
+
+<!-- Tea Room -->
+<section id="tea-room">
+  <div class="room-image" id="tea-image" style="background-image:url('https://3society.neocities.org/X_EN.TEA.2026/ROOMS/Breakfast.TeaRoom.PastelLavenderPillow.jpeg');">
+    <div class="tea-leaf" style="top:250px; left:30px; animation-delay:0s;"></div>
+    <div class="tea-leaf" style="top:200px; left:80px; animation-delay:2s;"></div>
+    <div class="tea-leaf" style="top:150px; left:50px; animation-delay:4s;"></div>
+  </div>
+  <div class="room-panel">
+    <h3>Tea Room Details</h3>
+    <p>My cozy tea sanctuary. Here I brew ideas and build characters around my love for tea.</p>
+    <p>Discover my favorite tea blends, photos, and interactive polls!</p>
+    <button class="switch" onclick="toggleLight('tea-image')">Toggle Light</button>
+    <button class="info-btn" onclick="showInfo('tea-info')">More Info</button>
+    <div class="info-modal" id="tea-info">
+      <div class="info-content">
+        <span class="close" onclick="closeInfo('tea-info')">&times;</span>
+        <p>Extra content, polls, links, or inspirations could appear here.</p>
+        <a href="https://en.wikipedia.org/wiki/Tea" target="_blank" style="color:hotpink;">Learn More About Tea</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Art Room -->
+<section id="art-room">
+  <div class="room-image" id="art-image" style="background-image:url('https://3society.neocities.org/X_EN.TEA.2026/ROOMS/ARTROOM1.jpeg');">
+    <div class="brush-stroke" style="top:30px; left:-150px; animation-duration:10s;"></div>
+    <div class="brush-stroke" style="top:100px; left:-200px; animation-duration:8s;"></div>
+    <div class="brush-stroke" style="top:200px; left:-250px; animation-duration:12s;"></div>
+  </div>
+  <div class="room-panel">
+    <h3>Art Room Details</h3>
+    <p>Creative zone for drawings, illustrations, and magical inspirations.</p>
+    <button class="switch" onclick="toggleLight('art-image')">Toggle Light</button>
+    <button class="info-btn" onclick="showInfo('art-info')">More Info</button>
+    <div class="info-modal" id="art-info">
+      <div class="info-content">
+        <span class="close" onclick="closeInfo('art-info')">&times;</span>
+        <p>See sketches, inspirations, and interactive polls about my art.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Other rooms (Office, Favorites, Cellar) kept same layout -->
+<section id="office">
+  <div class="room-image" id="office-image" style="background-image:url('https://3society.neocities.org/X_EN.TEA.2026/ROOMS/officespacetwo.jpeg');"></div>
+  <div class="room-panel">
+    <h3>Office Details</h3>
+    <p>Where ideas and projects come to life. My workspace and spiritual reflections live here.</p>
+    <button class="switch" onclick="toggleLight('office-image')">Toggle Light</button>
+    <button class="info-btn" onclick="showInfo('office-info')">More Info</button>
+    <div class="info-modal" id="office-info">
+      <div class="info-content">
+        <span class="close" onclick="closeInfo('office-info')">&times;</span>
+        <p>Workspace insights, projects, and ways to collaborate with me.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="favorites">
+  <div class="room-image" id="fav-image" style="background-image:url('https://via.placeholder.com/600x300?text=Favorites');"></div>
+  <div class="room-panel">
+    <h3>Favorites Details</h3>
+    <p>A collection of things that inspire me: books, music, and more.</p>
+    <button class="switch" onclick="toggleLight('fav-image')">Toggle Light</button>
+    <button class="info-btn" onclick="showInfo('fav-info')">More Info</button>
+    <div class="info-modal" id="fav-info">
+      <div class="info-content">
+        <span class="close" onclick="closeInfo('fav-info')">&times;</span>
+        <p>Links and descriptions of my inspirations.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="cellar">
+  <div class="room-image" id="cellar-image" style="background-image:url('https://3society.neocities.org/X_EN.TEA.2026/ROOMS/prayerpillowroomchrist.jpeg');"></div>
+  <div class="room-panel">
+    <h3>Cellar Details</h3>
+    <p>Ideas, brainstorming, collaborations, Q&A, and projects live here.</p>
+    <button class="switch" onclick="toggleLight('cellar-image')">Toggle Light</button>
+    <button class="info-btn" onclick="showInfo('cellar-info')">More Info</button>
+    <div class="info-modal" id="cellar-info">
+      <div class="info-content">
+        <span class="close" onclick="closeInfo('cellar-info')">&times;</span>
+        <p>Collaborate, contribute ideas, and explore my active projects.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Mini-map -->
+<div class="mini-map">
+  <h3>Floorplan</h3>
+  <div class="floorplan">
+    <div class="row"><a href="#tea-room">Tea</a></div>
+    <div class="row">
+      <a href="#office">Office</a>
+      <a href="#art-room">Art</a>
+      <a href="#favorites">Fav</a>
+    </div>
+    <div class="row"><a href="#cellar">Cellar</a></div>
+  </div>
+</div>
+
+<a href="#top" class="back-to-top">↑</a>
+
+<script>
+function toggleLight(id) { document.getElementById(id).classList.toggle('lights-off'); }
+function showInfo(id) { document.getElementById(id).style.display="block"; }
+function closeInfo(id) { document.getElementById(id).style.display="none"; }
+
+const sections = document.querySelectorAll('section');
+const navLinks = { 'tea-room':'nav-tea','office':'nav-office','art-room':'nav-art','favorites':'nav-fav','cellar':'nav-cellar' };
+const miniFloor = document.querySelectorAll('.floorplan a');
+window.addEventListener('scroll', () => {
+  let current='';
+  sections.forEach(sec=>{ const top=sec.offsetTop-150; const height=sec.offsetHeight; if(pageYOffset>=top && pageYOffset<top+height) current=sec.id; });
+  for(const key in navLinks) document.getElementById(navLinks[key]).classList.remove('active');
+  miniFloor.forEach(a=>a.classList.remove('active'));
+  if(current){
+    document.getElementById(navLinks[current]).classList.add('active');
+    miniFloor[[...Object.keys(navLinks)].indexOf(current)].classList.add('active');
+  }
+});
+</script>
+</body>
+</html>
