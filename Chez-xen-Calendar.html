@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Observatory</title>
+
+<style>
+
+:root{
+  --violet:#b44cff;
+  --pink:#ff69b4;
+  --glass:rgba(48,0,48,.45);
+}
+
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:black;
+  color:white;
+  overflow-x:hidden;
+}
+
+/* Cosmic Background */
+
+body::before{
+  content:"";
+  position:fixed;
+  top:0;
+  left:0;
+  width:200%;
+  height:200%;
+  background:
+    radial-gradient(circle,
+    rgba(255,255,255,.8) 1px,
+    transparent 1px);
+  background-size:50px 50px;
+  opacity:.25;
+  animation:drift 80s linear infinite;
+  z-index:-2;
+}
+
+@keyframes drift{
+  from{transform:translate(0,0);}
+  to{transform:translate(-500px,-500px);}
+}
+
+/* Floating Stars */
+
+.star{
+  position:fixed;
+  width:4px;
+  height:4px;
+  border-radius:50%;
+  background:white;
+  box-shadow:
+    0 0 8px white,
+    0 0 15px var(--pink);
+  animation:twinkle 3s infinite alternate;
+}
+
+@keyframes twinkle{
+  from{opacity:.2;}
+  to{opacity:1;}
+}
+
+header{
+  text-align:center;
+  padding:30px;
+  border-bottom:2px solid var(--violet);
+  background:rgba(0,0,0,.65);
+  backdrop-filter:blur(10px);
+}
+
+header h1{
+  margin:0;
+  color:var(--pink);
+  text-shadow:
+      0 0 10px var(--violet),
+      0 0 25px var(--pink);
+}
+
+header p{
+  color:#ddd;
+}
+
+.clock{
+  margin-top:15px;
+  font-size:1rem;
+}
+
+.container{
+  width:90%;
+  margin:auto;
+  padding:30px 0;
+}
+
+/* Observatory Panel */
+
+.panel{
+  background:var(--glass);
+  backdrop-filter:blur(10px);
+  border:2px solid var(--violet);
+  border-radius:15px;
+  padding:20px;
+  margin-bottom:20px;
+  box-shadow:
+     0 0 15px rgba(180,76,255,.4);
+}
+
+.controls{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  justify-content:center;
+}
+
+button{
+  cursor:pointer;
+  border:none;
+  padding:10px 18px;
+  border-radius:8px;
+  background:var(--violet);
+  color:black;
+  font-weight:bold;
+}
+
+button:hover{
+  background:var(--pink);
+  color:white;
+}
+
+/* Calendar */
+
+.month-title{
+  text-align:center;
+  font-size:2rem;
+  color:var(--pink);
+  margin-bottom:20px;
+}
+
+.weekdays{
+  display:grid;
+  grid-template-columns:repeat(7,1fr);
+  gap:8px;
+  margin-bottom:10px;
+}
+
+.weekdays div{
+  text-align:center;
+  font-weight:bold;
+  color:var(--pink);
+}
+
+.calendar{
+  display:grid;
+  grid-template-columns:repeat(7,1fr);
+  gap:8px;
+}
+
+.day{
+  min-height:120px;
+  border:1px solid var(--violet);
+  border-radius:10px;
+  padding:8px;
+  background:rgba(255,255,255,.04);
+  transition:.3s;
+  overflow:hidden;
+}
+
+.day:hover{
+  transform:scale(1.03);
+  box-shadow:
+    0 0 10px var(--violet),
+    0 0 20px var(--pink);
+}
+
+.today{
+  border:2px solid var(--pink);
+  animation:pulse 2s infinite;
+}
+
+@keyframes pulse{
+  0%{box-shadow:0 0 10px var(--pink);}
+  50%{box-shadow:0 0 25px var(--pink);}
+  100%{box-shadow:0 0 10px var(--pink);}
+}
+
+.date{
+  font-weight:bold;
+  color:var(--pink);
+}
+
+.event{
+  margin-top:6px;
+  padding:4px;
+  border-radius:6px;
+  background:rgba(255,105,180,.18);
+  font-size:.8rem;
+}
+
+/* Add Event */
+
+.event-form{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+}
+
+.event-form input{
+  padding:10px;
+  border:none;
+  border-radius:8px;
+}
+
+/* Constellation Mode */
+
+.constellation{
+  display:none;
+  min-height:400px;
+  position:relative;
+}
+
+.constellation-star{
+  position:absolute;
+  width:12px;
+  height:12px;
+  border-radius:50%;
+  background:white;
+  box-shadow:
+    0 0 10px var(--violet),
+    0 0 20px var(--pink);
+}
+
+footer{
+  text-align:center;
+  padding:30px;
+  color:#aaa;
+}
+
+@media(max-width:800px){
+
+  .calendar{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .weekdays{
+    display:none;
+  }
+
+}
+
+</style>
+
+</head>
+<body>
+
+<header>
+  <h1>✦ The Observatory ✦</h1>
+  <p>Your future mapped among the stars.</p>
+  <div class="clock" id="clock"></div>
+</header>
+
+<div class="container">
+
+  <div class="panel controls">
+
+```
+<button onclick="changeMonth(-1)">◀ Previous</button>
+<button onclick="changeMonth(1)">Next ▶</button>
+<button onclick="toggleConstellation()">
+  Constellation Mode
+</button>
+
+<a href="index.html">
+  <button>Return Home</button>
+</a>
+```
+
+  </div>
+
+  <div class="panel">
+
+```
+<div class="month-title" id="monthTitle"></div>
+
+<div class="weekdays">
+  <div>Sun</div>
+  <div>Mon</div>
+  <div>Tue</div>
+  <div>Wed</div>
+  <div>Thu</div>
+  <div>Fri</div>
+  <div>Sat</div>
+</div>
+
+<div class="calendar" id="calendar"></div>
+
+<div class="constellation" id="constellation"></div>
+```
+
+  </div>
+
+  <div class="panel">
+
+```
+<h3>Add Cosmic Event</h3>
+
+<div class="event-form">
+
+  <input type="date" id="eventDate">
+
+  <input
+    type="text"
+    id="eventText"
+    placeholder="Tea Ceremony, Art Session..."
+  >
+
+  <button onclick="addEvent()">
+    Save Event
+  </button>
+
+</div>
+```
+
+  </div>
+
+</div>
+
+<footer>
+  ✨ Every plan is a star waiting to shine. ✨
+</footer>
+
+<script>
+
+for(let i=0;i<40;i++){
+
+  const star=document.createElement('div');
+
+  star.className='star';
+
+  star.style.top=Math.random()*100+'%';
+  star.style.left=Math.random()*100+'%';
+
+  star.style.animationDelay=
+      Math.random()*5+'s';
+
+  document.body.appendChild(star);
+}
+
+function updateClock(){
+
+  const now=new Date();
+
+  document.getElementById('clock').innerHTML=
+      now.toLocaleString();
+}
+
+setInterval(updateClock,1000);
+
+updateClock();
+
+let currentDate=new Date();
+
+function getEvents(){
+  return JSON.parse(
+    localStorage.getItem('observatoryEvents')
+  ) || {};
+}
+
+function saveEvents(data){
+  localStorage.setItem(
+    'observatoryEvents',
+    JSON.stringify(data)
+  );
+}
+
+function renderCalendar(){
+
+  const calendar=
+    document.getElementById('calendar');
+
+  calendar.innerHTML='';
+
+  const year=currentDate.getFullYear();
+  const month=currentDate.getMonth();
+
+  const firstDay=
+    new Date(year,month,1);
+
+  const lastDay=
+    new Date(year,month+1,0);
+
+  document.getElementById('monthTitle')
+    .textContent=
+      firstDay.toLocaleString(
+        'default',
+        {month:'long'}
+      ) + ' ' + year;
+
+  const startOffset=
+      firstDay.getDay();
+
+  for(let i=0;i<startOffset;i++){
+
+    const blank=document.createElement('div');
+
+    calendar.appendChild(blank);
+  }
+
+  const events=getEvents();
+
+  for(let day=1;day<=lastDay.getDate();day++){
+
+    const cell=document.createElement('div');
+
+    cell.className='day';
+
+    const today=new Date();
+
+    if(
+      day===today.getDate() &&
+      month===today.getMonth() &&
+      year===today.getFullYear()
+    ){
+      cell.classList.add('today');
+    }
+
+    const dateKey=
+      `${year}-${month+1}-${day}`;
+
+    let html=
+      `<div class="date">${day}</div>`;
+
+    if(events[dateKey]){
+
+      events[dateKey].forEach(event=>{
+
+        html+=
+          `<div class="event">${event}</div>`;
+      });
+    }
+
+    cell.innerHTML=html;
+
+    calendar.appendChild(cell);
+  }
+
+  renderConstellation();
+}
+
+function addEvent(){
+
+  const date=
+      document.getElementById('eventDate').value;
+
+  const text=
+      document.getElementById('eventText').value;
+
+  if(!date || !text) return;
+
+  const events=getEvents();
+
+  if(!events[date]){
+      events[date]=[];
+  }
+
+  events[date].push(text);
+
+  saveEvents(events);
+
+  renderCalendar();
+
+  document.getElementById('eventText').value='';
+}
+
+function changeMonth(direction){
+
+  currentDate.setMonth(
+      currentDate.getMonth()+direction
+  );
+
+  renderCalendar();
+}
+
+function toggleConstellation(){
+
+  const view=
+    document.getElementById('constellation');
+
+  const calendar=
+    document.getElementById('calendar');
+
+  if(view.style.display==='block'){
+
+      view.style.display='none';
+      calendar.style.display='grid';
+
+  }else{
+
+      view.style.display='block';
+      calendar.style.display='none';
+  }
+}
+
+function renderConstellation(){
+
+  const container=
+    document.getElementById('constellation');
+
+  container.innerHTML='';
+
+  const events=getEvents();
+
+  Object.keys(events).forEach(key=>{
+
+    const star=
+      document.createElement('div');
+
+    star.className=
+      'constellation-star';
+
+    star.style.left=
+      Math.random()*90+'%';
+
+    star.style.top=
+      Math.random()*80+'%';
+
+    star.title=
+      events[key].join(', ');
+
+    container.appendChild(star);
+  });
+}
+
+renderCalendar();
+
+</script>
+
+</body>
+</html>
