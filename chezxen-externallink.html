@@ -111,6 +111,7 @@ section { display: flex; flex-wrap: wrap; align-items: flex-start; margin:40px a
   <a href="#art-room" id="nav-art">Art Room</a>
   <a href="#favorites" id="nav-fav">Favorites</a>
   <a href="#cellar" id="nav-cellar">The Cellar</a>
+  <a href="#calender" id="nav-cellar">Calender</a>
 </nav>
 
 <!-- Tea Room -->
@@ -205,7 +206,21 @@ section { display: flex; flex-wrap: wrap; align-items: flex-start; margin:40px a
     </div>
   </div>
 </section>
-
+<section id="calender">
+  <div class="room-image" id="calender-image" style="background-image:url('https://3society.neocities.org/X_EN.TEA.2026/ROOMS/prayerpillowroomchrist.jpeg');"></div>
+  <div class="room-panel">
+    <h3>Calender Details</h3>
+    <p>Ideas, brainstorming, collaborations, Q&A, and projects live here.</p>
+    <button class="switch" onclick="toggleLight('cellar-image')">Toggle Light</button>
+    <button class="info-btn" onclick="showInfo('cellar-info')">More Info</button>
+    <div class="info-modal" id="cellar-info">
+      <div class="info-content">
+        <span class="close" onclick="closeInfo('cellar-info')">&times;</span>
+        <p>Collaborate, contribute ideas, and explore my active projects.</p>
+      </div>
+    </div>
+  </div>
+</section>
 <!-- Mini-map -->
 <div class="mini-map">
   <h3>Floorplan</h3>
@@ -215,6 +230,7 @@ section { display: flex; flex-wrap: wrap; align-items: flex-start; margin:40px a
       <a href="#office">Office</a>
       <a href="#art-room">Art</a>
       <a href="#favorites">Fav</a>
+      <a href="calendar.html" id="nav-calendar">Observatory</a>
     </div>
     <div class="row"><a href="#cellar">Cellar</a></div>
   </div>
