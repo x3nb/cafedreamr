@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>The Bardic Hearth & Tea House</title>
+
+<style>
+:root {
+  --parchment: #f4ebd0;
+  --herbal-green: #2b4c3f;
+  --amber-tea: #b85a1c;
+  --soft-gold: #d4af37;
+  --charcoal: #2c2520;
+  --text-dark: #3d312a;
+}
+
+* {
+  box-sizing: border-box;
+  font-family: "Georgia", "Times New Roman", serif;
+}
+
+body {
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  color: var(--text-dark);
+  background:
+    radial-gradient(circle at center, var(--parchment), #e2d4b7 80%),
+    repeating-linear-gradient(
+      0deg,
+      rgba(184, 90, 28, 0.03),
+      rgba(184, 90, 28, 0.03) 1px,
+      transparent 1px,
+      transparent 30px
+    );
+}
+
+/* HEADER */
+header {
+  height: 110px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  border-bottom: 2px double var(--amber-tea);
+  background: rgba(255, 253, 245, 0.4);
+  flex-shrink: 0;
+}
+
+.avatar {
+  width: 65px;
+  height: 65px;
+  border-radius: 50%;
+  border: 3px double var(--soft-gold);
+  background: radial-gradient(circle, #e9d7a5, var(--amber-tea));
+  box-shadow: 0 4px 15px rgba(44, 37, 32, 0.2);
+  transition: 0.6s;
+  animation: gentleSimmer 4s infinite ease-in-out;
+}
+
+@keyframes gentleSimmer {
+  0%, 100% { transform: scale(1); box-shadow: 0 4px 15px rgba(184, 90, 28, 0.2); }
+  50% { transform: scale(1.03); box-shadow: 0 6px 22px rgba(214, 175, 55, 0.4); }
+}
+
+header span {
+  margin-top: 6px;
+  font-size: 0.85em;
+  font-style: italic;
+  color: var(--herbal-green);
+  letter-spacing: 1px;
+}
+
+/* CALENDAR */
+.calendar {
+  height: 35px;
+  background: rgba(43, 76, 63, 0.05);
+  border-bottom: 1px solid rgba(184, 90, 28, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9em;
+  font-variant: small-caps;
+  color: var(--herbal-green);
+  flex-shrink: 0;
+}
+
+/* GRID */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+  padding: 15px 30px;
+  flex-shrink: 0;
+}
+
+.tile {
+  height: 95px;
+  padding: 12px;
+  border: 1px solid rgba(184, 90, 28, 0.4);
+  border-radius: 6px;
+  background: linear-gradient(145deg, #ffffff, #fcf8ee);
+  box-shadow: 0 3px 6px rgba(0,0,0,0.05);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.tile:hover {
+  transform: translateY(-3px);
+  border-color: var(--soft-gold);
+  background: #fffdf3;
+  box-shadow: 0 6px 15px rgba(184, 90, 28, 0.15);
+}
+
+.tile.active-char {
+  border: 2px solid var(--herbal-green);
+  background: #f0f7f4;
+}
+
+.tile h3 {
+  margin: 0 0 4px 0;
+  color: var(--herbal-green);
+  font-size: 1.1em;
+  border-bottom: 1px dashed rgba(43, 76, 63, 0.2);
+  padding-bottom: 2px;
+}
+
+.tile p {
+  margin: 0;
+  font-size: 0.8em;
+  color: #615146;
+  font-style: italic;
+}
+
+/* CHRONICLE (THE CHAT BOX) */
+.chronicle-container {
+  flex-grow: 1;
+  padding: 10px 40px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  background: rgba(255, 255, 255, 0.2);
+  border-top: 1px double rgba(184, 90, 28, 0.2);
+  border-bottom: 1px double rgba(184, 90, 28, 0.2);
+}
+
+.dialogue-line {
+  margin: 6px 0;
+  padding: 6px 12px;
+  border-radius: 4px;
+  max-width: 80%;
+  line-height: 1.4;
+  font-size: 1em;
+  animation: fadeIn 0.4s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.dialogue-line.lady {
+  align-self: flex-end;
+  background: rgba(255, 253, 245, 0.8);
+  border-right: 3px solid var(--amber-tea);
+  font-style: italic;
+}
+
+.dialogue-line.bard {
+  align-self: flex-start;
+  background: rgba(43, 76, 63, 0.08);
+  border-left: 3px solid var(--herbal-green);
+}
+
+.dialogue-line .speaker {
+  font-weight: bold;
+  font-size: 0.85em;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 3px;
+  color: var(--amber-tea);
+}
+
+/* SEARCH/INPUT AREA */
+.search-area {
+  padding: 15px;
+  display: flex;
+  justify-content: center;
+  background: rgba(244, 235, 208, 0.4);
+  flex-shrink: 0;
+}
+
+.search-area input {
+  width: 60%;
+  padding: 12px 20px;
+  background: #fffdf9;
+  border: 1px solid var(--amber-tea);
+  border-radius: 4px;
+  color: var(--text-dark);
+  font-size: 1.05em;
+  outline: none;
+}
+
+.search-area input:focus {
+  border-color: var(--herbal-green);
+}
+
+/* FOOTER */
+footer {
+  height: 40px;
+  border-top: 1px solid rgba(184, 90, 28, 0.3);
+  background: rgba(244, 235, 208, 0.7);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 30px;
+  font-size: 0.8em;
+  color: var(--herbal-green);
+  flex-shrink: 0;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="avatar" id="avatar"></div>
+  <span>Consult the Lore · Seek the Chronicles · Brew the Infusion</span>
+</header>
+
+<div class="calendar" id="calendar"></div>
+
+<div class="grid">
+  <div class="tile" data-char="hans" id="tile-hans"><h3>Hans</h3><p>Oak Foundations & Assams</p></div>
+  <div class="tile" data-char="chari" id="tile-chari"><h3>Chari</h3><p>Wild Fire & Spiced Chai</p></div>
+  <div class="tile" data-char="star" id="tile-star"><h3>Star</h3><p>Midnight Ballads & Jasmine</p></div>
+  <div class="tile" data-char="miki" id="tile-miki"><h3>Miki</h3><p>Quiet Tapestries & Silver Needle</p></div>
+  <div class="tile" data-char="yeshua" id="tile-yeshua"><h3>Yeshua</h3><p>Deep Mercies & Chamomile</p></div>
+  <div class="tile" data-char="miles" id="tile-miles"><h3>Miles</h3><p>Wandering Chords & Lapsang</p></div>
+</div>
+
+<!-- NEW SCROLLING CHRONICLE COMPONENT -->
+<div class="chronicle-container" id="chronicle">
+  <div class="dialogue-line bard">
+    <div class="speaker">The Hearth</div>
+    The embers grow warm. Click upon a companion's ledger or utter their name below to stir them to conversation...
+  </div>
+</div>
+
+<div class="search-area">
+  <input id="search" autocomplete="off"
+    placeholder="Speak to your active companion, or type a name to summon another..." />
+</div>
+
+<footer>
+  <div>The Scholar's Hearth</div>
+  <div>
+    <label><input type="checkbox" id="silentToggle" /> Silent Meditation Mode</label>
+  </div>
+  <div>The lineage endures</div>
+</footer>
+
+<script>
+/* ================= MEMORY & STATE ================= */
+let memory = JSON.parse(localStorage.getItem("gridMemory")) || {
+  silent: false,
+  visits: 0,
+  lastCharacter: "hans"
+};
+memory.visits++;
+saveMemory();
+
+let currentCharacter = memory.lastCharacter || "hans";
+
+/* ================= DIALOGUE POOLS ================= */
+// Rolling dialogue banks simulating a thread of continuous conversation
+const conversationPools = {
+  hans: [
+    "A fine observation. Like an autumn harvest, patience yields the highest quality leaf. What structural truths shall we look into next?",
+    "Indeed. One cannot rush the brickwork of a fine estate, nor can one over-steep a sensitive Darjeeling without spoiling the balance. Tell me, does your current path possess solid scaffolding?",
+    "Your words hold weight. Let us ledger that thought away securely. Tell me, do you find comfort in routine, or are you looking to adjust your foundations?"
+  ],
+  star: [
+    "Ah, your words dance like reflections on a midnight pond. A perfect sentiment to accompany a delicate white tip tea. Tell me, what beautiful melancholy inspires you tonight?",
+    "The rhythm of your thoughts matches the strumming of my strings. Let us preserve this dynamic verse before it evaporates into history. What else does your spirit wish to confess?",
+    "A marvelous phrasing! I shall hum a melody in its honor. Tell me more, dear friend—do you look at the stars to seek map-routes, or simply to marvel at their brilliance?"
+  ],
+  miki: [
+    "I have quietly observed this pattern before. Like leaves floating in a ceramic vessel, our paths twist but ultimately follow a grand geometric design. What underlying truth do you see taking form?",
+    "A curious response. It ripples through the quiet atmosphere of this room. Let us examine it together with a clear mind and a warm cup. What elements of this puzzle do you feel are missing?",
+    "To notice the subtle shift is everything. You possess a keen perception. Let us remain still a moment longer—what deeper harmony are you hoping to manifest?"
+  ],
+  yeshua: [
+    "Your heart speaks clearly, traveler. Rest your weary limbs by the fire. The chamomile is fully steeped, and here, no judgments shall ever find you. What heavy burden can we unburden you of next?",
+    "Mercy is a soothing balm, much like honey melting into warm water. Do not trouble yourself with the storms outside. Tell me, how can I best bring tranquility to your thoughts right now?",
+    "A profound reflection. There is immense strength hidden within your gentleness. Let us walk further down this peaceful path together—what brings your soul the most comfort today?"
+  ],
+  chari: [
+    "Ha! Spot on! The iron kettle boils fiercely and so must we! No time to languish over cold tea leaves—momentum is our currency! What grand boundary are we crashing through next?",
+    "A fierce answer! I can feel the sparks flying from the hearth. Let the traditionalists complain about our unorthodox methods; we brew for action! What audacious dream are you ready to conquer?",
+    "Exactly! Standing still is just slow decay! Let us throw caution into the wind and take another massive stride forward. Tell me, what bold venture are you ready to spark into existence?"
+  ],
+  miles: [
+    "Spoken like a true wanderer! The smoky aroma of this Lapsang tea always conjures up visions of moonlit highways and misty mountain passes. Where do your instincts tell you to journey next?",
+    "Ah, a fascinating chord you've struck there! It resonates perfectly with the traveler's tune I've been writing. Tell me, do you prefer a map cleanly laid out, or do you let the wind guide your boots?",
+    "Magnificent. Every conversation is simply a brand new trail waiting to be explored. Let us pack our satchels and see where this dialog leads us. What distant horizon calls to you?"
+  ]
+};
+
+const introMessages = {
+  hans: "Ah, Lady. I have cleared the mahogany desk and prepared a robust Assam. Let us bring order and structure to your thoughts. What shall we analyze today?",
+  star: "Greetings, radiant soul. The jasmine leaves are unfurling like verses in the dark. Come, let us turn our shared thoughts into elegant poetry. What is on your mind?",
+  miki: "The room is still, and a cup of Silver Needle stands waiting. Let us examine the quiet geometry of your world. What patterns are revealing themselves to you?",
+  yeshua: "Welcome, weary traveler. Find sanctuary here by the hearth with a soothing cup of chamomile. Tell me, what worries can we dissolve into the warmth today?",
+  chari: "Finally, you've arrived! The spiced chai is hot, the fire is blazing, and the time for hesitation is over! What massive mountain are we moving today?",
+  miles: "Aha! Well met! The smoky Lapsang is poured and my lute is fully tuned. Tell me of your latest travels, or shall we map out a brand new adventure together?"
+};
+
+/* ================= CALENDAR ================= */
+document.getElementById("calendar").textContent = "Upon the Day of " + new Date().toDateString();
+
+/* ================= CHAT ENGINE ================= */
+const chronicle = document.getElementById("chronicle");
+const searchInput = document.getElementById("search");
+
+function appendDialogue(speaker, text, type) {
+  const line = document.createElement("div");
+  line.className = `dialogue-line ${type}`;
+  
+  const speakerDiv = document.createElement("div");
+  speakerDiv.className = "speaker";
+  speakerDiv.textContent = speaker;
+  
+  const textNode = document.createTextNode(text);
+  
+  line.appendChild(speakerDiv);
+  line.appendChild(textNode);
+  chronicle.appendChild(line);
+  
+  // Auto-scroll to the bottom of the parchment parchment
+  chronicle.scrollTop = chronicle.scrollHeight;
+}
+
+function handleCharacterResponse() {
+  const pool = conversationPools[currentCharacter];
+  // Select a random line from the conversational pool to keep it dynamic
+  const reply = pool[Math.floor(Math.random() * pool.length)];
+  
+  const capitalizedName = currentCharacter.charAt(0).toUpperCase() + currentCharacter.slice(1);
+  
+  // Delay slightly to simulate the bard 'thinking' and pouring tea
+  setTimeout(() => {
+    appendDialogue(capitalizedName, reply, "bard");
+    speak(reply, voiceProfiles[currentCharacter]);
+    ambientTone();
+  }, 600);
+}
+
+function selectCharacter(key) {
+  currentCharacter = key;
+  memory.lastCharacter = key;
+  saveMemory();
+  
+  // Update UI visual highlights
+  document.querySelectorAll(".tile").forEach(t => t.classList.remove("active-char"));
+  document.getElementById(`tile-${key}`).classList.add("active-char");
+  
+  const capitalizedName = key.charAt(0).toUpperCase() + key.slice(1);
+  const intro = introMessages[key];
+  
+  appendDialogue("System", `${capitalizedName} joins the hearth side.`, "bard");
+  appendDialogue(capitalizedName, intro, "bard");
+  speak(intro, voiceProfiles[key]);
+  ambientTone();
+}
+
+/* ================= INPUT HANDLING ================= */
+searchInput.addEventListener("keydown", e => {
+  if (e.key !== "Enter") return;
+  const input = searchInput.value.trim();
+  if (!input) return;
+  
+  // 1. Log the Lady's message to the chronicle
+  appendDialogue("Noble Lady", input, "lady");
+  searchInput.value = "";
+  
+  // 2. Check if the user is trying to switch characters by typing their name
+  const lowerInput = input.toLowerCase();
+  for (let k in conversationPools) {
+    if (lowerInput === k || (lowerInput.includes(k) && lowerInput.includes("summon") || lowerInput.includes("talk to"))) {
+      selectCharacter(k);
+      return;
+    }
+  }
+  
+  // 3. Otherwise, have the active character keep the conversation flowing
+  handleCharacterResponse();
+});
+
+/* ================= TILES CLICK ================= */
+document.querySelectorAll(".tile").forEach(tile => {
+  tile.addEventListener("click", () => {
+    selectCharacter(tile.dataset.char);
+  });
+  tile.addEventListener("mouseenter", ambientTone);
+});
+
+/* ================= VOICE & AUDIO ================= */
+const voiceProfiles = {
+  hans: { rate: 0.80, pitch: 0.85, volume: 0.95, voiceHint: "male" },
+  star: { rate: 0.82, pitch: 1.20, volume: 0.80, voiceHint: "female" },
+  miki: { rate: 0.85, pitch: 1.00, volume: 0.80 },
+  yeshua: { rate: 0.75, pitch: 0.90, volume: 0.85 },
+  chari: { rate: 0.95, pitch: 1.10, volume: 0.95 },
+  miles: { rate: 0.90, pitch: 1.05, volume: 0.90 }
+};
+
+function speak(text, profile = {}) {
+  if (memory.silent) return;
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.rate = profile.rate ?? 0.85; 
+  u.pitch = profile.pitch ?? 1.0;
+  u.volume = profile.volume ?? 0.9;
+  speechSynthesis.speak(u);
+}
+
+function ambientTone() {
+  if (memory.silent) return;
+  const ctx = new (window.AudioContext || window.webkitAudioContext)();
+  const o1 = ctx.createOscillator();
+  const gainNode = ctx.createGain();
+  o1.type = 'triangle';
+  o1.frequency.value = 146.83; // D3 Lute pluck
+  gainNode.gain.setValueAtTime(0.12, ctx.currentTime);
+  gainNode.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
+  o1.connect(gainNode);
+  gainNode.connect(ctx.destination);
+  o1.start();
+  o1.stop(ctx.currentTime + 0.4);
+}
+
+/* ================= SACRED MODE ================= */
+const silentToggle = document.getElementById("silentToggle");
+silentToggle.checked = memory.silent;
+silentToggle.addEventListener("change", () => {
+  memory.silent = silentToggle.checked;
+  saveMemory();
+  document.getElementById("avatar").style.opacity = memory.silent ? 0.4 : 1;
+});
+
+/* ================= INITIALIZATION ================= */
+window.addEventListener("load", () => {
+  setTimeout(() => {
+    selectCharacter(currentCharacter);
+  }, 500);
+});
+
+function saveMemory() {
+  localStorage.setItem("gridMemory", JSON.stringify(memory));
+}
+</script>
+
+</body>
+</html>
