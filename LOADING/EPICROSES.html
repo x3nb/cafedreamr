@@ -1,0 +1,217 @@
+
+<!doctype html>
+<html lang="en">
+<head><script src="/.nekoweb-api/static/site.js" defer></script>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>The Archives — Loading</title>
+<style>
+  :root{
+    --c1: #BA1359;
+    --c2: #AD2687;
+    --bg: #060406;
+    --fade-duration: 1s;
+  }
+
+  html,body{height:100%;margin:0;background:var(--bg);color:#f7f7f7;font-family:Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;}
+
+  /* Fullscreen container */
+  .stage{
+    position:fixed;inset:0;overflow:hidden;display:flex;align-items:center;justify-content:center;
+  }
+
+  /* Video backdrop */
+  .bg-video{
+    position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:contrast(1.05) saturate(1.1) brightness(0.75);
+    transform:scale(1.02);
+  }
+
+  /* animated color wash over video */
+  .wash{
+    position:absolute;inset:0;background:linear-gradient(120deg, rgba(186,19,89,0.28) 0%, rgba(173,38,135,0.28) 50%, rgba(10,6,8,0.25) 100%);
+    mix-blend-mode:screen;pointer-events:none;
+  }
+
+  /* Loading overlay content */
+  .loader{
+    position:relative;z-index:5;display:flex;flex-direction:column;align-items:center;gap:20px;text-align:center;
+    padding:2rem;
+  }
+
+  .mystery{
+    font-size:clamp(22px,4vw,44px);letter-spacing:0.12em;color:white;
+    text-transform:uppercase;font-weight:700;
+    -webkit-text-stroke: 0.6px rgba(0,0,0,0.3);
+    opacity:1;transform:translateY(0);
+    transition:opacity var(--fade-duration) ease, transform var(--fade-duration) ease;
+  }
+
+  /* animated glyph ring */
+  .ring{
+    width:110px;height:110px;border-radius:50%;position:relative;display:grid;place-items:center;
+    background:conic-gradient(from 180deg, var(--c1), var(--c2));
+    padding:10px;box-shadow:0 8px 40px rgba(0,0,0,0.6);
+    animation:rotateRing 7s linear forwards;
+    mask: radial-gradient(circle at center, #000 58%, transparent 60%);
+  }
+
+  .ring .inner{
+    width:100%;height:100%;border-radius:50%;background:rgba(6,4,6,0.6);display:grid;place-items:center;color:#fff;
+    font-weight:700;font-size:14px;letter-spacing:0.14em;text-transform:uppercase;
+    transform:scale(0.98);transition:transform .4s;
+  }
+
+  @keyframes rotateRing{
+    0%{transform:rotate(0)}
+    60%{transform:rotate(720deg) scale(1.05)}
+    100%{transform:rotate(1080deg) scale(1.15)}
+  }
+
+  /* pulsating bars below ring */
+  .bars{display:flex;gap:6px;align-items:end;height:26px}
+  .bar{width:8px;background:linear-gradient(180deg,var(--c2),var(--c1));border-radius:4px;animation:pulse 0.9s infinite ease-in-out;transform-origin:bottom}
+  .bar:nth-child(1){height:8px;animation-delay:0s}
+  .bar:nth-child(2){height:14px;animation-delay:0.08s}
+  .bar:nth-child(3){height:24px;animation-delay:0.16s}
+  .bar:nth-child(4){height:16px;animation-delay:0.04s}
+  @keyframes pulse{
+    0%{transform:scaleY(0.4);opacity:0.9}
+    50%{transform:scaleY(1.15);opacity:1}
+    100%{transform:scaleY(0.45);opacity:0.85}
+  }
+
+  /* After load: the main site content (initially hidden) */
+  .site{
+    position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:3;
+    opacity:0;pointer-events:none;transition:opacity var(--fade-duration) ease;
+    padding:40px;
+    backdrop-filter: blur(2px);
+  }
+
+  .site.open{opacity:1;pointer-events:auto}
+
+  .site h1{
+    font-size:clamp(30px,6vw,64px);margin:0 0 18px 0;letter-spacing:0.04em;font-weight:800;
+    color:linear-gradient(#fff,#ddd);
+    text-shadow:0 6px 30px rgba(10,6,8,0.6);
+  }
+
+  .toc{display:flex;gap:18px;flex-wrap:wrap;justify-content:center;font-weight:700}
+  .toc a{
+    color:#fff;text-decoration:none;padding:10px 14px;border-radius:10px;background:linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+    border:1px solid rgba(255,255,255,0.06);transition:transform .18s ease,box-shadow .18s;
+    letter-spacing:0.08em;text-transform:uppercase;font-size:14px;
+  }
+  .toc a:hover{transform:translateY(-4px);box-shadow:0 12px 30px rgba(173,38,135,0.12);}
+
+  /* fade-out helpers when loader finishes */
+  .fade-out{opacity:0;transform:translateY(-8px)}
+  .hidden{display:none}
+  
+  /* Responsive tweaks */
+  @media (max-width:520px){
+    .ring{width:86px;height:86px}
+    .mystery{font-size:18px}
+  }
+</style>
+</head>
+<body>
+  <div class="stage" id="stage">
+    <!-- looping video background (replace src with your asset; include webm/mp4 for broad support) -->
+    <video class="bg-video" autoplay muted playsinline loop id="bgVid">
+      <source src="https://www.cafedreamr.art/images/rosepetals-falling-cinematic.mp4" type="video/mp4">
+      <!-- fallback: static background color if video fails -->
+    </video>
+    <div class="wash"></div>
+
+    <!-- Loading overlay -->
+    <div class="loader" id="loader" aria-hidden="false">
+      <div class="ring" aria-hidden="true">
+        <div class="inner">— — —</div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;align-items:center;gap:8px">
+        <div class="bars" aria-hidden="true">
+          <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
+        </div>
+        <div class="mystery" id="mysteryText">A R R I V A L</div>
+      </div>
+    </div>
+
+    <!-- Final site content (hidden until after 7s) -->
+    <main class="site" id="site" role="main" aria-hidden="true">
+      <h1>The Archives</h1>
+      <nav class="toc" aria-label="Table of contents">
+        <a href="https://example.com/about" target="_blank" rel="noopener noreferrer">ABOUT</a>
+        <a href="https://example.com/art" target="_blank" rel="noopener noreferrer">ART</a>
+        <a href="https://example.com/portfolio" target="_blank" rel="noopener noreferrer">PORTFOLIO</a>
+        <a href="https://example.com/contact" target="_blank" rel="noopener noreferrer">CONTACT</a>
+      </nav>
+    </main>
+  </div>
+
+<script>
+  // Duration configuration (milliseconds)
+  const LOAD_MS = 7000;
+  const FADE_MS = 1000;
+
+  const loader = document.getElementById('loader');
+  const site = document.getElementById('site');
+  const mystery = document.getElementById('mysteryText');
+  const bgVid = document.getElementById('bgVid');
+
+  // small timed sequencing to build tension
+  // Phase changes: text updates and subtle transformations
+  const timeline = [
+    {t: 0, text: 'A R R I V A L'},
+    {t: 1800, text: 'C O D E'},
+    {t: 3600, text: 'R E M N A N T S'},
+    {t: 5200, text: 'T H E   A R C H I V E S'},
+  ];
+
+  timeline.forEach(item => {
+    setTimeout(()=> {
+      mystery.style.opacity = 0;
+      setTimeout(()=> {
+        mystery.textContent = item.text;
+        mystery.style.opacity = 1;
+      }, 220);
+    }, item.t);
+  });
+
+  // After LOAD_MS, transition
+  setTimeout(() => {
+    // fade loader
+    loader.classList.add('fade-out');
+    loader.setAttribute('aria-hidden','true');
+
+    // slightly dim video and reveal site
+    site.setAttribute('aria-hidden','false');
+    setTimeout(()=> {
+      site.classList.add('open');
+      // remove loader from flow after fade to avoid pointer issues
+      setTimeout(()=> loader.classList.add('hidden'), FADE_MS);
+    }, 200);
+  }, LOAD_MS);
+
+  // Optional: ensure video keeps playing; if not available, fallback gradient color
+  bgVid.addEventListener('error', () => {
+    bgVid.style.display = 'none';
+  });
+
+  // Accessibility: allow skip for users who want to bypass animation (press Enter or Space)
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      // Immediately finish loading
+      const remaining = Math.max(0, LOAD_MS - (performance.now() % LOAD_MS));
+      // fast-forward: reveal site immediately
+      loader.classList.add('fade-out');
+      loader.setAttribute('aria-hidden','true');
+      site.setAttribute('aria-hidden','false');
+      site.classList.add('open');
+      setTimeout(()=> loader.classList.add('hidden'), FADE_MS);
+    }
+  });
+</script>
+</body>
+</html>
