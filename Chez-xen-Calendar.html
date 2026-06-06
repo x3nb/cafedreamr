@@ -1,258 +1,96 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Observatory</title>
-
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>The Observatory — Interactive Calendar</title>
 <style>
-
 :root{
   --violet:#b44cff;
   --pink:#ff69b4;
   --glass:rgba(48,0,48,.45);
+  --panel-bg: rgba(0,0,0,.55);
 }
-
+*{box-sizing:border-box}
 body{
   margin:0;
   font-family:Arial,sans-serif;
   background:black;
   color:white;
   overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
 }
-
-/* Cosmic Background */
-
+/* Background */
 body::before{
   content:"";
   position:fixed;
-  top:0;
-  left:0;
-  width:200%;
-  height:200%;
+  top:0;left:0;
+  width:200%;height:200%;
   background:
-    radial-gradient(circle,
-    rgba(255,255,255,.8) 1px,
-    transparent 1px);
+    radial-gradient(circle, rgba(255,255,255,.8) 1px, transparent 1px);
   background-size:50px 50px;
   opacity:.25;
   animation:drift 80s linear infinite;
   z-index:-2;
 }
+@keyframes drift{from{transform:translate(0,0);}to{transform:translate(-500px,-500px);}}
 
-@keyframes drift{
-  from{transform:translate(0,0);}
-  to{transform:translate(-500px,-500px);}
-}
+/* Stars */
+.star{position:fixed;width:4px;height:4px;border-radius:50%;background:white;
+  box-shadow:0 0 8px white,0 0 15px var(--pink);animation:twinkle 3s infinite alternate;}
+@keyframes twinkle{from{opacity:.2;}to{opacity:1;}}
 
-/* Floating Stars */
+header{ text-align:center;padding:24px;border-bottom:2px solid var(--violet);background:rgba(0,0,0,.65);backdrop-filter:blur(10px); }
+header h1{margin:0;color:var(--pink);text-shadow:0 0 10px var(--violet),0 0 25px var(--pink);}
+header p{color:#ddd;margin:6px 0;}
+.clock{margin-top:8px;font-size:0.95rem;color:#eee}
 
-.star{
-  position:fixed;
-  width:4px;
-  height:4px;
-  border-radius:50%;
-  background:white;
-  box-shadow:
-    0 0 8px white,
-    0 0 15px var(--pink);
-  animation:twinkle 3s infinite alternate;
-}
-
-@keyframes twinkle{
-  from{opacity:.2;}
-  to{opacity:1;}
-}
-
-header{
-  text-align:center;
-  padding:30px;
-  border-bottom:2px solid var(--violet);
-  background:rgba(0,0,0,.65);
-  backdrop-filter:blur(10px);
-}
-
-header h1{
-  margin:0;
-  color:var(--pink);
-  text-shadow:
-      0 0 10px var(--violet),
-      0 0 25px var(--pink);
-}
-
-header p{
-  color:#ddd;
-}
-
-.clock{
-  margin-top:15px;
-  font-size:1rem;
-}
-
-.container{
-  width:90%;
-  margin:auto;
-  padding:30px 0;
-}
-
-/* Observatory Panel */
-
-.panel{
-  background:var(--glass);
-  backdrop-filter:blur(10px);
-  border:2px solid var(--violet);
-  border-radius:15px;
-  padding:20px;
-  margin-bottom:20px;
-  box-shadow:
-     0 0 15px rgba(180,76,255,.4);
-}
-
-.controls{
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  justify-content:center;
-}
-
-button{
-  cursor:pointer;
-  border:none;
-  padding:10px 18px;
-  border-radius:8px;
-  background:var(--violet);
-  color:black;
-  font-weight:bold;
-}
-
-button:hover{
-  background:var(--pink);
-  color:white;
-}
+/* Layout */
+.container{width:94%;max-width:1100px;margin:22px auto;padding-bottom:40px}
+.panel{background:var(--glass);backdrop-filter:blur(10px);border:2px solid var(--violet);border-radius:14px;padding:16px;margin-bottom:18px;box-shadow:0 0 15px rgba(180,76,255,.2)}
+.controls{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:center;margin-bottom:6px}
+.controls .spacer{flex:1;min-width:8px}
+button{cursor:pointer;border:none;padding:9px 14px;border-radius:8px;background:var(--violet);color:black;font-weight:700}
+button:hover{background:var(--pink);color:white}
+.small{padding:6px 10px;font-size:.9rem}
 
 /* Calendar */
+.month-row{display:flex;gap:8px;align-items:center;justify-content:center;margin-bottom:12px}
+.month-title{font-size:1.6rem;color:var(--pink);min-width:220px;text-align:center}
+.weekdays{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:10px}
+.weekdays div{text-align:center;font-weight:700;color:var(--pink);font-size:.95rem}
+.calendar{display:grid;grid-template-columns:repeat(7,1fr);gap:8px}
+.day{min-height:110px;border:1px solid var(--violet);border-radius:10px;padding:8px;background:rgba(255,255,255,.03);transition:.18s;overflow:hidden;position:relative}
+.day:hover{transform:scale(1.02);box-shadow:0 0 10px var(--violet),0 0 20px var(--pink)}
+.date{font-weight:700;color:var(--pink);display:block}
+.event{margin-top:6px;padding:6px;border-radius:8px;background:rgba(255,105,180,.12);font-size:.85rem;cursor:pointer}
+.today{border:2px solid var(--pink);animation:pulse 2s infinite}
+@keyframes pulse{0%{box-shadow:0 0 10px var(--pink);}50%{box-shadow:0 0 25px var(--pink);}100%{box-shadow:0 0 10px var(--pink);}}
 
-.month-title{
-  text-align:center;
-  font-size:2rem;
-  color:var(--pink);
-  margin-bottom:20px;
+/* Modal */
+.modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;z-index:50}
+.modal{width:min(720px,94%);background:var(--panel-bg);border:2px solid var(--violet);border-radius:12px;padding:18px;box-shadow:0 10px 40px rgba(0,0,0,.7)}
+.modal h3{margin:0 0 8px 0;color:var(--pink)}
+.form-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.form-row input[type="text"], .form-row textarea, .form-row input[type="date"], .form-row select{
+  padding:10px;border-radius:8px;border:none;background:rgba(255,255,255,.04);color:white;min-width:0;flex:1
 }
+.form-row textarea{min-height:80px;resize:vertical}
+.event-list{margin-top:12px;max-height:220px;overflow:auto}
+.event-item{display:flex;gap:8px;align-items:flex-start;padding:8px;border-radius:8px;background:rgba(255,255,255,.03);margin-bottom:8px}
+.event-text{flex:1}
+.delete-btn{background:#ff6868;color:white;padding:6px 8px;border-radius:6px;font-weight:700}
 
-.weekdays{
-  display:grid;
-  grid-template-columns:repeat(7,1fr);
-  gap:8px;
-  margin-bottom:10px;
+/* Constellation */
+.constellation{display:none;min-height:360px;position:relative;border-radius:10px;padding:12px}
+.constellation-star{position:absolute;width:12px;height:12px;border-radius:50%;background:white;box-shadow:0 0 10px var(--violet),0 0 20px var(--pink);cursor:default}
+
+/* Responsive */
+@media (max-width:800px){
+  .calendar{grid-template-columns:repeat(2,1fr)}
+  .weekdays{display:none}
 }
-
-.weekdays div{
-  text-align:center;
-  font-weight:bold;
-  color:var(--pink);
-}
-
-.calendar{
-  display:grid;
-  grid-template-columns:repeat(7,1fr);
-  gap:8px;
-}
-
-.day{
-  min-height:120px;
-  border:1px solid var(--violet);
-  border-radius:10px;
-  padding:8px;
-  background:rgba(255,255,255,.04);
-  transition:.3s;
-  overflow:hidden;
-}
-
-.day:hover{
-  transform:scale(1.03);
-  box-shadow:
-    0 0 10px var(--violet),
-    0 0 20px var(--pink);
-}
-
-.today{
-  border:2px solid var(--pink);
-  animation:pulse 2s infinite;
-}
-
-@keyframes pulse{
-  0%{box-shadow:0 0 10px var(--pink);}
-  50%{box-shadow:0 0 25px var(--pink);}
-  100%{box-shadow:0 0 10px var(--pink);}
-}
-
-.date{
-  font-weight:bold;
-  color:var(--pink);
-}
-
-.event{
-  margin-top:6px;
-  padding:4px;
-  border-radius:6px;
-  background:rgba(255,105,180,.18);
-  font-size:.8rem;
-}
-
-/* Add Event */
-
-.event-form{
-  display:flex;
-  flex-wrap:wrap;
-  gap:10px;
-}
-
-.event-form input{
-  padding:10px;
-  border:none;
-  border-radius:8px;
-}
-
-/* Constellation Mode */
-
-.constellation{
-  display:none;
-  min-height:400px;
-  position:relative;
-}
-
-.constellation-star{
-  position:absolute;
-  width:12px;
-  height:12px;
-  border-radius:50%;
-  background:white;
-  box-shadow:
-    0 0 10px var(--violet),
-    0 0 20px var(--pink);
-}
-
-footer{
-  text-align:center;
-  padding:30px;
-  color:#aaa;
-}
-
-@media(max-width:800px){
-
-  .calendar{
-    grid-template-columns:repeat(2,1fr);
-  }
-
-  .weekdays{
-    display:none;
-  }
-
-}
-
 </style>
-
 </head>
 <body>
 
@@ -265,278 +103,302 @@ footer{
 <div class="container">
 
   <div class="panel controls">
-
-```
-<button onclick="changeMonth(-1)">◀ Previous</button>
-<button onclick="changeMonth(1)">Next ▶</button>
-<button onclick="toggleConstellation()">
-  Constellation Mode
-</button>
-
-<a href="chezxen-externallink.html">
-  <button>Return Home</button>
-</a>
-```
-
+    <button onclick="changeMonth(-1)">◀ Prev</button>
+    <button onclick="changeMonth(1)">Next ▶</button>
+    <div class="spacer"></div>
+    <select id="yearSelect" onchange="jumpToYear()" class="small"></select>
+    <button onclick="toggleConstellation()" id="constBtn">Constellation Mode</button>
+    <button onclick="clearAllConfirm()" title="Clear all saved events" style="background:#ff6868;color:white">Clear All</button>
   </div>
 
   <div class="panel">
+    <div class="month-row">
+      <button onclick="changeMonth(-1)">◀</button>
+      <div class="month-title" id="monthTitle"></div>
+      <button onclick="changeMonth(1)">▶</button>
+    </div>
 
-```
-<div class="month-title" id="monthTitle"></div>
+    <div class="weekdays" aria-hidden="true">
+      <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
+    </div>
 
-<div class="weekdays">
-  <div>Sun</div>
-  <div>Mon</div>
-  <div>Tue</div>
-  <div>Wed</div>
-  <div>Thu</div>
-  <div>Fri</div>
-  <div>Sat</div>
-</div>
+    <div class="calendar" id="calendar" aria-live="polite"></div>
 
-<div class="calendar" id="calendar"></div>
-
-<div class="constellation" id="constellation"></div>
-```
-
+    <div class="constellation" id="constellation" aria-hidden="true"></div>
   </div>
 
   <div class="panel">
-
-```
-<h3>Add Cosmic Event</h3>
-
-<div class="event-form">
-
-  <input type="date" id="eventDate">
-
-  <input
-    type="text"
-    id="eventText"
-    placeholder="Tea Ceremony, Art Session..."
-  >
-
-  <button onclick="addEvent()">
-    Save Event
-  </button>
-
-</div>
-```
-
+    <h3>Add Cosmic Event</h3>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
+      <input type="date" id="eventDate" style="padding:10px;border-radius:8px;border:none;background:rgba(255,255,255,.04);color:white">
+      <input type="text" id="eventText" placeholder="Tea Ceremony, Art Session..." style="padding:10px;border-radius:8px;border:none;background:rgba(255,255,255,.04);color:white;flex:1">
+      <button onclick="addEvent()">Save Event</button>
+    </div>
   </div>
 
 </div>
 
-<footer>
-  ✨ Every plan is a star waiting to shine. ✨
-</footer>
+<footer style="text-align:center;padding:22px;color:#aaa">✨ Every plan is a star waiting to shine. ✨</footer>
+
+<!-- Modal template -->
+<div id="modalRoot" style="display:none"></div>
 
 <script>
-
+/* Stars */
 for(let i=0;i<40;i++){
-
-  const star=document.createElement('div');
-
-  star.className='star';
-
-  star.style.top=Math.random()*100+'%';
-  star.style.left=Math.random()*100+'%';
-
-  star.style.animationDelay=
-      Math.random()*5+'s';
-
-  document.body.appendChild(star);
+  const s=document.createElement('div'); s.className='star';
+  s.style.top=Math.random()*100+'%'; s.style.left=Math.random()*100+'%';
+  s.style.animationDelay=Math.random()*5+'s'; s.style.opacity=(0.15+Math.random()*0.85);
+  document.body.appendChild(s);
 }
 
+/* Clock */
 function updateClock(){
-
   const now=new Date();
-
-  document.getElementById('clock').innerHTML=
-      now.toLocaleString();
+  document.getElementById('clock').textContent = now.toLocaleString();
 }
-
 setInterval(updateClock,1000);
-
 updateClock();
 
-let currentDate=new Date();
-
+/* Data storage helpers */
+const STORAGE_KEY = 'observatoryEvents_v1';
 function getEvents(){
-  return JSON.parse(
-    localStorage.getItem('observatoryEvents')
-  ) || {};
+  try{
+    return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+  }catch(e){ return {}; }
 }
+function saveEvents(obj){ localStorage.setItem(STORAGE_KEY, JSON.stringify(obj)); }
 
-function saveEvents(data){
-  localStorage.setItem(
-    'observatoryEvents',
-    JSON.stringify(data)
-  );
+/* Calendar state */
+let currentDate = new Date();
+const calendarEl = document.getElementById('calendar');
+const monthTitle = document.getElementById('monthTitle');
+const constellation = document.getElementById('constellation');
+const modalRoot = document.getElementById('modalRoot');
+
+/* Year select populate (range +/-5 years) */
+function populateYearSelect(){
+  const sel = document.getElementById('yearSelect');
+  sel.innerHTML='';
+  const now = new Date();
+  const start = now.getFullYear() - 5;
+  for(let y=start; y<=start+10; y++){
+    const opt = document.createElement('option'); opt.value=y; opt.textContent=y;
+    if(y===currentDate.getFullYear()) opt.selected=true;
+    sel.appendChild(opt);
+  }
 }
+populateYearSelect();
 
+/* Render calendar */
 function renderCalendar(){
+  calendarEl.innerHTML='';
+  constellation.innerHTML='';
 
-  const calendar=
-    document.getElementById('calendar');
+  const year = currentDate.getFullYear();
+  const month = currentDate.getMonth();
+  const firstDay = new Date(year,month,1);
+  const lastDay = new Date(year,month+1,0);
 
-  calendar.innerHTML='';
+  monthTitle.textContent = firstDay.toLocaleString('default',{month:'long'}) + ' ' + year;
 
-  const year=currentDate.getFullYear();
-  const month=currentDate.getMonth();
-
-  const firstDay=
-    new Date(year,month,1);
-
-  const lastDay=
-    new Date(year,month+1,0);
-
-  document.getElementById('monthTitle')
-    .textContent=
-      firstDay.toLocaleString(
-        'default',
-        {month:'long'}
-      ) + ' ' + year;
-
-  const startOffset=
-      firstDay.getDay();
-
+  // blank cells
+  const startOffset = firstDay.getDay();
   for(let i=0;i<startOffset;i++){
-
-    const blank=document.createElement('div');
-
-    calendar.appendChild(blank);
+    const blank = document.createElement('div');
+    blank.className = 'day';
+    blank.style.visibility = 'hidden';
+    calendarEl.appendChild(blank);
   }
 
-  const events=getEvents();
+  const events = getEvents();
 
-  for(let day=1;day<=lastDay.getDate();day++){
+  for(let d=1; d<=lastDay.getDate(); d++){
+    const cell = document.createElement('div'); cell.className='day';
+    const dateKeyISO = isoKey(year, month+1, d); // YYYY-M-D format used in storage
+    const label = document.createElement('div'); label.className='date'; label.textContent = d;
+    cell.appendChild(label);
 
-    const cell=document.createElement('div');
+    if(isToday(year,month,d)) cell.classList.add('today');
 
-    cell.className='day';
-
-    const today=new Date();
-
-    if(
-      day===today.getDate() &&
-      month===today.getMonth() &&
-      year===today.getFullYear()
-    ){
-      cell.classList.add('today');
-    }
-
-    const dateKey=
-      `${year}-${month+1}-${day}`;
-
-    let html=
-      `<div class="date">${day}</div>`;
-
-    if(events[dateKey]){
-
-      events[dateKey].forEach(event=>{
-
-        html+=
-          `<div class="event">${event}</div>`;
+    if(events[dateKeyISO]){
+      events[dateKeyISO].forEach((ev, idx) => {
+        const evDiv = document.createElement('div'); evDiv.className='event';
+        evDiv.textContent = ev;
+        // clicking an event opens modal to edit/delete
+        evDiv.onclick = (e) => { e.stopPropagation(); openDayModal(dateKeyISO); };
+        cell.appendChild(evDiv);
       });
     }
 
-    cell.innerHTML=html;
+    // Click day to open modal (add/edit events for that day)
+    cell.onclick = () => openDayModal(dateKeyISO);
 
-    calendar.appendChild(cell);
+    calendarEl.appendChild(cell);
   }
 
-  renderConstellation();
+  renderConstellation(); // update constellation view
 }
 
+/* Helper formats */
+function isoKey(y,m,d){ return `${y}-${m}-${d}`; }
+function parseIsoKey(key){
+  const [y,m,d] = key.split('-').map(Number); return new Date(y,m-1,d);
+}
+function isToday(y,m,d){
+  const t = new Date();
+  return t.getFullYear()===y && t.getMonth()===m && t.getDate()===d;
+}
+
+/* Add event from top form (date input uses yyyy-mm-dd; normalize to storage key) */
 function addEvent(){
-
-  const date=
-      document.getElementById('eventDate').value;
-
-  const text=
-      document.getElementById('eventText').value;
-
-  if(!date || !text) return;
-
-  const events=getEvents();
-
-  if(!events[date]){
-      events[date]=[];
-  }
-
-  events[date].push(text);
-
-  saveEvents(events);
-
-  renderCalendar();
-
+  const dateInput = document.getElementById('eventDate').value;
+  const text = document.getElementById('eventText').value.trim();
+  if(!dateInput || !text) return;
+  // normalize: dateInput is yyyy-mm-dd; convert to numeric m,d without zero padding to retain earlier storage format
+  const dt = new Date(dateInput + 'T00:00:00');
+  const key = isoKey(dt.getFullYear(), dt.getMonth()+1, dt.getDate());
+  const ev = getEvents();
+  if(!ev[key]) ev[key]=[];
+  ev[key].push(text);
+  saveEvents(ev);
   document.getElementById('eventText').value='';
-}
-
-function changeMonth(direction){
-
-  currentDate.setMonth(
-      currentDate.getMonth()+direction
-  );
-
+  document.getElementById('eventDate').value='';
+  // if adding to current visible month and year, re-render
   renderCalendar();
 }
 
+/* Month navigation */
+function changeMonth(offset){
+  currentDate.setMonth(currentDate.getMonth()+offset);
+  // update year select
+  document.getElementById('yearSelect').value = currentDate.getFullYear();
+  renderCalendar();
+}
+function jumpToYear(){
+  const y = Number(document.getElementById('yearSelect').value);
+  currentDate.setFullYear(y);
+  renderCalendar();
+}
+
+/* Constellation mode: shows stars for dates that have events */
 function toggleConstellation(){
-
-  const view=
-    document.getElementById('constellation');
-
-  const calendar=
-    document.getElementById('calendar');
-
-  if(view.style.display==='block'){
-
-      view.style.display='none';
-      calendar.style.display='grid';
-
+  const isHidden = constellation.style.display==='none' || constellation.style.display==='';
+  if(isHidden){
+    constellation.style.display='block';
+    calendarEl.style.display='none';
+    document.getElementById('constBtn').textContent='Calendar Mode';
   }else{
-
-      view.style.display='block';
-      calendar.style.display='none';
+    constellation.style.display='none';
+    calendarEl.style.display='grid';
+    document.getElementById('constBtn').textContent='Constellation Mode';
   }
 }
-
 function renderConstellation(){
-
-  const container=
-    document.getElementById('constellation');
-
-  container.innerHTML='';
-
-  const events=getEvents();
-
-  Object.keys(events).forEach(key=>{
-
-    const star=
-      document.createElement('div');
-
-    star.className=
-      'constellation-star';
-
-    star.style.left=
-      Math.random()*90+'%';
-
-    star.style.top=
-      Math.random()*80+'%';
-
-    star.title=
-      events[key].join(', ');
-
-    container.appendChild(star);
+  constellation.innerHTML='';
+  constellation.style.display = (calendarEl.style.display==='none') ? 'block' : 'none';
+  // Generate a star for each event key in the entire storage (or optionally for current month)
+  const events = getEvents();
+  const keys = Object.keys(events);
+  keys.forEach((k, i) => {
+    const star = document.createElement('div'); star.className='constellation-star';
+    star.style.left = (10 + (i*37 % 80)) + '%';
+    star.style.top  = (5 + (i*23 % 70)) + '%';
+    star.title = `${k}: ${events[k].join('; ')}`;
+    constellation.appendChild(star);
   });
+  // keep hidden by default (toggled via button)
+  constellation.style.display = (document.getElementById('constBtn').textContent==='Calendar Mode') ? 'block' : 'none';
 }
 
+/* Modal to view/add/edit events for a specific day */
+function openDayModal(dateKey){
+  closeModal(); // ensure single modal
+  const dayDate = parseIsoKey(dateKey);
+  const evObj = getEvents();
+  const dayEvents = evObj[dateKey] ? [...evObj[dateKey]] : [];
+
+  const backdrop = document.createElement('div'); backdrop.className='modal-backdrop';
+  const modal = document.createElement('div'); modal.className='modal';
+  modal.innerHTML = `
+    <h3>Events — ${dayDate.toLocaleDateString()}</h3>
+    <div class="form-row" style="margin-top:8px;">
+      <input type="text" id="modalEventText" placeholder="New event title">
+      <button id="modalAddBtn">Add</button>
+      <button id="modalCloseBtn" style="background:#666;color:white">Close</button>
+    </div>
+    <div class="event-list" id="modalEventList"></div>
+  `;
+  backdrop.appendChild(modal);
+  modalRoot.appendChild(backdrop);
+  modalRoot.style.display='block';
+
+  const listEl = modal.querySelector('#modalEventList');
+  function refreshList(){
+    listEl.innerHTML='';
+    const curEv = getEvents()[dateKey] ? [...getEvents()[dateKey]] : [];
+    if(curEv.length===0){
+      const p = document.createElement('div'); p.style.opacity=0.7; p.textContent='No events for this day.';
+      listEl.appendChild(p); return;
+    }
+    curEv.forEach((txt, idx) => {
+      const it = document.createElement('div'); it.className='event-item';
+      const tdiv = document.createElement('div'); tdiv.className='event-text'; tdiv.textContent = txt;
+      const del = document.createElement('button'); del.className='delete-btn'; del.textContent='Delete';
+      del.onclick = () => { deleteEventAt(dateKey, idx); refreshList(); renderCalendar(); };
+      it.appendChild(tdiv); it.appendChild(del);
+      listEl.appendChild(it);
+    });
+  }
+  refreshList();
+
+  modal.querySelector('#modalAddBtn').onclick = () => {
+    const text = modal.querySelector('#modalEventText').value.trim();
+    if(!text) return;
+    const ev = getEvents();
+    if(!ev[dateKey]) ev[dateKey]=[];
+    ev[dateKey].push(text);
+    saveEvents(ev);
+    modal.querySelector('#modalEventText').value='';
+    refreshList();
+    renderCalendar();
+  };
+
+  modal.querySelector('#modalCloseBtn').onclick = closeModal;
+
+  // Close when backdrop clicked (but not when modal clicked)
+  backdrop.onclick = (e) => { if(e.target===backdrop) closeModal(); };
+}
+
+function closeModal(){
+  modalRoot.innerHTML=''; modalRoot.style.display='none';
+}
+
+/* Delete specific event by index */
+function deleteEventAt(dateKey, index){
+  const ev = getEvents();
+  if(!ev[dateKey]) return;
+  ev[dateKey].splice(index,1);
+  if(ev[dateKey].length===0) delete ev[dateKey];
+  saveEvents(ev);
+}
+
+/* Clear all with confirmation */
+function clearAllConfirm(){
+  if(!confirm('Clear all saved events? This cannot be undone.')) return;
+  localStorage.removeItem(STORAGE_KEY);
+  renderCalendar();
+}
+
+/* initialize */
 renderCalendar();
 
+/* Expose some functions to global for buttons used inline */
+window.changeMonth = changeMonth;
+window.addEvent = addEvent;
+window.toggleConstellation = toggleConstellation;
+window.jumpToYear = jumpToYear;
+window.clearAllConfirm = clearAllConfirm;
 </script>
-
 </body>
 </html>
