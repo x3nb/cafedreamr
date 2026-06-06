@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>The Archives — Anchored Sections</title>
+<style>
+  :root{
+    --c1:#BA1359; --c2:#AD2687; --bg:#060406;
+    --fade:1s; --load-ms:7000;
+  }
+  html,body{height:100%;margin:0;background:var(--bg);color:#f7f7f7;font-family:Inter,system-ui,Segoe UI,Roboto,Arial;}
+  .stage{position:fixed;inset:0;overflow:auto;}
+  .bg-video{position:fixed;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;filter:brightness(.75) contrast(1.05);}
+  .wash{position:fixed;inset:0;background:linear-gradient(120deg,rgba(186,19,89,0.28),rgba(173,38,135,0.28));mix-blend-mode:screen;z-index:1;pointer-events:none}
+  .loader{position:fixed;inset:0;z-index:4;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:24px}
+  .ring{width:110px;height:110px;border-radius:50%;background:conic-gradient(var(--c1),var(--c2));padding:10px;display:grid;place-items:center;animation:rotate 7s linear forwards;mask:radial-gradient(circle at center,#000 58%,transparent 60%);}
+  .ring .inner{width:100%;height:100%;border-radius:50%;background:rgba(6,4,6,0.6);display:grid;place-items:center;font-weight:700;letter-spacing:.14em}
+  @keyframes rotate{0%{transform:rotate(0)}100%{transform:rotate(1080deg) scale(1.15)}}
+  .mystery{font-weight:800;letter-spacing:.12em;text-transform:uppercase}
+  .site{position:relative;z-index:3;opacity:0;pointer-events:none;transition:opacity var(--fade) ease;padding:80px 24px 160px}
+  .site.open{opacity:1;pointer-events:auto}
+  header{text-align:center;margin-bottom:36px}
+  h1{font-size:clamp(30px,6vw,64px);margin:0 0 12px}
+  nav.toc{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:8px}
+  nav.toc a{color:#fff;text-decoration:none;padding:10px 14px;border-radius:10px;background:linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.02));border:1px solid rgba(255,255,255,0.06);font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+  nav.toc a:hover{transform:translateY(-4px)}
+  main.content{max-width:900px;margin:32px auto 120px;background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);border-radius:12px;padding:20px}
+  section.block{padding:18px;border-radius:10px;margin-bottom:18px;background:rgba(10,6,8,0.36);border:1px solid rgba(255,255,255,0.03)}
+  section.block h2{margin:0 0 8px;font-size:18px;letter-spacing:.06em}
+  .meta{font-size:13px;color:rgba(255,255,255,0.7);margin-bottom:10px}
+  .snippet{max-height:0;overflow:hidden;transition:max-height 420ms ease;padding:0 0}
+  .snippet.open{padding-top:12px;max-height:1200px}
+  .btn-inline{display:inline-block;margin-top:8px;padding:8px 12px;border-radius:8px;background:linear-gradient(90deg,var(--c1),var(--c2));color:#fff;text-decoration:none;font-weight:700}
+  /* anchor smooth scroll */
+  html{scroll-behavior:smooth}
+  /* small screens */
+  @media (max-width:520px){.ring{width:86px;height:86px}.site{padding:36px 12px 120px}}
+</style>
+</head>
+<body>
+  <!-- video + wash -->
+  <video class="bg-video" autoplay muted playsinline loop id="bgVid">
+    <source src="https://www.cafedreamr.art/images/rosepetals-falling-cinematic.mp4" type="video/mp4">
+  </video>
+  <div class="wash"></div>
+
+  <!-- loader -->
+  <div class="loader" id="loader" aria-hidden="false">
+    <div class="ring"><div class="inner">— — —</div></div>
+    <div style="text-align:center">
+      <div class="mystery" id="mysteryText">A R R I V A L</div>
+    </div>
+  </div>
+
+  <!-- main site -->
+  <div class="site" id="site" aria-hidden="true">
+    <header>
+      <h1>The Archives</h1>
+      <nav class="toc" aria-label="Table of contents">
+        <a href="#about" data-target="about">ABOUT</a>
+        <a href="#art" data-target="art">ART</a>
+        <a href="#portfolio" data-target="portfolio">PORTFOLIO</a>
+        <a href="#contact" data-target="contact">CONTACT</a>
+      </nav>
+      <div style="color:rgba(255,255,255,0.6);font-size:13px">Click an item to reveal details below</div>
+    </header>
+
+    <main class="content" role="main">
+      <section id="about" class="block" aria-labelledby="about-h">
+        <h2 id="about-h">ABOUT</h2>
+        <div class="meta">Artist · Developer · 80s Enthusiast</div>
+        <div class="snippet" id="about-snippet">
+          <p>Raised on neon lights and synth lines, Alex Mercer blends code and canvas to deconstruct nostalgia into contemporary works. Trained in fine arts and self-taught in web technologies, Alex prototypes interactive installations that feel like found fragments from a parallel 1984—bold silhouettes, saturated palettes, and tactile mischief.</p>
+          <p>When not building generative visuals or responsive micro-sites, Alex explores vintage fashion archives and rewrites garment patterns into shader code, marrying texture and algorithm.</p>
+          <a class="btn-inline" href="https://example.com/about" target="_blank" rel="noopener noreferrer">Learn more</a>
+        </div>
+      </section>
+
+      <section id="art" class="block" aria-labelledby="art-h">
+        <h2 id="art-h">ART</h2>
+        <div class="meta">Exhibitions · Series · Mediums</div>
+        <div class="snippet" id="art-snippet">
+          <p>Signature series include "Neon Collation" — mixed-media panels with embedded LED matrices — and "Glitch Couture", a digital clothing line rendered as browser-based wearables. Visual language references 80s magazine layouts, VHS artifacts, and runway photography with high-contrast color blocking.</p>
+          <p>Mediums: oil on panel, generative canvas (WebGL), wearable electronics, and limited-run zines.</p>
+          <a class="btn-inline" href="https://example.com/art" target="_blank" rel="noopener noreferrer">View gallery</a>
+        </div>
+      </section>
+
+      <section id="portfolio" class="block" aria-labelledby="portfolio-h">
+        <h2 id="portfolio-h">PORTFOLIO</h2>
+        <div class="meta">Selected Projects · Case Studies</div>
+        <div class="snippet" id="portfolio-snippet">
+          <p>Highlights: a responsive portfolio site that emulates a 1980s magazine flipbook; a realtime audio-visualizer for live sets; and a boutique e-comm theme inspired by vintage department-store catalogs. Each project balances craftsmanship, accessibility, and performative color systems.</p>
+          <p>Tech stack: HTML/CSS, JavaScript, WebGL (Three.js), GLSL shaders, Node.js, and small-form microcontrollers for interactive garments.</p>
+          <a class="btn-inline" href="https://example.com/portfolio" target="_blank" rel="noopener noreferrer">Open portfolio</a>
+        </div>
+      </section>
+
+      <section id="contact" class="block" aria-labelledby="contact-h">
+        <h2 id="contact-h">CONTACT</h2>
+        <div class="meta">Inquiries · Commissions · Press</div>
+        <div class="snippet" id="contact-snippet">
+          <p>For commissions, collaborations, or press requests, reach out with a brief and timeline. Alex prefers email and uses brief mood boards and select references to scope work before prototyping.</p>
+          <p><strong>Email:</strong> <a href="mailto:hello@example.com" style="color:var(--c2)">hello@example.com</a></p>
+          <a class="btn-inline" href="https://example.com/contact" target="_blank" rel="noopener noreferrer">Contact form</a>
+        </div>
+      </section>
+    </main>
+  </div>
+
+<script>
+  const LOAD_MS = 7000;
+  const FADE_MS = 900;
+  const loader = document.getElementById('loader');
+  const site = document.getElementById('site');
+  const mystery = document.getElementById('mysteryText');
+
+  // timeline text updates
+  const timeline = [{t:0,text:'A R R I V A L'},{t:1800,text:'C O D E'},{t:3600,text:'R E M N A N T S'},{t:5200,text:'T H E   A R C H I V E S'}];
+  timeline.forEach(item => setTimeout(()=>{mystery.style.opacity=0;setTimeout(()=>{mystery.textContent=item.text;mystery.style.opacity=1},220)}, item.t));
+
+  setTimeout(()=>{loader.style.opacity=0;loader.setAttribute('aria-hidden','true');setTimeout(()=>{loader.remove()},FADE_MS);site.setAttribute('aria-hidden','false');site.classList.add('open')}, LOAD_MS);
+
+  // Accordion reveal behavior when clicking TOC or anchors
+  function openSnippet(id){
+    const el = document.getElementById(id + '-snippet');
+    if(!el) return;
+    // close others
+    document.querySelectorAll('.snippet').forEach(s => { if(s !== el) s.classList.remove('open'); });
+    el.classList.add('open');
+  }
+
+  // Attach clicks on nav links to open and scroll to section
+  document.querySelectorAll('nav.toc a').forEach(a=>{
+    a.addEventListener('click', (e)=>{
+      // default anchor will scroll; we also ensure expansion
+      const target = a.getAttribute('data-target') || a.getAttribute('href').replace('#','');
+      setTimeout(()=> openSnippet(target), 360); // wait a bit for scroll to land
+    });
+  });
+
+  // If user clicks a section heading, toggle its snippet
+  document.querySelectorAll('section.block').forEach(sec=>{
+    sec.querySelector('h2').addEventListener('click', ()=> {
+      const sn = sec.querySelector('.snippet');
+      const isOpen = sn.classList.contains('open');
+      document.querySelectorAll('.snippet').forEach(s => s.classList.remove('open'));
+      if(!isOpen) sn.classList.add('open');
+      // scroll into view for clarity
+      sec.scrollIntoView({behavior:'smooth',block:'start'});
+    });
+  });
+
+  // keyboard accessibility: Enter/Space on focused TOC link opens it
+  document.querySelectorAll('nav.toc a').forEach(a=>{
+    a.addEventListener('keydown', (e)=>{ if(e.key==='Enter' || e.key===' ') { e.preventDefault(); a.click(); }});
+  });
+
+  // video fallback hide if not supported
+  const bgVid = document.getElementById('bgVid');
+  bgVid.addEventListener('error', ()=>{ bgVid.style.display='none'; });
+
+</script>
+</body>
+</html>
