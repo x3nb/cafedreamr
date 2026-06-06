@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="/.nekoweb-api/static/site.js" defer></script>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>CafeDreamr</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%;font-family:Arial, sans-serif}
+
+  .video-background{
+    position:fixed;
+    inset:0;
+    background-color:#4B0082; /* fallback while loading */
+    overflow:hidden;
+    z-index:-1;
+  }
+
+  .video-background video{
+    position:absolute;
+    top:50%;
+    left:50%;
+    width:100%;
+    height:100%;
+    object-fit:cover;              /* cover the viewport */
+    transform:translate(-50%,-50%);
+    pointer-events:none;           /* allow clicks through */
+  }
+
+  .content-overlay{
+    position:relative;
+    height:100%;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    color:#fff;
+    text-align:center;
+    background:rgba(0,0,0,0.3);
+    z-index:1;
+    padding:20px;
+  }
+
+  h1{font-size:3em;margin-bottom:30px}
+  .buttons{display:flex;gap:20px}
+  .btn{padding:15px 30px;font-size:1.2em;color:#fff;text-decoration:none;border-radius:8px;cursor:pointer}
+  .btn-register{background:linear-gradient(45deg,#6a0dad,#8a2be2);box-shadow:0 4px 15px rgba(0,0,0,.3);position:relative;overflow:hidden}
+  .btn-register:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,.4)}
+  .btn-register::after{content:"";position:absolute;top:0;left:-75%;width:50%;height:100%;background:linear-gradient(120deg,rgba(255,255,255,.3),rgba(255,255,255,0));transform:skewX(-20deg);animation:shine 2s infinite}
+  @keyframes shine{0%{left:-75%}100%{left:125%}}
+  
+  
+  /* Gothic headline styling */ 
+  h1 { font-family: "UnifrakturCook", serif; font-size: 4rem; /* adjust size */ color: #9a86b8; /* dusty lavender base */ line-height: 1.05; position: relative; letter-spacing: 0.02em; margin: 0 0 30px; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; /* slight dark outline for readability */ text-shadow: 0 1px 0 rgba(0,0,0,0.6), /* subtle base shadow */ 0 6px 18px rgba(0,0,0,0.45); /* soft drop shadow */ } /* Thin lighter highlight across the top of the letters */ h1::before{ content:""; position:absolute; inset:0 0 55% 0; /* cover top portion of text box */ background: linear-gradient(180deg, rgba(255,255,255,0.35), rgba(255,255,255,0.05)); mix-blend-mode: screen; pointer-events:none; -webkit-mask: linear-gradient(#000, transparent 60%); /* fade effect */ mask: linear-gradient(#000, transparent 60%); border-radius:4px; } /* Optional subtle stroke/glow using a text-shadow hack for thin outline */ h1.stroke { text-shadow: -1px -1px 0 rgba(255,255,255,0.08), 1px -1px 0 rgba(255,255,255,0.06), -1px 1px 0 rgba(0,0,0,0.6), 1px 1px 0 rgba(0,0,0,0.6), 0 8px 20px rgba(0,0,0,0.45); } /* Responsive size */ @media (max-width:700px){ h1 { font-size: 2.2rem; } }
+</style>
+</head>
+<body>
+
+<div class="video-background">
+  <video autoplay muted loop playsinline preload="auto">
+    <source src="https://www.cafedreamr.art/teasiblingloop.mp4" type="video/mp4">
+    <!-- Optional webm fallback -->
+    <source src="VIDEO_URL.webm" type="video/webm">
+    <!-- Fallback image if video not supported -->
+  </video>
+</div>
+
+<div class="content-overlay">
+  <h1>CafeDreamr</h1>
+  <div class="buttons">
+    <a href="register.html" class="btn btn-register">Register</a>
+    <a href="login.html" class="btn btn-login">Login</a>
+  </div>
+</div>
+
+</body>
+</html>
