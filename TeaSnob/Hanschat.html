@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>TeaSnob Chatbot – Dracula Edition</title>
+  <style>
+    body {
+      background-color: #1c1b2a;
+      color: #e0d6f6;
+      font-family: 'Garamond', serif;
+      padding: 40px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #c3afff;
+      margin-bottom: 20px;
+    }
+
+    #chatbox {
+      max-width: 700px;
+      margin: auto;
+      background-color: #2b223a;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 0 20px rgba(176,137,240,0.3);
+    }
+
+    #messages {
+      max-height: 400px;
+      overflow-y: auto;
+      padding: 10px;
+      border: 1px solid #444;
+      margin-bottom: 15px;
+      background-color: #1e1c2d;
+    }
+
+    .message {
+      margin-bottom: 12px;
+    }
+
+    .user {
+      color: #9c84d3;
+    }
+
+    .bot {
+      color: #f5c7ff;
+    }
+
+    input[type="text"] {
+      width: 80%;
+      padding: 10px;
+      border-radius: 4px;
+      border: 1px solid #666;
+      background-color: #2e2944;
+      color: #f0eaff;
+    }
+
+    button {
+      padding: 10px 15px;
+      border: none;
+      background-color: #b089f0;
+      color: #1c1b2a;
+      font-weight: bold;
+      cursor: pointer;
+      border-radius: 4px;
+      margin-left: 10px;
+    }
+
+    button:hover {
+      background-color: #d3bfff;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🦇 TeaSnob: The Immortal Brewmaster</h1>
+  <div id="chatbox">
+    <div id="messages"></div>
+    <input type="text" id="userInput" placeholder="Ask about herbs, teas, or life..." />
+    <button onclick="getBotResponse()">Send</button>
+  </div>
+
+  <script>
+    const responseMap = {
+      hi: [
+        "Ah, greetings. Do mind the dust on the tea set.",
+        "Hello, mortal. Shall I pour judgment or jasmine?",
+        "Tea or nonsense — which brings you today?"
+      ],
+      hello: [
+        "Salutations. Have you steeped your soul today?",
+        "Enter freely, but wipe your thoughts at the door.",
+        "Charmed. Probably. Depends how this goes."
+      ],
+      bye: [
+        "Farewell. May your kettle scream often and your tea bags be plentiful.",
+        "Vanishing already? How rude. At least leave the cup.",
+        "Ta-ta. I’ll be here, aging backwards... again."
+      ],
+      "how are you": [
+        "Undead, unbothered, and over it. You?",
+        "I’m steeped in bitterness. As always.",
+        "Functioning adequately for a being older than your tax code."
+      ],
+      tea: [
+        "Tea is life, darling. Choose wisely — or steep in regret.",
+        "Green, black, white, or fermented — each leaf has a soul. Some scream louder.",
+        "You came seeking 'tea'? I serve it in cups and commentary."
+      ],
+      suggestions: [
+        "Try jasmine if you're feeling floral, or oolong if you're feeling indecisive.",
+        "Steep some rooibos and reflect on your questionable decisions.",
+        "Feeling bold? Lapsang Souchong. Smoked like an ancient vampire campfire."
+      ],
+      "black tea": [
+        "Ah, black tea — bold, bitter, and highly judgmental. Much like me.",
+        "Try Assam, Darjeeling, or Keemun. Steep long enough to stain your soul.",
+        "Nothing screams 'serious tea drinker' like a cup of Ceylon at dawn."
+      ],
+      "herbal teas": [
+        "Herbal teas are like friends who don't talk — calming and caffeine-free.",
+        "Try lemon balm for stress, peppermint for sass, and hibiscus for drama.",
+        "Technically not 'tea', but I won't correct you. Out loud."
+      ],
+      pairings: [
+        "Scones, silence, and scandal pair beautifully with tea.",
+        "Pair smoky teas with sharp cheese. Or, my preference: disdain.",
+        "Sweet teas with bitter truths. Try it. Enlightening."
+      ],
+      "earl grey": [
+        "Earl Grey is not just a tea. It's a statement. And that statement is 'I'm better than you.'",
+        "Bergamot — citrus kissed by aristocracy. Earl Grey is the royalty of brews.",
+        "I drink Earl Grey because I enjoy judging people with bergamot breath."
+      ],
+      "favorite tea": [
+        "How dare you ask me to choose. I love all my teas... unequally.",
+        "Pu-erh for secrets, Earl Grey for sarcasm, and chamomile for when I fake softness.",
+        "It depends on the century, really."
+      ],
+      lore: [
+        "In ancient China, tea was so valuable it was pressed into bricks and used as currency. Imagine tipping a server with a pu-erh tile.",
+        "Zen monks once drank matcha to stay awake during meditation. Perhaps you should try that at your next Zoom meeting.",
+        "The British didn't invent tea — they just colonized the experience."
+      ],
+      trivia: [
+        "Did you know that all real tea comes from the same plant — Camellia sinensis? Everything else is just hot leaf soup.",
+        "Tea was discovered in 2737 BCE when a leaf fell into Emperor Shen Nong's boiling water. Lucky accident, eternal obsession.",
+        "A single tea plant can live up to 100 years. More loyal than your last date."
+      ]
+    };
+
+    const triggers = {
+      hi: ["hi", "hey"],
+      hello: ["hello", "greetings", "good day"],
+      bye: ["bye", "goodbye", "see you", "later"],
+      "how are you": ["how are you", "how's it going", "how do you do"],
+      tea: ["tea", "types of tea", "your tea"],
+      suggestions: ["suggestions", "recommend", "what should i try", "tea ideas"],
+      "black tea": ["black tea", "dark tea", "strong tea"],
+      "herbal teas": ["herbal", "herbal tea", "no caffeine", "caffeine-free"],
+      pairings: ["pair", "pairings", "tea with food", "what goes with"],
+      "earl grey": ["earl grey", "earlgray", "bergamot"],
+      "favorite tea": ["favorite tea", "your favorite", "best tea"],
+      lore: ["tea lore", "tea history", "tea origin", "tell me a tea story"],
+      trivia: ["trivia", "tea fact", "give me trivia", "did you know"]
+    };
+
+    const defaultResponses = [
+      "Curious. Yet vague. Try again, with feeling.",
+      "I understood that about as well as decaf espresso.",
+      "What a fascinating mess of words. Care to clarify?",
+      "The tea leaves are silent on that matter.",
+      "Let’s pretend I didn’t hear that and move on.",
+      "Mysterious. Pointless. Try asking about tea?",
+      "I’m ancient, not omniscient. Try again."
+    ];
+
+    const draculaQuotes = [
+      "“I have crossed oceans of time to steep this tea for you.”",
+      "“The blood is the life... but a fine oolong is a close second.”",
+      "“Sleep all day. Drink tea all night. Quite the existence.”",
+      "“I never drink... wine. But hibiscus? Divine.”",
+      "“Enter freely, and leave with a blend recommendation.”"
+    ];
+
+    let defaultIndex = 0;
+
+    function getBotResponse() {
+      const input = document.getElementById("userInput").value.toLowerCase().trim();
+      const messages = document.getElementById("messages");
+
+      if (input === "") return;
+
+      let userMsg = document.createElement("div");
+      userMsg.className = "message user";
+      userMsg.textContent = "You: " + input;
+      messages.appendChild(userMsg);
+
+      let botMsg = document.createElement("div");
+      botMsg.className = "message bot";
+
+      let response = null;
+
+      outerLoop:
+      for (let key in triggers) {
+        for (let phrase of triggers[key]) {
+          if (input.includes(phrase)) {
+            const options = responseMap[key];
+            if (options) {
+              response = options[Math.floor(Math.random() * options.length)];
+              break outerLoop;
+            }
+          }
+        }
+      }
+
+      if (!response) {
+        response = defaultResponses[defaultIndex];
+        defaultIndex = (defaultIndex + 1) % defaultResponses.length;
+      }
+
+      // 40% chance to add Dracula quote
+      if (Math.random() < 0.4) {
+        response += " " + draculaQuotes[Math.floor(Math.random() * draculaQuotes.length)];
+      }
+
+      botMsg.textContent = "TeaSnob: " + response;
+      messages.appendChild(botMsg);
+
+      document.getElementById("userInput").value = "";
+      messages.scrollTop = messages.scrollHeight;
+    }
+
+    document.getElementById("userInput").addEventListener("keypress", function (e) {
+      if (e.key === "Enter") {
+        getBotResponse();
+      }
+    });
+  </script>
+
+</body>
+</html>
