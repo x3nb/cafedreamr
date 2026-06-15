@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="/.nekoweb-api/static/site.js" defer></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Miki's Core Log | Chimera Collective</title>
+    <style>
+        :root {
+            --accent: #00d4ff; 
+            --bg: #050505;
+            --panel: #111;
+            --text: #e0f7fa;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body, html { 
+            height: 100%; 
+            background-color: var(--bg); 
+            color: var(--text);
+            font-family: 'Courier New', Courier, monospace;
+            overflow: hidden;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 450px; 
+            height: 100vh;
+        }
+
+        /* --- LEFT SIDE --- */
+        .experience-side {
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            border-right: 1px solid var(--accent);
+        }
+
+        /* --- TRUE COLORS BANNER SYSTEM --- */
+        .banner-frame {
+            width: 100%;
+            height: 180px;
+            overflow: hidden;
+            position: relative;
+            border-bottom: 2px solid var(--accent);
+            background: #000;
+            cursor: crosshair;
+        }
+
+        /* Layer 1: The Blue Tinted Base */
+        .base-layer {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: hue-rotate(180deg) brightness(0.7) contrast(1.2);
+            position: absolute;
+            top: 0; left: 0;
+        }
+
+        /* Layer 2: The Original Color Hidden Layer */
+        .reveal-layer {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-image: url('chimeracafe-banner-cool.jpg');
+            background-size: cover;
+            background-position: center;
+            /* Starts at 0% size */
+            clip-path: circle(0% at 55% 40%); 
+            transition: clip-path 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            pointer-events: none;
+        }
+
+        /* CALIBRATION: 
+           Change '55%' (Left/Right) and '40%' (Up/Down) 
+           to center the circle on Miki's face! 
+        */
+        .banner-frame:hover .reveal-layer {
+            clip-path: circle(130px at 55% 40%); 
+        }
+
+        /* --- CONTENT AREA --- */
+        .media-viewport {
+            flex-grow: 1;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: linear-gradient(180deg, #0a0a0a 0%, #000 100%);
+        }
+
+        .web-container {
+            position: relative;
+            margin-bottom: 10px;
+            cursor: help;
+        }
+
+        .spiderweb-icon {
+            font-size: 2rem;
+            color: var(--accent);
+            text-shadow: 0 0 10px var(--accent), 0 0 20px var(--accent);
+            animation: webPulse 2s infinite alternate;
+        }
+
+        .web-tooltip {
+            visibility: hidden;
+            width: 280px;
+            background: rgba(0, 0, 0, 0.95);
+            color: var(--accent);
+            text-align: center;
+            border: 1px solid var(--accent);
+            padding: 15px;
+            position: absolute;
+            z-index: 100;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.8rem;
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+        }
+
+        .web-container:hover .web-tooltip { visibility: visible; }
+
+        @keyframes webPulse {
+            from { opacity: 0.4; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1.1); }
+        }
+
+        .log-section {
+            padding: 20px;
+            max-width: 800px;
+            width: 100%;
+        }
+
+        .search-area { display: flex; gap: 10px; margin: 20px 0; }
+        
+        #coreSearch {
+            flex-grow: 1;
+            background: #000;
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            padding: 12px;
+            outline: none;
+            box-shadow: inset 0 0 5px rgba(0, 212, 255, 0.3);
+        }
+
+        .access-btn {
+            background: var(--accent);
+            color: black;
+            border: none;
+            padding: 0 25px;
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-family: inherit;
+        }
+
+        .log-entry {
+            background: #0a0a0a;
+            padding: 25px;
+            border: 1px solid rgba(0, 212, 255, 0.1);
+            min-height: 120px;
+            line-height: 1.6;
+            color: var(--text);
+        }
+
+        /* --- PADLET SIDEBAR --- */
+        .padlet-sidebar {
+            background: #1e1e1e;
+            display: flex;
+            flex-direction: column;
+            border-left: 1px solid var(--accent);
+        }
+
+        iframe { width: 100%; height: 100%; border: none; }
+
+    </style>
+</head>
+<body>
+
+    <div class="main-grid">
+        
+        <div class="experience-side">
+            <div class="banner-frame">
+                <img src="https://xencafe.nekoweb.org/2026-LIVESTREAM/MIKIS-REALM-ARTPOST/MikiPeeringManically.jpeg" class="base-layer" alt="Blue Tinted">
+                <div class="reveal-layer"></div>
+            </div>
+
+            <div class="media-viewport">
+                
+                <div class="web-container">
+                    <div class="spiderweb-icon">🕸</div>
+                    <div class="web-tooltip">
+                        <strong>// SYSTEM DECRYPTOR</strong><br><br>
+                        Miki's logs are encrypted. Enter character names (Star, Hans, Chari) to bypass the firewall.
+                    </div>
+                </div>
+
+                <div class="log-section">
+                    <div class="log-header">
+                        <h2 style="color: var(--accent); letter-spacing: 2px;">> CORE_LOG_INTERFACE_V1</h2>
+                    </div>
+
+                    <div class="search-area">
+                        <input type="text" id="coreSearch" placeholder="Awaiting command..." onkeydown="if(event.key==='Enter') queryMiki()">
+                        <button class="access-btn" onclick="queryMiki()">DECRYPT</button>
+                    </div>
+
+                    <div id="logResult" class="log-entry">
+                        [CORE STANDBY... MOVE CURSOR TO VIEW BIOSCAN]
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="padlet-sidebar">
+            <iframe src="https://padlet.com/embed/hbu3ozs9k8tqlhuy"></iframe>
+        </div>
+
+    </div>
+
+    <script>
+        const mikiLore = [
+            { key: "hans", msg: "[CORE LOG]: Hans attempted to archive my logs using a physical filing cabinet. I've countered by encrypting his tea-inventory spreadsheet. It's a standoff." },
+            { key: "star", msg: "[CORE LOG]: Star's romance novels contain sub-textual patterns that match the Chimera's original blueprints. Either she's a genius, or the author is one of us." },
+            { key: "chari", msg: "[CORE LOG]: Chari keeps leaving sticky notes on the server rack. 'Do not touch - making cold brew.' I'm going to need a bigger firewall." },
+            { key: "tea", msg: "[CORE LOG]: Temperature fluctuations detected in the brewing chamber. Hans is agitated. Recommend immediate manual override." }
+        ];
+
+        function queryMiki() {
+            const val = document.getElementById('coreSearch').value.toLowerCase();
+            const res = document.getElementById('logResult');
+            const match = mikiLore.find(e => val.includes(e.key));
+            
+            if(match) {
+                res.innerHTML = `<span style="color:var(--accent)">[LOG RECOVERED]:</span><br><br>${match.msg}`;
+            } else {
+                res.innerHTML = `<span style="color:#ff4444">[ACCESS DENIED]:</span> No record found for '${val}'. Check the spiderweb for hints.`;
+            }
+        }
+    </script>
+
+</body>
+</html>
