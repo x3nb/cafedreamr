@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Chinera Infusion | A Secret Realm</title>
+    <style>
+        /* --- THEME VARIABLES --- */
+        :root {
+            --gold: #d4a373;
+            --cream: #faedcd;
+            --dark: #0a0a0a;
+            --panel: #161616;
+            --glass: rgba(0, 0, 0, 0.7);
+        }
+
+        /* --- RESET & LAYOUT --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body, html { 
+            background-color: var(--dark); 
+            color: var(--cream);
+            font-family: 'Georgia', serif;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            border-left: 1px solid rgba(212, 163, 115, 0.2);
+            border-right: 1px solid rgba(212, 163, 115, 0.2);
+            background: #0d0d0d;
+            min-height: 100vh;
+        }
+
+        /* --- BANNER --- */
+        .banner-frame {
+            width: 100%;
+            height: 300px; /* Increased for a more cinematic feel */
+            overflow: hidden;
+            position: relative;
+            border-bottom: 2px solid var(--gold);
+        }
+
+        .banner-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            animation: breathe 15s infinite alternate ease-in-out;
+        }
+
+        /* --- MEDIA AREA --- */
+        .media-section {
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: radial-gradient(circle at center, #1a1a1a 0%, #0a0a0a 100%);
+        }
+
+        .visual-frame {
+            width: 100%;
+            max-width: 900px;
+            aspect-ratio: 16/9;
+            background: #000;
+            border: 1px solid var(--gold);
+            box-shadow: 0 0 40px rgba(0,0,0,1);
+            overflow: hidden;
+        }
+
+        .visual-frame video { width: 100%; height: 100%; object-fit: cover; opacity: 0.7; }
+
+        .music-player {
+            margin-top: -30px;
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            padding: 20px 40px;
+            border-radius: 50px;
+            border: 1px solid var(--gold);
+            z-index: 10;
+            text-align: center;
+        }
+
+        /* --- HANS'S ARCHIVE --- */
+        .ledger-section {
+            padding: 80px 40px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hans-header { text-align: center; margin-bottom: 40px; }
+        .hans-header h2 { font-size: 2.8rem; color: var(--gold); letter-spacing: 4px; }
+        .hans-note { font-style: italic; color: #888; font-size: 0.9rem; margin-top: 10px; }
+
+        .search-container {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        #loreSearch {
+            flex-grow: 1;
+            background: #111;
+            border: 1px solid var(--gold);
+            color: var(--cream);
+            padding: 15px;
+            font-size: 1.1rem;
+            outline: none;
+            font-family: 'Garamond', serif;
+        }
+
+        .consult-btn {
+            background: var(--gold);
+            color: black;
+            border: none;
+            padding: 0 30px;
+            font-weight: bold;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .consult-btn:hover { background: var(--cream); box-shadow: 0 0 15px var(--gold); }
+
+        .ledger-entry {
+            background: var(--panel);
+            padding: 40px;
+            border-radius: 4px;
+            border-top: 1px solid rgba(212, 163, 115, 0.3);
+            line-height: 1.8;
+            font-size: 1.2rem;
+            min-height: 150px;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+        }
+
+        /* --- ANIMATIONS --- */
+        @keyframes breathe { from { transform: scale(1); } to { transform: scale(1.1); } }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="banner-frame">
+            <img src="https://xencafe.nekoweb.org/2026-LIVESTREAM/09-9.jpg" class="banner-image" alt="The Chimera Infusion">
+        </div>
+
+        <section class="media-section">
+            <div class="visual-frame">
+                <video autoplay muted loop poster="https://xencafe.nekoweb.org/2026-LIVESTREAM/0000starservs.jpg">
+                    <source src="your-silent-video.mp4" type="video/mp4">
+                </video>
+            </div>
+
+            <div class="music-player">
+                <p style="font-size: 0.7rem; letter-spacing: 4px; margin-bottom: 10px; color: var(--gold);">THE INFUSION PLAYLIST</p>
+                <audio controls>
+                    <source src="your-playlist.mp3" type="audio/mpeg">
+                </audio>
+            </div>
+        </section>
+
+        <section class="ledger-section">
+            <div class="hans-header">
+                <h2>The Scriptum Archive</h2>
+                <p class="hans-note">"Speak clearly into the ledger. I haven't the patience for riddles today." — Hans</p>
+            </div>
+
+            <div class="search-container">
+                <input type="text" id="loreSearch" placeholder="Consult the records (Star, Chari, Tea, Card Match)...">
+                <button class="consult-btn" onclick="consultHans()">Consult</button>
+            </div>
+
+            <div id="ledgerDisplay" class="ledger-entry">
+                The pages are blank, awaiting your inquiry. Hans is currently organizing the Oolong collection...
+            </div>
+        </section>
+    </div>
+
+    <script>
+        const hansData = [
+            { 
+                keys: ["star", "romance", "scripture"], 
+                text: "Star is currently occupied. If she has her romance novel in one hand and scripture in the other, she is technically between worlds. Best to leave her be until she returns to reality." 
+            },
+            { 
+                keys: ["chari", "training", "sister"], 
+                text: "Young Chari shows promise. She managed not to scorch the Oolong this morning. Progress is slow, but like a good steep, one must be patient." 
+            },
+            { 
+                keys: ["tea", "etiquette", "brewing"], 
+                text: "Etiquette is not a suggestion; it is a survival skill. Milk goes in after the tea. If I catch you doing otherwise, I will personally escort you to the library's exit." 
+            },
+            { 
+                keys: ["card match", "match", "game"], 
+                text: "Ah, the match of '24. A traveler once tried to play a banned game. I didn't even have to use wit to stop him—the look I gave him was enough to make him fold his entire deck." 
+            }
+        ];
+
+        function consultHans() {
+            const query = document.getElementById('loreSearch').value.toLowerCase();
+            const display = document.getElementById('ledgerDisplay');
+            
+            const match = hansData.find(entry => entry.keys.some(k => query.includes(k)));
+
+            if (match) {
+                display.innerHTML = `<span style="color: var(--gold); font-family: serif; font-weight: bold;">HANS:</span><br><br> "${match.text}"`;
+            } else {
+                display.innerHTML = `<span style="color: var(--gold); font-family: serif; font-weight: bold;">HANS:</span><br><br> "I find no such entry in the current ledger. Perhaps you should try asking about Star or my Tea Etiquette instead."`;
+            }
+        }
+    </script>
+
+    <script src='https://cdn.jsdelivr.net/npm/@widgetbot/crate@3' async defer>
+        new Crate({
+            server: '1491361651633422550', 
+            channel: '1491361652967215126' 
+        })
+    </script>
+
+</body>
+</html>
