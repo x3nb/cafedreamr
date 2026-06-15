@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Chinera Infusion | A Secret Realm</title>
+    <style>
+        /* --- THEME VARIABLES --- */
+        :root {
+            --gold: #d4a373;
+            --cream: #faedcd;
+            --dark: #0a0a0a;
+            --panel: #161616;
+            --glass: rgba(0, 0, 0, 0.7);
+        }
+
+        /* --- RESET & LAYOUT --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body, html { 
+            height: 100%; 
+            background-color: var(--dark); 
+            color: var(--cream);
+            font-family: 'Georgia', serif;
+            overflow-x: hidden;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 380px; /* Media on left, Discord on right */
+            height: 100vh;
+        }
+
+        /* --- LEFT SIDE: THE EXPERIENCE --- */
+        .experience-side {
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            border-right: 1px solid var(--gold);
+        }
+
+        /* Banner Frame */
+        .banner-frame {
+            width: 100%;
+            height: 220px;
+            overflow: hidden;
+            position: relative;
+            border-bottom: 2px solid var(--gold);
+        }
+
+        .banner-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            animation: breathe 10s infinite alternate ease-in-out;
+        }
+
+        /* Video & Music Area */
+        .video-viewport {
+            position: relative;
+            background: #000;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .visual-frame {
+            width: 100%;
+            max-width: 900px;
+            aspect-ratio: 16/9;
+            background: #111;
+            border: 1px solid rgba(212, 163, 115, 0.2);
+            box-shadow: 0 0 50px rgba(0,0,0,0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .visual-frame video { width: 100%; height: 100%; object-fit: cover; opacity: 0.6; }
+
+        .music-player {
+            margin-top: -30px;
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            padding: 20px 40px;
+            border-radius: 50px;
+            border: 1px solid var(--gold);
+            z-index: 10;
+        }
+
+        /* --- HANS'S ARCHIVE SECTION --- */
+        .ledger-section {
+            padding: 60px 40px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .hans-header { text-align: center; margin-bottom: 30px; }
+        .hans-header h2 { font-size: 2.5rem; color: var(--gold); letter-spacing: 3px; margin-bottom: 10px; }
+        .hans-note { font-style: italic; color: #888; font-size: 0.9rem; }
+
+        .search-box {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        #loreSearch {
+            flex-grow: 1;
+            background: #1a1a1a;
+            border: 1px solid var(--gold);
+            color: white;
+            padding: 15px;
+            font-size: 1.1rem;
+            outline: none;
+        }
+
+        .consult-btn {
+            background: var(--gold);
+            color: black;
+            border: none;
+            padding: 0 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .consult-btn:hover { background: var(--cream); }
+
+        .ledger-entry {
+            background: var(--panel);
+            padding: 30px;
+            border-left: 4px solid var(--gold);
+            min-height: 120px;
+            animation: fadeIn 0.5s ease;
+        }
+
+        /* --- RIGHT SIDE: DISCORD --- */
+        .chat-sidebar {
+            background: #2f3136;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- ANIMATIONS --- */
+        @keyframes breathe { from { transform: scale(1); } to { transform: scale(1.08); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Responsive */
+        @media (max-width: 1000px) {
+            .main-grid { grid-template-columns: 1fr; }
+            .chat-sidebar { height: 500px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="main-grid">
+        
+        <div class="experience-side">
+            
+            <div class="banner-frame">
+                <img src="chineracafe-banner-cool.jpg" class="banner-image" alt="The Chinera Infusion">
+            </div>
+
+            <div class="video-viewport">
+                <div class="visual-frame">
+                    <video autoplay muted loop poster="chineracafe-banner-cool.jpg">
+                        <source src="your-silent-video.mp4" type="video/mp4">
+                    </video>
+                </div>
+
+                <div class="music-player">
+                    <p style="text-align: center; font-size: 0.7rem; letter-spacing: 3px; margin-bottom: 8px; color: var(--gold);">CHINERA INFUSION RADIO</p>
+                    <audio controls>
+                        <source src="https://xenbohem.github.io/2026/RETROTV/PUNKCAFE/notw2.mp3" type="audio/mpeg">
+                    </audio>
+                </div>
+            </div>
+
+            <div class="ledger-section">
+                <div class="hans-header">
+                    <h2>The Scriptum Archive</h2>
+                    <p class="hans-note">"Keep your boots off the table and your inquiries precise." — Hans</p>
+                </div>
+
+                <div class="search-box">
+                    <input type="text" id="loreSearch" placeholder="Type a name or keyword (e.g. Star, Chari, Tea)...">
+                    <button class="consult-btn" onclick="consultHans()">Consult Hans</button>
+                </div>
+
+                <div id="ledgerDisplay" class="ledger-entry">
+                    "The ledgers are open. Hans is waiting for a valid keyword to retrieve the records."
+                </div>
+            </div>
+
+        </div>
+
+        <div class="chat-sidebar">
+            <iframe 
+                src="https://e.widgetbot.io/channels/YOUR_SERVER_ID/YOUR_CHANNEL_ID" 
+                height="100%" 
+                width="100%" 
+                frameborder="0">
+            </iframe>
+        </div>
+
+    </div>
+
+    <script>
+        // THE LORE DATABASE
+        const hansData = [
+            { 
+                keys: ["star", "romance", "scripture"], 
+                text: "Star is currently occupied. If she has her romance novel in one hand and scripture in the other, she is technically between worlds. Best to leave her be until she returns to reality." 
+            },
+            { 
+                keys: ["chari", "training", "sister"], 
+                text: "Young Chari shows promise. She managed not to scorch the Oolong this morning. Progress is slow, but like a good steep, one must be patient." 
+            },
+            { 
+                keys: ["tea", "etiquette", "brewing"], 
+                text: "Etiquette is not a suggestion; it is a survival skill. Milk goes in after the tea. If I catch you doing otherwise, I will personally escort you to the library's exit." 
+            },
+            { 
+                keys: ["magic", "mana", "cards"], 
+                text: "The players in the corner are getting rowdy again. As long as they don't spill ink on my ledgers or mana on the rug, they may continue their duels." 
+            }
+        ];
+
+        function consultHans() {
+            const query = document.getElementById('loreSearch').value.toLowerCase();
+            const display = document.getElementById('ledgerDisplay');
+            
+            const match = hansData.find(entry => entry.keys.some(k => query.includes(k)));
+
+            if (match) {
+                display.innerHTML = `<span style="color: var(--gold); font-weight:bold;">Hans:</span><br><br> "${match.text}"`;
+            } else {
+                display.innerHTML = `<span style="color: var(--gold); font-weight:bold;">Hans:</span><br><br> "I have no record of '${query}'. Perhaps you should spend less time whispering and more time reading the actual ledgers."`;
+            }
+        }
+    </script>
+</body>
+</html>
