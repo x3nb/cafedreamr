@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="/.nekoweb-api/static/site.js" defer></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gone to The 80's</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Yuji+Syuku&family=Orbitron:wght@600&display=swap" rel="stylesheet">
+
+<style>
+body {
+    margin:0;
+    font-family:'Yuji Syuku', serif;
+    background:linear-gradient(180deg,#2d004d,#6c757d,#6495ED);
+    color:white;
+    overflow-x:hidden;
+}
+
+/* ================= LOADER ================= */
+#loader{
+    position:fixed;
+    width:100%;
+    height:100%;
+    background:linear-gradient(180deg,#2d004d,#6c757d,#6495ED);
+    display:flex;
+    justify-content:center;
+    align-items:flex-start;
+    z-index:9999;
+    overflow:hidden;
+}
+
+.spider-thread{
+    position:absolute;
+    top:0;
+    left:50%;
+    width:2px;
+    height:0;
+    background:rgba(255,255,255,0.6);
+    transform:translateX(-50%);
+    z-index:1;
+}
+
+.spider{
+    position:absolute;
+    top:0;
+    font-size:50px;
+    cursor:pointer;
+    z-index:3;
+}
+
+.web{
+    position:absolute;
+    top:52vh;
+    font-size:140px;
+    opacity:0;
+    z-index:2;
+    transition:opacity 1s ease;
+}
+
+/* Heart Thread Spin + Sway */
+.heart-thread{
+    position:absolute;
+    top:52vh;
+    left:50%;
+    transform:translateX(-50%);
+    font-size:14px;
+    opacity:0;
+    pointer-events:none;
+}
+
+.heart-thread::before{
+    content:"❤";
+    color:#ff77ff;
+    text-shadow:0 0 6px #ff99ff;
+}
+
+@keyframes spinHeart{
+    0%{opacity:0; transform:translateX(-50%) scale(0.5) rotate(0deg);}
+    50%{opacity:1; transform:translateX(-50%) scale(1.2) rotate(180deg);}
+    100%{opacity:0.9; transform:translateX(-50%) scale(1) rotate(360deg);}
+}
+
+@keyframes swayHeart {
+  0% { transform: translateX(-50%) rotate(-5deg); }
+  50% { transform: translateX(-50%) rotate(5deg); }
+  100% { transform: translateX(-50%) rotate(-5deg); }
+}
+
+.heart-thread.active {
+  animation: spinHeart 2s ease forwards, swayHeart 4s ease-in-out infinite 2s;
+}
+
+/* Click Bounce */
+.spider.bounce{
+    animation:miniBounce 0.6s ease;
+}
+
+@keyframes miniBounce{
+    0%{transform:translateY(0) scale(1);}
+    30%{transform:translateY(-10px) scale(1.1);}
+    60%{transform:translateY(0) scale(0.95);}
+    100%{transform:translateY(0) scale(1);}
+}
+
+body.loaded #loader{
+    opacity:0;
+    pointer-events:none;
+    transition:opacity 2s ease;
+}
+
+/* ================= HEADER ================= */
+header{text-align:center;padding:20px;}
+
+h1{
+    font-family:'Orbitron',sans-serif;
+    font-size:2.5rem;
+}
+
+#countdown{font-size:1rem;}
+
+/* ================= TICKER ================= */
+.ticker-wrapper{
+    position:relative;
+    overflow:hidden;
+    height:40px;
+    margin-top:10px;
+}
+
+.ticker{
+    position:absolute;
+    white-space:nowrap;
+    animation:scroll 12s linear infinite;
+    color:violet;
+    font-weight:bold;
+}
+
+@keyframes scroll{
+    from{transform:translateX(100%);}
+    to{transform:translateX(-100%);}
+}
+
+.stars,.hearts{
+    position:absolute;
+    width:100%;
+    height:40px;
+    top:0;
+    pointer-events:none;
+}
+
+.star{
+    width:2px;height:2px;background:white;position:absolute;
+    animation:twinkle 2s infinite alternate;
+}
+
+@keyframes twinkle{
+    from{opacity:0.3;}
+    to{opacity:1;}
+}
+
+.heart{
+    position:absolute;
+    color:rgba(148,0,211,0.3);
+    animation:fall 5s linear infinite;
+}
+
+@keyframes fall{
+    from{transform:translateY(-10px);}
+    to{transform:translateY(40px);}
+}
+
+/* ================= LAYOUT ================= */
+.container{display:flex;min-height:80vh;}
+
+.remote{
+    width:90px;background:rgba(0,0,0,0.4);
+    border-radius:40px;padding:10px;
+    position:sticky;top:120px;margin-left:10px;
+}
+
+.remote button{
+    display:block;width:100%;margin:10px 0;
+    padding:8px;border:none;border-radius:20px;
+    background:#9400D3;color:white;cursor:pointer;font-size:0.7rem;
+}
+
+.remote button:hover{background:#ba55d3;}
+
+.content{
+    flex:1;padding:30px;background:rgba(0,0,0,0.3);
+    border-radius:20px;margin:10px;min-height:400px;
+}
+
+/* ================= SHOP GRID ================= */
+.shop-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px,1fr));
+  gap:15px;
+  margin-top:15px;
+}
+
+.shop-box {
+  background: rgba(255,255,255,0.1);
+  padding:10px;
+  border-radius:15px;
+  text-align:center;
+  transition: transform 0.3s, background 0.3s, box-shadow 0.5s ease-in-out;
+  box-shadow: 0 0 6px rgba(148,0,211,0.3);
+  animation: pulseGlow 3s ease-in-out infinite;
+}
+
+@keyframes pulseGlow {
+  0% { box-shadow: 0 0 4px rgba(148,0,211,0.2); }
+  50% { box-shadow: 0 0 12px rgba(148,0,211,0.5); }
+  100% { box-shadow: 0 0 4px rgba(148,0,211,0.2); }
+}
+
+.shop-box:hover {
+  transform: translateY(-5px);
+  background: rgba(255,255,255,0.2);
+}
+
+.shop-box img {
+  max-width:100%;
+  border-radius:10px;
+}
+
+/* IFRAME EMBED */
+iframe {
+  background: rgba(255,255,255,0.05);
+  box-shadow: 0 0 10px rgba(148,0,211,0.3);
+  border-radius:15px;
+}
+
+/* ================= MYSTERY ================= */
+.mystery{
+    position:fixed;bottom:20px;right:20px;
+    font-size:24px;cursor:pointer;display:none;
+}
+
+.popup{
+    position:fixed;bottom:60px;right:20px;
+    background:#9400D3;padding:10px;border-radius:10px;display:none;
+}
+</style>
+</head>
+<body>
+
+<!-- LOADER -->
+<div id="loader">
+    <div class="spider-thread"></div>
+    <div class="spider">🕷</div>
+    <div class="web">🕸</div>
+    <div class="heart-thread"></div>
+</div>
+
+<audio id="synthMusic" loop>
+<source src="https://cdn.pixabay.com/audio/2022/03/15/audio_9a9a4c8c71.mp3" type="audio/mp3">
+</audio>
+
+<header>
+<div id="countdown"></div>
+<h1>Gone to The 80's, Be Back Later</h1>
+
+<div class="ticker-wrapper">
+<div class="stars" id="stars"></div>
+<div class="hearts" id="hearts"></div>
+<div class="ticker">Love is Only Heaven Away - Psychedelic Furs</div>
+</div>
+</header>
+
+<div class="container">
+<div class="remote">
+<button onclick="loadContent('songs')">🎵 Songs</button>
+<button onclick="loadContent('poems')">📝 Poems</button>
+<button onclick="loadContent('valentine')">💘 24-7</button>
+<button onclick="loadContent('websites')">🌐 Websites</button>
+<button onclick="loadContent('yt')">📺 xenusual</button>
+<button onclick="loadContent('shop')">🛍 Shop</button>
+<button onclick="loadContent('video')">🎬 Video</button>
+</div>
+
+<div class="content" id="mainContent">
+Valentine 80’s Dimension...
+</div>
+</div>
+
+<div class="mystery" id="mysteryIcon">🕷</div>
+<div class="popup" id="popupMsg"></div>
+
+<script>
+
+/* LOADER + MUSIC + THREAD TRAILING */
+window.addEventListener("load", function(){
+
+const spider=document.querySelector(".spider");
+const thread=document.querySelector(".spider-thread");
+const web=document.querySelector(".web");
+const heartThread=document.querySelector(".heart-thread");
+const music=document.getElementById("synthMusic");
+
+music.volume=0.2;
+setTimeout(()=>{ music.play().catch(()=>{}); },1000);
+
+let dropDuration=5000;
+let startTime=null;
+
+function animateSpider(timestamp){
+    if(!startTime) startTime=timestamp;
+    let progress=timestamp-startTime;
+    let percent=Math.min(progress/dropDuration,1);
+    let position=percent*window.innerHeight*0.52;
+
+    spider.style.top=position+"px";
+    thread.style.height=position+"px";
+
+    if(percent<1){
+        requestAnimationFrame(animateSpider);
+    } else {
+        web.style.opacity="1";
+        heartThread.classList.add("active");
+        setTimeout(()=>{ document.body.classList.add("loaded"); },1500);
+    }
+}
+
+requestAnimationFrame(animateSpider);
+});
+
+/* SPIDER CLICK */
+const spider=document.querySelector(".spider");
+spider.addEventListener("click",()=>{
+spider.classList.add("bounce");
+setTimeout(()=>spider.classList.remove("bounce"),600);
+});
+
+/* RANDOM REAPPEAR */
+function randomSpiderDrop(){
+const spider=document.querySelector(".spider");
+const thread=document.querySelector(".spider-thread");
+const web=document.querySelector(".web");
+const heart=document.querySelector(".heart-thread");
+
+spider.style.top="0px";
+thread.style.height="0px";
+web.style.opacity="0";
+heart.classList.remove("active");
+
+spider.style.animation="none";
+void spider.offsetWidth;
+
+let dropDuration=5000;
+let startTime=null;
+function animateSpider(timestamp){
+    if(!startTime) startTime=timestamp;
+    let progress=timestamp-startTime;
+    let percent=Math.min(progress/dropDuration,1);
+    let position=percent*window.innerHeight*0.52;
+    spider.style.top=position+"px";
+    thread.style.height=position+"px";
+    if(percent<1){ requestAnimationFrame(animateSpider); }
+    else{ web.style.opacity="1"; heart.classList.add("active"); }
+}
+requestAnimationFrame(animateSpider);
+}
+
+function scheduleSpiderReturn(){
+const randomTime=Math.floor(Math.random()*25000)+20000;
+setTimeout(()=>{
+randomSpiderDrop();
+scheduleSpiderReturn();
+},randomTime);
+}
+
+setTimeout(scheduleSpiderReturn,30000);
+
+/* COUNTDOWN */
+function updateCountdown(){
+let now=new Date();
+let year=now.getFullYear();
+let valentines=new Date(year,1,14);
+if(now>valentines) valentines=new Date(year+1,1,14);
+let diff=valentines-now;
+let days=Math.floor(diff/(1000*60*60*24));
+document.getElementById("countdown").innerText="Countdown to Valentine's Day: "+days+" days";
+}
+setInterval(updateCountdown,1000);
+updateCountdown();
+
+/* STARS */
+for(let i=0;i<40;i++){
+let star=document.createElement("div");
+star.className="star";
+star.style.left=Math.random()*100+"%";
+star.style.top=Math.random()*40+"px";
+document.getElementById("stars").appendChild(star);
+}
+
+/* HEARTS */
+for(let i=0;i<10;i++){
+let heart=document.createElement("div");
+heart.className="heart";
+heart.innerHTML="❤";
+heart.style.left=Math.random()*100+"%";
+heart.style.animationDelay=Math.random()*5+"s";
+document.getElementById("hearts").appendChild(heart);
+}
+
+/* CONTENT */
+function loadContent(section){
+let content=document.getElementById("mainContent");
+
+if(section==='shop'){
+    content.innerHTML="<h2>Veloura's Valentine Shop</h2><div class='shop-grid'>"+
+    `<div class='shop-box'>
+       <a href='https://www.amazon.com/dp/B01N6Z3D6G?tag=YOURAFFILIATEID' target='_blank'>
+         <img src='https://images-na.ssl-images-amazon.com/images/I/71h1Y1QG7RL._AC_SL1500_.jpg' alt='Valentine Candy'>
+         <p>Valentine Candy</p>
+       </a>
+     </div>`+
+    `<div class='shop-box'>
+       <a href='https://www.amazon.com/dp/B07Z3F3G1T?tag=YOURAFFILIATEID' target='_blank'>
+         <img src='https://images-na.ssl-images-amazon.com/images/I/81eBx2Hu6kL._AC_UL1500_.jpg' alt='Cozy Valentine Sweater'>
+         <p>Valentine Sweater</p>
+       </a>
+     </div>`+
+    `</div>`;
+} else if(section==='video'){
+  content.innerHTML="<h2>NEW WAVE ALTERNAT!VE-MIX</h2>"+
+  "<iframe width='100%' height='360' src='https://www.youtube.com/embed/LDNBKff6g_E?si=_bE5DQLXicAkK0ha' "+
+  "title='YouTube video player' frameborder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe>";
+} else if(section==='websites'){
+  content.innerHTML="<h2>Favorite Music Websites</h2>"+
+  "<iframe src='https://xencafe.nekoweb.org/GONE2THE1980s/AFFILIATEWEB/synthwave.html' width='100%' height='500px' title='Favorite 80s Music Sites'></iframe>";
+} else {
+    content.innerHTML="<h2>"+section+"</h2><p>Channel loaded in true 80’s fashion.</p>";
+}
+}
+
+/* MYSTERY */
+const messages=[
+"🍬 Love always wins.",
+"🍫 You are treasured.",
+"💜 Be someone's miracle.",
+"💘 Grace is romantic.",
+"🌹 Forgiveness is divine."
+];
+
+function showMystery(){
+let icon=document.getElementById("mysteryIcon");
+icon.style.display="block";
+setTimeout(()=>{icon.style.display="none";},2000);
+}
+
+setInterval(showMystery,Math.random()>0.5?3000:7000);
+
+document.getElementById("mysteryIcon").onclick=function(){
+let popup=document.getElementById("popupMsg");
+popup.innerText=messages[Math.floor(Math.random()*messages.length)];
+popup.style.display="block";
+setTimeout(()=>{popup.style.display="none";},3000);
+};
+
+</script>
+</body>
+</html>
