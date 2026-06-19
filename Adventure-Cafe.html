@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Chimera-Cat Adventure</title>
+<!-- Link to a moody, handwritten font (Google Fonts) -->
+<link href="https://fonts.googleapis.com/css2?family=Rock+Salt&display=swap" rel="stylesheet">
+<style>
+  body {
+    margin: 0;
+    font-family: 'Rock Salt', cursive, Arial, sans-serif;
+    background-color: #2e1a4d; /* Deep purple background for noir mood */
+    color: #d3d3d3; /* Subdued text */
+    padding: 20px;
+    background-image: radial-gradient(circle at center, rgba(46, 26, 77, 0.2), transparent 70%), 
+                      repeating-linear-gradient(45deg, rgba(46, 26, 77, 0.05), rgba(46, 26, 77, 0.05) 5px, transparent 5px, transparent 10px);
+    background-repeat: repeat;
+    background-size: 200px 200px, 20px 20px;
+  }
+  h1 {
+    text-align: center;
+    font-size: 2.8em;
+    color: #6495ed; /* Cornflower blue for header */
+    margin-bottom: 10px;
+    text-shadow: 0 0 10px #6495ed; /* Dreamy glow effect */
+  }
+
+  /* Character selection styles */
+  #characters {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+  }
+  .char-card {
+    background: rgba(44, 12, 67, 0.7); /* Slightly transparent for noir feel */
+    border: 2px solid #708090; /* Slate gray border for mood */
+    border-radius: 15px;
+    padding: 10px;
+    width: 150px;
+    cursor: pointer;
+    transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
+  }
+  .char-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 20px #6495ed; /* Blue glow on hover for dreamlike effect */
+    border-color: #add8e6; /* Light blue border on hover */
+  }
+  .char-avatar {
+    width: 100%;
+    height: 150px;
+    background-size: cover;
+    background-position: center;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    border: 2px solid #444; /* darker border for style */
+  }
+
+  /* Story box styles */
+#storyBox {
+  display: none;
+  margin-top: 30px;
+  background: rgba(44, 12, 67, 0.8); /* Deep purple with transparency */
+  border-radius: 15px;
+  padding: 20px;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+  border: 2px solid #708090;
+  box-shadow: inset 0 0 10px #6495ed; /* Inner glow for dreamy effect */
+}
+#storyText {
+  font-size: 1.2em;
+  margin-bottom: 15px;
+  line-height: 1.5;
+}
+.choice-buttons button {
+  background-color: #3b1f5b; /* Dark muted purple */
+  border: none;
+  padding: 10px 15px;
+  margin: 8px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: bold;
+  color: #d3d3d3;
+  transition: background 0.3s, transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 0 5px #6495ed; /* subtle glow for buttons */
+}
+.choice-buttons button:hover {
+  background-color: #6495ed; /* Cornflower blue on hover */
+  transform: scale(1.05);
+  box-shadow: 0 0 15px #6495ed; /* glow effect on hover */
+}
+</style>
+</head>
+<body>
+
+<h1>🖤 Chimera-Cat Adventure 🖤</h1>
+
+<!-- Optional: Background music with a moody vibe -->
+<audio id="music" autoplay loop>
+  <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg" />
+</audio>
+
+<!-- Character selection -->
+<div id="characters">
+  <div class="char-card" data-character="Luna">
+    <div class="char-avatar" style="background-image: url('https://images.unsplash.com/photo-1549924231-f129b911e442?ixlib=rb-4.0.4&auto=format&fit=crop&w=150&q=80');"></div>
+    <h3>Star</h3>
+  </div>
+  <div class="char-card" data-character="Leo">
+    <div class="char-avatar" style="background-image: url('https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?ixlib=rb-4.0.4&auto=format&fit=crop&w=150&q=80');"></div>
+    <h3>Miki</h3>
+  </div>
+  <div class="char-card" data-character="Mira">
+    <div class="char-avatar" style="background-image: url('https://images.unsplash.com/photo-1549924316-4fc7f7bdf4a4?ixlib=rb-4.0.4&auto=format&fit=crop&w=150&q=80');"></div>
+    <h3>Chari</h3>
+  </div>
+</div>
+
+<!-- Story and choices appear here -->
+<div id="storyBox">
+  <div id="storyText"></div>
+  <div class="choice-buttons" id="choices"></div>
+</div>
+
+<script>
+const characters = document.querySelectorAll('.char-card');
+const storyBox = document.getElementById('storyBox');
+const storyText = document.getElementById('storyText');
+const choicesDiv = document.getElementById('choices');
+
+// Sample story paths for each character
+const stories = {
+  Luna: [
+    {
+      text: "Star, a mysterious chimera-cat, finds a glowing cafe in the etherrealm. What should she do?",
+      options: [
+        { text: "Touch the cafe", next: 1 },
+        { text: "Ignore it and fly away", next: 2 },
+        { text: "Own it", next: 3 },
+      ],
+    },
+    {
+      text: "The cafe glows brighter! Luna feels a strange power. What's next?",
+      options: [
+        { text: "Use the cafe to serve coffee", next: 'end' },
+        { text: "Hide in the cafe", next: 'end' },
+        { text: "Share the cafe with friends", next: 'end' },
+      ],
+    },
+    {
+      text: "Star flies away to visit Milo at his garden. Select the next adventure.",
+      options: [{ text: "Restart", next: 'restart' }],
+    },
+    {
+      text: "Star carefully picks up the keys and opens the cafe door. The adventure ends here.",
+      options: [{ text: "Restart", next: 'restart' }],
+    },
+  ],
+  Leo: [
+    {
+      text: "Miki, Star's sister, shows up at the cafe door. What's her first move?",
+      options: [
+        { text: "Taps at the window", next: 1 },
+        { text: "Makes funny faces at Chari", next: 2 },
+        { text: "Peers to see if anyone is inside", next: 3 },
+      ],
+    },
+    {
+      text: "Miki waits for Chari to open the door. What's his next move?",
+      options: [
+        { text: "Chari greets Miki apprehensively", next: 'end' },
+        { text: "Cracks a joke, Chari smirks", next: 'end' },
+        { text: "Notices Chari coming towards the door slowly", next: 'end' },
+      ],
+    },
+    {
+      text: "Miki turns the door handle! The shenanigans begin.",
+      options: [{ text: "Restart", next: 'restart' }],
+    },
+    {
+      text: "Leo runs away safely. The adventure ends here.",
+      options: [{ text: "Restart", next: 'restart' }],
+    },
+  ],
+  Mira: [
+    {
+      text: "Chari, a young apprentice, finds Star. What does she do?",
+      options: [
+        { text: "Ask how to make a latte", next: 1 },
+        { text: "Hide in the bathroom", next: 2 },
+        { text: "Waits patiently for Star to notice her", next: 3 },
+      ],
+    },
+    {
+      text: "It worked! Chari gains advancement. What's her next move?",
+      options: [
+        { text: "Learn a new recipe", next: 'end' },
+        { text: "Suggest a pumpkin spice latte", next: 'end' },
+        { text: "Open the door for Miki", next: 'end' },
+      ],
+    },
+    {
+      text: "Chari notices Miki, feeling cautious.",
+      options: [{ text: "Restart", next: 'restart' }],
+    },
+    {
+      text: "Chari suggests a Pumpkin Latte, making new friends. Miki and Chari each drink up!",
+      options: [{ text: "Restart", next: 'restart' }],
+    },
+  ],
+};
+
+// When a character is clicked
+characters.forEach(c => {
+  c.addEventListener('click', () => {
+    const name = c.getAttribute('data-character');
+    startStory(name);
+  });
+});
+
+function startStory(name) {
+  showNode(name, 0);
+}
+
+function showNode(character, index) {
+  const node = stories[character][index];
+  storyText.innerHTML = node.text;
+  choicesDiv.innerHTML = '';
+
+  node.options.forEach(opt => {
+    const btn = document.createElement('button');
+    btn.innerText = opt.text;
+    btn.onclick = () => {
+      if (opt.next === 'restart') {
+        startStory(character);
+      } else if (opt.next === 'end') {
+        storyText.innerHTML = "The story ends here. Want to play again?";
+        choicesDiv.innerHTML = `<button onclick="startStory('${character}')">Play again</button>`;
+      } else {
+        showNode(character, opt.next);
+      }
+    };
+    choicesDiv.appendChild(btn);
+  });
+
+  // Show the story box
+  storyBox.style.display = 'block';
+}
+</script>
+
+</body>
+</html>
