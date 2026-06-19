@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CHIMERA ESCAPE // Connection Established</title>
+    <style>
+        :root {
+            --gold: #c0a153;
+            --miki: #00f2ff;
+            --hans: #6495ED;
+            --terminal: #0d1117;
+        }
+        body, html { margin: 0; padding: 0; background: #000; color: #fff; font-family: 'Courier New', monospace; overflow: hidden; }
+
+        .stage { position: fixed; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; z-index: 10; }
+
+        /* --- STAGE 1: SYSTEM LOADING --- */
+        #stage-loading { display: flex; background: var(--terminal); color: var(--miki); padding: 20px; }
+        .loading-bar { width: 300px; height: 2px; background: #1a1a1a; margin: 20px 0; position: relative; overflow: hidden; }
+        .progress { width: 0%; height: 100%; background: var(--miki); transition: 0.5s; }
+        .log-text { font-size: 0.8rem; color: var(--miki); opacity: 0.7; }
+
+        /* --- STAGE 2: THE STORY ROLL --- */
+        #stage-story { background: #000; text-align: center; color: var(--gold); font-family: 'Garamond', serif; }
+        .story-content { width: 70%; line-height: 1.8; font-size: 1.5rem; opacity: 0; transition: 2s; }
+
+        /* --- STAGE 3: MIKI'S RIDDLE GATE --- */
+        #stage-riddle { background: #000; z-index: 100; border: 2px solid var(--miki); margin: 20px; height: calc(100% - 40px); width: calc(100% - 40px); box-sizing: border-box; }
+        #stage-riddle h2 { color: var(--miki); text-shadow: 0 0 10px var(--miki); }
+        .riddle-input { background: transparent; border: none; border-bottom: 2px solid var(--miki); color: var(--miki); font-size: 2rem; text-align: center; outline: none; width: 300px; margin-top: 30px; }
+
+        /* --- STAGE 4: THE MAP (ALICE STYLE) --- */
+        #stage-map { 
+            background: radial-gradient(circle, #1a1a1a, #000); 
+            display: none; transition: transform 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: translateY(100%); /* Start tucked below */
+        }
+        .welcome-note { grid-column: span 2; text-align: center; padding: 40px; color: var(--gold); border-bottom: 1px dashed var(--gold); margin-bottom: 40px; }
+        .map-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; width: 80%; }
+        .node { border: 1px solid var(--gold); padding: 30px; text-align: center; cursor: pointer; transition: 0.3s; }
+        .node:hover { background: rgba(192, 161, 83, 0.1); transform: scale(1.02); }
+    </style>
+</head>
+<body>
+
+    <audio id="bgPulse" loop><source src="your-synth-f.mp3" type="audio/mpeg"></audio>
+
+    <div id="stage-loading" class="stage">
+        <div id="status">INITIATING DECRYPTION...</div>
+        <div class="loading-bar"><div id="progress" class="progress"></div></div>
+        <div class="log-text" id="logs">> Locating Paris_Sanctuary_File...<br>> Delivering Kittens to Yeshua.bin...</div>
+    </div>
+
+    <div id="stage-story" class="stage">
+        <div class="story-content" id="story-text">
+            <h2>The Paris Disclosure</h2>
+            <p>They were found in the silence of an abandoned cathedral.</p>
+            <p>Kittens born of shadow, delivered by Yeshua into the golden light.</p>
+            <p>The Archive is their legacy. The Apprenticeship is your trial.</p>
+            <p style="font-size: 0.9rem; margin-top: 50px;">- End of File -</p>
+        </div>
+    </div>
+
+    <div id="stage-riddle" class="stage">
+        <p style="color:var(--miki)">[ !!! FIREWALL BREACH BY MIKI_SYSTEM !!! ]</p>
+        <h2>"I have whiskers but no milk, I have a tail but no kite. <br>I can see in the dark, but I am not a ghost. What am I?"</h2>
+        <input type="text" id="riddleAnswer" class="riddle-input" autocomplete="off" autofocus>
+        <p style="color:var(--miki); font-size: 0.8rem; margin-top: 20px;">[ TYPE ANSWER AND PRESS ENTER ]</p>
+    </div>
+
+    <div id="stage-map" class="stage">
+        <div class="welcome-note">
+            <h1 style="font-family:'Garamond'; letter-spacing: 5px;">WELCOME TO THE ARCHIVE</h1>
+            <p>"Curiouser and curiouser! You've broken the code. Now, pick your poison."</p>
+            <p style="font-style: italic; font-size: 0.8rem;">(Complete all trials to reach the Great Congregation)</p>
+        </div>
+        <div class="map-grid">
+            <div class="node" onclick="alert('Entering Miki...')">MIKI: Digital Neon</div>
+            <div class="node" onclick="alert('Entering Hans...')">HANS: Gilded Tea</div>
+        </div>
+    </div>
+
+<script>
+    const logs = [
+        "> Paris node established...",
+        "> Yeshua protocol active...",
+        "> Chimera souls detected...",
+        "> Decoding biography...",
+        "> ACCESS GRANTED."
+    ];
+
+    let logIndex = 0;
+    const progress = document.getElementById('progress');
+    const logDiv = document.getElementById('logs');
+
+    // 1. START LOADING
+    window.onload = () => {
+        let p = 0;
+        const interval = setInterval(() => {
+            p += 5;
+            progress.style.width = p + "%";
+            if(p % 20 === 0) {
+                logDiv.innerHTML += `<br>${logs[logIndex]}`;
+                logIndex++;
+            }
+            if(p >= 100) {
+                clearInterval(interval);
+                setTimeout(showStory, 1000);
+            }
+        }, 200);
+    };
+
+    // 2. SHOW STORY
+    function showStory() {
+        document.getElementById('stage-loading').style.display = 'none';
+        const story = document.getElementById('stage-story');
+        story.style.display = 'flex';
+        setTimeout(() => { document.getElementById('story-text').style.opacity = '1'; }, 100);
+        
+        // Wait for user to read, then show Miki
+        setTimeout(showRiddle, 8000);
+    }
+
+    // 3. SHOW RIDDLE
+    function showRiddle() {
+        document.getElementById('stage-story').style.display = 'none';
+        document.getElementById('stage-riddle').style.display = 'flex';
+        document.getElementById('riddleAnswer').focus();
+    }
+
+    // 4. CHECK RIDDLE & LIFT CURTAIN
+    document.getElementById('riddleAnswer').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            const val = e.target.value.toLowerCase().trim();
+            if (val === 'cat' || val === 'a cat') {
+                revealMap();
+            } else {
+                alert("Miki: 'Wrong! Try again, slow-brain!'");
+                e.target.value = "";
+            }
+        }
+    });
+
+    function revealMap() {
+        const map = document.getElementById('stage-map');
+        map.style.display = 'flex';
+        // Lift the riddle stage
+        document.getElementById('stage-riddle').style.transition = 'transform 1.5s';
+        document.getElementById('stage-riddle').style.transform = 'translateY(-100%)';
+        
+        // Slide up the map
+        setTimeout(() => {
+            map.style.transform = 'translateY(0)';
+        }, 100);
+    }
+</script>
+</body>
+</html>
