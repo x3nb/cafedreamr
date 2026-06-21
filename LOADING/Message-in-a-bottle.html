@@ -1,0 +1,497 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Message In A Bottle Bulletin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Monsieur+La+Doulaise&family=Klee+One:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Cosmetic Romantic Palette */
+            --bg-color: #1a0f23;              /* Dark velvet violet night */
+            --glow-purple: #3d224e;           /* Atmospheric deep violet glow */
+            --title-color: #f3ccd3;           /* Creamy blush pink */
+            --firefly-color: #fce4ec;         /* Soft rose-tinted highlight */
+            --parchment-color: rgba(43, 24, 56, 0.75); /* Satin dark violet-tinted glass */
+            --wax-seal: #a33851;              /* Rich berry/lipstick crimson */
+            --bottle-glass: rgba(242, 170, 185, 0.45); /* Translucent blush glass */
+            --ripple-color: rgba(243, 204, 211, 0.35); /* Blush pink water highlights */
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            font-family: 'Klee One', cursive, sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 2rem;
+            position: relative;
+            background: radial-gradient(circle at 50% 30%, var(--glow-purple) 0%, var(--bg-color) 75%);
+        }
+
+        /* Ambient Stars & Glow */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(rgba(243, 204, 211, 0.3) 1.5px, transparent 40px),
+                radial-gradient(rgba(255, 255, 255, 0.2) 1px, transparent 30px);
+            background-size: 450px 450px, 290px 290px;
+            background-position: 0 0, 40px 60px;
+            opacity: 0.4;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* Powder Rose Fireflies */
+        .firefly {
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            background: var(--firefly-color);
+            border-radius: 50%;
+            box-shadow: 0 0 12px 3px rgba(252, 228, 236, 0.7);
+            pointer-events: none;
+            z-index: 1;
+            animation: drift 9s infinite ease-in-out, flash 4s infinite ease-in-out;
+        }
+
+        /* Header Title */
+        h1 {
+            font-family: 'Monsieur La Doulaise', cursive;
+            color: var(--title-color);
+            font-size: 4.5rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            z-index: 10;
+            user-select: none;
+            animation: title-breathe 6s infinite ease-in-out;
+        }
+
+        /* Interactive Container */
+        .interactive-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 600px;
+            z-index: 10;
+        }
+
+        /* Water Surface Area (Added top margin here to move the bottle down) */
+        .water-surface {
+            position: relative;
+            width: 200px;
+            height: 260px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            margin-top: 3.5rem; /* Moves the bottle lower down from the headline */
+            margin-bottom: 2rem;
+        }
+
+        /* Concentric Cosmetic Ripples */
+        .ripple-container {
+            position: absolute;
+            bottom: 35px;
+            left: 50%;
+            transform: translateX(-50%) rotateX(75deg);
+            width: 160px;
+            height: 160px;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .ripple {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border: 2px solid var(--ripple-color);
+            border-radius: 50%;
+            width: 10px;
+            height: 10px;
+            opacity: 0;
+            box-shadow: inset 0 0 12px rgba(243, 204, 211, 0.15);
+            animation: ripple-expand 4.5s infinite cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .ripple:nth-child(2) { animation-delay: 1.5s; }
+        .ripple:nth-child(3) { animation-delay: 3s; }
+
+        .revealed-parent ~ .ripple-container .ripple {
+            animation: none;
+            opacity: 0;
+        }
+
+        /* Bottle Container & Vertical Floating */
+        .bottle-wrapper {
+            position: relative;
+            cursor: pointer;
+            animation: float-vertical 5s infinite ease-in-out;
+            transition: transform 0.3s ease;
+            z-index: 5;
+        }
+
+        .bottle-wrapper:hover {
+            transform: scale(1.03);
+        }
+
+        /* Blush Lipstick Vintage Glass Bottle */
+        .bottle {
+            width: 130px;
+            height: 210px;
+            background: linear-gradient(135deg, var(--bottle-glass) 0%, rgba(220, 110, 130, 0.15) 60%, rgba(242, 170, 185, 0.5) 100%);
+            border: 2.5px solid rgba(255, 205, 215, 0.55);
+            border-radius: 40px 40px 35px 35px;
+            position: relative;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.4), inset 0 0 25px rgba(255,255,255,0.25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Bottle Neck */
+        .bottle::before {
+            content: '';
+            position: absolute;
+            top: -38px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 42px;
+            height: 40px;
+            background: rgba(242, 170, 185, 0.3);
+            border-left: 2.5px solid rgba(255, 205, 215, 0.55);
+            border-right: 2.5px solid rgba(255, 205, 215, 0.55);
+        }
+
+        /* Bottle Rim */
+        .bottle-rim {
+            position: absolute;
+            top: -43px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 10px;
+            background: rgba(242, 170, 185, 0.45);
+            border: 2px solid rgba(255, 205, 215, 0.55);
+            border-radius: 5px;
+        }
+
+        /* Cork */
+        .cork {
+            position: absolute;
+            top: -60px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 32px;
+            height: 23px;
+            background: #8c6343;
+            border-radius: 3px 3px 0 0;
+            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.5s;
+        }
+
+        /* Inner Hint */
+        .parchment-hint {
+            width: 80px;
+            height: 120px;
+            background: #eddcc6;
+            border-radius: 4px;
+            transform: rotate(-4deg);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            padding: 10px;
+            font-size: 0.55rem;
+            color: #614631;
+            overflow: hidden;
+            line-height: 1.2;
+            opacity: 0.8;
+            transition: opacity 0.5s;
+        }
+
+        .revealed .cork {
+            transform: translate(-50%, -120px) rotate(20deg);
+            opacity: 0;
+        }
+
+        .revealed .parchment-hint {
+            opacity: 0;
+        }
+        
+        .revealed.bottle-wrapper {
+            animation-play-state: paused;
+        }
+
+        /* Left-to-Right Unrolling Satin Scroll Container */
+        .scroll-container {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            overflow: hidden;
+            perspective: 1000px;
+        }
+
+        .parchment {
+            background-color: var(--parchment-color);
+            color: var(--title-color); /* Soft creamy blush pink text */
+            padding: 2.5rem 2rem;
+            border-radius: 16px;
+            width: 0%; /* Closed by default */
+            max-width: 540px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5), 
+                        inset 0 0 30px rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 205, 215, 0.25);
+            position: relative;
+            margin-bottom: 2rem;
+            /* Shimmering glass side rollers */
+            border-left: 6px solid rgba(242, 170, 185, 0.6);
+            border-right: 6px solid rgba(242, 170, 185, 0.6);
+            opacity: 0;
+            overflow: hidden;
+            cursor: pointer;
+            backdrop-filter: blur(12px); /* Gives it that frosted satin glass finish */
+            -webkit-backdrop-filter: blur(12px);
+            /* Smooth left-to-right reveal transition */
+            transition: width 1.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease;
+        }
+
+        /* Fixed structural inner container prevents layout shifting while stretching open */
+        .parchment-content {
+            width: 476px; 
+            text-align: center;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+        }
+
+        .parchment p {
+            font-size: 1.15rem;
+            line-height: 1.8;
+            white-space: pre-line;
+            min-height: 120px;
+        }
+
+        /* Dynamic Cursor/Blinker for typing effect */
+        .parchment p::after {
+            content: '|';
+            animation: blink 0.8s infinite;
+            opacity: 1;
+            margin-left: 2px;
+            color: rgba(242, 170, 185, 0.8);
+        }
+        
+        .parchment.done-typing p::after {
+            display: none; /* Hide cursor when text finish animating */
+        }
+
+        /* Open State triggers left-to-right stretch */
+        .scroll-container.open .parchment {
+            width: 90%;
+            opacity: 1;
+        }
+
+        /* Closing State retracts left-to-right quickly before link redirect */
+        .scroll-container.closing .parchment {
+            width: 0%;
+            opacity: 0;
+            transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease;
+        }
+
+        /* Keyframe Animations */
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        @keyframes title-breathe {
+            0%, 100% {
+                opacity: 0.75;
+                text-shadow: 0 0 10px rgba(243, 204, 211, 0.3);
+            }
+            50% {
+                opacity: 1;
+                text-shadow: 0 0 25px rgba(243, 204, 211, 0.7);
+            }
+        }
+
+        @keyframes float-vertical {
+            0% { transform: translateY(0px) rotate(3deg); }
+            50% { transform: translateY(-12px) rotate(-3deg); }
+            100% { transform: translateY(0px) rotate(3deg); }
+        }
+
+        @keyframes ripple-expand {
+            0% {
+                width: 10px;
+                height: 10px;
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            100% {
+                width: 180px;
+                height: 180px;
+                opacity: 0;
+            }
+        }
+
+        @keyframes drift {
+            0% { transform: translateY(100vh) translateX(0px); }
+            50% { transform: translateY(50vh) translateX(25px); }
+            100% { transform: translateY(-10vh) translateX(-15px); }
+        }
+
+        @keyframes flash {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 0.8; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="firefly" style="left: 12%; animation-delay: 0s, 0s; scale: 0.8;"></div>
+    <div class="firefly" style="left: 48%; animation-delay: 2.5s, 1s; scale: 1.1;"></div>
+    <div class="firefly" style="left: 78%; animation-delay: 1s, 3s; scale: 0.9;"></div>
+    <div class="firefly" style="left: 28%; animation-delay: 4.5s, 1.5s; scale: 0.7;"></div>
+    <div class="firefly" style="left: 88%; animation-delay: 6s, 0.5s; scale: 1.2;"></div>
+
+    <h1>CafeDreamr</h1>
+
+    <div class="interactive-container">
+        
+        <div class="water-surface" id="waterSurface">
+            <div class="bottle-wrapper" id="bottleWrapper" onclick="unrollMessage()">
+                <div class="cork"></div>
+                <div class="bottle-rim"></div>
+                <div class="bottle">
+                    <div class="parchment-hint">
+                        So glad to meet you...
+                    </div>
+                </div>
+            </div>
+
+            <div class="ripple-container">
+                <div class="ripple"></div>
+                <div class="ripple"></div>
+                <div class="ripple-expand"></div>
+            </div>
+        </div>
+
+        <div class="scroll-container" id="scrollContainer">
+            <div class="parchment" id="parchmentCard" onclick="closeAndRedirect()">
+                <div class="parchment-content">
+                    <p id="typingTarget"></p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Target Destination URL
+        const destinationUrl = "https://discord.gg/your-link";
+        
+        // Message array to be programmatically typed out
+        const messageText = `So glad to meet you.\nIf you're reading this, you've found the bottle.\nThe tides carried it to you for a reason.\nBeyond this note is a harbor filled with stories, conversations, and friendly faces.\nWhen you're ready, click this scroll to come aboard.`;
+
+        // Synthesizer function to generate a subtle 'plop' sound
+        function playPlopSound() {
+            try {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                if (!AudioContext) return;
+                const ctx = new AudioContext();
+
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+
+                osc.type = 'sine'; 
+                
+                const now = ctx.currentTime;
+                osc.frequency.setValueAtTime(150, now); 
+                osc.frequency.exponentialRampToValueAtTime(400, now + 0.08); 
+
+                gain.gain.setValueAtTime(0, now);
+                gain.gain.linearRampToValueAtTime(0.15, now + 0.02); 
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15); 
+
+                osc.start(now);
+                osc.stop(now + 0.15);
+            } catch (e) {
+                console.log("AudioContext blocked or un-supported.");
+            }
+        }
+
+        function typeWriterEffect(text, elementId, speed = 35) {
+            let i = 0;
+            const element = document.getElementById(elementId);
+            element.innerHTML = ""; // Ensure it starts empty
+            
+            function type() {
+                if (i < text.length) {
+                    if (text.charAt(i) === '\n') {
+                        element.innerHTML += '<br>';
+                    } else {
+                        element.innerHTML += text.charAt(i);
+                    }
+                    i++;
+                    setTimeout(type, speed);
+                } else {
+                    document.getElementById('parchmentCard').classList.add('done-typing');
+                }
+            }
+            type();
+        }
+
+        function unrollMessage() {
+            const bottle = document.getElementById('bottleWrapper');
+            const waterSurface = document.getElementById('waterSurface');
+            const scrollContainer = document.getElementById('scrollContainer');
+            
+            if(scrollContainer.classList.contains('open')) return;
+
+            playPlopSound();
+            
+            bottle.classList.add('revealed');
+            waterSurface.classList.add('revealed-parent');
+            
+            setTimeout(() => {
+                scrollContainer.classList.add('open');
+            }, 500);
+
+            setTimeout(() => {
+                typeWriterEffect(messageText, "typingTarget", 30);
+            }, 1400);
+        }
+
+        function closeAndRedirect() {
+            const scrollContainer = document.getElementById('scrollContainer');
+            
+            scrollContainer.classList.remove('open');
+            scrollContainer.classList.add('closing');
+            
+            setTimeout(() => {
+                window.location.href = destinationUrl;
+            }, 800); 
+        }
+    </script>
+</body>
+</html>
+
+```
