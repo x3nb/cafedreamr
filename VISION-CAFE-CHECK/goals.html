@@ -1,0 +1,1120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="/.nekoweb-api/static/site.js" defer></script><script src="/.nekoweb-api/static/site.js" defer></script><script src="/.nekoweb-api/static/site.js" defer></script><script src="/.nekoweb-api/static/site.js" defer></script>
+<meta charset="UTF-8">
+<title>My Vision Cafe</title>
+
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Vampiro+One&family=Klee+One&display=swap" rel="stylesheet">
+
+<style>
+/* LOADING SCREEN */
+#loading-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(45deg, #000, #1a0033, #000);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  opacity: 1;
+  transition: opacity 1s ease-out 4s;
+}
+
+#loading-screen.fade-out {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.loading-title {
+  font-family: 'Vampiro One', cursive;
+  font-size: 4rem;
+  color: #ff4da6;
+  text-shadow: 0 0 20px #ff4da6;
+  animation: pulse 5s infinite;
+}
+
+.loading-subtitle {
+  font-family: 'Klee One', sans-serif;
+  color: cornflowerblue;
+  font-size: 1.5rem;
+  margin-top: 20px;
+  animation: fadeInOut 5s infinite;
+}
+
+.loading-dots {
+  font-size: 2rem;
+  animation: bounce 1.5s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+@keyframes fadeInOut {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+  40% { transform: translateY(-10px); }
+  60% { transform: translateY(-5px); }
+}
+
+/* HIDE MAIN CONTENT DURING LOADING */
+.main-content {
+  opacity: 0;
+  transition: opacity 1s ease-in;
+}
+
+.main-content.fade-in {
+  opacity: 1;
+}
+
+/* GLOBAL */
+body {
+  margin: 0;
+  background: black;
+  color: cornflowerblue;
+  font-family: 'Klee One', sans-serif;
+  scroll-behavior: smooth;
+  display: flex;
+  justify-content: center;
+}
+
+/* FRAME */
+.frame {
+  margin: 20px;
+  border: 3px solid #4B0082;
+  padding: 0;
+  max-width: 1200px;
+  border-radius: 10px;
+  box-sizing: border-box;
+  background: black;
+}
+
+/* HEADER */
+header {
+  font-family: 'Vampiro One', cursive;
+  font-size: 3rem;
+  text-align: center;
+  padding: 20px;
+  color: #ff4da6;
+  text-shadow: 0 0 15px #ff4da6;
+  position: sticky;
+  top: 0;
+  background: black;
+  z-index: 20;
+}
+
+/* TIMELINE */
+.timeline {
+  display: flex;
+  overflow-x: auto;
+  padding: 15px;
+  gap: 15px;
+  border-bottom: 2px solid #333;
+  position: sticky;
+  top: 80px;
+  background: black;
+  z-index: 10;
+}
+
+/* CARDS */
+.card {
+  min-width: 160px;
+  padding: 15px;
+  background: #111;
+  border: 2px solid cornflowerblue;
+  border-radius: 12px;
+  cursor: pointer;
+  position: relative;
+  transition: 0.2s;
+}
+.card:hover { transform: scale(1.1); }
+.card:active::after {
+  content: "✨";
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  animation: sparkle 0.8s ease-out;
+}
+@keyframes sparkle {
+  from { opacity: 1; transform: scale(1); }
+  to { opacity: 0; transform: scale(2); }
+}
+
+/* PROGRESS */
+.progress {
+  height: 6px;
+  background: #333;
+  margin-top: 10px;
+  border-radius: 3px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: cornflowerblue;
+  width: 0%;
+  transition: width 1s ease-out;
+  border-radius: 3px;
+}
+
+/* CHECKBOXES & STRIKE-THROUGH */
+.task-list {
+  margin: 20px 0;
+}
+
+.task-item {
+  position: relative;
+  padding-left: 25px;
+  margin: 12px 0;
+  cursor: pointer;
+  user-select: none;
+  display: block;
+  transition: all 0.3s ease;
+}
+
+.task-item:hover {
+  transform: translateX(5px);
+}
+
+.task-item input[type="checkbox"] {
+  position: absolute;
+  left: 0;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+.task-checkmark {
+  position: absolute;
+  left: 0;
+  height: 20px;
+  width: 20px;
+  background: #333;
+  border: 2px solid cornflowerblue;
+  border-radius: 4px;
+  top: 2px;
+  transition: all 0.3s ease;
+}
+
+.task-item:hover .task-checkmark {
+  box-shadow: 0 0 12px cornflowerblue;
+  transform: scale(1.1);
+}
+
+.task-item input[type="checkbox"]:checked ~ .task-checkmark {
+  background: linear-gradient(45deg, cornflowerblue, #ff4da6);
+  animation: checkmarkPulse 0.6s ease-out;
+}
+
+@keyframes checkmarkPulse {
+  0% { transform: scale(0.8); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+.task-item input[type="checkbox"]:checked ~ .task-checkmark:after {
+  content: "✓";
+  position: absolute;
+  display: block;
+  color: black;
+  font-weight: bold;
+  left: 4px;
+  top: -2px;
+  font-size: 14px;
+}
+
+.task-item input[type="checkbox"]:checked ~ .task-text {
+  text-decoration: line-through;
+  opacity: 0.7;
+}
+
+.task-text {
+  font-family: 'Klee One', sans-serif;
+  transition: 0.2s;
+  display: block;
+}
+
+/* 🎯 ENHANCED DATE STYLES */
+.task-date {
+  font-size: 0.75rem;
+  color: #88aaee;
+  margin-left: 28px;
+  font-style: italic;
+  opacity: 0;
+  transform: translateY(-5px);
+  transition: all 0.4s ease;
+  line-height: 1.2;
+  display: none;
+}
+
+.task-date::before {
+  content: "📅 ";
+  color: #ff4da6;
+  font-size: 0.85rem;
+  animation: dateAppear 0.6s ease-out;
+}
+
+@keyframes dateAppear {
+  0% { opacity: 0; transform: scale(0.8) rotate(-5deg); }
+  100% { opacity: 1; transform: scale(1) rotate(0deg); }
+}
+
+.task-item.completed .task-date {
+  display: block;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* TIME ELAPSED */
+.time-elapsed {
+  font-size: 0.7rem;
+  color: #ffaa88;
+  margin-left: 28px;
+  font-style: italic;
+  opacity: 0.9;
+}
+
+.time-elapsed::before {
+  content: "⏱ ";
+  color: #ff4da6;
+}
+
+/* SECTIONS */
+.section {
+  padding: 40px 40px 60px;
+  border-bottom: 1px solid #222;
+  min-height: 60vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.section h2 {
+  margin-top: 0;
+  font-family: 'Vampiro One', cursive;
+  font-size: 2rem;
+  color: #ff4da6;
+  text-shadow: 0 0 10px #ff4da6;
+}
+
+/* FIRST SECTION SPECIAL - NO SCROLL */
+#guild {
+  padding-top: 120px; /* Account for sticky timeline */
+}
+
+/* BACK BUTTON */
+.back-btn {
+  margin-top: 20px;
+  padding: 10px 16px;
+  background: black;
+  color: cornflowerblue;
+  border: 1px solid cornflowerblue;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-right: 10px;
+  font-family: 'Klee One', sans-serif;
+}
+.back-btn:hover {
+  background: cornflowerblue;
+  color: black;
+  transform: scale(1.05);
+}
+
+/* PROGRESS SUMMARY */
+.progress-summary {
+  background: #111;
+  border: 1px solid #444;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.progress-summary h3 {
+  color: #ff4da6;
+  margin: 0 0 10px 0;
+  font-family: 'Vampiro One', cursive;
+  font-size: 1.2rem;
+}
+
+/* CHAT GUIDE */
+.chatguide {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #111;
+  border: 2px solid cornflowerblue;
+  padding: 15px;
+  border-radius: 10px;
+  max-width: 220px;
+  z-index: 15;
+}
+.chatguide input {
+  margin-top: 10px;
+  width: 100%;
+  padding: 8px;
+  background: black;
+  border: 1px solid cornflowerblue;
+  color: cornflowerblue;
+  border-radius: 4px;
+  font-family: 'Klee One', sans-serif;
+}
+</style>
+</head>
+
+<body>
+<!-- LOADING SCREEN -->
+<div id="loading-screen">
+  <div class="loading-title">My Vision Cafe</div>
+  <div class="loading-subtitle">Preparing your journey<span class="loading-dots">. . .</span></div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="frame main-content">
+<header>My Vision Cafe</header>
+
+<!-- TIMELINE -->
+<div class="timeline">
+  <div class="card" onclick="scrollToSection('guild')">Social Guild Hub
+    <div class="progress"><div class="progress-fill" data-target="50"></div></div>
+  </div>
+  <div class="card" onclick="scrollToSection('roleplay')">Role Play Community
+    <div class="progress"><div class="progress-fill" data-target="30"></div></div>
+  </div>
+  <div class="card" onclick="scrollToSection('lore')">Complete Lore
+    <div class="progress"><div class="progress-fill" data-target="40"></div></div>
+  </div>
+  <div class="card" onclick="scrollToSection('characters')">Characters
+    <div class="progress"><div class="progress-fill" data-target="60"></div></div>
+  </div>
+  <div class="card" onclick="scrollToSection('backend')">Build Back End
+    <div class="progress"><div class="progress-fill" data-target="20"></div></div>
+  </div>
+  <div class="card" onclick="scrollToSection('players')">Invite Players
+    <div class="progress"><div class="progress-fill" data-target="10"></div></div>
+  </div>
+  <div class="card" onclick="scrollToSection('quests')">Quests
+    <div class="progress"><div class="progress-fill" data-target="25"></div></div>
+  </div>
+</div>
+
+<!-- SECTIONS -->
+<div id="guild" class="section">
+<h2>Social Guild Hub</h2>
+<div class="progress-summary" id="guild-summary"></div>
+<div class="task-list">
+  <label class="task-item" data-task-id="guild-1">
+    <input type="checkbox" onchange="updateProgress('guild', this)">
+    <span class="task-checkmark"></span>
+    <span class="task-text">Define purpose</span>
+    <span class="task-date" data-date></span>
+    <span class="time-elapsed" data-elapsed></span>
+  </label>
+  <label class="task-item" data-task-id="guild-2">
+    <input type="checkbox" onchange="updateProgress('guild', this)">
+    <span class="task-checkmark"></span>
+    <span class="task-text">Choose platform</span>
+    <span class="task-date" data-date></span>
+    <span class="time-elapsed" data-elapsed></span>
+  </label>
+  <label class="task-item" data-task-id="guild-3">
+    <input type="checkbox" onchange="updateProgress('guild', this)">
+    <span class="task-checkmark"></span>
+    <span class="task-text">Create channels</span>
+    <span class="task-date" data-date></span>
+    <span class="time-elapsed" data-elapsed></span>
+  </label>
+  <label class="task-item" data-task-id="guild-4">
+    <input type="checkbox" onchange="updateProgress('guild', this)">
+    <span class="task-checkmark"></span>
+    <span class="task-text">Design onboarding</span>
+    <span class="task-date" data-date></span>
+    <span class="time-elapsed" data-elapsed></span>
+  </label>
+  <label class="task-item" data-task-id="guild-5">
+    <input type="checkbox" onchange="updateProgress('guild', this)">
+    <span class="task-checkmark"></span>
+    <span class="task-text">Add engagement features</span>
+    <span class="task-date" data-date></span>
+    <span class="time-elapsed" data-elapsed></span>
+  </label>
+</div>
+<button onclick="scrollToTop()" class="back-btn">⬆ Back to Timeline</button>
+</div>
+
+<div id="roleplay" class="section">
+<h2>Role Play Community</h2>
+<div class="progress-summary" id="roleplay-summary"></div>
+<div class="task-list">
+  <label class="task-item" data-task-id="roleplay-1">
+    <input type="checkbox" onchange="updateProgress('roleplay', this)">
+    <span class="task-checkmark"></span>
+    <span class="task-text">Decide genre + tone</span>
+    <span class="task-date" data-date></span>
+    <span class="time-elapsed" data-elapsed></span>
+  </label>
+  <label class="task-item" data-task-id="roleplay-2">
+    <input type="checkbox" onchange="updateProgress('roleplay', this)">
+    <span class="task-checkmark"></span>
+    <span class="task-text">Set rules</span>
+    <span class="task-date" data-date></span>
+    <span class="time-elapsed" data-elapsed></span>
+  </label>
+  <label class="task-item" data-task-id="roleplay-3">
+    <input type="checkbox" onchange="updateProgress('roleplay', this)">
+    <span class="task-checkmark"></span>
+    <span class="task-text">Create scenarios</span>
+    <span class="task-date" data-date></span>
+    <span class="time-elapsed" data-elapsed></span>
+  </label>
+  <label class="task-item" data-task-id="roleplay-4">
+    <input type="checkbox" onchange="updateProgress('roleplay', this)">
+    <span class="task-checkmark"></span>
+    <span class="task-text">Encourage interaction</span>
+    <span class="task-date" data-date></span>
+    <span class="time-elapsed" data-elapsed></span>
+  </label>
+  <label class="task-item" data-task-id="roleplay-5">
+    <input type="checkbox" onchange="updateProgress('roleplay', this)">
+    <span class="task-checkmark"></span>
+    <span class="task-text">Maintain activity</span>
+    <span class="task-date" data-date></span>
+    <span class="time-elapsed" data-elapsed></span>
+  </label>
+</div>
+<button onclick="scrollToTop()" class="back-btn">⬆ Back to Timeline</button>
+</div>
+
+<div id="lore" class="section">
+<h2>Complete Lore</h2>
+<div class="progress-summary" id="lore-summary"></div>
+<div class="task-list">
+  <label class="task-item" data-task-id="lore-1">
+    <input type="checkbox" onchange="updateProgress('lore', this)">
+    <span class="task-checkmark"></span>
+    <span class="task-text">Build world history</span>
+    <span class="task-date" data-date></span>
+    <span class="time-elapsed" data-elapsed></span>
+  </label>
+  <label class="task-item" data-task-id="lore-2">
+    <input type="checkbox" onchange="updateProgress('lore', this)">
+    <span class="task-checkmark"></span>
+    <span class="task-text">Define factions</span>
+    <span class="task-date" data-date></span>
+    <span class="time-elapsed" data-elapsed></span>
+  </label>
+  <label class="task-item" data-task-id="lore-3">
+    <input type="checkbox" onchange="updateProgress('lore', this)">
+    <span class="task-checkmark"></span>
+    <span class="task-text">Create conflicts</span>
+    <span class="task-date" data-date></span>
+    <span class="time-elapsed" data-elapsed></span>
+  </label>
+  <label class="task-item" data-task-id="lore-4">
+    <input type="checkbox" onchange="updateProgress('lore', this)">
+    <span class="task-checkmark"></span>
+    <span class="task-text">Organize documents</span>
+    <span class="task-date" data-date></span>
+    <span class="time-elapsed" data-elapsed></span>
+  </label>
+  <label class="task-item" data-task-id="lore-5">
+    <input type="checkbox" onchange="updateProgress('lore', this)">
+    <span class="task-checkmark"></span>
+    <span class="task-text">Update consistently</span>
+    <span class="task-date" data-date></span>
+    <span class="time-elapsed" data-elapsed></span>
+  </label>
+</div>
+<button onclick="scrollToTop()" class="back-btn">⬆ Back to Timeline</button>
+</div>
+
+<div id="characters" class="section">
+<h2>Characters</h2>
+<div class="progress-summary" id="characters-summary"></div>
+<div class="task-list">
+  <label class="task-item" data-task-id="characters-1">
+    <input type="checkbox" onchange="updateProgress('characters', this)">
+    <span class="task-checkmark"></span>
+    <span class="task-text">Create templates</span>
+    <span class="task-date" data-date></span>
+    <span class="time-elapsed" data-elapsed></span>
+  </label>
+  <label class="task-item" data-task-id="characters-2">
+    <input type="checkbox" onchange="updateProgress('characters', this)">
+    <span class="task-checkmark"></span>
+    <span class="task-text">Design identity</span>
+    <span class="task-date" data-date></span>
+    <span class="time-elapsed" data-elapsed></span>
+  </label>
+  <label class="task-item" data-task-id="characters-3">
+    <input type="checkbox" onchange="updateProgress('characters', this)">
+    <span class="task-checkmark"></span>
+    <span class="task-text">Define relationships</span>
+    <span class="task-date" data-date></span>
+    <span class="time-elapsed" data-elapsed></span>
+  </label>
+  <label class="task-item" data-task-id="characters-4">
+    <input type="checkbox" onchange="updateProgress('characters', this)">
+    <span class="task-checkmark"></span>
+    <span class="task-text">Plan growth arcs</span>
+    <span class="task-date" data-date></span>
+    <span class="time-elapsed" data-elapsed></span>
+  </label>
+  <label class="task-item" data-task-id="characters-5">
+    <input type="checkbox" onchange="updateProgress('characters', this)">
+    <span class="task-checkmark"></span>
+    <span class="task-text">Keep profiles accessible</span>
+    <span class="task-date" data-date></span>
+    <span class="time-elapsed" data-elapsed></span>
+  </label>
+</div>
+<button onclick="scrollToTop()" class="back-btn">⬆ Back to Timeline</button>
+</div>
+
+<div id="backend" class="section">
+<h2>Build Back End</h2>
+<div class="progress-summary" id="backend-summary"></div>
+<div class="task-list">
+  <label class="task-item" data-task-id="backend-1">
+    <input type="checkbox" onchange="updateProgress('backend', this)">
+    <span class="task-checkmark"></span>
+    <span class="task-text">Choose tech stack</span>
+    <span class="task-date" data-date></span>
+    <span class="time-elapsed" data-elapsed></span>
+  </label>
+  <label class="task-item" data-task-id="backend-2">
+    <input type="checkbox" onchange="updateProgress('backend', this)">
+    <span class="task-checkmark"></span>
+    <span class="task-text">Set up database</span>
+    <span class="task-date" data-date></span>
+    <span class="time-elapsed" data-elapsed></span>
+  </label>
+  <label class="task-item" data-task-id="backend-3">
+    <input type="checkbox" onchange="updateProgress('backend', this)">
+    <span class="task-checkmark"></span>
+    <span class="task-text">Add authentication</span>
+    <span class="task-date" data-date></span>
+    <span class="time-elapsed" data-elapsed></span>
+  </label>
+  <label class="task-item" data-task-id="backend-4">
+    <input type="checkbox" onchange="updateProgress('backend', this)">
+    <span class="task-checkmark"></span>
+    <span class="task-text">Store progress</span>
+    <span class="task-date" data-date></span>
+    <span class="time-elapsed" data-elapsed></span>
+  </label>
+  <label class="task-item" data-task-id="backend-5">
+    <input type="checkbox" onchange="updateProgress('backend', this)">
+    <span class="task-checkmark"></span>
+    <span class="task-text">Test system</span>
+    <span class="task-date" data-date></span>
+    <span class="time-elapsed" data-elapsed></span>
+  </label>
+</div>
+<button onclick="scrollToTop()" class="back-btn">⬆ Back to Timeline</button>
+</div>
+
+<div id="players" class="section">
+<h2>Invite Players</h2>
+<div class="progress-summary" id="players-summary"></div>
+<div class="task-list">
+  <label class="task-item" data-task-id="players-1">
+    <input type="checkbox" onchange="updateProgress('players', this)">
+    <span class="task-checkmark"></span>
+    <span class="task-text">Find audience</span>
+    <span class="task-date" data-date></span>
+    <span class="time-elapsed" data-elapsed></span>
+  </label>
+  <label class="task-item" data-task-id="players-2">
+    <input type="checkbox" onchange="updateProgress('players', this)">
+    <span class="task-checkmark"></span>
+    <span class="task-text">Share invites</span>
+    <span class="task-date" data-date></span>
+    <span class="time-elapsed" data-elapsed></span>
+  </label>
+  <label class="task-item" data-task-id="players-3">
+    <input type="checkbox" onchange="updateProgress('players', this)">
+    <span class="task-checkmark"></span>
+    <span class="task-text">Create landing page</span>
+    <span class="task-date" data-date></span>
+    <span class="time-elapsed" data-elapsed></span>
+  </label>
+  <label class="task-item" data-task-id="players-4">
+    <input type="checkbox" onchange="updateProgress('players', this)">
+    <span class="task-checkmark"></span>
+    <span class="task-text">Offer incentives</span>
+    <span class="task-date" data-date></span>
+    <span class="time-elapsed" data-elapsed></span>
+  </label>
+  <label class="task-item" data-task-id="players-5">
+    <input type="checkbox" onchange="updateProgress('players', this)">
+    <span class="task-checkmark"></span>
+    <span class="task-text">Build onboarding</span>
+    <span class="task-date" data-date></span>
+    <span class="time-elapsed" data-elapsed></span>
+  </label>
+</div>
+<button onclick="scrollToTop()" class="back-btn">⬆ Back to Timeline</button>
+</div>
+
+<div id="quests" class="section">
+<h2>Quests</h2>
+<div class="progress-summary" id="quests-summary"></div>
+<div class="task-list">
+  <label class="task-item" data-task-id="quests-1">
+    <input type="checkbox" onchange="updateProgress('quests', this)">
+    <span class="task-checkmark"></span>
+    <span class="task-text">Design missions</span>
+    <span class="task-date" data-date></span>
+    <span class="time-elapsed" data-elapsed></span>
+  </label>
+  <label class="task-item" data-task-id="quests-2">
+    <input type="checkbox" onchange="updateProgress('quests', this)">
+    <span class="task-checkmark"></span>
+    <span class="task-text">Create rewards</span>
+    <span class="task-date" data-date></span>
+    <span class="time-elapsed" data-elapsed></span>
+  </label>
+  <label class="task-item" data-task-id="quests-3">
+    <input type="checkbox" onchange="updateProgress('quests', this)">
+    <span class="task-checkmark"></span>
+    <span class="task-text">Keep variety</span>
+    <span class="task-date" data-date></span>
+    <span class="time-elapsed" data-elapsed></span>
+  </label>
+  <label class="task-item" data-task-id="quests-4">
+    <input type="checkbox" onchange="updateProgress('quests', this)">
+    <span class="task-checkmark"></span>
+    <span class="task-text">Track progress</span>
+    <span class="task-date" data-date></span>
+    <span class="time-elapsed" data-elapsed></span>
+  </label>
+  <label class="task-item" data-task-id="quests-5">
+    <input type="checkbox" onchange="updateProgress('quests', this)">
+    <span class="task-checkmark"></span>
+    <span class="task-text">Update regularly</span>
+    <span class="task-date" data-date></span>
+    <span class="time-elapsed" data-elapsed></span>
+  </label>
+</div>
+<button onclick="scrollToTop()" class="back-btn">⬆ Back to Timeline</button>
+</div>
+
+<!-- CHAT GUIDE -->
+<div class="chatguide">
+  <div id="chat-output">
+    🧙‍♂️ Hansel: You're here. Excellent. Let's get something done.
+  </div>
+  <input type="text" id="chat-input" placeholder="Speak..." onkeydown="handleChat(event)">
+</div>
+
+</div> <!-- END FRAME -->
+
+<script>
+/* TRACKING VARIABLES */
+let currentSection = null;
+let lastSwitchTime = Date.now();
+
+/* LOADING SCREEN */
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    document.getElementById('loading-screen').classList.add('fade-out');
+    document.querySelector('.main-content').classList.add('fade-in');
+  }, 7000);
+  loadAllProgress();
+});
+
+/* UTILITY FUNCTIONS */
+/* 🔧 ROBUST DATE FUNCTIONS - FIXES "Invalid Date" */
+function formatDate(timestamp) {
+  if (!timestamp || isNaN(timestamp)) return '';
+  
+  const date = new Date(parseInt(timestamp));
+  if (isNaN(date.getTime())) return 'Unknown';
+  
+  return date.toLocaleString('en-US', {
+    weekday: 'short',
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true
+  });
+}
+
+
+function getTimeElapsed(startTime) {
+  if (!startTime || isNaN(startTime)) return '';
+  
+  const completedTime = parseInt(startTime);
+  if (isNaN(completedTime)) return 'Unknown';
+  
+  const now = Date.now();
+  const elapsed = Math.floor((now - completedTime) / 1000 / 60); // minutes
+  
+  if (elapsed < 1) return 'Just now';
+  if (elapsed < 60) return `${elapsed}m ago`;
+  const hours = Math.floor(elapsed / 60);
+  if (hours < 24) return `${hours}h ago`;
+  const days = Math.floor(hours / 24);
+  return `${days}d ago`;
+
+}
+
+/* ENHANCED PROGRESS TRACKING WITH TIMESTAMPS */
+function updateProgress(sectionId, checkbox) {
+  const taskItem = checkbox.closest('.task-item');
+  const taskId = taskItem.getAttribute('data-task-id');
+  
+  // Record timestamp when checked
+  if (checkbox.checked) {
+    const now = Date.now();
+    taskItem.setAttribute('data-completed', now);
+    taskItem.classList.add('completed');
+    
+    // Update date display
+    const taskDate = taskItem.querySelector('.task-date');
+    const timeElapsed = taskItem.querySelector('.time-elapsed');
+    taskDate.textContent = formatDate(now);
+    timeElapsed.textContent = 'Just now';
+    
+    // Update elapsed time every minute
+    const updateElapsed = () => {
+      const completedTime = parseInt(taskItem.getAttribute('data-completed'));
+      timeElapsed.textContent = getTimeElapsed(completedTime);
+    };
+    updateElapsed();
+    setInterval(updateElapsed, 60000); // Update every minute
+  } else {
+    // Clear when unchecked
+    taskItem.removeAttribute('data-completed');
+    taskItem.classList.remove('completed');
+    taskItem.querySelector('.task-date').textContent = '';
+    taskItem.querySelector('.time-elapsed').textContent = '';
+  }
+  
+  // Update section progress
+  const checkboxes = document.querySelectorAll(`#${sectionId} input[type="checkbox"]`);
+  const total = checkboxes.length;
+  const checked = Array.from(checkboxes).filter(cb => cb.checked).length;
+  const percentage = Math.round((checked / total) * 100);
+  
+  // Update timeline progress bar
+  const progressFill = document.querySelector(`.timeline .card[onclick="scrollToSection('${sectionId}')"] .progress-fill`);
+  progressFill.style.width = percentage + '%';
+  progressFill.setAttribute('data-current', percentage);
+  
+  // Update summary
+  updateSectionSummary(sectionId, percentage, checked, total);
+  
+  // Save everything
+  saveAllProgress();
+  
+  // Visual feedback
+  progressFill.style.background = 'linear-gradient(90deg, cornflowerblue, #ff4da6)';
+  setTimeout(() => {
+    progressFill.style.background = 'cornflowerblue';
+  }, 500);
+}
+
+function updateSectionSummary(sectionId, percentage, completed, total) {
+  const summary = document.getElementById(`${sectionId}-summary`);
+  const completedTasks = Array.from(document.querySelectorAll(`#${sectionId} .task-item[data-completed]`));
+  
+  let summaryHtml = `
+    <h3>${percentage}% Complete</h3>
+    <div style="color: ${percentage > 50 ? '#88ff88' : '#ffaa88'}">${completed}/${total} tasks</div>
+  `;
+  
+  if (completedTasks.length > 0) {
+    // Safely get first and last completed times
+    const times = completedTasks
+      .map(task => parseInt(task.getAttribute('data-completed')))
+      .filter(time => !isNaN(time))
+      .sort((a, b) => a - b);
+    
+    if (times.length > 0) {
+      summaryHtml += `<div>First: ${formatDate(times[0])}</div>`;
+      summaryHtml += `<div>Last: ${formatDate(times[times.length - 1])}</div>`;
+    }
+  }
+  
+  summary.innerHTML = summaryHtml;
+}
+/* 🧹 CLEANUP CORRUPTED DATA */
+function cleanupCorruptedData() {
+  ['guild', 'roleplay', 'lore', 'characters', 'backend', 'players', 'quests'].forEach(section => {
+    const savedTasks = localStorage.getItem(`tasks_${section}`);
+    if (savedTasks) {
+      try {
+        const tasks = JSON.parse(savedTasks);
+        const cleanedTasks = tasks.map(task => ({
+          ...task,
+          completedTime: task.completedTime && !isNaN(parseInt(task.completedTime)) 
+            ? task.completedTime 
+            : null
+        }));
+        localStorage.setItem(`tasks_${section}`, JSON.stringify(cleanedTasks));
+      } catch (e) {
+        console.warn(`Cleaning up corrupted data for ${section}`);
+        localStorage.removeItem(`tasks_${section}`);
+      }
+    }
+  });
+}
+
+// Run cleanup on load
+window.addEventListener('load', () => {
+  cleanupCorruptedData();
+  // ... rest of load code
+});
+/* SAVE/LOAD ALL PROGRESS */
+function saveAllProgress() {
+  // Save checkboxes and timestamps
+  ['guild', 'roleplay', 'lore', 'characters', 'backend', 'players', 'quests'].forEach(section => {
+    const checkboxes = document.querySelectorAll(`#${section} input[type="checkbox"]`);
+    const states = Array.from(checkboxes).map(cb => ({
+      checked: cb.checked,
+      taskId: cb.closest('.task-item').getAttribute('data-task-id'),
+      completedTime: cb.closest('.task-item').getAttribute('data-completed')
+    }));
+    localStorage.setItem(`tasks_${section}`, JSON.stringify(states));
+  });
+  
+  // Save timeline progress
+  document.querySelectorAll('.progress-fill').forEach(fill => {
+    const card = fill.closest('.card');
+    const goalName = card.textContent.trim().split('\n')[0].toLowerCase().replace(/\s+/g, '');
+    localStorage.setItem(`progress_${goalName}`, fill.style.width);
+  });
+}
+
+function loadAllProgress() {
+  ['guild', 'roleplay', 'lore', 'characters', 'backend', 'players', 'quests'].forEach(section => {
+    const savedTasks = localStorage.getItem(`tasks_${section}`);
+    if (savedTasks) {
+      const tasks = JSON.parse(savedTasks);
+      tasks.forEach(taskData => {
+        const taskItem = document.querySelector(`[data-task-id="${taskData.taskId}"]`);
+        if (taskItem) {
+          const checkbox = taskItem.querySelector('input[type="checkbox"]');
+          checkbox.checked = taskData.checked;
+          if (taskData.checked && taskData.completedTime) {
+            taskItem.setAttribute('data-completed', taskData.completedTime);
+            taskItem.classList.add('completed');
+            const taskDate = taskItem.querySelector('.task-date');
+            const timeElapsed = taskItem.querySelector('.time-elapsed');
+            taskDate.textContent = formatDate(taskData.completedTime);
+            timeElapsed.textContent = getTimeElapsed(taskData.completedTime);
+          }
+        }
+      });
+      updateProgress(section, null); // Refresh display
+    }
+  });
+  
+  // Load timeline progress
+  document.querySelectorAll('.progress-fill').forEach(fill => {
+    const card = fill.closest('.card');
+    const goalName = card.textContent.trim().split('\n')[0].toLowerCase().replace(/\s+/g, '');
+    const saved = localStorage.getItem(`progress_${goalName}`);
+    if (saved) {
+      fill.style.width = saved;
+      fill.setAttribute('data-current', parseInt(saved));
+    }
+  });
+}
+
+/* NAVIGATION */
+function scrollToSection(id) {
+  if (id === 'guild') {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  } else {
+    const title = document.querySelector(`#${id} h2`);
+    const headerHeight = 120;
+    const titlePosition = title.getBoundingClientRect().top + window.pageYOffset;
+    const offsetPosition = titlePosition - headerHeight - 100;
+    
+    window.scrollTo({
+      top: offsetPosition,
+      behavior: 'smooth'
+    });
+  }
+  currentSection = id;
+  lastSwitchTime = Date.now();
+  
+  const title = document.querySelector(`#${id} h2`);
+  title.style.textShadow = '0 0 20px #ff4da6, 0 0 30px #ff4da6';
+  setTimeout(() => {
+    title.style.textShadow = '0 0 10px #ff4da6';
+  }, 800);
+}
+
+function scrollToTop() {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  const timeline = document.querySelector('.timeline');
+  timeline.style.transform = 'scale(1.05)';
+  setTimeout(() => {
+    timeline.style.transform = 'scale(1)';
+  }, 300);
+}
+
+/* CHAT PERSONALITY - ENHANCED WITH PROGRESS AWARENESS */
+function random(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+function getDefaultResponse() {
+  return random([
+    "Progress calls. Answer it.",
+    "What's your next step?",
+     "The path ahead awaits."
+  ]);
+}
+
+function handleChat(event) {
+  if (event.key === "Enter") {
+    const input = document.getElementById("chat-input");
+    const output = document.getElementById("chat-output");
+    const text = input.value.toLowerCase().trim();
+
+    let response = getDefaultResponse();
+
+    if (text.includes("hi") || text.includes("hello")) {
+      response = random([
+        "Greetings, traveler. The journey begins.",
+        "Welcome. Let's forge your path.",
+        "Hello. Purpose brought you here."
+      ]);
+    } else if (text.includes("how are you")) {
+      response = random([
+        "Steadfast. Ready to guide.",
+        "Clear-minded. Like you should be.",
+        "Well-prepared. For your success."
+      ]);
+    } else if (text.includes("progress") || text.includes("status")) {
+      const totalProgress = document.querySelectorAll('.progress-fill[data-current]').length;
+      const avgProgress = Array.from(document.querySelectorAll('.progress-fill[data-current]'))
+        .reduce((sum, el) => sum + parseInt(el.getAttribute('data-current') || 0), 0) / totalProgress;
+      response = `Overall: ${Math.round(avgProgress)}% complete. Timestamps track your discipline.`;
+    } else if (text.includes("time") || text.includes("date")) {
+      response = "Every completed task shows its timestamp. Your history is preserved.";
+    } else if (text.includes("okay") || text.includes("ok")) {
+      response = random([
+        "Good. Now take the first step.",
+        "Very well. Action follows words.",
+        "Excellent start."
+      ]);
+    } else if (text.includes("thank") || text.includes("gratitude")) {
+      response = random([
+        "Your progress is thanks enough.",
+        "Well-earned. Keep moving.",
+        "The road rewards effort."
+      ]);
+    } else if (text.includes("help")) {
+      response = random([
+        "Check your tasks. Timestamps appear when complete.",
+        "Choose a goal. I'll guide you.",
+        "The checklist shows your path with completion times."
+      ]);
+    } else if (text.includes("where i left off")) {
+      response = currentSection 
+        ? `You were at ${currentSection}. Check timestamps there.`
+        : "Everywhere is a good place to start.";
+    } else if (text.includes("yes")) {
+      response = random([
+        "Then proceed without delay.",
+        "Perfect. The path is clear.",
+        "Forward!"
+      ]);
+    } else if (text === "no") {
+      response = random([
+        "The choice is yours, always.",
+        "Very well. Reconsider when ready.",
+        "Paths can change."
+      ]);
+    } else if (text.includes("bye")) {
+      response = random([
+        "Return when ready to progress.",
+        "Safe travels. Come back stronger.",
+        "The path remains."
+      ]);
+    } else if (text.includes("reset")) {
+      if (confirm("Reset all progress? Timestamps will be lost.")) {
+        localStorage.clear();
+        location.reload();
+        response = "Clean slate. Begin again.";
+      } else {
+        response = "Wise choice. Progress is valuable.";
+      }
+    }
+
+    // OUTPUT
+    output.innerHTML = `🧙‍♂️ Hansel: ${response}`;
+    input.value = "";
+
+    // SMART NUDGES BASED ON PROGRESS
+    setTimeout(() => {
+      const lowProgressSections = Array.from(document.querySelectorAll('.progress-fill[data-current]'))
+        .filter(el => parseInt(el.getAttribute('data-current') || 0) < 50)
+        .map(el => el.closest('.card').textContent.trim().split('\n')[0]);
+      
+      if (lowProgressSections.length > 0 && Math.random() < 0.4) {
+        const nudgeSection = lowProgressSections[Math.floor(Math.random() * lowProgressSections.length)];
+        const nudge = random([
+          `📋 ${nudgeSection} needs attention.`,
+          `⚡ Quick win: ${nudgeSection}`,
+          `${nudgeSection} awaits your timestamp.`
+        ]);
+        output.innerHTML += `<br><span style="color: #ff4da6;">${nudge}</span>`;
+      } else if (Math.random() < 0.25) {
+        const nudge = random([
+          "A single checkbox changes everything.",
+          "Your next task awaits.",
+          "Progress is one click away.",
+          "Timestamps prove your commitment."
+        ]);
+        output.innerHTML += `<br>🧙‍♂️ Hansel: ${nudge}`;
+      }
+    }, 1500);
+  }
+}
+
+// Auto-save every 30 seconds
+setInterval(saveAllProgress, 30000);
+
+// Initial load
+window.addEventListener('load', () => {
+  loadAllProgress();
+  
+  // Update elapsed times on load
+  document.querySelectorAll('.task-item[data-completed]').forEach(taskItem => {
+    const completedTime = parseInt(taskItem.getAttribute('data-completed'));
+    const timeElapsed = taskItem.querySelector('.time-elapsed');
+    if (timeElapsed) {
+      timeElapsed.textContent = getTimeElapsed(completedTime);
+    }
+  });
+  
+  // Update all summaries
+  ['guild', 'roleplay', 'lore', 'characters', 'backend', 'players', 'quests'].forEach(section => {
+    updateProgress(section, null);
+  });
+});
+
+// Before unload, save progress
+window.addEventListener('beforeunload', saveAllProgress);
+
+console.log("🧙‍♂️ My Vision Cafe loaded with timestamp tracking! Every task completion is recorded forever.");
+</script>
+</body>
+</html>
