@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chimera Café NPC World</title>
+
+<style>
+body {
+  margin: 0;
+  overflow: hidden;
+  font-family: Arial, sans-serif;
+  background: radial-gradient(circle at center, #0b0b22, #050510);
+  color: white;
+}
+
+/* 🌌 stars */
+.stars {
+  position: fixed;
+  inset: 0;
+  background-image: radial-gradient(white 1px, transparent 1px);
+  background-size: 70px 70px;
+  opacity: 0.12;
+  pointer-events: none;
+}
+
+/* 🌍 world */
+.world {
+  position: absolute;
+  width: 2000px;
+  height: 1200px;
+
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* 🧍 NPC BASE */
+.npc {
+  position: absolute;
+  width: 110px;
+  height: 110px;
+  border-radius: 18px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.2s;
+
+  box-shadow: 0 0 12px rgba(122,92,255,0.25);
+}
+
+.npc:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 20px rgba(122,92,255,0.6);
+}
+
+/* 🖼️ NPC IMAGE */
+.npc img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* positions */
+#miki { top: 300px; left: 400px; }
+#hans { top: 400px; left: 900px; }
+#star { top: 650px; left: 500px; }
+#milo { top: 600px; left: 1200px; }
+
+/* 💬 dialog */
+.dialog {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60%;
+  background: rgba(0,0,0,0.85);
+  padding: 15px;
+  border-radius: 12px;
+  display: none;
+  z-index: 10;
+}
+
+.name {
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #a78bfa;
+}
+
+.close {
+  position: absolute;
+  right: 10px;
+  top: 8px;
+  cursor: pointer;
+  font-size: 12px;
+}
+body {
+  margin: 0;
+  overflow: hidden;
+  font-family: Arial, sans-serif;
+  /* Deep, infinite void background */
+  background: #040209; 
+  color: white;
+}
+
+/* 🌌 Parallel Universe Cosmic Background */
+.stars {
+  position: fixed;
+  inset: 0;
+  /* Layer 1: Nebula glow | Layer 2: Star field */
+  background: 
+    radial-gradient(circle at 30% 20%, rgba(122, 92, 255, 0.15) 0%, transparent 50%),
+    radial-gradient(circle at 80% 70%, rgba(244, 63, 94, 0.1) 0%, transparent 45%),
+    radial-gradient(white 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 60px 60px;
+  opacity: 0.6;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* 🌍 The Multiverse Café Map Floor */
+.world {
+  position: absolute;
+  width: 2000px;
+  height: 1200px;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  
+  /* Creates a glowing cyberpunk/cosmic grid floor */
+  background-color: rgba(11, 11, 34, 0.6);
+  background-image: 
+    linear-gradient(rgba(167, 139, 250, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(167, 139, 250, 0.08) 1px, transparent 1px);
+  background-size: 80px 80px;
+  background-position: center;
+  
+  /* Cosmic border aura for the cafe map boundary */
+  border: 2px solid rgba(167, 139, 250, 0.2);
+  border-radius: 40px;
+  box-shadow: 
+    inset 0 0 60px rgba(122, 92, 255, 0.2),
+    0 0 80px rgba(122, 92, 255, 0.15);
+}
+</style>
+</head>
+
+<body>
+
+<div class="stars"></div>
+
+<div class="world" id="world">
+
+  <!-- 🧠 MIKI -->
+  <div class="npc" id="miki"
+    onclick="talk('Miki', 'I observe the café between timelines.')">
+    <img src="https://xencafe.nekoweb.org/2024-CHIMERA-GAME-NPCROOM/Miki-Official.jpeg" alt="Miki">
+  </div>
+
+  <!-- 🔥 HANS -->
+  <div class="npc" id="hans"
+    onclick="talk('Hans', 'Rituals repeat until they remember themselves.')">
+    <img src="https://xencafe.nekoweb.org/2024-CHIMERA-GAME-NPCROOM/HANS-OFFICIAL-CHIMERA.jpeg" alt="Hans">
+  </div>
+
+  <!-- 🌌 STAR -->
+  <div class="npc" id="star"
+    onclick="talk('Star', 'I stabilize the soft systems.')">
+    <img src="https://xencafe.nekoweb.org/2024-CHIMERA-GAME-NPCROOM/Gem-Map.html/STAR.jpeg" alt="Star">
+  </div>
+
+  <!-- ☕ MILO -->
+  <div class="npc" id="milo"
+    onclick="talk('Milo', 'I stayed after everything ended.')">
+    <img src="https://xencafe.nekoweb.org/2024-CHIMERA-GAME-NPCROOM/Emo-Milo-Japanese-Parisian.jpeg" alt="Milo">
+  </div>
+
+</div>
+
+<!-- 💬 DIALOG -->
+<div class="dialog" id="dialog">
+  <div class="close" onclick="closeDialog()">✖</div>
+  <div class="name" id="name"></div>
+  <div id="text"></div>
+</div>
+
+<script>
+/* 💬 dialog */
+function talk(name, text) {
+  document.getElementById("dialog").style.display = "block";
+  document.getElementById("name").innerText = name;
+  document.getElementById("text").innerText = text;
+}
+
+function closeDialog() {
+  document.getElementById("dialog").style.display = "none";
+}
+</script>
+
+</body>
+</html>
