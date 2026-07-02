@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Legendary Parisian Bistro & Hotel Cafe</title>
+<style>
+  /* Import Cedarville Cursive font */
+  @import url('https://fonts.googleapis.com/css2?family=Cedarville+Cursive&display=swap');
+
+  /* Reset and base */
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0;
+    font-family: 'Georgia', serif;
+    background: linear-gradient(to bottom, #1a1a1a, #1e1a2e); /* Added indigo gradient */
+    color: #bbb;
+    overflow-x: hidden;
+    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><text y="18" font-size="18">🕷️</text></svg>'), auto;
+    transition: background-color 0.5s ease;
+  }
+  /* Vintage grey to crisp color on hover for body */
+  body:hover {
+    background: linear-gradient(to bottom, #2c2c2c, #32295a); /* Added indigo on hover */
+    color: #eee;
+    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><text y="18" font-size="18">🍵</text></svg>'), auto;
+  }
+
+  /* Top header with spider web and spider emoji */
+  header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 120px;
+    background: rgba(20, 20, 30, 0.85); /* Added indigo tint */
+    backdrop-filter: blur(6px);
+    border-bottom: 1px solid #4a3d7a; /* Changed to indigo */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 1000;
+    user-select: none;
+  }
+  .spider-web {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    margin-top: 5px;
+  }
+  /* Spider web using SVG */
+  .spider-web svg {
+    width: 100%;
+    height: 100%;
+    filter: drop-shadow(0 0 2px #6b5b95); /* Purple shadow */
+  }
+  .spider-emoji {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    font-size: 2.5rem;
+    transform: translate(-50%, -50%);
+    user-select: none;
+  }
+
+  /* Navigation below spider web */
+  nav {
+    margin-top: 5px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  nav button {
+    background: rgba(60, 50, 80, 0.6); /* Purple tint */
+    border: 1px solid #6b5b95; /* Purple border */
+    color: #d8c3ff; /* Light purple */
+    padding: 6px 12px;
+    font-size: 0.9rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 600;
+    user-select: none;
+  }
+  nav button:hover {
+    background: #8a2be2; /* Deep purple */
+    color: #fff;
+    border-color: #9370db;
+    filter: drop-shadow(0 0 4px #8a2be2);
+  }
+
+  /* Elevator controls */
+  #elevator {
+    position: fixed;
+    right: 20px;
+    top: 140px;
+    background: rgba(40, 30, 60, 0.8); /* Deep purple */
+    border-radius: 12px;
+    padding: 10px;
+    box-shadow: 0 0 10px #4b0082 inset; /* Indigo shadow */
+    user-select: none;
+    z-index: 900;
+  }
+  #elevator h3 {
+    margin: 0 0 8px 0;
+    color: #ba9bff; /* Light purple */
+    font-family: 'Georgia', serif;
+    text-align: center;
+    text-shadow: 0 0 3px #8a2be2;
+  }
+  #elevator button {
+    display: block;
+    width: 60px;
+    margin: 6px auto;
+    background: #4a3d7a; /* Purple */
+    border: 1px solid #6b5b95;
+    color: #d8c3ff;
+    font-weight: 700;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  #elevator button:hover, #elevator button.current-level {
+    background: #8a2be2; /* Deep purple */
+    color: #fff;
+    border-color: #9370db;
+    filter: drop-shadow(0 0 4px #8a2be2);
+  }
+
+  /* Main container for rooms */
+  main {
+    margin-top: 160px;
+    padding: 20px;
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* Room container */
+  .room {
+    margin-bottom: 80px;
+    padding: 20px;
+    background: rgba(50, 40, 70, 0.6); /* Purple tint */
+    border-radius: 16px;
+    box-shadow: 0 0 15px rgba(75, 0, 130, 0.7); /* Indigo shadow */
+    backdrop-filter: blur(8px);
+    color: #d8c3ff; /* Light purple */
+    opacity: 0.5;
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    position: relative;
+    transform: translateY(20px);
+  }
+  .room.active {
+    opacity: 1;
+    transform: translateY(0);
+    box-shadow: 0 0 25px #8a2be2; /* Deep purple glow */
+  }
+
+  /* Room title */
+  .room h2 {
+    font-family: 'Georgia', serif;
+    font-weight: 700;
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+    color: #ba9bff; /* Light purple */
+    text-shadow: 0 0 5px #8a2be2; /* Deep purple shadow */
+  }
+
+  /* Light toggle */
+  .light-toggle {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: rgba(70, 60, 90, 0.7); /* Purple */
+    border-radius: 20px;
+    padding: 6px 12px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    user-select: none;
+    border: 1px solid #6b5b95;
+    color: #d8c3ff;
+    transition: background-color 0.3s ease;
+  }
+  .light-toggle:hover, .light-toggle.lights-off {
+    background: #4b0082; /* Indigo */
+    color: #fff;
+    border-color: #8a2be2;
+  }
+
+  /* Image placeholder */
+  .room img {
+    width: 100%;
+    max-height: 300px;
+    object-fit: cover;
+    border-radius: 12px;
+    margin-top: 12px;
+    filter: grayscale(70%) brightness(0.8) sepia(0.3) hue-rotate(240deg); /* Purple tint */
+    transition: filter 0.5s ease;
+    cursor: pointer;
+  }
+  .room img:hover {
+    filter: grayscale(0%) brightness(1) sepia(0);
+  }
+
+  /* Bio text */
+  .bio {
+    margin-top: 12px;
+    font-style: italic;
+    font-size: 1rem;
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-height 0.6s ease, opacity 0.6s ease;
+    color: #e6daff; /* Very light purple */
+  }
+  .bio.visible {
+    max-height: 200px;
+    opacity: 1;
+  }
+
+  /* Mailbox */
+  #mailbox {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    width: 60px;
+    height: 90px;
+    background: rgba(60, 50, 80, 0.8); /* Purple */
+    border-radius: 12px 12px 4px 4px;
+    box-shadow: inset 0 0 10px #4a3d7a; /* Dark purple */
+    cursor: pointer;
+    user-select: none;
+    border: 2px solid #6b5b95;
+    transition: background-color 0.3s ease;
+    z-index: 1100;
+  }
+  #mailbox:hover {
+    background: #8a2be2; /* Deep purple */
+    border-color: #9370db;
+    box-shadow: 0 0 10px #8a2be2, inset 0 0 10px #4a3d7a;
+  }
+  #mailbox::before {
+    content: '';
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 20px;
+    background: #4a3d7a; /* Dark purple */
+    border-radius: 10px 10px 0 0;
+    border: 1px solid #6b5b95;
+  }
+  #mailbox::after {
+    content: '✉️';
+    position: absolute;
+    top: 35px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 2rem;
+  }
+
+  /* Letter popup */
+  #letter-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 320px;
+    background: rgba(255, 255, 240, 0.95);
+    border-radius: 20px;
+    box-shadow: 0 0 30px #8a2be2; /* Deep purple glow */
+    padding: 20px 30px;
+    font-family: 'Cedarville Cursive', cursive;
+    font-size: 1.3rem;
+    color: #4b3b1b;
+    line-height: 1.5;
+    display: none;
+    z-index: 1200;
+    user-select: text;
+    border: 2px solid #8a2be2;
+  }
+  #letter-popup button.close-letter {
+    position: absolute;
+    top: 8px;
+    right: 12px;
+    background: transparent;
+    border: none;
+    font-size: 1.5rem;
+    color: #4b3b1b;
+    cursor: pointer;
+    font-weight: 700;
+  }
+  #letter-popup button.close-letter:hover {
+    color: #8a2be2; /* Deep purple */
+  }
+
+  /* Parisian bot guide */
+  #bot-guide {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 180px;
+    background: rgba(40, 30, 60, 0.85); /* Deep purple */
+    border-radius: 16px;
+    padding: 12px;
+    box-shadow: 0 0 15px #4b0082 inset; /* Indigo */
+    color: #ba9bff; /* Light purple */
+    font-family: 'Georgia', serif;
+    user-select: none;
+    z-index: 1000;
+    border: 1px solid #6b5b95;
+  }
+  #bot-guide img {
+    width: 100%;
+    border-radius: 12px;
+    margin-bottom: 8px;
+    filter: drop-shadow(0 0 4px #8a2be2); /* Deep purple */
+  }
+  #bot-guide p {
+    font-style: italic;
+    font-size: 0.9rem;
+    line-height: 1.3;
+  }
+
+  /* Mystery tea buttons */
+  .mystery-button {
+    background: rgba(70, 60, 90, 0.7); /* Purple */
+    border: 1px solid #6b5b95;
+    color: #d8c3ff;
+    padding: 8px 14px;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    margin-top: 12px;
+    user-select: none;
+  }
+  .mystery-button:hover {
+    background: #8a2be2; /* Deep purple */
+    color: #fff;
+    border-color: #9370db;
+    filter: drop-shadow(0 0 6px #8a2be2);
+  }
+
+  /* Scroll container for bio reveal */
+  .scroll-container {
+    max-height: 350px;
+    overflow-y: auto;
+    padding-right: 10px;
+  }
+
+  /* Scrollbar styling */
+  .scroll-container::-webkit-scrollbar {
+    width: 8px;
+  }
+  .scroll-container::-webkit-scrollbar-track {
+    background: #2d2447; /* Dark purple */
+  }
+  .scroll-container::-webkit-scrollbar-thumb {
+    background: #8a2be2; /* Deep purple */
+    border-radius: 4px;
+  }
+
+  /* Community links in header */
+  .community-links {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    display: flex;
+    gap: 10px;
+  }
+  .community-links a {
+    color: #ba9bff; /* Light purple */
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.3s ease;
+  }
+  .community-links a:hover {
+    color: #fff;
+    text-shadow: 0 0 5px #8a2be2;
+  }
+
+</style>
+</head>
+<body>
+
+<header>
+  <div class="spider-web" aria-label="Spider web decoration">
+    <svg viewBox="0 0 120 120" aria-hidden="true" focusable="false">
+      <circle cx="60" cy="60" r="58" stroke="#6b5b95" stroke-width="1" fill="none"/>
+      <circle cx="60" cy="60" r="45" stroke="#8a2be2" stroke-width="1" fill="none"/>
+      <circle cx="60" cy="60" r="30" stroke="#9370db" stroke-width="1" fill="none"/>
+      <circle cx="60" cy="60" r="15" stroke="#ba9bff" stroke-width="1" fill="none"/>
+      <line x1="60" y1="2" x2="60" y2="118" stroke="#6b5b95" stroke-width="1"/>
+      <line x1="2" y1="60" x2="118" y2="60" stroke="#6b5b95" stroke-width="1"/>
+      <line x1="20" y1="20" x2="100" y2="100" stroke="#8a2be2" stroke-width="1"/>
+      <line x1="20" y1="100" x2="100" y2="20" stroke="#8a2be2" stroke-width="1"/>
+    </svg>
+    <div class="spider-emoji" aria-label="Spider emoji" role="img">🕷️</div>
+  </div>
+  <nav aria-label="Room navigation">
+    <button data-room="0">Exquisite Tea Room</button>
+    <button data-room="1">Perfumery</button>
+    <button data-room="2">Photos</button>
+    <button data-room="3">Love Letters</button>
+    <button data-room="4">Members Only</button>
+    <button data-room="5">Guides</button>
+    <button data-room="6">Quests</button>
+    <button data-room="7">Color Chamber</button>
+    <button data-room="8">Meet Xen</button>
+  </nav>
+  <div class="community-links">
+    <a href="#" target="_blank">Community</a>
+    <a href="#" target="_blank">Events</a>
+    <a href="#" target="_blank">Gallery</a>
+  </div>
+</header>
+
+<div id="mailbox" role="button" aria-label="Mailbox, click to read letter" tabindex="0"></div>
+
+<div id="letter-popup" role="dialog" aria-modal="true" aria-labelledby="letter-title">
+  <button class="close-letter" aria-label="Close letter">&times;</button>
+  <p id="letter-title" style="margin-top:0;">Hello my legendary friend.</p>
+  <p>We've been steeping the tea long enough.<br>Are you ready to engage in a quest?<br><br>Signed, Xen</p>
+</div>
+
+<div id="elevator" aria-label="Elevator controls">
+  <h3>Elevator</h3>
+  <button data-level="0" class="current-level">Tea Room</button>
+  <button data-level="1">Perfumery</button>
+  <button data-level="2">Photos</button>
+  <button data-level="3">Love Letters</button>
+  <button data-level="4">Members Only</button>
+  <button data-level="5">Guides</button>
+  <button data-level="6">Quests</button>
+</div>
+
+<main>
+  <section class="room active" id="room-0" tabindex="0" aria-label="Exquisite Tea Room">
+    <h2>Exquisite Tea Room</h2>
+    <div class="light-toggle" role="switch" aria-checked="true" tabindex="0">Lights On</div>
+    <img src="faux.html" alt="Exquisite Tea Room with vintage tea sets and steam rising from porcelain cups" />
+    <div class="bio scroll-container">
+      <p>Welcome to the Exquisite Tea Room, where every sip is a journey through the finest blends of Parisian tradition. The air is thick with the aroma of bergamot and jasmine, and the ambiance whispers secrets of old-world charm.</p>
+      <button class="mystery-button" aria-label="Reveal a riddle about tea">Reveal Tea Riddle</button>
+      <p class="riddle" style="display:none; margin-top:10px; font-style: italic; color:#ba9bff;">
+        I am steeped but never drowned,<br>
+        In porcelain cups I am found.<br>
+        What am I?
+      </p>
+    </div>
+  </section>
+
+  <section class="room" id="room-1" tabindex="0" aria-label="Perfumery">
+    <h2>Perfumery</h2>
+    <div class="light-toggle" role="switch" aria-checked="true" tabindex="0">Lights On</div>
+    <img src="faux.html" alt="Perfumery with elegant glass bottles and dried lavender displayed on shelves" />
+    <div class="bio scroll-container">
+      <p>The Perfumery enchants with scents of lavender, rose, and mysterious spices. Each bottle tells a story, a fragrant poem that lingers in the air like a whispered secret.</p>
+      <button class="mystery-button" aria-label="Reveal a riddle about tea">Reveal Tea Riddle</button>
+      <p class="riddle" style="display:none; margin-top:10px; font-style: italic; color:#ba9bff;">
+        I dance in steam, a fragrant art,<br>
+        From leaf to cup, I warm the heart.<br>
+        What am I?
+      </p>
+    </div>
+  </section>
+
+  <section class="room" id="room-2" tabindex="0" aria-label="Photos">
+    <h2>Photos</h2>
+    <div class="light-toggle" role="switch" aria-checked="true" tabindex="0">Lights On</div>
+    <img src="faux.html" alt="Vintage photographs in ornate frames showing Parisian scenes from another era" />
+    <div class="bio scroll-container">
+      <p>Captured moments frozen in time, these photographs whisper stories of romance, intrigue, and the timeless beauty of Paris. Each frame holds a secret waiting to be discovered.</p>
+      <button class="mystery-button" aria-label="Reveal a riddle about tea">Reveal Tea Riddle</button>
+      <p class="riddle" style="display:none; margin-top:10px; font-style: italic; color:#ba9bff;">
+        I capture light but make no sound,<br>
+        In albums and frames I am found.<br>
+        What am I?
+      </p>
+    </div>
+  </section>
+
+  <section class="room" id="room-3" tabindex="0" aria-label="Love Letters">
+    <h2>Love Letters</h2>
+    <div class="light-toggle" role="switch" aria-checked="true" tabindex="0">Lights On</div>
+    <img src="faux.html" alt="Elegant handwritten letters with wax seals on a writing desk" />
+    <div class="bio scroll-container">
+      <p>Whispers of passion, promises of forever, and secrets of the heart fill this room. Each letter tells a tale of romance that transcends time and distance.</p>
+      <button class="mystery-button" aria-label="Reveal a riddle about tea">Reveal Tea Riddle</button>
+      <p class="riddle" style="display:none; margin-top:10px; font-style: italic; color:#ba9bff;">
+        I travel far with words so sweet,<br>
+        On paper wings our hearts do meet.<br>
+        What am I?
+      </p>
+    </div>
+  </section>
+
+  <section class="room" id="room-4" tabindex="0" aria-label="Members Only">
+    <h2>Members Only</h2>
+    <div class="light-toggle" role="switch" aria-checked="true" tabindex="0">Lights On</div>
+    <img src="faux.html" alt="Exclusive lounge area with velvet ropes and elegant seating" />
+    <div class="bio scroll-container">
+      <p>Behind these doors lies a sanctuary for those who appreciate the finer things. Membership is by invitation only, reserved for those with a taste for the exceptional.</p>
+      <button class="mystery-button" aria-label="Reveal a riddle about tea">Reveal Tea Riddle</button>
+      <p class="riddle" style="display:none; margin-top:10px; font-style: italic; color:#ba9bff;">
+        I guard a space both rare and true,<br>
+        For special few, not just for you.<br>
+        What am I?
+      </p>
+    </div>
+  </section>
+
+  <section class="room" id="room-5" tabindex="0" aria-label="Guides">
+    <h2>Guides</h2>
+    <div class="light-toggle" role="switch" aria-checked="true" tabindex="0">Lights On</div>
+    <img src="faux.html" alt="Bookshelves filled with leather-bound guides and maps of Paris" />
+    <div class="bio scroll-container">
+      <p>Knowledge is power, and in this room, you'll find guides to the hidden Paris—the secret passages, the forgotten histories, and the true essence of this magical city.</p>
+      <button class="mystery-button" aria-label="Reveal a riddle about tea">Reveal Tea Riddle</button>
+      <p class="riddle" style="display:none; margin-top:10px; font-style: italic; color:#ba9bff;">
+        I show the way but do not lead,<br>
+        For those with curiosity and need.<br>
+        What am I?
+      </p>
+    </div>
+  </section>
+
+  <section class="room" id="room-6" tabindex="0" aria-label="Quests">
+    <h2>Quests</h2>
+    <div class="light-toggle" role="switch" aria-checked="true" tabindex="0">Lights On</div>
+    <img src="faux.html" alt="Mysterious scrolls and treasure maps spread across an ancient table" />
+    <div class="bio scroll-container">
+      <p>Adventure calls to those brave enough to answer. These quests will take you through hidden Paris, testing your wit, courage, and devotion to discovery.</p>
+      <button class="mystery-button" aria-label="Reveal a riddle about tea">Reveal Tea Riddle</button>
+      <p class="riddle" style="display:none; margin-top:10px; font-style: italic; color:#ba9bff;">
+        I promise journeys, tests, and gold,<br>
+        For stories waiting to be told.<br>
+        What am I?
+      </p>
+    </div>
+  </section>
+
+  <section class="room" id="room-7" tabindex="0" aria-label="Color Chamber">
+    <h2>Color Chamber</h2>
+    <div class="light-toggle" role="switch" aria-checked="true" tabindex="0">Lights On</div>
+    <img src="faux.html" alt="Rainbow of colored lights and prisms creating patterns on the walls" />
+    <div class="bio scroll-container">
+      <p>A symphony of hues and shades, this chamber explores the emotional resonance of color. Each tint tells a different story, each shade holds a different secret.</p>
+      <button class="mystery-button" aria-label="Reveal a riddle about tea">Reveal Tea Riddle</button>
+      <p class="riddle" style="display:none; margin-top:10px; font-style: italic; color:#ba9bff;">
+        I span the spectrum, light's own art,<br>
+        I paint the world and touch the heart.<br>
+        What am I?
+      </p>
+    </div>
+  </section>
+
+  <section class="room" id="room-8" tabindex="0" aria-label="Meet Xen">
+    <h2>Meet Xen</h2>
+    <div class="light-toggle" role="switch" aria-checked="true" tabindex="0">Lights On</div>
+    <img src="faux.html" alt="Mysterious figure in shadow with only a hint of a smile visible" />
+    <div class="bio scroll-container">
+      <p>Xen is the enigmatic curator of this establishment, a being of mystery and wisdom who appears only to those truly ready to understand the deeper mysteries of Paris.</p>
+      <button class="mystery-button" aria-label="Reveal a riddle about tea">Reveal Tea Riddle</button>
+      <p class="riddle" style="display:none; margin-top:10px; font-style: italic; color:#ba9bff;">
+        I know the secrets, old and new,<br>
+        And share them only with the few.<br>
+        Who am I?
+      </p>
+    </div>
+  </section>
+</main>
+
+<div id="bot-guide">
+  <img src="https://3society.neocities.org/X_EN.TEA.2026/steampunk.stellar.frontview.jpeg" alt="Parisian guide with elegant hat and mysterious smile" />
+  <p>Bonjour, je suis votre guide parisienne. Explorez chaque pièce pour découvrir les secrets qui se cachent dans l'ombre.</p>
+</div>
+
+<script>
+  // DOM Elements
+  const rooms = document.querySelectorAll('.room');
+  const navButtons = document.querySelectorAll('nav button');
+  const elevatorButtons = document.querySelectorAll('#elevator button');
+  const lightToggles = document.querySelectorAll('.light-toggle');
+  const mailbox = document.getElementById('mailbox');
+  const letterPopup = document.getElementById('letter-popup');
+  const closeLetterBtn = document.querySelector('.close-letter');
+  const mysteryButtons = document.querySelectorAll('.mystery-button');
+  const communityLinks = document.querySelectorAll('.community-links a');
+  
+  // Current room tracking
+  let currentRoom = 0;
+  
+  // Initialize the page
+  function initPage() {
+    // Set first room as active
+    showRoom(0);
+    
+    // Add intersection observer for bio reveal on scroll
+    const bioObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.5 });
+    
+    // Observe all bio sections
+    document.querySelectorAll('.bio').forEach(bio => {
+      bioObserver.observe(bio);
+    });
+  }
+  
+  // Show specific room
+  function showRoom(index) {
+    // Hide all rooms
+    rooms.forEach(room => {
+      room.classList.remove('active');
+    });
+    
+    // Show selected room
+    rooms[index].classList.add('active');
+    currentRoom = index;
+    
+    // Update elevator button styles
+    elevatorButtons.forEach(btn => {
+      btn.classList.remove('current-level');
+    });
+    if (elevatorButtons[index]) {
+      elevatorButtons[index].classList.add('current-level');
+    }
+    
+    // Scroll to room
+    rooms[index].scrollIntoView({ behavior: 'smooth' });
+  }
+  
+  // Toggle lights in a room
+  function toggleLights(button) {
+    const room = button.closest('.room');
+    const isLightsOn = button.getAttribute('aria-checked') === 'true';
+    
+    if (isLightsOn) {
+      button.setAttribute('aria-checked', 'false');
+      button.textContent = 'Lights Off';
+      button.classList.add('lights-off');
+      room.style.backgroundColor = 'rgba(20, 15, 35, 0.8)';
+    } else {
+      button.setAttribute('aria-checked', 'true');
+      button.textContent = 'Lights On';
+      button.classList.remove('lights-off');
+      room.style.backgroundColor = 'rgba(50, 40, 70, 0.6)';
+    }
+  }
+  
+  // Toggle letter popup
+  function toggleLetter() {
+    if (letterPopup.style.display === 'block') {
+      letterPopup.style.display = 'none';
+    } else {
+      letterPopup.style.display = 'block';
+    }
+  }
+  
+  // Show tea riddle
+  function showRiddle(button) {
+    const riddle = button.nextElementSibling;
+    if (riddle.style.display === 'block') {
+      riddle.style.display = 'none';
+      button.textContent = 'Reveal Tea Riddle';
+    } else {
+      riddle.style.display = 'block';
+      button.textContent = 'Hide Riddle';
+    }
+  }
+  
+  // Event Listeners
+  navButtons.forEach((button, index) => {
+    button.addEventListener('click', () => showRoom(index));
+  });
+  
+  elevatorButtons.forEach((button, index) => {
+    button.addEventListener('click', () => showRoom(index));
+  });
+  
+  lightToggles.forEach(button => {
+    button.addEventListener('click', () => toggleLights(button));
+  });
+  
+  mailbox.addEventListener('click', toggleLetter);
+  closeLetterBtn.addEventListener('click', toggleLetter);
+  
+  mysteryButtons.forEach(button => {
+    button.addEventListener('click', () => showRiddle(button));
+  });
+  
+  // Make community links actually work
+  communityLinks.forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      alert(`This would navigate to: ${link.textContent} page`);
+    });
+  });
+  
+  // Close letter popup if clicked outside
+  document.addEventListener('click', (e) => {
+    if (letterPopup.style.display === 'block' && 
+        !letterPopup.contains(e.target) && 
+        e.target !== mailbox) {
+      letterPopup.style.display = 'none';
+    }
+  });
+  
+  // Initialize the page when loaded
+  document.addEventListener('DOMContentLoaded', initPage);
+</script>
+</body>
+</html>
