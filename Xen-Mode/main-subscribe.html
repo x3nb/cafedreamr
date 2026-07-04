@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="/.nekoweb-api/static/site.js" defer></script>
+<meta charset="UTF-8">
+<title>Xen Mode Portal</title>
+<link rel="manifest" href="manifest.json">
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Spectral:wght@400;700&family=Roboto:wght@300;500&display=swap');
+
+body {
+  margin:0;
+  font-family:'Roboto',sans-serif;
+  background: radial-gradient(circle at top,#1a0b2c,#0c0714 70%);
+  color:#e6e6ff;
+}
+
+/* Fade Layer */
+#fadeLayer {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at center, #0c0714, #000);
+  opacity: 1;
+  pointer-events: none;
+  transition: opacity 1.2s ease;
+  z-index: 999;
+}
+
+.container {
+  max-width:900px;
+  margin:100px auto;
+  padding:40px;
+  text-align:center;
+}
+
+.header {
+  font-family:'Spectral',serif;
+  font-size:3rem;
+}
+
+.header-sub {
+  color:#a0a0ff;
+}
+
+#returnMessage {
+  opacity:0;
+  transition:0.8s;
+  font-style:italic;
+  color:#cfcfff;
+}
+
+/* Subscribe */
+.subscribe-card {
+  margin-top:40px;
+  padding:30px;
+  background: linear-gradient(135deg,#2a1f4a,#3b2ec0);
+  border-radius:16px;
+}
+
+#emailError {
+  color:#ffb3c6;
+  opacity:0;
+  transition:0.4s;
+  margin-top:10px;
+  font-style:italic;
+}
+
+/* Grid */
+.grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:30px;
+}
+
+.module {
+  background: rgba(255,255,255,0.06);
+  border:1px solid rgba(255,255,255,0.15);
+  border-radius:16px;
+  padding:20px;
+  transition:0.3s;
+}
+
+.module.featured { grid-column: span 2; }
+
+.module:hover {
+  box-shadow:0 0 25px rgba(154,108,255,0.5),
+             0 0 40px rgba(100,149,237,0.3);
+  background:rgba(100,149,237,0.05);
+}
+
+/* Leave link */
+.leave-link {
+  margin-top:50px;
+  opacity:0.5;
+  font-size:0.85rem;
+  cursor:pointer;
+}
+.leave-link:hover { opacity:0.9; }
+
+/* Overlay */
+#overlay {
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.85);
+  z-index:1000;
+}
+
+#overlayContent {
+  position: relative;
+  margin:100px auto;
+  max-width:600px;
+  background:#111;
+  padding:30px;
+  border-radius:16px;
+}
+
+/* Close button */
+#closeOverlayBtn {
+  position:absolute;
+  top:10px;
+  right:15px;
+  font-size:1.5rem;
+  cursor:pointer;
+  opacity:0.6;
+  transition:0.3s;
+}
+#closeOverlayBtn:hover {
+  opacity:1;
+  text-shadow:0 0 10px rgba(100,149,237,0.6);
+}
+</style>
+</head>
+
+<body>
+
+<div id="fadeLayer"></div>
+
+<div class="container">
+
+  <div class="header">Xen Mode</div>
+  <div class="header-sub">Enter the Quiet Guild & Café</div>
+  <p id="returnMessage"></p>
+
+  <!-- Subscribe -->
+  <div class="subscribe-card" id="subscribeCard">
+    <form id="subscribeForm">
+      <input type="email" id="emailInput" placeholder="Enter your email" required>
+      <button>Subscribe</button>
+    </form>
+    <p id="emailError"></p>
+  </div>
+
+  <!-- Café -->
+  <div id="cafeGrid" style="opacity:0; margin-top:60px;">
+    <div class="grid">
+
+      <div class="module featured" onclick="openOverlay('latest')">
+        <h2 id="latestTitle">Xen Dispatches</h2>
+        <p id="latestDate"></p>
+        <p id="latestDesc">Loading latest dispatch…</p>
+      </div>
+
+      <div class="module">The Café</div>
+      <div class="module">The Academy</div>
+
+      <div class="module" onclick="openOverlay('archive')">
+        Archive
+      </div>
+
+    </div>
+
+    <div class="leave-link" onclick="leaveCafe()">
+      Step away from the Café
+    </div>
+  </div>
+
+</div>
+
+<!-- Overlay -->
+<div id="overlay">
+  <div id="overlayContent">
+    <div id="closeOverlayBtn" onclick="closeOverlay()">×</div>
+    <div id="overlayInner"></div>
+  </div>
+</div>
+
+<script>
+// Fade in
+window.addEventListener('load',()=>{
+  const fade = document.getElementById('fadeLayer');
+  setTimeout(()=> fade.style.opacity = 0, 200);
+
+  window.scrollTo(0,0);
+
+  const msg = document.getElementById('returnMessage');
+
+  if(localStorage.getItem('subscribed')==='true'){
+    document.getElementById('subscribeCard').style.display='none';
+    document.getElementById('cafeGrid').style.opacity=1;
+
+    msg.innerText = "Welcome back. The Café is as you left it.";
+    msg.style.opacity = 1;
+  } else {
+    msg.innerText = "Take your time. The door is open.";
+    msg.style.opacity = 0.7;
+  }
+});
+
+// Email validation
+document.getElementById('subscribeForm').addEventListener('submit', function(e){
+  const email = document.getElementById('emailInput');
+  const error = document.getElementById('emailError');
+
+  if(!email.checkValidity()){
+    e.preventDefault();
+    error.innerText = "Hmm… that doesn’t look like a valid address. Try once more.";
+    error.style.opacity = 1;
+    return;
+  }
+
+  error.style.opacity = 0;
+  e.preventDefault();
+
+  localStorage.setItem('subscribed','true');
+  playSubscribeAnimation();
+});
+
+// Subscribe flow
+function playSubscribeAnimation(){
+  document.getElementById('subscribeCard').style.display='none';
+  const grid = document.getElementById('cafeGrid');
+  grid.style.opacity=1;
+  grid.scrollIntoView({behavior:'smooth'});
+}
+
+// Leave café (fade out)
+function leaveCafe(){
+  const fade = document.getElementById('fadeLayer');
+  fade.style.opacity = 1;
+
+  const msg = document.createElement('div');
+  msg.innerText = "Until next time.";
+  msg.style.position = "fixed";
+  msg.style.top = "50%";
+  msg.style.left = "50%";
+  msg.style.transform = "translate(-50%, -50%)";
+  msg.style.color = "#cfcfff";
+  msg.style.opacity = "0";
+  msg.style.transition = "opacity 1s ease";
+  msg.style.fontStyle = "italic";
+
+  document.body.appendChild(msg);
+  setTimeout(()=> msg.style.opacity = 1, 200);
+
+  setTimeout(()=>{
+    localStorage.removeItem('subscribed');
+    window.scrollTo(0,0);
+    location.reload();
+  },1400);
+}
+
+// Overlay open
+function openOverlay(type){
+  const overlay = document.getElementById('overlay');
+  const content = document.getElementById('overlayInner');
+
+  if(type==='latest'){
+    content.innerHTML = `
+      <h2>Latest Dispatch</h2>
+      <a href="${window.latestLink}" target="_blank">Read the full dispatch</a>
+    `;
+  } else {
+    content.innerHTML = `
+      <h2>Archive</h2>
+      <a href="https://buttondown.com/Xen/archive/" target="_blank">Enter archive</a>
+    `;
+  }
+
+  overlay.style.display='block';
+}
+
+// Overlay close
+function closeOverlay(){
+  document.getElementById('overlay').style.display='none';
+}
+
+// Load latest dispatch
+async function loadLatestDispatch(){
+  try{
+    const res = await fetch("https://api.rss2json.com/v1/api.json?rss_url=https://buttondown.com/Xen/rss");
+    const data = await res.json();
+    const item = data.items[0];
+
+    document.getElementById("latestTitle").innerText = item.title;
+    document.getElementById("latestDate").innerText = new Date(item.pubDate).toLocaleDateString();
+    document.getElementById("latestDesc").innerText =
+      item.description.replace(/<[^>]*>/g,"").slice(0,120)+"...";
+
+    window.latestLink = item.link;
+
+  } catch {
+    document.getElementById("latestDesc").innerText =
+      "Unable to load dispatch right now.";
+  }
+}
+loadLatestDispatch();
+
+</script>
+
+</body>
+</html>
