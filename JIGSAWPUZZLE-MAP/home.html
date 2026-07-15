@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="/.nekoweb-api/static/site.js" defer></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cryptic Map Puzzle</title>
+    <style>
+        /* Base Styling & Theme */
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            background: linear-gradient(135deg, #1b0a2a 0%, #111116 100%); /* Deep Purple to Dark Grey Ombre */
+            font-family: 'Courier New', Courier, monospace; /* Cryptic/Runes aesthetic */
+            color: #d1f0ff;
+            display: flex;
+            user-select: none;
+        }
+
+        /* Ambient Map Grid lines */
+        .map-grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle, rgba(100, 149, 237, 0.08) 1px, transparent 1px),
+                linear-gradient(to right, rgba(100, 149, 237, 0.03) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(100, 149, 237, 0.03) 1px, transparent 1px);
+            background-size: 100px 100px;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Left Side: The Interactive Puzzle Map Canvas */
+        #canvas-area {
+            flex: 1;
+            position: relative;
+            height: 100%;
+            z-index: 2;
+        }
+
+        /* Right Side: The Cryptic Codex (Content Panel) */
+        #codex-panel {
+            width: 350px;
+            height: 100%;
+            background: rgba(15, 10, 25, 0.85);
+            border-left: 2px solid rgba(100, 149, 237, 0.3);
+            box-shadow: -10px 0 30px rgba(0, 0, 0, 0.7);
+            z-index: 3;
+            padding: 30px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            transition: all 0.5s ease;
+            backdrop-filter: blur(8px);
+        }
+
+        #codex-title {
+            font-size: 24px;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            color: #6495ED; /* Cornflower Blue */
+            text-shadow: 0 0 10px rgba(100, 149, 237, 0.6);
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(100, 149, 237, 0.3);
+            padding-bottom: 10px;
+        }
+
+        #codex-content {
+            font-size: 14px;
+            line-height: 1.6;
+            color: #a5c3e8;
+            white-space: pre-line;
+        }
+
+        /* Draggable Organic Puzzle Pieces */
+        .puzzle-piece {
+            position: absolute;
+            width: 130px;
+            height: 130px;
+            cursor: grab;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            transition: transform 0.1s ease, filter 0.3s ease;
+        }
+
+        .puzzle-piece:active {
+            cursor: grabbing;
+            z-index: 100;
+        }
+
+        /* SVG styling inside puzzle pieces for Organic Shapes */
+        .puzzle-piece svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0px 8px 12px rgba(0,0,0,0.5));
+            transition: filter 0.3s;
+        }
+
+        /* Hover & Glow states using Cornflower to Cerulean Blue */
+        .puzzle-piece:hover svg {
+            filter: drop-shadow(0px 0px 15px rgba(0, 123, 255, 0.8));
+        }
+
+        .puzzle-piece.selected svg {
+            filter: drop-shadow(0px 0px 20px rgba(100, 149, 237, 1));
+        }
+
+        /* Text inside puzzle pieces */
+        .piece-label {
+            position: absolute;
+            font-size: 11px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            color: #ffffff;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+            pointer-events: none;
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="map-grid"></div>
+
+    <div id="canvas-area"></div>
+
+    <div id="codex-panel">
+        <h2 id="codex-title">Cartographer's Log</h2>
+        <p id="codex-content">Select a shard of the map to align your coordinates and unlock its data matrix...</p>
+    </div>
+
+    <script>
+        // Data for each menu item (Puzzle Shard)
+        const menuData = {
+            art: {
+                title: "[ ART ]",
+                content: "A visual archive of lost sectors. The canvas reflects swirling nebulae of cerulean dust trapped in glass bottles. Use these coordinates to render raw dreams into reality."
+            },
+            community: {
+                title: "[ COMMUNITY ]",
+                content: "Signals from adjacent travelers. There are currently 1,042 beacons firing in this quadrant. You are not wandering alone, even if the silence suggests otherwise."
+            },
+            chat: {
+                title: "[ CHAT ]",
+                content: "Decrypted comms channel:\n\n'Did you find the third monolith?'\n'No, the tides shifted.'\n'Look closer at the Milo shard...'"
+            },
+            star: {
+                title: "[ STAR ]",
+                content: "Astral coordinates set to Polaris-9. A glowing celestial marker guiding ships through the deep violet void. Click to trace its alignment curve."
+            },
+            hans: {
+                title: "[ HANS ]",
+                content: "Profile Node: HANS.\nRole: Chrono-Engineer.\nStatus: Missing since cycle 402. Last seen heading toward the outer rim with a pocketful of gears."
+            },
+            milo: {
+                title: "[ MILO ]",
+                content: "Profile Node: MILO.\nRole: Cartographer's Familiar.\nStatus: Active. A digital entity shaped like a shadow-fox. Guides players through difficult terrain."
+            },
+            char: {
+                title: "[ CHAR ]",
+                content: "Profile Node: CHAR.\nRole: Archivist.\nStatus: Hibernating. Spends centuries index-matching forgotten dialects into the collective mindscape."
+            },
+            secret: {
+                title: "[ SECRET MESSAGE ]",
+                content: "S0S... THE MAP IS ALIVE.\n\nAligning all ten shards to their exact coordinates is said to cause a doorway to unfold in the center of the dark-grey ocean."
+            },
+            gifts: {
+                title: "[ GIFTS ]",
+                content: "Inventory items unlocked:\n- 1x Prismatic Compass\n- 3x Dust of Cerulean\n- 1x Forgotten keycard\n\nThese will aid your puzzle assembly."
+            },
+            mission: {
+                title: "[ MISSION ]",
+                content: "CURRENT DIRECTIVE:\nRebuild the fractured landscape. Drag the organic shards together. Piece by piece, the full map pattern will illuminate."
+            }
+        };
+
+        // Organic SVG shapes acting as puzzle contours
+        const organicShapes = [
+            `d="M20,50 C30,20 70,10 90,30 C110,50 120,90 90,110 C70,120 30,110 10,90 C-10,70 10,80 20,50 Z"`,
+            `d="M10,40 C30,10 80,20 100,50 C120,80 110,110 80,120 C50,130 20,100 10,80 C0,60 0,50 10,40 Z"`,
+            `d="M30,30 C60,10 90,30 110,60 C120,90 90,120 60,110 C30,100 10,80 10,50 C10,30 10,40 30,30 Z"`,
+            `d="M40,20 C70,-5 100,20 110,50 C120,80 90,110 70,115 C40,120 15,90 20,60 C25,40 20,30 40,20 Z"`
+        ];
+
+        // Synthesize a subtle magical chime sound using Web Audio API
+        function playChime() {
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            if (!AudioContext) return;
+            const ctx = new AudioContext();
+            
+            const now = ctx.currentTime;
+            
+            // First High Tone
+            const osc1 = ctx.createOscillator();
+            const gain1 = ctx.createGain();
+            osc1.type = 'sine';
+            osc1.frequency.setValueAtTime(880, now); // A5
+            osc1.frequency.exponentialRampToValueAtTime(1320, now + 0.15); // E6
+            
+            gain1.gain.setValueAtTime(0.08, now);
+            gain1.gain.exponentialRampToValueAtTime(0.001, now + 0.8);
+            
+            osc1.connect(gain1);
+            gain1.connect(ctx.destination);
+            
+            // Second Harmonizing Tone
+            const osc2 = ctx.createOscillator();
+            const gain2 = ctx.createGain();
+            osc2.type = 'triangle';
+            osc2.frequency.setValueAtTime(1100, now + 0.05); // C#6
+            
+            gain2.gain.setValueAtTime(0.04, now + 0.05);
+            gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.6);
+            
+            osc2.connect(gain2);
+            gain2.connect(ctx.destination);
+            
+            osc1.start(now);
+            osc1.stop(now + 0.8);
+            osc2.start(now + 0.05);
+            osc2.stop(now + 0.65);
+        }
+
+        const canvas = document.getElementById('canvas-area');
+        const codexTitle = document.getElementById('codex-title');
+        const codexContent = document.getElementById('codex-content');
+
+        // Render the puzzle pieces randomly on the map
+        Object.keys(menuData).forEach((key, index) => {
+            const data = menuData[key];
+            const piece = document.createElement('div');
+            piece.classList.add('puzzle-piece');
+            
+            // Pick a random organic shape contour
+            const path = organicShapes[index % organicShapes.length];
+            
+            // Cornflower blue (#6495ED) to Cerulean Blue (#007ba7) Gradient for each piece
+            piece.innerHTML = `
+                <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="grad-${key}" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#6495ED;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#007ba7;stop-opacity:1" />
+                        </linearGradient>
+                    </defs>
+                    <path ${path} fill="url(#grad-${key})" opacity="0.85"/>
+                </svg>
+                <div class="piece-label">${key}</div>
+            `;
+
+            // Random positions simulating scattered puzzle fragments
+            const posX = 50 + Math.random() * (window.innerWidth - 550);
+            const posY = 50 + Math.random() * (window.innerHeight - 200);
+            piece.style.left = `${posX}px`;
+            piece.style.top = `${posY}px`;
+
+            canvas.appendChild(piece);
+
+            // Drag-and-drop system
+            let isDragging = false;
+            let startX, startY;
+            let initialX, initialY;
+
+            piece.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                
+                // Select piece visually
+                document.querySelectorAll('.puzzle-piece').forEach(p => p.classList.remove('selected'));
+                piece.classList.add('selected');
+                
+                // Trigger sound and update content
+                playChime();
+                codexTitle.textContent = data.title;
+                codexContent.textContent = data.content;
+
+                // Grab mouse offsets
+                startX = e.clientX;
+                startY = e.clientY;
+                initialX = piece.offsetLeft;
+                initialY = piece.offsetTop;
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+                const dx = e.clientX - startX;
+                const dy = e.clientY - startY;
+                
+                piece.style.left = `${initialX + dx}px`;
+                piece.style.top = `${initialY + dy}px`;
+            });
+
+            document.addEventListener('mouseup', () => {
+                isDragging = false;
+            });
+        });
+    </script>
+</body>
+</html>
