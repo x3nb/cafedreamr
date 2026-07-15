@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Cryptic Map Puzzle</title>
+    <style>
+        /* Base Styling & Theme */
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            background: linear-gradient(135deg, #1b0a2a 0%, #111116 100%); /* Deep Purple to Dark Grey Ombre */
+            font-family: 'Courier New', Courier, monospace; /* Cryptic/Runes aesthetic */
+            color: #d1f0ff;
+            display: flex;
+            user-select: none;
+            touch-action: none; /* Prevents default mobile gestures like zooming/scrolling while dragging */
+        }
+
+        /* Ambient Map Grid lines */
+        .map-grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle, rgba(100, 149, 237, 0.08) 1px, transparent 1px),
+                linear-gradient(to right, rgba(100, 149, 237, 0.03) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(100, 149, 237, 0.03) 1px, transparent 1px);
+            background-size: 100px 100px;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Main Workspace Container */
+        #workspace {
+            display: flex;
+            flex: 1;
+            width: 100%;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Left Side: The Interactive Puzzle Map Canvas */
+        #canvas-area {
+            flex: 1;
+            position: relative;
+            height: 100%;
+            z-index: 2;
+            overflow: hidden;
+        }
+
+        /* Right Side/Bottom Side: The Cryptic Codex (Content Panel) */
+        #codex-panel {
+            width: 350px;
+            height: 100%;
+            background: rgba(15, 10, 25, 0.9);
+            border-left: 2px solid rgba(100, 149, 237, 0.3);
+            box-shadow: -10px 0 30px rgba(0, 0, 0, 0.7);
+            z-index: 3;
+            padding: 30px 25px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Centers the video and title */
+            justify-content: flex-start;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(8px);
+        }
+
+        /* Organic Morphing Video Container - Holding the Iframe now */
+        .video-container {
+            width: 160px;
+            height: 110px;
+            overflow: hidden;
+            position: relative;
+            border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+            animation: morphBlob 8s ease-in-out infinite;
+            border: 3px solid #6495ED; /* Cornflower Blue */
+            box-shadow: 0 0 20px rgba(0, 123, 255, 0.4);
+            background: #000;
+            margin-bottom: 20px;
+            flex-shrink: 0;
+            mask-image: radial-gradient(white, black);
+            -webkit-mask-image: -webkit-radial-gradient(white, black);
+        }
+
+        .video-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            object-fit: cover;
+        }
+
+        /* Slow organic shape shifting animation */
+        @keyframes morphBlob {
+            0% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+            50% { border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%; }
+            100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+        }
+
+        #codex-title {
+            width: 100%;
+            font-size: 20px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: #6495ED; /* Cornflower Blue */
+            text-shadow: 0 0 10px rgba(100, 149, 237, 0.6);
+            margin-bottom: 15px;
+            border-bottom: 1px solid rgba(100, 149, 237, 0.3);
+            padding-bottom: 10px;
+            text-align: center;
+        }
+
+        #codex-content {
+            width: 100%;
+            font-size: 13px;
+            line-height: 1.5;
+            color: #a5c3e8;
+            white-space: pre-line;
+            overflow-y: auto;
+        }
+
+        /* Glowing links container & style */
+        .codex-links {
+            margin-top: 20px;
+            border-top: 1px dashed rgba(100, 149, 237, 0.3);
+            padding-top: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        /* Interactive Action Buttons Styled like mysterious terminals */
+        .codex-link-item, .video-trigger-btn {
+            color: #6495ED;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 11px;
+            letter-spacing: 2px;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            background: none;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+            font-family: inherit;
+            text-align: left;
+        }
+
+        .codex-link-item::before, .video-trigger-btn::before {
+            content: "➔ ";
+            margin-right: 5px;
+        }
+
+        .codex-link-item:hover, .video-trigger-btn:hover {
+            color: #00ffff;
+            text-shadow: 0 0 8px rgba(0, 255, 255, 0.6);
+            transform: translateX(5px);
+        }
+
+        /* Special highlight color specifically for the Game Lore button */
+        .lore-btn {
+            color: #bd93f9 !important; /* Soft Purple */
+        }
+        .lore-btn:hover {
+            color: #ff79c6 !important; /* Bright Pink */
+            text-shadow: 0 0 8px rgba(255, 121, 198, 0.6) !important;
+        }
+
+        /* Draggable Organic Puzzle Pieces */
+        .puzzle-piece {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            cursor: grab;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            touch-action: none;
+        }
+
+        .puzzle-piece:active {
+            cursor: grabbing;
+            z-index: 100;
+        }
+
+        /* SVG styling inside puzzle pieces for Organic Shapes */
+        .puzzle-piece svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0px 6px 10px rgba(0,0,0,0.5));
+            transition: filter 0.3s;
+        }
+
+        /* Hover & Glow states (Standard pieces glow blue) */
+        .puzzle-piece:hover svg, .puzzle-piece.selected svg {
+            filter: drop-shadow(0px 0px 15px rgba(100, 149, 237, 1));
+        }
+
+        /* SPECIAL: Secret/Anomaly piece styling (Glows vibrant pink/neon magenta) */
+        .puzzle-piece.anomaly-piece svg {
+            animation: glitchPulse 2s infinite alternate;
+        }
+        
+        .puzzle-piece.anomaly-piece:hover svg, .puzzle-piece.anomaly-piece.selected svg {
+            filter: drop-shadow(0px 0px 18px rgba(255, 0, 128, 1));
+        }
+
+        @keyframes glitchPulse {
+            0% { opacity: 0.85; filter: drop-shadow(0px 6px 10px rgba(255, 0, 128, 0.4)); }
+            100% { opacity: 1; filter: drop-shadow(0px 6px 12px rgba(255, 0, 128, 0.8)); }
+        }
+
+        /* Text inside puzzle pieces */
+        .piece-label {
+            position: absolute;
+            font-size: 10px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            color: #ffffff;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+            pointer-events: none;
+            text-transform: uppercase;
+        }
+
+        /* --- RESPONSIVE MOBILE ADJUSTMENTS --- */
+        @media (max-width: 768px) {
+            #workspace {
+                flex-direction: column;
+            }
+
+            #canvas-area {
+                height: 55%; /* Map occupies the top portion */
+                width: 100%;
+            }
+
+            #codex-panel {
+                width: 100%;
+                height: 45%; /* Panel shifts to the bottom */
+                border-left: none;
+                border-top: 2px solid rgba(100, 149, 237, 0.3);
+                box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.7);
+                padding: 15px 20px;
+                flex-direction: row; /* Side-by-side layout on mobile */
+                align-items: center;
+                gap: 15px;
+            }
+
+            .video-container {
+                margin-bottom: 0;
+                width: 120px;
+                height: 85px;
+            }
+
+            #codex-panel-right {
+                display: flex;
+                flex-direction: column;
+                flex: 1;
+                height: 100%;
+                overflow-y: auto;
+            }
+
+            #codex-title {
+                text-align: left;
+                font-size: 16px;
+                margin-bottom: 5px;
+                padding-bottom: 5px;
+            }
+
+            .puzzle-piece {
+                width: 85px;
+                height: 85px;
+            }
+
+            .piece-label {
+                font-size: 9px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="map-grid"></div>
+
+    <div id="workspace">
+        <div id="canvas-area"></div>
+
+        <div id="codex-panel">
+            <div class="video-container">
+                <iframe id="codex-iframe" 
+                        src="https://www.youtube.com/embed/378X8ZAnXAw?autoplay=1&mute=1&loop=1&playlist=378X8ZAnXAw&controls=0&modestbranding=1" 
+                        allow="autoplay; encrypted-media">
+                </iframe>
+            </div>
+            
+            <div id="codex-panel-right" style="width: 100%;">
+                <h2 id="codex-title">Cartographer's Log</h2>
+                <div id="codex-content">Select a shard of the map to align your coordinates and unlock its data matrix...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const menuData = {
+            art: { 
+                title: "[ ART ]", 
+                content: `A visual archive of lost sectors. The canvas reflects swirling nebulae of cerulean dust trapped in glass bottles. Use these coordinates to render raw dreams into reality.
+                
+                <div class="codex-links">
+                    <a href="https://cafedreamr.art" target="_blank" class="codex-link-item">VISIT CAFEDREAMR.ART</a>
+                    <button onclick="playTargetVideo('dQw4w9WgXcQ', true)" class="video-trigger-btn lore-btn">PLAY GAME LORE</button>
+                </div>` 
+            },
+            community: { 
+                title: "[ COMMUNITY ]", 
+                content: `Signals from adjacent travelers. There are currently 1,042 beacons firing in this quadrant. You are not wandering alone, even if the silence suggests otherwise.
+                
+                <div class="codex-links">
+                    <a href="https://cafedreamr.art" target="_blank" class="codex-link-item">COMMUNITY PLATFORM</a>
+                    <button onclick="playTargetVideo('dQw4w9WgXcQ', true)" class="video-trigger-btn lore-btn">PLAY GAME LORE</button>
+                </div>` 
+            },
+            chat: { 
+                title: "[ CHAT ]", 
+                content: `Decrypted comms channel:
+                
+                'Did you find the third monolith?'
+                'No, the tides shifted.'
+                'Look closer at the Milo shard...'
+                
+                <div class="codex-links">
+                    <button onclick="playTargetVideo('dQw4w9WgXcQ', true)" class="video-trigger-btn lore-btn">PLAY GAME LORE</button>
+                </div>`
+            },
+            star: { 
+                title: "[ STAR ]", 
+                content: `Astral coordinates set to Polaris-9. A glowing celestial marker guiding ships through the deep violet void. Click to trace its alignment curve.`,
+                video: "ydXhzXWq-Fc", // Unique Star Map system loop
+                contentSuffix: `
+                <div class="codex-links">
+                    <button onclick="playTargetVideo('ydXhzXWq-Fc', true)" class="video-trigger-btn">PLAY STAR FEED WITH AUDIO</button>
+                    <a href="https://cafedreamr.art" target="_blank" class="codex-link-item">STAR MAP SYSTEM</a>
+                    <button onclick="playTargetVideo('ydXhzXWq-Fc', true)" class="video-trigger-btn lore-btn">PLAY GAME LORE</button>
+                </div>`
+            },
+            hans: {                    
+                title: "[ HANS ]", 
+                content: `Profile Node: HANS.
+                Role: Chrono-Engineer.
+                Status: Missing since cycle 402. Last seen heading toward the outer rim with a pocketful of gears.`,
+                video: "XX-Dl_5rubw", // Replace with real Hans character introduction video ID
+                contentSuffix: `
+                <div class="codex-links">
+                    <button onclick="playTargetVideo('XX-Dl_5rubw', true)" class="video-trigger-btn">PLAY HANS FEED WITH AUDIO</button>
+                    <button onclick="playTargetVideo('XX-Dl_5rubw', true)" class="video-trigger-btn lore-btn">PLAY GAME LORE</button>
+                </div>`
+            },
+            milo: { 
+                title: "[ MILO ]", 
+                content: `Profile Node: MILO.
+                Role: Cartographer's Familiar.
+                Status: Active. A digital entity shaped like a shadow-fox. Guides players through difficult terrain.
+                
+                <div class="codex-links">
+                    <a href="https://cafedreamr.art" target="_blank" class="codex-link-item">MILO'S CORNER</a>
+                    <button onclick="playTargetVideo('dQw4w9WgXcQ', true)" class="video-trigger-btn lore-btn">PLAY GAME LORE</button>
+                </div>` 
+            },
+            char: { 
+                title: "[ CHAR ]", 
+                content: `Profile Node: CHAR.
+                Role: Archivist.
+                Status: Hibernating. Spends centuries index-matching forgotten dialects into the collective mindscape.`,
+                video: "YOUTUBE_ID_FOR_CHAR", // Replace with real Char character introduction video ID
+                contentSuffix: `
+                <div class="codex-links">
+                    <button onclick="playTargetVideo('YOUTUBE_ID_FOR_CHAR', true)" class="video-trigger-btn">PLAY CHAR FEED WITH AUDIO</button>
+                    <a href="https://cafedreamr.art" target="_blank" class="codex-link-item">CHAR'S HISTORICAL RECORD</a>
+                    <button onclick="playTargetVideo('dQw4w9WgXcQ', true)" class="video-trigger-btn lore-btn">PLAY GAME LORE</button>
+                </div>`
+            },
+            secret: { 
+                title: "[ SECRET MESSAGE ]", 
+                content: `S0S... THE MAP IS ALIVE.
+                
+                Aligning all ten shards to their exact coordinates is said to cause a doorway to unfold in the center of the dark-grey ocean.
+                
+                <div class="codex-links">
+                    <button onclick="playTargetVideo('dQw4w9WgXcQ', true)" class="video-trigger-btn lore-btn">PLAY GAME LORE</button>
+                </div>` 
+            },
+            gifts: { 
+                title: "[ GIFTS ]", 
+                content: `Inventory items unlocked:
+                - 1x Prismatic Compass
+                - 3x Dust of Cerulean
+                - 1x Forgotten keycard
+                
+                These will aid your puzzle assembly.
+                
+                <div class="codex-links">
+                    <a href="https://cafedreamr.art" target="_blank" class="codex-link-item">CLAIM PHYSICAL GIFTS</a>
+                    <button onclick="playTargetVideo('dQw4w9WgXcQ', true)" class="video-trigger-btn lore-btn">PLAY GAME LORE</button>
+                </div>` 
+            },
+            mission: { 
+                title: "[ MISSION ]", 
+                content: `CURRENT DIRECTIVE:
+                Rebuild the fractured landscape. Drag the organic shards together. Piece by piece, the full map pattern will illuminate.
+                
+                <div class="codex-links">
+                    <button onclick="playTargetVideo('dQw4w9WgXcQ', true)" class="video-trigger-btn lore-btn">PLAY GAME LORE</button>
+                </div>` 
+            },
+            // EXCLUSIVE RICKROLL PIECE
+            anomaly: {
+                title: "⚠️ CRITICAL ANOMALY ⚠️",
+                content: `CRITICAL EXPLOIT DETECTED.
+                
+                A non-terrestrial frequency has breached the terminal system. Standard encryption layers are falling. Initiating forced audio/video fallback bypass...`,
+                video: "dQw4w9WgXcQ" // Rickroll YouTube ID
+            }
+        };
+
+        const organicShapes = [
+            `d="M20,50 C30,20 70,10 90,30 C110,50 120,90 90,110 C70,120 30,110 10,90 C-10,70 10,80 20,50 Z"`,
+            `d="M10,40 C30,10 80,20 100,50 C120,80 110,110 80,120 C50,130 20,100 10,80 C0,60 0,50 10,40 Z"`,
+            `d="M30,30 C60,10 90,30 110,60 C120,90 90,120 60,110 C30,100 10,80 10,50 C10,30 10,40 30,30 Z"`,
+            `d="M40,20 C70,-5 100,20 110,50 C120,80 90,110 70,115 C40,120 15,90 20,60 C25,40 20,30 40,20 Z"`
+        ];
+
+        // Web Audio API Synth Sound (Custom alert frequency for the Anomaly piece)
+        function playChime(isAnomaly = false) {
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            if (!AudioContext) return;
+            const ctx = new AudioContext();
+            const now = ctx.currentTime;
+            
+            const osc1 = ctx.createOscillator();
+            const gain1 = ctx.createGain();
+            
+            osc1.type = isAnomaly ? 'sawtooth' : 'sine';
+            osc1.frequency.setValueAtTime(isAnomaly ? 180 : 880, now);
+            osc1.frequency.exponentialRampToValueAtTime(isAnomaly ? 320 : 1320, now + 0.3);
+            
+            gain1.gain.setValueAtTime(isAnomaly ? 0.05 : 0.08, now);
+            gain1.gain.exponentialRampToValueAtTime(0.001, now + 1.0);
+            osc1.connect(gain1);
+            gain1.connect(ctx.destination);
+            
+            osc1.start(now);
+            osc1.stop(now + 1.0);
+        }
+
+        // Updates video source dynamically with or without audio mute
+        function playTargetVideo(videoId, playWithAudio = false) {
+            const iframe = document.getElementById('codex-iframe');
+            // Setting mute parameter based on user action to bypass browser blocks
+            const muteParam = playWithAudio ? "0" : "1";
+            iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=${muteParam}&controls=1&modestbranding=1`;
+        }
+
+        const canvas = document.getElementById('canvas-area');
+        const codexTitle = document.getElementById('codex-title');
+        const codexContent = document.getElementById('codex-content');
+
+        Object.keys(menuData).forEach((key, index) => {
+            const data = menuData[key];
+            const piece = document.createElement('div');
+            piece.classList.add('puzzle-piece');
+            
+            if (key === 'anomaly') {
+                piece.classList.add('anomaly-piece');
+            }
+            
+            const path = organicShapes[index % organicShapes.length];
+            
+            const gradientColors = key === 'anomaly' 
+                ? `<stop offset="0%" style="stop-color:#ff0080;stop-opacity:1" /><stop offset="100%" style="stop-color:#7a0099;stop-opacity:1" />`
+                : `<stop offset="0%" style="stop-color:#6495ED;stop-opacity:1" /><stop offset="100%" style="stop-color:#007ba7;stop-opacity:1" />`;
+
+            piece.innerHTML = `
+                <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="grad-${key}" x1="0%" y1="0%" x2="100%" y2="100%">
+                            ${gradientColors}
+                        </linearGradient>
+                    </defs>
+                    <path ${path} fill="url(#grad-${key})" opacity="0.85"/>
+                </svg>
+                <div class="piece-label">${key}</div>
+            `;
+
+            // Spawn layout boundaries
+            const maxW = window.innerWidth < 768 ? window.innerWidth - 100 : window.innerWidth - 450;
+            const maxH = window.innerHeight < 768 ? (window.innerHeight * 0.55) - 100 : window.innerHeight - 150;
+            
+            const posX = 20 + Math.random() * Math.max(10, maxW);
+            const posY = 20 + Math.random() * Math.max(10, maxH);
+            piece.style.left = `${posX}px`;
+            piece.style.top = `${posY}px`;
+
+            canvas.appendChild(piece);
+
+            let isDragging = false;
+            let startX, startY;
+            let initialX, initialY;
+
+            function startDrag(clientX, clientY) {
+                isDragging = true;
+                document.querySelectorAll('.puzzle-piece').forEach(p => p.classList.remove('selected'));
+                piece.classList.add('selected');
+                
+                if (key === 'anomaly') {
+                    playChime(true);
+                    playTargetVideo(data.video, true); // Exclusive auto-play Rickroll with audio
+                    codexContent.innerHTML = data.content;
+                } else {
+                    playChime(false);
+                    
+                    if (data.video) {
+                        // Load preview in a muted state to comply with browser autoplay requirements
+                        playTargetVideo(data.video, false); 
+                        codexContent.innerHTML = data.content + data.contentSuffix;
+                    } else {
+                        codexContent.innerHTML = data.content;
+                    }
+                }
+
+                codexTitle.textContent = data.title;
+
+                startX = clientX;
+                startY = clientY;
+                initialX = piece.offsetLeft;
+                initialY = piece.offsetTop;
+            }
+
+            function moveDrag(clientX, clientY) {
+                if (!isDragging) return;
+                const dx = clientX - startX;
+                const dy = clientY - startY;
+                piece.style.left = `${initialX + dx}px`;
+                piece.style.top = `${initialY + dy}px`;
+            }
+
+            function endDrag() {
+                isDragging = false;
+            }
+
+            piece.addEventListener('mousedown', (e) => startDrag(e.clientX, e.clientY));
+            document.addEventListener('mousemove', (e) => moveDrag(e.clientX, e.clientY));
+            document.addEventListener('mouseup', endDrag);
+
+            piece.addEventListener('touchstart', (e) => {
+                const touch = e.touches[0];
+                startDrag(touch.clientX, touch.clientY);
+            }, { passive: true });
+
+            document.addEventListener('touchmove', (e) => {
+                if (!isDragging) return;
+                const touch = e.touches[0];
+                moveDrag(touch.clientX, touch.clientY);
+            }, { passive: false });
+
+            document.addEventListener('touchend', endDrag);
+        });
+    </script>
+</body>
+</html>
