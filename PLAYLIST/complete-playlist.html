@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE AUTOMATIC INFUSION</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@700;900&family=Klee+One:wght@400;600&family=UnifrakturMaguntia&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-void: #000000;
+            --purple-deep: #160226; 
+            --lavender-ghost: #b57edc; 
+            --cornflower-glow: #9ec2ff;
+            --black: #000000;
+            
+            --bento-gap: 30px;
+            --poly-border: 4px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Klee One', cursive;
+            background: var(--bg-void);
+            color: var(--cornflower-glow);
+            overflow-x: hidden;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* BANNER BLOCK */
+        .title-container {
+            border: var(--poly-border) solid var(--lavender-ghost);
+            background: var(--purple-deep);
+            padding: 30px;
+            width: 100%;
+            max-width: 1200px;
+            margin-bottom: var(--bento-gap);
+            clip-path: polygon(0 12%, 100% 0, 100% 88%, 0% 100%);
+            box-shadow: 0 0 25px rgba(181, 126, 220, 0.2);
+        }
+
+        .header-flex {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+
+        .title {
+            font-family: 'UnifrakturMaguntia', serif;
+            font-size: 3.8rem;
+            text-align: left;
+            line-height: 1.1;
+            background: linear-gradient(to right, var(--cornflower-glow), var(--lavender-ghost));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* 3X MASSIVE VIOLET ROSE WITH DUAL STYLES */
+        .header-flower {
+            height: 210px; 
+            width: auto;
+            object-fit: contain;
+            transform-origin: bottom center; 
+            filter: invert(30%) sepia(80%) hue-rotate(285deg) saturate(3.5) brightness(1.1) opacity(0.85);
+            transition: filter 0.5s ease;
+            cursor: pointer;
+            z-index: 20;
+            
+            /* Ambient swaying is active by default */
+            animation: gentleSway 4s ease-in-out infinite alternate;
+        }
+
+        /* Spinning animation class added by JavaScript when music plays */
+        .header-flower.playing {
+            animation: vinylSpin 12s linear infinite !important;
+            filter: invert(30%) sepia(80%) hue-rotate(285deg) saturate(5) brightness(1.3) opacity(1) drop-shadow(0 0 20px rgba(147, 112, 219, 0.7));
+        }
+
+        .header-flower:hover {
+            filter: invert(30%) sepia(80%) hue-rotate(285deg) saturate(4.5) brightness(1.2) opacity(1) drop-shadow(0 0 20px rgba(147, 112, 219, 0.6));
+        }
+
+        @keyframes gentleSway {
+            0% { transform: rotate(-3deg); }
+            100% { transform: rotate(4deg); }
+        }
+
+        @keyframes vinylSpin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* TRACK DISPLAY DECK */
+        .audio-marquee {
+            width: 100%;
+            max-width: 1200px;
+            background: #06000a;
+            border: 2px dashed var(--lavender-ghost);
+            padding: 8px 15px;
+            margin-bottom: 20px;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.85rem;
+            color: var(--lavender-ghost);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .track-status {
+            font-weight: 900;
+            animation: textPulse 2s infinite alternate;
+        }
+
+        @keyframes textPulse {
+            0% { opacity: 0.4; }
+            100% { opacity: 1; }
+        }
+
+        /* NAVIGATION PLATFORM */
+        .nav {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        .nav-btn {
+            background: #0b0214;
+            color: var(--cornflower-glow);
+            border: 2px solid var(--lavender-ghost);
+            font-family: 'Fira Code', monospace;
+            font-size: 13px;
+            font-weight: 700;
+            padding: 15px 25px;
+            cursor: pointer;
+            border-radius: 0px; 
+            clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+            box-shadow: inset 0 0 10px rgba(181, 126, 220, 0.3);
+            transition: all 0.4s ease;
+        }
+
+        .nav-btn:hover, .nav-btn.active {
+            background: var(--lavender-ghost);
+            color: var(--black);
+            box-shadow: 0 0 15px var(--lavender-ghost);
+            transform: translateY(-3px);
+        }
+        #skipBtn:hover {
+        color: var(--cornflower-glow) !important;
+        text-shadow: 0 0 10px var(--cornflower-glow);
+}
+
+        /* BENTO HORIZONTAL VIEWPORT */
+        .modules {
+            display: flex;
+            flex-wrap: nowrap;
+            justify-content: flex-start;
+            gap: var(--bento-gap);
+            padding: 20px 40px 60px 40px;
+            width: 100vw;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            scroll-behavior: smooth;
+        }
+
+        .module {
+            min-width: 85vw;
+            max-width: 950px;
+            flex: 0 0 auto;
+            scroll-snap-align: center;
+            background: var(--purple-deep);
+            padding: 50px;
+            box-sizing: border-box;
+            position: relative;
+            overflow: hidden;
+            border: 3px solid var(--lavender-ghost);
+            clip-path: polygon(0% 15px, 15px 0%, calc(100% - 15px) 0%, 100% 15px, 100% calc(100% - 15px), calc(100% - 15px) 100%, 15px 100%, 0% calc(100% - 15px));
+            box-shadow: 0 0 30px rgba(22, 2, 38, 0.8);
+        }
+
+        /* GHOST REVEAL LAYER */
+        .module::before {
+            content: "TRANSMISSION OBSCURED // HOVER TO REVEAL";
+            font-family: 'Fira Code', monospace;
+            font-size: 0.85rem;
+            letter-spacing: 2px;
+            color: var(--lavender-ghost);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 100;
+            background: rgba(11, 2, 20, 0.92);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            opacity: 1;
+            transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1), backdrop-filter 1.2s ease;
+            pointer-events: none;
+        }
+
+        .module:hover::before {
+            opacity: 0;
+            backdrop-filter: blur(0px);
+            -webkit-backdrop-filter: blur(0px);
+        }
+
+        .module h2 {
+            font-family: 'UnifrakturMaguntia', serif;
+            font-size: 3.2rem;
+            margin-bottom: 25px;
+            border-bottom: 3px dashed var(--lavender-ghost);
+            padding-bottom: 10px;
+            color: var(--lavender-ghost);
+        }
+
+        .module p {
+            font-size: 1.15rem;
+            line-height: 1.8;
+            margin-bottom: 25px;
+            border-left: 3px solid var(--lavender-ghost);
+            padding-left: 15px;
+            font-weight: 600;
+        }
+
+        .info-grid { display: grid; grid-template-columns: 1fr; gap: var(--bento-gap); }
+        .char-card {
+            background: rgba(0, 0, 0, 0.4); border: 2px solid var(--lavender-ghost); padding: 20px;
+            clip-path: polygon(0 15px, 15px 0, 100% 0, 100% 100%, 0 100%);
+        }
+        .char-card strong { color: var(--lavender-ghost); }
+        .shop-items { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--bento-gap); }
+        .shop-item {
+            background: rgba(11, 2, 20, 0.6); border: 2px solid var(--lavender-ghost); padding: 20px; text-align: center;
+            clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%);
+        }
+        .shop-item strong { color: var(--lavender-ghost); display: block; margin-bottom: 8px; }
+        .shop-item a { color: var(--cornflower-glow); text-decoration: underline; }
+        .shop-item a:hover { color: var(--black); background: var(--cornflower-glow); }
+
+        .boiler-monitor {
+            margin-top: 30px; padding: 20px; background: var(--bg-void); color: var(--lavender-ghost);
+            border: 2px dashed var(--lavender-ghost); font-family: 'Fira Code', monospace; font-size: 0.85rem;
+        }
+
+        .modules::-webkit-scrollbar { height: 8px; }
+        .modules::-webkit-scrollbar-track { background: var(--bg-void); }
+        .modules::-webkit-scrollbar-thumb { background: var(--purple-deep); border: 2px solid var(--lavender-ghost); }
+
+        @media (max-width: 768px) {
+            .modules { flex-wrap: wrap; width: 100%; padding: 10px; }
+            .module { min-width: 100%; max-width: 100%; padding: 30px; }
+            .title { font-size: 2.2rem; }
+            .header-flex { flex-direction: column; gap: 20px; }
+            .header-flower { height: 140px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="title-container">
+        <div class="header-flex">
+            <h1 class="title">The Cafe Infusion</h1>
+            <img src="rose-sketch.png" alt="Ethereal Phonograph Trigger" class="header-flower" id="jukeboxRose" onclick="toggleAetherAudio()">
+        </div>
+    </div>
+<div class="audio-marquee">
+    <div>SIGNAL STATE: <span id="playbackDeck" class="track-status">OFFLINE // CLICK FLOWER TO TRANSMIT</span></div>
+    <div style="display: flex; gap: 15px; align-items: center;">
+        <div id="trackTitleDisplay" style="font-weight: bold;">TRACK: NONE SELECTED</div>
+        <span id="skipBtn" onclick="skipAetherTrack()" style="cursor: pointer; color: var(--lavender-ghost); font-weight: 900; transition: all 0.3s ease; display: none;">[⏩ SKIP]</span>
+    </div>
+</div>
+    <nav class="nav">
+        <button class="nav-btn" data-module="lore">STP_01 // LORE_DECK</button>
+        <button class="nav-btn" data-module="blends">STP_02 // BLEND_DECK</button>
+        <button class="nav-btn" data-module="crew">STP_03 // CREW_DECK</button>
+        <button class="nav-btn" data-module="vault">STP_04 // VAULT_DECK</button>
+    </nav>
+
+    <div class="modules">
+        
+        <div id="lore" class="module">
+            <h2>System Lore</h2>
+            <p>In the year 1889, the coal grids failed. Society didn't collapse; it simply shifted to a high-pressure, highly caffeinated alternative.</p>
+            <p>By boiling the mysterious, hyper-reactive <strong>Aether-Pekoe leaf</strong> inside massive subterranean pressure engines, whole sectors are now powered entirely by aromatic tea-steam.</p>
+            <p>The pressure is high, the porcelain is steel-reinforced, and missing tea-time is considered a grand act of treason against the Steam-Crown.</p>
+        </div>
+
+        <div id="blends" class="module">
+            <h2>Aether Blends</h2>
+            <p><strong>Clockwork Chamomile:</strong> A glowing, lavender-tinted pressure brew layered with micro-flecked copper dust. Engineered to soothe rogue mechanical joints and human nerves simultaneously.</p>
+            <p><strong>Voltaic Earl Grey:</strong> Harvested during high-altitude lightning storms in the floating gardens of Neo-Assam. It gives off a small static charge when stirred with a silver spoon.</p>
+            <p><strong>Sub-Zero Matcha:</strong> Cryogenically crushed using liquid nitrogen valves. Used by long-distance zeppelin crews to keep frostbite away from their steering hands.</p>
+        </div>
+
+        <div id="crew" class="module">
+            <h2>Manifest</h2>
+            <div class="info-grid">
+                <div class="char-card">
+                    <strong>[#] LADY BEATRICE GREY</strong><br>
+                    Rogue airship engineer. Modified mechanical right arm equipped with an integrated high-pressure extraction chamber.
+                </div>
+                <div class="char-card">
+                    <strong>[#] THE COPPER SOMMELIER</strong><br>
+                    Automaton entity welded from scrap copper kettles. Analyzes molecular leaf densities instantly.
+                </div>
+            </div>
+            
+            <div class="boiler-monitor">
+                <div>SYS_DATE: <span id="date"></span></div>
+                <div>SYS_TIME: <span id="time"></span></div>
+            </div>
+        </div>
+
+        <div id="vault" class="module">
+            <h2>Supplies</h2>
+            <div class="shop-items">
+                <div class="shop-item">
+                    <strong>BRASS INFUSER</strong><br>
+                    <a href="#" target="_blank">[REQUISITION]</a>
+                </div>
+                <div class="shop-item">
+                    <strong>GOGGLE CLEANER</strong><br>
+                    <a href="#" target="_blank">[REQUISITION]</a>
+                </div>
+                <div class="shop-item">
+                    <strong>AETHER BLENDS</strong><br>
+                    <a href="#" target="_blank">[REQUISITION]</a>
+                </div>
+                <div class="shop-item">
+                    <strong>PRESSURE MUG</strong><br>
+                    <a href="#" target="_blank">[REQUISITION]</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Synchronized Clock
+        function updateTime() {
+            const now = new Date();
+            document.getElementById('date').textContent = now.toLocaleDateString();
+            document.getElementById('time').textContent = now.toLocaleTimeString();
+        }
+        updateTime();
+        setInterval(updateTime, 1000);
+
+        // 17-TRACK SOUNDTRACK PROTOCOL
+        // Update the file strings below to exactly match your 17 mp3 filenames
+        const playlist = [
+            { title: "Track 01: GypsyCat", file: "https://www.cafedreamr.art/music/GypsyCatinstrumental.mp3" },
+            { title: "Track 02: Unbound-Hans", file: "https://www.cafedreamr.art/music/Unbound-Hans.mp3" },
+            { title: "Track 03: Broken-chains", file: "https://www.cafedreamr.art/music/Loose-Chains-Abruptly.mp3" },
+            { title: "Track 04: Dreamy", file: "https://www.cafedreamr.art/music/Dreamy.mp3" },
+            { title: "Track 05: Forgiven-Light", file: "https://www.cafedreamr.art/music/forgiven-light.mp3" },
+            { title: "Track 06: Fruit-of-TheSpirit", file: "https://www.cafedreamr.art/music/FruitofTheSpirit.mp3" },
+            { title: "Track 07: Hans-Lore-Pt1", file: "https://www.cafedreamr.art/music/TheirLore2026.mp3" },
+            { title: "Track 08: Unbound-Dreamrs-Cafe", file: "https://www.cafedreamr.art/music/Unbound-Dreamrs-Cafe.mp3" },
+            { title: "Track 09: Hans-Testimony", file: "https://www.cafedreamr.art/PLAYLIST/God1st-nothingbetter.mp3" },
+            { title: "Track 10: Washed Clean", file: "https://www.cafedreamr.art/music/Washedclean.mp3" },
+            { title: "Track 11: Christ Cafe", file: "https://www.cafedreamr.art/music/Christshousecafe.mp3" },
+            { title: "Track 12: Feed-Me-Not", file: "https://www.cafedreamr.art/music/Feed-me-not.mp3" },
+            { title: "Track 13: Volts and Tea Spoons", file: "https://www.cafedreamr.art/music/Feed-me-not.mp3" },
+            { title: "Track 14: Midnight Condensation", file: "track14.mp3" },
+            { title: "Track 15: Lady Beatrice Theme", file: "track15.mp3" },
+            { title: "Track 16: Cafe-Introduction", file: "https://www.cafedreamr.art/music/Etiquette-Cafe0.mp3" },
+            { title: "Track 17: Lore", file: "https://www.cafedreamr.art/music/Dream-Lab.mp3" }
+        ];
+
+        let currentTrackIdx = 0;
+let audio = new Audio();
+let isPlaying = false;
+
+// Initialize Audio Parameters
+audio.src = playlist[currentTrackIdx].file;
+
+function updateTrackDisplay() {
+    const display = document.getElementById('trackTitleDisplay');
+    display.textContent = `TRACK: [${playlist[currentTrackIdx].title}]`;
+}
+
+// Reusable track advance function
+function nextTrack() {
+    currentTrackIdx = (currentTrackIdx + 1) % playlist.length;
+    audio.src = playlist[currentTrackIdx].file;
+    updateTrackDisplay();
+    if (isPlaying) {
+        audio.play().catch(err => console.log("Audio load error on skip:", err));
+    }
+}
+
+// Handle Auto-Advance to Next Track when it naturally ends
+audio.addEventListener('ended', nextTrack);
+
+// Manual Skip Execution
+function skipAetherTrack() {
+    if (!isPlaying) return;
+    playZapChime(); // Fires the static zap sound for physical feedback
+    nextTrack();
+}
+
+function toggleAetherAudio() {
+    const rose = document.getElementById('jukeboxRose');
+    const statusText = document.getElementById('playbackDeck');
+    const skipBtn = document.getElementById('skipBtn');
+    
+    if (isPlaying) {
+        audio.pause();
+        isPlaying = false;
+        rose.classList.remove('playing');
+        statusText.textContent = "TRANSMISSION PAUSED // IDLE";
+        skipBtn.style.display = "none"; // Hide skip when paused
+    } else {
+        audio.play().then(() => {
+            isPlaying = true;
+            rose.classList.add('playing');
+            statusText.textContent = "LIVE TRANSMISSION ACTIVE // SYNCED";
+            skipBtn.style.display = "inline-block"; // Majestic reveal of the skip action
+            updateTrackDisplay();
+        }).catch(err => {
+            console.log("Audio load error - update your filenames:", err);
+            statusText.textContent = "ERROR // VERIFY FILE ARCHIVES";
+        });
+    }
+}
+        // Dynamic System Clicking UI (Separate Web Audio Synth Node)
+        let audioCtx;
+        function playZapChime() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            const osc = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            osc.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            osc.type = 'triangle'; 
+            const now = audioCtx.currentTime;
+            osc.frequency.setValueAtTime(750, now);
+            osc.frequency.exponentialRampToValueAtTime(150, now + 0.15);
+            gainNode.gain.setValueAtTime(0.06, now);
+            gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
+            osc.start(now);
+            osc.stop(now + 0.15);
+        }
+
+        // Navigation Controller
+        const buttons = document.querySelectorAll('.nav-btn');
+        const modules = document.querySelectorAll('.module');
+
+        buttons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const targetId = btn.dataset.module;
+                playZapChime();
+                
+                buttons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');                                
+                
+                modules.forEach((mod) => {
+                    if (mod.id === targetId) {
+                        mod.classList.add('active');
+                        mod.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                    } else {
+                        mod.classList.remove('active');
+                    }
+                });
+            });
+        });
+
+        document.querySelector('.nav-btn').click();
+    </script>
+</body>
+</html>
