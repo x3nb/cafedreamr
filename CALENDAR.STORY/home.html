@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="/.nekoweb-api/static/site.js" defer></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Holographic Eternal Calendar Experience</title>
+<style>
+  html {
+    font-size: 16pt;
+  }
+  * {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    transition: all 0.2s ease;
+  }
+
+  body {
+    background: #090a15;
+    background-image: 
+      radial-gradient(circle at 20% 20%, rgba(0, 242, 254, 0.15) 0%, transparent 40%),
+      radial-gradient(circle at 80% 80%, rgba(255, 0, 128, 0.15) 0%, transparent 40%),
+      radial-gradient(circle at 50% 50%, rgba(79, 172, 254, 0.1) 0%, transparent 50%);
+    font-family: 'Cinzel', serif;
+    color: #e2f1f8;
+    text-align: center;
+    overflow-x: hidden;
+  }
+
+  /* --- LIGHT RAIN EFFECT --- */
+  .rain-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 99;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, rgba(0, 242, 254, 0.2) 100%);
+    opacity: 0.25;
+  }
+
+  .rain-overlay::before {
+    content: '';
+    position: absolute;
+    top: -100%;
+    left: 0;
+    width: 100%;
+    height: 200%;
+    background-image: repeating-linear-gradient(
+      175deg,
+      transparent,
+      transparent 12px,
+      rgba(0, 242, 254, 0.4) 12px,
+      rgba(0, 242, 254, 0.4) 14px
+    );
+    animation: rain 1.2s linear infinite;
+  }
+
+  @keyframes rain {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(50%); }
+  }
+
+  /* Navigation Header */
+  nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1em;
+    width: 100%;
+    padding: 0.7em 1.4em;
+    background: rgba(12, 18, 34, 0.85);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(0, 242, 254, 0.4);
+    box-shadow: 0 0 15px rgba(0, 242, 254, 0.2);
+  }
+
+  .nav {
+    display: flex;
+    gap: 1.5em;
+  }
+
+  .nav a {
+    color: #00f2fe;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.2s;
+  }
+
+  .nav a:hover {
+    color: #ff007f;
+    text-shadow: 0 0 8px #ff007f;
+  }
+
+  /* Scroll Track Container */
+  section {
+    position: relative;
+    width: 100dvw;
+    height: 220dvh;
+  }
+
+  /* Sticky Scroll Grid */
+  #grid {
+    position: sticky;
+    top: 0;
+    display: grid;
+    grid-template-columns: 1fr 0fr 1fr;
+    place-items: start center;
+    width: 100%;
+    height: 100dvh;
+    background: #060810;
+    font-size: 0rem;
+    overflow: hidden;
+
+    animation: open 1ms linear both;
+    animation-timeline: scroll();
+    animation-range: 0% 50%;
+  }
+
+  @keyframes open {
+    to {
+      grid-template-columns: 0fr 1fr 0fr;
+      font-size: 1rem;
+    }
+  }
+
+  /* Side Panels with Image Galleries */
+  .left, .right {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    padding: 20px;
+    background: rgba(12, 18, 34, 0.85);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(0, 242, 254, 0.3);
+    z-index: 2;
+    overflow: hidden;
+  }
+
+  .left {
+    border-right: 2px solid #00f2fe;
+    box-shadow: 10px 0 25px rgba(0, 242, 254, 0.3);
+  }
+
+  .right {
+    border-left: 2px solid #ff007f;
+    box-shadow: -10px 0 25px rgba(255, 0, 128, 0.3);
+  }
+
+  /* Image Containers */
+  .image-wrapper {
+    width: 80%;
+    max-width: 280px;
+    background: rgba(15, 25, 45, 0.6);
+    border: 1px solid rgba(0, 242, 254, 0.4);
+    border-radius: 8px;
+    padding: 8px;
+    box-shadow: 0 0 15px rgba(0, 242, 254, 0.2);
+  }
+
+  .image-wrapper img {
+    width: 100%;
+    height: 140px;
+    object-fit: cover;
+    border-radius: 4px;
+    display: block;
+  }
+
+  article {
+    padding: 1em;
+    max-width: 45ch;
+    color: #e2f1f8;
+    background: rgba(5, 10, 20, 0.75);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(0, 242, 254, 0.4);
+    border-radius: 0.6em;
+    box-shadow: 0 0 20px rgba(0, 242, 254, 0.2);
+
+    h2 {
+      color: #00f2fe;
+      text-shadow: 0 0 8px rgba(0, 242, 254, 0.6);
+      font-size: 1.1rem;
+      margin-bottom: 0.4em;
+    }
+
+    p {
+      font-size: 0.85rem;
+      line-height: 1.4;
+    }
+  }
+
+  /* Center Calendar Area */
+  .middle {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    background: rgba(9, 10, 21, 0.95);
+    z-index: 1;
+    overflow: hidden;
+  }
+
+  .calendar-title {
+    font-size: 2.2rem;
+    background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 30%, #ff139d 70%, #00f2fe 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 12px rgba(0, 242, 254, 0.6));
+    margin-bottom: 20px;
+    letter-spacing: 2px;
+  }
+
+  .calendar-container {
+    width: 90%;
+    max-width: 650px;
+    background: rgba(12, 18, 34, 0.85);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(0, 242, 254, 0.5);
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 0 35px rgba(0, 242, 254, 0.25);
+  }
+
+  .calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+
+  .cal-btn {
+    font-family: inherit;
+    background: rgba(5, 10, 20, 0.8);
+    border: 1px solid #00f2fe;
+    color: #00f2fe;
+    padding: 6px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+  }
+
+  .cal-btn:hover {
+    background: #00f2fe;
+    color: #000;
+    box-shadow: 0 0 12px #00f2fe;
+  }
+
+  .month-year-display {
+    font-size: 1.4rem;
+    color: #fff;
+    text-shadow: 0 0 10px rgba(0, 242, 254, 0.6);
+  }
+
+  .calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 8px;
+  }
+
+  .day-name {
+    font-weight: bold;
+    color: #ff77c6;
+    padding: 6px 0;
+    font-size: 0.9rem;
+  }
+
+  .day-cell {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(15, 20, 35, 0.6);
+    border: 1px solid rgba(0, 242, 254, 0.2);
+    border-radius: 6px;
+    font-size: 0.95rem;
+    color: #e2f1f8;
+    cursor: pointer;
+  }
+
+  .day-cell:hover:not(.empty) {
+    background: linear-gradient(135deg, rgba(0, 242, 254, 0.3), rgba(255, 0, 128, 0.3));
+    border-color: #00f2fe;
+    box-shadow: 0 0 10px rgba(0, 242, 254, 0.5);
+  }
+
+  .day-cell.today {
+    background: linear-gradient(135deg, #00f2fe, #ff007f);
+    color: #fff;
+    font-weight: bold;
+    box-shadow: 0 0 15px #00f2fe;
+  }
+
+  .day-cell.empty {
+    background: transparent;
+    border: none;
+    cursor: default;
+  }
+
+  .spacer {
+    display: grid;
+    place-items: center;
+    width: 100%;
+    min-height: 60dvh;
+    background: #090a15;
+    border-top: 1px solid rgba(0, 242, 254, 0.3);
+
+    h2 {
+      max-width: 80%;
+      text-align: center;
+      color: #00f2fe;
+      text-shadow: 0 0 10px rgba(0, 242, 254, 0.4);
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="rain-overlay"></div>
+
+<nav>
+  <div class="logo" style="color:#00f2fe; font-weight:bold;">CRYSTAL REALM</div>
+  <div class="nav">
+    <a href="#about">About</a>
+    <a href="#calendar">Calendar</a>
+    <a href="#contact">Contact</a>
+  </div>
+</nav>
+
+<section>
+  <div id="grid">
+    <div class="left">
+      <div class="image-wrapper">
+        <img src="https://xencafe.nekoweb.org/0CALENDAR-INTERACTIVE/lavalatte.jpg" alt="Left Panel Image 1" onerror="this.src='https://via.placeholder.com/280x140/0a1020/00f2fe?text=Place+Left+Image+1+Here'">
+      </div>
+      
+      <article>
+        <h2>The Gateway</h2>
+        <p>Scroll down to part the holographic veil and reveal the Eternal Crystal Calendar.</p>
+      </article>
+
+      <div class="image-wrapper">
+        <img src="YOUR_LEFT_IMAGE_URL_2_HERE" alt="Left Panel Image 2" onerror="this.src='https://via.placeholder.com/280x140/0a1020/00f2fe?text=Place+Left+Image+2+Here'">
+      </div>
+    </div>
+
+    <div class="middle" id="calendar">
+      <h1 class="calendar-title">Eternal Calendar</h1>
+      <div class="calendar-container">
+        <div class="calendar-header">
+          <button class="cal-btn" id="prevBtn">&lt; Prev</button>
+          <div class="month-year-display" id="monthYearText">Month Year</div>
+          <button class="cal-btn" id="nextBtn">Next &gt;</button>
+        </div>
+        <div class="calendar-grid" id="calendarGrid">
+          <div class="day-name">Sun</div>
+          <div class="day-name">Mon</div>
+          <div class="day-name">Tue</div>
+          <div class="day-name">Wed</div>
+          <div class="day-name">Thu</div>
+          <div class="day-name">Fri</div>
+          <div class="day-name">Sat</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="right">
+      <div class="image-wrapper">
+        <img src="YOUR_RIGHT_IMAGE_URL_1_HERE" alt="Right Panel Image 1" onerror="this.src='https://via.placeholder.com/280x140/0a1020/ff007f?text=Place+Right+Image+1+Here'">
+      </div>
+
+      <article>
+        <h2>Time Eternal</h2>
+        <p>Navigate effortlessly through days past, present, and future in full clarity.</p>
+      </article>
+
+      <div class="image-wrapper">
+        <img src="YOUR_RIGHT_IMAGE_URL_2_HERE" alt="Right Panel Image 2" onerror="this.src='https://via.placeholder.com/280x140/0a1020/ff007f?text=Place+Right+Image+2+Here'">
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="spacer">
+  <h2>Explore Beyond The Crystal Gate</h2>
+</div>
+
+<script>
+  let currentDate = new Date();
+  const monthNames = [
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"
+  ];
+
+  function renderCalendar() {
+    const year = currentDate.getFullYear();
+    const month = currentDate.getMonth();
+
+    document.getElementById("monthYearText").textContent = `${monthNames[month]} ${year}`;
+    const grid = document.getElementById("calendarGrid");
+    
+    while (grid.children.length > 7) {
+      grid.removeChild(grid.lastChild);
+    }
+
+    const firstDayIndex = new Date(year, month, 1).getDay();
+    const lastDate = new Date(year, month + 1, 0).getDate();
+
+    for (let i = 0; i < firstDayIndex; i++) {
+      const emptyDiv = document.createElement("div");
+      emptyDiv.classList.add("day-cell", "empty");
+      grid.appendChild(emptyDiv);
+    }
+
+    const today = new Date();
+    for (let day = 1; day <= lastDate; day++) {
+      const dayDiv = document.createElement("div");
+      dayDiv.classList.add("day-cell");
+      dayDiv.textContent = day;
+
+      if (
+        day === today.getDate() &&
+        month === today.getMonth() &&
+        year === today.getFullYear()
+      ) {
+        dayDiv.classList.add("today");
+      }
+
+      grid.appendChild(dayDiv);
+    }
+  }
+
+  document.getElementById("prevBtn").addEventListener("click", () => {
+    currentDate.setMonth(currentDate.getMonth() - 1);
+    renderCalendar();
+  });
+
+  document.getElementById("nextBtn").addEventListener("click", () => {
+    currentDate.setMonth(currentDate.getMonth() + 1);
+    renderCalendar();
+  });
+
+  renderCalendar();
+</script>
+
+</body>
+</html>
