@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Holographic Eternal Realm & Media Player</title>
+<style>
+  html {
+    font-size: 16pt;
+  }
+  * {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+  }
+
+  body {
+    background: #090a15;
+    font-family: 'Cinzel', serif;
+    color: #e2f1f8;
+    text-align: center;
+    overflow-x: hidden;
+  }
+
+  /* Lightweight CSS Rain Layer */
+  .rain-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 99;
+    opacity: 0.15;
+  }
+
+  .rain-overlay::before {
+    content: '';
+    position: absolute;
+    top: -100%;
+    left: 0;
+    width: 100%;
+    height: 200%;
+    background-image: repeating-linear-gradient(
+      175deg,
+      transparent,
+      transparent 12px,
+      rgba(0, 242, 254, 0.4) 12px,
+      rgba(0, 242, 254, 0.4) 14px
+    );
+    animation: rain 1.5s linear infinite;
+  }
+
+  @keyframes rain {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(50%); }
+  }
+
+  /* Navigation Bar */
+  nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1em;
+    width: 100%;
+    padding: 0.7em 1.4em;
+    background: rgba(12, 18, 34, 0.85);
+    border-bottom: 1px solid rgba(0, 242, 254, 0.3);
+  }
+
+  .nav {
+    display: flex;
+    gap: 1.5em;
+  }
+
+  .nav a {
+    color: #00f2fe;
+    text-decoration: none;
+    font-size: 0.9rem;
+  }
+
+  .nav a:hover {
+    color: #ff007f;
+  }
+
+  /* Scroll Track Sections */
+  section {
+    position: relative;
+    width: 100dvw;
+    height: 200dvh;
+  }
+
+  .grid-container {
+    position: sticky;
+    top: 0;
+    display: grid;
+    grid-template-columns: 1fr 0fr 1fr;
+    place-items: start center;
+    width: 100%;
+    height: 100dvh;
+    background: #060810;
+    font-size: 0rem;
+    overflow: hidden;
+    gap: 0; /* Ensures zero gap between closed curtains */
+
+    animation: open 1ms linear both;
+    animation-timeline: scroll();
+    animation-range: 0% 50%;
+  }
+
+  @keyframes open {
+    0% {
+      grid-template-columns: 1fr 0fr 1fr;
+      font-size: 0rem;
+    }
+    to {
+      grid-template-columns: 0fr 1fr 0fr;
+      font-size: 1rem;
+    }
+  }
+
+  /* Glass Side Panels (Curtains) */
+  .left, .right {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    padding: 20px;
+    background: rgba(12, 18, 34, 0.95);
+    border: 1px solid rgba(0, 242, 254, 0.2);
+    z-index: 2;
+    overflow: hidden;
+  }
+
+  .left {
+    border-right: 2px solid #00f2fe;
+  }
+
+  .right {
+    border-left: 2px solid #ff007f;
+  }
+
+  .image-wrapper {
+    width: 80%;
+    max-width: 280px;
+    background: rgba(15, 25, 45, 0.8);
+    border: 1px solid rgba(0, 242, 254, 0.3);
+    border-radius: 8px;
+    padding: 8px;
+  }
+
+  .image-wrapper img {
+    width: 100%;
+    height: 140px;
+    object-fit: cover;
+    border-radius: 4px;
+    display: block;
+  }
+
+  article {
+    padding: 1em;
+    max-width: 45ch;
+    color: #e2f1f8;
+    background: rgba(5, 10, 20, 0.85);
+    border: 1px solid rgba(0, 242, 254, 0.3);
+    border-radius: 0.6em;
+
+    h2 {
+      color: #00f2fe;
+      font-size: 1.1rem;
+      margin-bottom: 0.4em;
+    }
+
+    p {
+      font-size: 0.85rem;
+      line-height: 1.4;
+    }
+  }
+
+  /* Center Container */
+  .middle {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    background: rgba(9, 10, 21, 0.98);
+    z-index: 1;
+    overflow: hidden;
+  }
+
+  .section-title {
+    font-size: 2.2rem;
+    color: #00f2fe;
+    margin-bottom: 15px;
+    letter-spacing: 2px;
+  }
+
+  /* Calendar Box */
+  .calendar-container {
+    width: 90%;
+    max-width: 600px;
+    background: rgba(12, 18, 34, 0.9);
+    border: 1px solid rgba(0, 242, 254, 0.4);
+    border-radius: 12px;
+    padding: 20px;
+  }
+
+  .calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+  }
+
+  .cal-btn, .holo-btn {
+    font-family: inherit;
+    background: rgba(5, 10, 20, 0.9);
+    border: 1px solid #00f2fe;
+    color: #00f2fe;
+    padding: 6px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+  }
+
+  .cal-btn:hover, .holo-btn:hover {
+    background: #00f2fe;
+    color: #000;
+  }
+
+  .month-year-display {
+    font-size: 1.3rem;
+    color: #fff;
+  }
+
+  .calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 6px;
+  }
+
+  .day-name {
+    font-weight: bold;
+    color: #ff77c6;
+    padding: 4px 0;
+    font-size: 0.85rem;
+  }
+
+  .day-cell {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(15, 20, 35, 0.8);
+    border: 1px solid rgba(0, 242, 254, 0.2);
+    border-radius: 6px;
+    font-size: 0.9rem;
+    color: #e2f1f8;
+    cursor: pointer;
+  }
+
+  .day-cell:hover:not(.empty) {
+    background: rgba(0, 242, 254, 0.2);
+    border-color: #00f2fe;
+  }
+
+  .day-cell.today {
+    background: #00f2fe;
+    color: #000;
+    font-weight: bold;
+  }
+
+  .day-cell.empty {
+    background: transparent;
+    border: none;
+    cursor: default;
+  }
+
+  /* Media Layout */
+  .media-layout {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    width: 95%;
+    max-width: 900px;
+  }
+
+  .icon-card {
+    background: rgba(12, 18, 34, 0.9);
+    border: 1px solid rgba(0, 242, 254, 0.3);
+    border-radius: 10px;
+    padding: 15px;
+    width: 160px;
+    cursor: pointer;
+  }
+
+  .icon-card:hover {
+    border-color: #ff007f;
+    transform: translateY(-2px);
+  }
+
+  .icon-card span {
+    font-size: 2.2rem;
+    display: block;
+    margin-bottom: 5px;
+  }
+
+  .icon-card h3 {
+    font-size: 0.85rem;
+    color: #00f2fe;
+  }
+
+  .video-container {
+    flex: 1;
+    background: rgba(12, 18, 34, 0.9);
+    border: 1px solid rgba(0, 242, 254, 0.4);
+    border-radius: 12px;
+    padding: 15px;
+  }
+
+  video {
+    width: 100%;
+    max-height: 280px;
+    border-radius: 8px;
+    background: #000;
+  }
+
+  .video-controls {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 10px;
+  }
+
+  .audio-player-card {
+    margin-top: 20px;
+    width: 95%;
+    max-width: 600px;
+    background: rgba(12, 18, 34, 0.9);
+    border: 1px solid rgba(255, 0, 128, 0.3);
+    border-radius: 10px;
+    padding: 15px;
+  }
+
+  .now-playing {
+    font-size: 0.95rem;
+    color: #ff007f;
+    margin-bottom: 10px;
+  }
+
+  .welcome-modal {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(9, 10, 21, 0.98);
+    border: 2px solid #00f2fe;
+    padding: 25px;
+    border-radius: 12px;
+    z-index: 1000;
+    max-width: 400px;
+  }
+
+  .welcome-modal p {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin-bottom: 15px;
+  }
+
+  .spacer {
+    display: grid;
+    place-items: center;
+    width: 100%;
+    min-height: 50dvh;
+    background: #090a15;
+    border-top: 1px solid rgba(0, 242, 254, 0.3);
+
+    h2 {
+      max-width: 80%;
+      text-align: center;
+      color: #00f2fe;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="rain-overlay"></div>
+
+<nav>
+  <div class="logo" style="color:#00f2fe; font-weight:bold;">CRYSTAL REALM</div>
+  <div class="nav">
+    <a href="#calendarSection">Calendar</a>
+    <a href="#mediaSection">Media Realm</a>
+  </div>
+</nav>
+
+<section id="calendarSection">
+  <div class="grid-container">
+    <div class="left">
+      <div class="image-wrapper">
+        <img src="YOUR_LEFT_IMAGE_URL_1_HERE" alt="Left Panel Image 1" onerror="this.src='https://via.placeholder.com/280x140/0a1020/00f2fe?text=Left+Image+1'">
+      </div>
+      <article>
+        <h2>The Gateway</h2>
+        <p>Scroll down to part the veil and reveal the Eternal Crystal Calendar.</p>
+      </article>
+    </div>
+
+    <div class="middle">
+      <h1 class="section-title">Eternal Calendar</h1>
+      <div class="calendar-container">
+        <div class="calendar-header">
+          <button class="cal-btn" id="prevBtn">&lt; Prev</button>
+          <div class="month-year-display" id="monthYearText">Month Year</div>
+          <button class="cal-btn" id="nextBtn">Next &gt;</button>
+        </div>
+        <div class="calendar-grid" id="calendarGrid">
+          <div class="day-name">Sun</div>
+          <div class="day-name">Mon</div>
+          <div class="day-name">Tue</div>
+          <div class="day-name">Wed</div>
+          <div class="day-name">Thu</div>
+          <div class="day-name">Fri</div>
+          <div class="day-name">Sat</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="right">
+      <div class="image-wrapper">
+        <img src="YOUR_RIGHT_IMAGE_URL_1_HERE" alt="Right Panel Image 1" onerror="this.src='https://via.placeholder.com/280x140/0a1020/ff007f?text=Right+Image+1'">
+      </div>
+      <article>
+        <h2>Time Eternal</h2>
+        <p>Navigate effortlessly through days past, present, and future in full clarity.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section id="mediaSection">
+  <div class="grid-container">
+    <div class="left">
+      <article>
+        <h2>Audio Visual Vault</h2>
+        <p>Experience crystal clear visual streams and ambient harmonic frequencies.</p>
+      </article>
+    </div>
+
+    <div class="middle">
+      <h1 class="section-title">Vision & Harmony</h1>
+      
+      <div class="media-layout">
+        <div class="icon-card" id="welcomeIcon">
+          <span>✨</span>
+          <h3>Welcome Note</h3>
+        </div>
+
+        <div class="video-container">
+          <video id="crystalVideo" loop>
+            <source src="YOUR_VIDEO_FILE_URL_HERE.mp4" type="video/mp4">
+            Your browser does not support video play.
+          </video>
+          <div class="video-controls">
+            <button class="holo-btn" id="videoPlayBtn">Play / Pause Video</button>
+            <button class="holo-btn" id="videoMuteBtn">Mute / Unmute</button>
+          </div>
+        </div>
+
+        <div class="icon-card">
+          <span>🎬</span>
+          <h3 id="videoTitleText">Title: Crystal Horizons</h3>
+        </div>
+      </div>
+
+      <div class="audio-player-card">
+        <div class="now-playing" id="nowPlayingText">Now Playing: Select Track</div>
+        <audio id="crystalAudio"></audio>
+        <div class="video-controls">
+          <button class="holo-btn" id="audioPlayBtn">Play</button>
+          <button class="holo-btn" id="audioPauseBtn">Pause</button>
+          <button class="holo-btn" id="audioNextBtn">Next Track</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="right">
+      <article>
+        <h2>Audio Deck</h2>
+        <p>Tracks auto-transition sequentially for continuous background music.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<div class="welcome-modal" id="welcomeModal">
+  <h2 style="color:#00f2fe; margin-bottom:10px;">Welcome Traveler</h2>
+  <p>Welcome to the Eternal Realm! Enjoy seamlessly viewing time and immersing yourself in audio and visual streams.</p>
+  <button class="holo-btn" id="closeModalBtn">Close Message</button>
+</div>
+
+<div class="spacer">
+  <h2>End of Crystal Realm</h2>
+</div>
+
+<script>
+  let currentDate = new Date();
+  const monthNames = [
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"
+  ];
+
+  function renderCalendar() {
+    const year = currentDate.getFullYear();
+    const month = currentDate.getMonth();
+
+    document.getElementById("monthYearText").textContent = `${monthNames[month]} ${year}`;
+    const grid = document.getElementById("calendarGrid");
+    
+    while (grid.children.length > 7) {
+      grid.removeChild(grid.lastChild);
+    }
+
+    const firstDayIndex = new Date(year, month, 1).getDay();
+    const lastDate = new Date(year, month + 1, 0).getDate();
+
+    for (let i = 0; i < firstDayIndex; i++) {
+      const emptyDiv = document.createElement("div");
+      emptyDiv.classList.add("day-cell", "empty");
+      grid.appendChild(emptyDiv);
+    }
+
+    const today = new Date();
+    for (let day = 1; day <= lastDate; day++) {
+      const dayDiv = document.createElement("div");
+      dayDiv.classList.add("day-cell");
+      dayDiv.textContent = day;
+
+      if (
+        day === today.getDate() &&
+        month === today.getMonth() &&
+        year === today.getFullYear()
+      ) {
+        dayDiv.classList.add("today");
+      }
+
+      grid.appendChild(dayDiv);
+    }
+  }
+
+  document.getElementById("prevBtn").addEventListener("click", () => {
+    currentDate.setMonth(currentDate.getMonth() - 1);
+    renderCalendar();
+  });
+
+  document.getElementById("nextBtn").addEventListener("click", () => {
+    currentDate.setMonth(currentDate.getMonth() + 1);
+    renderCalendar();
+  });
+
+  renderCalendar();
+
+  const video = document.getElementById("crystalVideo");
+  document.getElementById("videoPlayBtn").addEventListener("click", () => {
+    if (video.paused) {
+      video.play();
+    } else {
+      video.pause();
+    }
+  });
+
+  document.getElementById("videoMuteBtn").addEventListener("click", () => {
+    video.muted = !video.muted;
+  });
+
+  const modal = document.getElementById("welcomeModal");
+  document.getElementById("welcomeIcon").addEventListener("click", () => {
+    modal.style.display = "block";
+  });
+  document.getElementById("closeModalBtn").addEventListener("click", () => {
+    modal.style.display = "none";
+  });
+
+  const playlist = [
+    { title: "Harmonic Crystal Drift", src: "YOUR_MP3_URL_1_HERE.mp3" },
+    { title: "Celestial Ether Pulse", src: "YOUR_MP3_URL_2_HERE.mp3" }
+  ];
+
+  let currentTrackIndex = 0;
+  const audio = document.getElementById("crystalAudio");
+  const nowPlayingText = document.getElementById("nowPlayingText");
+
+  function loadTrack(index) {
+    audio.src = playlist[index].src;
+    nowPlayingText.textContent = `Now Playing: ${playlist[index].title}`;
+  }
+
+  document.getElementById("audioPlayBtn").addEventListener("click", () => {
+    if (!audio.src || audio.src.includes("YOUR_MP3")) {
+      loadTrack(currentTrackIndex);
+    }
+    audio.play();
+  });
+
+  document.getElementById("audioPauseBtn").addEventListener("click", () => {
+    audio.pause();
+  });
+
+  document.getElementById("audioNextBtn").addEventListener("click", () => {
+    currentTrackIndex = (currentTrackIndex + 1) % playlist.length;
+    loadTrack(currentTrackIndex);
+    audio.play();
+  });
+
+  audio.addEventListener("ended", () => {
+    currentTrackIndex = (currentTrackIndex + 1) % playlist.length;
+    loadTrack(currentTrackIndex);
+    audio.play();
+  });
+</script>
+
+</body>
+</html>
