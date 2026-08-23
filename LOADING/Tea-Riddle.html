@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CafeDreamr Realm | The Final Secret</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20rx%3D%2213%22%20fill%3D%22%231a0b2e%22%2F%3E%3Cg%20stroke%3D%22%23ff007f%22%20stroke-width%3D%222.4%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%3E%3Cpath%20d%3D%22M32%2032L56%2032M32%2032L32%208M32%2032L8%2032M32%2032L32%2056M32%2032L48.97%2015.03M32%2032L48.97%2048.97M32%2032L15.03%2048.97M32%2032L15.03%2015.03%22%2F%3E%3Ccircle%20cx%3D%2232%22%20cy%3D%2232%22%20r%3D%227%22%2F%3E%3Ccircle%20cx%3D%2232%22%20cy%3D%2232%22%20r%3D%2213%22%2F%3E%3Ccircle%20cx%3D%2232%22%20cy%3D%2232%22%20r%3D%2219%22%2F%3E%3C%2Fg%3E%3Ccircle%20cx%3D%2232%22%20cy%3D%2232%22%20r%3D%222.6%22%20fill%3D%22%23ff007f%22%2F%3E%3C%2Fsvg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Klee+One&family=Vampiro+One&family=UnifrakturMaguntia&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+<style>
+  :root {
+    --dark: #1a0b2e;
+    --wall: #0d0614;
+    --deeppurple: #8a2be2;
+    --lavender: #ff007f;
+    --grey: #c4a9e8;
+    --ink: #e6d5f7;
+    --fuchsia: #d900ff;
+    --glass-violet: rgba(138, 43, 226, 0.18);
+    --violet-glow: rgba(217, 0, 255, 0.45);
+  }
+  [hidden] { display: none !important; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Klee One', cursive;
+    background: radial-gradient(1200px 900px at 50% -10%, #2a1753 0%, #1a0b2e 40%, var(--wall) 78%);
+    background-attachment: fixed;
+    color: var(--ink);
+    overflow-x: hidden;
+    min-height: 100vh;
+    padding-bottom: 120px;
+    text-align: left;
+  }
+  ::selection { background: var(--lavender); color: var(--wall); }
+
+  /* ---------- loader: the spider spins its web ---------- */
+  #loaderCtn {
+    position: fixed; inset: 0; z-index: 9990; background: var(--wall);
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px;
+    opacity: 1; transition: opacity .5s ease;
+  }
+  #loaderCtn.done { opacity: 0; pointer-events: none; }
+  .loader-web { width: 116px; height: 116px; animation: loaderSpin 5.5s linear infinite; filter: drop-shadow(0 0 10px rgba(217,0,255,.65)); }
+  @keyframes loaderSpin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+  .loader-spider { width: 40px; height: 40px; animation: spiderDrop 1.4s ease-in-out infinite; }
+  @keyframes spiderDrop { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(13px); } }
+  .loader-txt { font-family: 'UnifrakturMaguntia', serif; font-size: 1.3rem; letter-spacing: .08em; color: var(--lavender); animation: loaderBlink 1.5s ease-in-out infinite; }
+  @keyframes loaderBlink { 0%, 100% { opacity: .45; } 50% { opacity: 1; } }
+
+  /* ---------- gatekeeper ---------- */
+  #gatekeeper {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: radial-gradient(900px 700px at 50% 30%, #1a0b2e 0%, var(--wall) 75%);
+    display: flex; align-items: center; justify-content: center; z-index: 10000; flex-direction: column;
+    text-align: center;
+  }
+  .gate-spider { width: 46px; height: 46px; margin-bottom: 6px; animation: spiderDrop 1.6s ease-in-out infinite; filter: drop-shadow(0 0 8px rgba(217,0,255,.6)); }
+  #gatekeeper h2 { font-family: 'UnifrakturMaguntia', serif; color: var(--grey); font-size: 2.5rem; margin-bottom: 22px; text-shadow: 0 0 18px var(--violet-glow); }
+  #tea-input {
+    background: transparent; border: 1px solid var(--lavender); padding: 12px; color: var(--ink);
+    font-family: 'Klee One', cursive; font-size: 1.2rem; text-align: center;
+    border-radius: 5px; width: 300px; outline: none; text-transform: lowercase;
+  }
+  #tea-input::placeholder { color: rgba(196,169,232,.4); }
+  #gatekeeper .gate-hint { margin-top: 15px; opacity: .5; font-size: .8rem; color: var(--grey); letter-spacing: .1em; }
+
+  /* ---------- main UI ---------- */
+  #main { display: none; opacity: 0; transition: opacity 1.2s ease; }
+  .realm-status { position: absolute; top: 25px; right: 40px; text-align: right; z-index: 10; }
+
+  .header { text-align: center; margin-bottom: 40px; padding-top: 20px; }
+  .header h1 {
+    font-family: 'UnifrakturMaguntia', serif; font-size: clamp(3rem, 10vw, 5.5em); line-height: 1.06; margin: 0;
+    background-image:
+      radial-gradient(3.5px 3.5px at 12% 28%, rgba(255,255,255,.95), transparent 70%),
+      radial-gradient(3px 3px at 68% 62%, rgba(255,255,255,.85), transparent 70%),
+      radial-gradient(3px 3px at 38% 78%, rgba(255,0,127,.9), transparent 70%),
+      radial-gradient(3px 3px at 84% 22%, rgba(196,169,232,.95), transparent 70%),
+      radial-gradient(3px 3px at 52% 18%, rgba(255,255,255,.75), transparent 70%),
+      radial-gradient(3px 3px at 26% 55%, rgba(255,255,255,.7), transparent 70%),
+      linear-gradient(105deg, #2a1753 0%, #4a2a8f 20%, #8a2be2 38%, #c4a9e8 50%, #8a2be2 62%, #4a2a8f 80%, #2a1753 100%);
+    background-size: 260% 100%, 260% 100%, 260% 100%, 260% 100%, 260% 100%, 260% 100%, 260% 100%;
+    background-clip: text; -webkit-background-clip: text;
+    color: transparent;
+    filter: drop-shadow(0 0 12px rgba(138,43,226,.5)) drop-shadow(0 0 30px rgba(217,0,255,.2));
+    animation: titleGlitter 8s ease-in-out infinite;
+    user-select: none;
+  }
+  @keyframes titleGlitter {
+    0%, 100% { background-position: 0% 0, 0% 0, 0% 0, 0% 0, 0% 0, 0% 0; }
+    50% { background-position: 26% 0, -14% 0, 30% 0, -22% 0, 18% 0, -10% 0, 24% 0; }
+  }
+  .subtitle { font-style: italic; max-width: 700px; margin: 18px auto 0; opacity: .8; color: var(--grey); }
+
+  /* ---------- the web ---------- */
+  .webzone { width: 170px; height: 170px; margin: 18px auto 6px; position: relative; cursor: pointer; }
+  .webzone .web-svg { position: absolute; inset: 0; width: 100%; height: 100%;
+    filter: drop-shadow(0 0 5px rgba(217,0,255,.55));
+    animation: webPulse 3.6s ease-in-out infinite; transition: opacity .3s;
+  }
+  @keyframes webPulse { 0%, 100% { filter: drop-shadow(0 0 3px rgba(217,0,255,.45)); opacity: .92; } 50% { filter: drop-shadow(0 0 9px rgba(255,0,127,.9)); opacity: 1; } }
+  .webzone .spider { position: absolute; left: calc(50% - 20px); top: calc(50% - 20px); width: 40px; height: 40px; z-index: 2; transition: transform .55s cubic-bezier(.2,.8,.3,1.2); transform-origin: 50% 50%; }
+  .webzone:hover .spider { transform: translateY(26px); }
+  .web-hint { position: absolute; top: 100%; left: 50%; transform: translateX(-50%); width: max-content; font-size: .68rem; letter-spacing: .12em; color: var(--lavender); background: rgba(13,6,20,.85); border: 1.5px dashed var(--fuchsia); padding: 3px 10px; opacity: .9; margin-top: 4px; }
+  .web-whisper { position: absolute; top: calc(100% + 34px); left: 50%; transform: translateX(-50%); width: max-content; max-width: 76vw; font-size: .74rem; font-style: italic; color: var(--grey); text-align: center; opacity: 0; transition: opacity .5s; pointer-events: none; letter-spacing: .02em; text-shadow: 0 0 8px rgba(217,0,255,.4); }
+  .web-whisper.show { opacity: 1; }
+  .webzone.fed .spider { transform: scale(1.5) translateY(-2px); filter: drop-shadow(0 0 10px rgba(217,0,255,.95)); transition: transform .4s cubic-bezier(.34,1.56,.64,1), filter .4s; }
+  .webzone.fed .web-svg { filter: drop-shadow(0 0 12px rgba(255,0,127,.85)); }
+
+  /* feeding moth */
+  .feed-moth { position: fixed; width: 24px; height: 24px; z-index: 7000; pointer-events: none; margin: -12px 0 0 -12px; }
+  .fm-body { position: absolute; left: 9px; top: 6px; width: 4px; height: 11px; border-radius: 4px; background: #8f8f8f; }
+  .fm-head { position: absolute; left: 8px; top: 3px; width: 6px; height: 4px; border-radius: 50%; background: #7a7a7a; }
+  .fm-w1, .fm-w2 { position: absolute; top: 3px; width: 9px; height: 7px; background: #c9c9c9; border-radius: 60% 40% 60% 40%; opacity: .95; }
+  .fm-w1 { left: 0; transform-origin: right center; animation: fmFlap .16s ease-in-out infinite alternate; }
+  .fm-w2 { right: 0; transform-origin: left center; animation: fmFlap .13s ease-in-out infinite alternate-reverse; }
+  @keyframes fmFlap { from { transform: scaleX(1); } to { transform: scaleX(.28); } }
+
+  /* cursor moth */
+  .moth-wing-up { transform-origin: 20px 19px; animation: mFlapU .2s ease-in-out infinite alternate; }
+  .moth-wing-lo { transform-origin: 20px 23px; animation: mFlapL .16s ease-in-out infinite alternate-reverse; }
+  .moth-wing-up-second { transform-origin: 20px 19px; animation: mFlapU .17s ease-in-out infinite alternate-reverse; }
+  .moth-wing-lo-second { transform-origin: 20px 23px; animation: mFlapL .19s ease-in-out infinite alternate; }
+  @keyframes mFlapU { from { transform: scaleX(1); } to { transform: scaleX(.3); } }
+  @keyframes mFlapL { from { transform: scaleX(1); } to { transform: scaleX(.42); } }
+
+  /* ---------- nav & marquee ---------- */
+  .nav-container { display: flex; justify-content: center; gap: 20px; padding: 20px 30px 26px; flex-wrap: wrap; }
+  .nav-btn { background: var(--glass-violet); backdrop-filter: blur(10px); border: 1px solid rgba(217,0,255,.35); color: var(--grey); padding: 12px 25px; text-decoration: none; border-radius: 8px; transition: .4s; font-family: 'Klee One', cursive; }
+  .nav-btn:hover { color: #fff; border-color: var(--lavender); box-shadow: 0 0 18px var(--violet-glow); transform: translateY(-2px); }
+
+  .marquee-wrap { overflow: hidden; white-space: nowrap; max-width: 900px; margin: 10px auto 26px; border-top: 1px dashed rgba(217,0,255,.3); border-bottom: 1px dashed rgba(217,0,255,.3); padding: 10px 0; }
+  .marquee-text { display: inline-block; padding-left: 100%; animation: scroll 42s linear infinite; font-style: italic; color: var(--ink); }
+  @keyframes scroll { to { transform: translateX(-100%); } }
+  .secret-pearl { color: var(--lavender); cursor: pointer; text-decoration: underline dotted; }
+
+  /* ---------- hub controls ---------- */
+  .hub-controls { display: flex; justify-content: center; gap: 30px; margin: 30px auto 40px; }
+  .toggle-btn { background: rgba(138,43,226,.12); border: 2px double var(--lavender); color: var(--lavender); padding: 15px 30px; font-family: 'UnifrakturMaguntia', serif; font-size: 1.4rem; cursor: pointer; transition: .3s; border-radius: 50px; }
+  .toggle-btn:hover { box-shadow: 0 0 25px var(--violet-glow); transform: translateY(-5px); color: #fff; }
+
+  .hub-flex-container { display: flex; max-width: 1400px; margin: 0 auto; gap: 25px; padding: 0 20px; perspective: 1000px; }
+  .drop-section { opacity: 0; transform: translateY(-50px) rotateX(-20deg); pointer-events: none; transition: all .8s cubic-bezier(0.175, 0.885, 0.32, 1.275); background: rgba(20,10,40,.6); border-radius: 20px; border: 1px solid rgba(138,43,226,.35); backdrop-filter: blur(8px); flex: 1; padding: 25px; }
+  .drop-section.active { opacity: 1; transform: translateY(0) rotateX(0); pointer-events: auto; }
+
+  /* ---------- drawers ---------- */
+  .drawer-container { position: fixed; bottom: 0; width: 100%; display: flex; justify-content: space-between; padding: 0 50px; z-index: 1000; pointer-events: none; }
+  .drawer { width: 300px; background: rgba(13,6,20,.96); border: 2px solid var(--fuchsia); border-bottom: none; border-radius: 20px 20px 0 0; transform: translateY(100%); transition: transform .6s cubic-bezier(0.68, -0.55, 0.265, 1.55); pointer-events: auto; padding: 22px; }
+  .drawer.open { transform: translateY(0); }
+  .handle { position: absolute; top: -40px; left: 50%; transform: translateX(-50%); background: var(--fuchsia); color: var(--wall); padding: 6px 22px; border-radius: 10px 10px 0 0; cursor: pointer; font-family: 'Vampiro One'; font-size: .8rem; letter-spacing: .06em; }
+  .handle:hover { background: var(--lavender); }
+
+  /* ---------- glass popups ---------- */
+  .glass-popup { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0); background: rgba(13,6,20,.97); backdrop-filter: blur(25px); border: 1px solid var(--lavender); padding: 40px; border-radius: 20px; z-index: 8000; transition: .6s cubic-bezier(0.175, 0.885, 0.32, 1.275); text-align: center; color: #fff; width: 450px; max-width: 92vw; box-shadow: 0 0 60px rgba(0,0,0,.9); cursor: pointer; max-height: 86vh; overflow: auto; }
+  .glass-popup.visible { transform: translate(-50%, -50%) scale(1); animation: textFlicker 3s linear infinite; }
+  @keyframes textFlicker { 0%, 100%, 95%, 97%, 99% { opacity: 1; } 96% { opacity: .8; } 98% { opacity: .9; } }
+  .letter-link { display: block; color: var(--grey); text-decoration: none; margin-top: 12px; font-style: italic; transition: .3s; cursor: pointer; }
+  .letter-link:hover { color: #fff; transform: translateX(5px); }
+
+  /* ---------- pearl particles ---------- */
+  .particle { position: fixed; pointer-events: none; border-radius: 50%; z-index: 6000; animation: fall linear forwards; }
+  @keyframes fall { to { transform: translateY(100vh) rotate(360deg); opacity: 0; } }
+
+  /* ---------- cursor spider + web sparks ---------- */
+  #fxCanvas { position: fixed; inset: 0; z-index: 5000; pointer-events: none; }
+  #cursorSpider { position: fixed; left: 0; top: 0; width: 34px; height: 34px; z-index: 5001; pointer-events: none; margin: -17px 0 0 -17px; opacity: 0; transition: opacity .35s; will-change: transform; }
+  #cursorSpider.show { opacity: 1; }
+  #cursorSpider svg { width: 100%; height: 100%; display: block; }
+
+  #chat-sidebar { height: 600px; overflow: hidden; }
+</style>
+
+<div class="loader" id="loaderCtn">
+  <div class="loader-web">
+    <svg viewBox="0 0 64 64" aria-hidden="true">
+      <g stroke="#d900ff" stroke-width="1.6" fill="none" stroke-linecap="round">
+        <path d="M32 32L56 32M32 32L32 8M32 32L8 32M32 32L32 56M32 32L48.97 15.03M32 32L48.97 48.97M32 32L15.03 48.97M32 32L15.03 15.03"/>
+        <circle cx="32" cy="32" r="9"/>
+        <circle cx="32" cy="32" r="17"/>
+      </g>
+    </svg>
+  </div>
+  <svg class="loader-spider" viewBox="0 0 40 40" aria-hidden="true">
+    <line x1="20" y1="-8" x2="20" y2="5" stroke="#ff007f" stroke-width="1.2"/>
+    <g fill="#e6d5f7">
+      <circle cx="20" cy="23.5" r="5.2"/>
+      <circle cx="20" cy="15.5" r="2.5"/>
+    </g>
+    <g stroke="#e6d5f7" stroke-width="1.7" fill="none" stroke-linecap="round">
+      <path d="M18 17 C14.5 14.5 12.5 13 10.5 10.5"/><path d="M18 17 C14.5 18.5 12.5 19 10.5 19.5"/>
+      <path d="M18 17 C15 20.3 13.3 21.8 11.4 22.9"/><path d="M18 17 C15 20.5 13.5 22.5 12 25"/>
+      <path d="M22 17 C25.5 14.5 27.5 13 29.5 10.5"/><path d="M22 17 C25.5 18.5 27.5 19 29.5 19.5"/>
+      <path d="M22 17 C25 20.3 26.7 21.8 28.6 22.9"/><path d="M22 17 C25 20.5 26.5 22.5 28 25"/>
+    </g>
+    <path d="M17.3 13.3 l2.7 -3 l2.7 3 z" fill="#ff007f"/>
+    <circle cx="19" cy="14.2" r=".7" fill="#0d0614"/>
+  </svg>
+  <div class="loader-txt">spinning up the web...</div>
+</div>
+
+<div id="gatekeeper">
+  <h2 style="font-family:'UnifrakturMaguntia'; color:var(--grey); font-size:2.4rem; margin-bottom:22px; text-shadow:0 0 18px var(--violet-glow);">"What tea shall we brew?"</h2>
+  <input type="text" id="tea-input" placeholder="Earl ____" autofocus>
+  <p class="gate-hint">· Press Enter to Unlock ·</p>
+</div>
+
+<div id="main">
+  <div class="realm-status">
+    <div id="date" style="font-size:.7rem; opacity:.6; text-transform:uppercase; color:var(--grey);"></div>
+    <div id="clock" style="font-weight:bold; font-size:1.3rem; color:var(--ink);"></div>
+    <div style="font-size:.5rem; color:var(--lavender); letter-spacing:2px;">LOCAL SYNC</div>
+  </div>
+
+  <div class="webzone" id="webzoneEl" title="the spider likes moths">
+    <svg class="web-svg" id="webSvgEl" viewBox="0 0 220 220" aria-hidden="true"></svg>
+    <svg class="spider" viewBox="0 0 40 40" aria-hidden="true">
+      <line x1="20" y1="-40" x2="20" y2="-9" stroke="#ff007f" stroke-width="1.2" opacity=".6"/>
+      <g stroke="#e6d5f7" stroke-width="1.5" fill="none" stroke-linecap="round">
+        <path d="M20 18 C 12 14, 8 10, 4 12"/><path d="M20 18 C 12 16, 8 18, 5 22"/>
+        <path d="M20 18 C 16 12, 18 8, 20 5"/><path d="M20 18 C 16 14, 14 12, 12 9"/>
+        <path d="M20 20 C 28 16, 32 12, 36 14"/><path d="M20 20 C 28 18, 32 20, 35 24"/>
+        <path d="M20 20 C 24 14, 22 10, 20 7"/><path d="M20 20 C 24 16, 26 14, 28 11"/>
+      </g>
+      <ellipse cx="20" cy="20" rx="4.3" ry="5" fill="#e6d5f7"/>
+      <circle cx="20" cy="15.2" r="2.3" fill="#e6d5f7"/>
+      <path d="M17.6 14.2 l2.4 -2.8 l2.4 2.8 z" fill="#ff007f"/>
+      <circle cx="19" cy="15" r=".75" fill="#0d0614"/>
+    </svg>
+    <div class="web-whisper" id="webWhisperEl"></div>
+    <span class="web-hint">psst — feed the spider a moth</span>
+  </div>
+
+  <nav class="nav-container">
+    <a href="https://x3nb.github.io/CAFEDREAMR1/CONTENTS.html" class="nav-btn">ABOUT</a>
+    <a href="#" class="nav-btn">BLOG</a>
+    <a href="https://x3nb.github.io/CAFEDREAMR1/blog.html" class="nav-btn">SHOP</a>
+    <a href="#" class="nav-btn">GUIDE</a>
+    <a href="#" class="nav-btn">GALLERY</a>
+  </nav>
+
+  <div class="marquee-wrap">
+    <div class="marquee-text">
+      &nbsp;&nbsp;"I must go seek some dewdrops here and hang a <span class="secret-pearl" onclick="triggerSecret()">pearl</span> in every cowslip's ear." — Shakespeare &nbsp;&nbsp; ● &nbsp;&nbsp; "The course of true love never did run smooth." &nbsp;&nbsp; ● &nbsp;&nbsp; "the spider knows things. be kind to it."
+    </div>
+  </div>
+
+  <div class="header">
+    <h1>CafeDreamr Realm</h1>
+    <p class="subtitle">"Welcome to the Fringe of the Empire. Leave your worries at the gate; we only trade in dreams and caffeine here."</p>
+  </div>
+
+  <div class="hub-controls">
+    <button class="toggle-btn" onclick="toggleSection('community')">Open Archives</button>
+    <button class="toggle-btn" onclick="toggleSection('chat-sidebar')">Enter Parlour</button>
+  </div>
+
+  <div class="hub-flex-container">
+    <section id="community" class="drop-section">
+      <h2 style="font-family:'Vampiro One'; margin-bottom:20px; color:var(--lavender);">The Inner Circle</h2>
+      <div id="disqus_thread"></div>
+    </section>
+
+    <aside id="chat-sidebar" class="drop-section">
+      <div style="background:#1a0b2e; padding:10px; text-align:center; font-family:'Vampiro One'; border-bottom:1px solid #331a4d; color:var(--grey);">Dream Chat</div>
+      <iframe src="https://e.widgetbot.io/channels/1498131914798665829" height="100%" width="100%" allowtransparency="true" frameborder="0"></iframe>
+    </aside>
+  </div>
+
+  <div class="drawer-container">
+    <div id="music-drawer" class="drawer">
+      <div class="handle" onclick="toggleDrawer('music-drawer')">GRAMOPHONE</div>
+      <h3 style="color:var(--fuchsia); font-family:'UnifrakturMaguntia';">Music Cabinet</h3>
+      <p style="font-size:.8rem; margin-bottom:10px; color:var(--grey);">Ambient Frequency</p>
+      <audio id="bg-music" src="starlightcafe.mp3" loop></audio>
+      <button onclick="document.getElementById('bg-music').play(); playChime(880);" style="background:rgba(138,43,226,.2); border:1px solid var(--lavender); color:var(--ink); padding:5px 10px; cursor:pointer;">Play</button>
+      <button onclick="document.getElementById('bg-music').pause(); playChime(440);" style="background:none; border:1px solid var(--ink); color:var(--grey); padding:5px 10px; cursor:pointer;">Silence</button>
+    </div>
+
+    <div id="letter-drawer" class="drawer">
+      <div class="handle" onclick="toggleDrawer('letter-drawer')">MISSIVES</div>
+      <h3 style="color:var(--fuchsia); font-family:'UnifrakturMaguntia';">Dead Letters</h3>
+      <div class="letter-link" onclick="showEtiquette()">🕸️ The Unspoken Etiquette</div>
+      <div class="letter-link" onclick="showAdminNote()">✉️ Admin's Secret Note</div>
+    </div>
+  </div>
+</div>
+
+<div id="etiquette-overlay" class="glass-popup" onclick="closePopups()">
+  <h2 style="font-family:'UnifrakturMaguntia'; color:var(--lavender); margin-bottom:15px;">Realm Lore</h2>
+  <p id="etiquette-text" style="font-size:1.2rem; font-style:italic; line-height:1.5; color:var(--ink);"></p>
+  <p style="margin-top:20px; font-size:.7rem; opacity:.5; letter-spacing:2px; color:var(--grey);">· Click to Dismiss ·</p>
+</div>
+
+<div id="admin-note-overlay" class="glass-popup" onclick="closePopups()">
+  <h2 style="font-family:'UnifrakturMaguntia'; color:var(--fuchsia); border-bottom:1px solid var(--fuchsia); display:inline-block; margin-bottom:15px;">A Message from the Admin</h2>
+  <p style="font-size:1.1rem; line-height:1.6; text-align:left; font-family:'Klee One'; color:var(--ink);">
+    To the Dreamer who found this,<br><br>
+    This realm was built from the remnants of old midnight conversations, the steam of a thousand cups of tea, and the silk of a very patient spider.<br><br>
+    If the world feels a bit too loud today, stay here a while. The archives are open and the parlour is warm — and if you string a web high enough, someone kind will find it.<br><br>
+    Stay strange,<br>
+    <em>— The Admin</em>
+  </p>
+  <p style="margin-top:20px; font-size:.7rem; opacity:.5; letter-spacing:2px; color:var(--grey);">· SEALED WITH VIOLET SILK ·</p>
+</div>
+
+<canvas id="fxCanvas" aria-hidden="true"></canvas>
+<div id="cursorSpider" aria-hidden="true">
+  <svg viewBox="0 0 40 40">
+    <g class="moth-wing-up">
+      <path d="M20 19 C 8 6, 3 3, 20 17 Z" fill="#c9c9c9" opacity=".95"/>
+      <path d="M20 19 C 32 6, 37 3, 20 17 Z" fill="#b9b9b9" opacity=".95"/>
+    </g>
+    <g class="moth-wing-up-second">
+      <path d="M20 15 C 7 5, 1 1, 20 13 Z" fill="#b9b9b9" opacity=".9"/>
+      <path d="M20 15 C 33 5, 39 1, 20 13 Z" fill="#c9c9c9" opacity=".9"/>
+    </g>
+    <g class="moth-wing-lo">
+      <path d="M20 23 C 9 34, 4 37, 20 26 Z" fill="#b2b2b2" opacity=".9"/>
+      <path d="M20 23 C 31 34, 36 37, 20 26 Z" fill="#c2c2c2" opacity=".9"/>
+    </g>
+    <g class="moth-wing-lo-second">
+      <path d="M20 27 C 10 37, 5 39, 20 29 Z" fill="#c2c2c2" opacity=".85"/>
+      <path d="M20 27 C 30 37, 35 39, 20 29 Z" fill="#b2b2b2" opacity=".85"/>
+    </g>
+    <ellipse cx="18" cy="14" rx="2.4" ry="3" fill="#d9d9d9" opacity=".9"/>
+    <ellipse cx="22" cy="14" rx="2.4" ry="3" fill="#d9d9d9" opacity=".9"/>
+    <path d="M20 16 C 17 14, 15 11, 16 9" stroke="#c9c9c9" stroke-width=".8" fill="none"/>
+    <path d="M20 16 C 23 14, 25 11, 24 9" stroke="#c9c9c9" stroke-width=".8" fill="none"/>
+    <ellipse cx="20" cy="21" rx="2.8" ry="8" fill="#8f8f8f"/>
+  </svg>
+</div>
+
+<script>
+  (function () {
+
+    var loadStarted = Date.now();
+    function hideLoader() {
+      var remaining = 1100 - (Date.now() - loadStarted);
+      setTimeout(function () {
+        loaderCtn.classList.add("done");
+        setTimeout(function () { loaderCtn.hidden = true; }, 600);
+      }, Math.max(0, remaining));
+    }
+
+    /* ---------- audio engine ---------- */
+    var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    function playChime(freq) {
+      freq = freq || 880;
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      var osc = audioCtx.createOscillator();
+      var gain = audioCtx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+      gain.gain.setValueAtTime(0.03, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 1.5);
+      osc.connect(gain); gain.connect(audioCtx.destination);
+      osc.start(); osc.stop(audioCtx.currentTime + 1.5);
+    }
+
+    /* ---------- clock ---------- */
+    function tick() {
+      var d = new Date();
+      date.textContent = d.toDateString();
+      clock.textContent = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    }
+    tick();
+    setInterval(tick, 1000);
+
+    var mainEl = document.getElementById('main');
+    var gatekeeper = document.getElementById('gatekeeper');
+    var teaInput = document.getElementById('tea-input');
+    teaInput.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') {
+        var v = teaInput.value.trim().toLowerCase();
+        if (v === 'earl grey' || v === 'earl gray') {
+          gatekeeper.style.transition = 'opacity .8s ease';
+          gatekeeper.style.opacity = '0';
+          setTimeout(function () {
+            gatekeeper.hidden = true;
+            mainEl.style.display = 'block';
+            setTimeout(function () { mainEl.style.opacity = '1'; }, 30);
+          }, 700);
+          playChime(880);
+          try { if (audioCtx.state === 'suspended') audioCtx.resume(); } catch (err) {}
+        } else {
+          playChime(220);
+        }
+      }
+    });
+
+    /* ---------- sections, drawers, popups ---------- */
+    window.toggleSection = function (id) {
+      var el = document.getElementById(id);
+      el.classList.toggle('active');
+      var isActive = el.classList.contains('active');
+      if (isActive) { playChime(660); el.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
+      else playChime(440);
+    };
+    window.toggleDrawer = function (id) {
+      var d = document.getElementById(id);
+      d.classList.toggle('open');
+      playChime(440);
+    };
+
+    var etiquetteRules = [
+      "Speak in ink, but think in starlight.",
+      "The tea is always hot, but the tea is never spilled.",
+      "Respect the silence between the songs.",
+      "Only kind ghosts are permitted in the chat.",
+      "We are all dreamers here.",
+      "If you find a secret, keep it until it's ready to be told.",
+      "String a web high enough, and someone kind will find it."
+    ];
+    window.showEtiquette = function () {
+      closePopups();
+      document.getElementById('etiquette-text').innerText = etiquetteRules[Math.floor(Math.random() * etiquetteRules.length)];
+      document.getElementById('etiquette-overlay').classList.add('visible');
+      playChime(330);
+    };
+    window.showAdminNote = function () {
+      closePopups();
+      document.getElementById('admin-note-overlay').classList.add('visible');
+      playChime(554.37);
+    };
+    window.closePopups = function () {
+      document.getElementById('etiquette-overlay').classList.remove('visible');
+      document.getElementById('admin-note-overlay').classList.remove('visible');
+    };
+
+    /* ---------- the pearl secret ---------- */
+    window.triggerSecret = function () {
+      playChime(1200);
+      var colors = ['#ff007f', '#d900ff', '#c4a9e8', '#ffffff'];
+      for (var i = 0; i < 30; i++) {
+        var p = document.createElement('div');
+        p.className = 'particle';
+        p.style.left = Math.random() * 100 + 'vw';
+        p.style.top = '-10px';
+        p.style.width = p.style.height = Math.random() * 8 + 'px';
+        p.style.background = colors[i % colors.length];
+        p.style.boxShadow = '0 0 10px white';
+        p.style.animationDuration = (Math.random() * 2 + 1) + 's';
+        document.body.appendChild(p);
+        setTimeout(function (n) { n.remove(); }, 3000, p);
+      }
+    };
+
+    /* ---------- hover chimes ---------- */
+    document.querySelectorAll('.nav-btn, .toggle-btn, .handle, .letter-link').forEach(function (b) {
+      b.addEventListener('mouseenter', function () { playChime(880); });
+    });
+
+    /* ---------- build the web ---------- */
+    function buildWeb() {
+      var cx = 110, cy = 110, R = 98, spokes = 9, rings = 6, d = [];
+      for (var i = 0; i < spokes; i++) {
+        var a = i * 2 * Math.PI / spokes;
+        d.push("M" + cx + " " + cy + "L" + (cx + R * Math.cos(a)).toFixed(1) + " " + (cy + R * Math.sin(a)).toFixed(1));
+      }
+      for (var r = 1; r <= rings; r++) {
+        var rad = R * r / rings;
+        for (var s = 0; s < spokes; s++) {
+          var a0 = s * 2 * Math.PI / spokes;
+          var a1 = ((s + 1) % spokes) * 2 * Math.PI / spokes;
+          var x0 = cx + rad * Math.cos(a0), y0 = cy + rad * Math.sin(a0);
+          var x1 = cx + rad * Math.cos(a1), y1 = cy + rad * Math.sin(a1);
+          d.push("M" + x0.toFixed(1) + " " + y0.toFixed(1) + "A" + rad.toFixed(1) + " " + rad.toFixed(1) + " 0 0 1 " + x1.toFixed(1) + " " + y1.toFixed(1));
+        }
+      }
+      var paths = d.map(function (p) { return '<path d="' + p + '"/>'; }).join("");
+      webSvgEl.innerHTML = '<g stroke="#d900ff" stroke-width="1.7" fill="none" opacity=".85">' + paths + "</g>";
+    }
+    webzoneEl.addEventListener('click', function () { feedMoth(); });
+
+    /* ---------- feed the spider a moth ---------- */
+    var curCur = { x: window.innerWidth / 2, y: 80 };
+    window.addEventListener('pointermove', function (e) { curCur.x = e.clientX; curCur.y = e.clientY; }, { passive: true });
+
+    var feedCount = 0;
+    var spiderSecrets = [
+      "the moth is kind to feed the web. the web remembers.",
+      "feed it three, and the spider hums your name to the quiet.",
+      "the silk tightens. someone kind is near.",
+      "every moth becomes a thread. every dream stays woven.",
+      "it tastes the starlight you carried in. warm."
+    ];
+
+    function feedMoth() {
+      playChime(540);
+      var web = document.getElementById('webzoneEl');
+      var r = web.getBoundingClientRect();
+      var tx = r.left + r.width / 2, ty = r.top + r.height / 2;
+      var moth = document.createElement('div');
+      moth.className = 'feed-moth';
+      moth.style.left = curCur.x + 'px';
+      moth.style.top = curCur.y + 'px';
+      moth.innerHTML = '<span class="fm-head"></span><span class="fm-w1"></span><span class="fm-w2"></span><span class="fm-body"></span>';
+      document.body.appendChild(moth);
+      var sx = curCur.x, sy = curCur.y;
+      var t0 = performance.now(), dur = 750;
+      function step(now) {
+        var p = Math.min((now - t0) / dur, 1);
+        var e = 1 - Math.pow(1 - p, 3);
+        moth.style.left = (sx + (tx - sx) * e) + 'px';
+        moth.style.top = (sy + (ty - sy) * e) - Math.sin(p * Math.PI) * 46 + 'px';
+        if (p < 1) { requestAnimationFrame(step); }
+        else { moth.remove(); onEaten(); }
+      }
+      requestAnimationFrame(step);
+    }
+
+    function onEaten() {
+      var web = document.getElementById('webzoneEl');
+      web.classList.remove('fed'); void web.offsetWidth; web.classList.add('fed');
+      setTimeout(function () { web.classList.remove('fed'); }, 900);
+      playChime(1320);
+      var r = web.getBoundingClientRect();
+      var cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+      var colors = ['#c9c9c9', '#e6e6e6', '#9f9f9f', '#d900ff', '#ff007f'];
+      for (var i = 0; i < 20; i++) {
+        (function (i) {
+          var p = document.createElement('div');
+          p.style.cssText = 'position:fixed;width:' + (Math.random() * 6 + 2) + 'px;height:6px;border-radius:60% 40% 60% 40%;background:' + colors[i % colors.length] + ';box-shadow:0 0 8px white;z-index:7000;pointer-events:none;left:' + cx + 'px;top:' + cy + 'px;';
+          document.body.appendChild(p);
+          var a = Math.random() * Math.PI * 2, sp = 2 + Math.random() * 4, x = cx, y = cy, t = 0;
+          (function fly() {
+            t += 1; x += Math.cos(a) * sp; y += Math.sin(a) * sp;
+            p.style.left = x + 'px'; p.style.top = y + 'px'; p.style.opacity = Math.max(0, 1 - t / 0.9);
+            if (t < 0.9) requestAnimationFrame(fly); else p.remove();
+          })();
+        })(i);
+      }
+      var whisper = document.getElementById('webWhisperEl');
+      whisper.textContent = '"' + spiderSecrets[feedCount % spiderSecrets.length] + '"';
+      feedCount++;
+      whisper.classList.remove('show'); void whisper.offsetWidth; whisper.classList.add('show');
+      setTimeout(function () { whisper.classList.remove('show'); }, 3400);
+    }
+
+    /* ---------- cursor spider + web sparks ---------- */
+    function initCursorFx() {
+      if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      var canvas = document.getElementById("fxCanvas");
+      var spider = document.getElementById("cursorSpider");
+      if (!canvas || !spider) return;
+      var ctx = canvas.getContext("2d");
+      var W = 0, H = 0;
+      function resize() {
+        W = window.innerWidth; H = window.innerHeight;
+        var dpr = Math.min(window.devicePixelRatio || 1, 2);
+        canvas.width = W * dpr; canvas.height = H * dpr;
+        canvas.style.width = W + "px"; canvas.style.height = H + "px";
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      }
+      resize();
+      window.addEventListener("resize", resize);
+
+      var mx = W / 2, my = H / 2, sx = W / 2, sy = H / 2;
+      var visible = false;
+      var sparks = [];
+      var lastT = performance.now();
+
+      window.addEventListener("pointermove", function (e) {
+        mx = e.clientX; my = e.clientY;
+        if (!visible) { visible = true; spider.classList.add("show"); }
+      }, { passive: true });
+      document.addEventListener("mouseleave", function () { visible = false; spider.classList.remove("show"); });
+
+      function burst(x, y) {
+        var n = 12;
+        for (var i = 0; i < n; i++) {
+          var a = (i / n) * Math.PI * 2 + Math.random() * 0.6;
+          var sp = 1.6 + Math.random() * 3.4;
+          sparks.push({ x: x, y: y, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp, life: 1, decay: 0.022 + Math.random() * 0.02, r: 1.2 + Math.random() * 1.8, rot: Math.random() * Math.PI, web: Math.random() < 0.35, color: ["#ff007f", "#d900ff", "#c4a9e8", "#ffffff"][(Math.random() * 4) | 0] });
+        }
+      }
+      window.addEventListener("pointerdown", function (e) { burst(e.clientX, e.clientY); }, { passive: true });
+
+      function frame(now) {
+        var dt = Math.min((now - lastT) / 16.7, 3);
+        lastT = now;
+        var k = 1 - Math.pow(0.89, dt);
+        sx += (mx - sx) * k; sy += (my - sy) * k;
+        for (var i = sparks.length - 1; i >= 0; i--) {
+          var s = sparks[i];
+          s.x += s.vx * dt; s.y += s.vy * dt;
+          s.vx *= Math.pow(0.96, dt); s.vy *= Math.pow(0.96, dt);
+          s.life -= s.decay * dt;
+          if (s.life <= 0) sparks.splice(i, 1);
+        }
+        ctx.clearRect(0, 0, W, H);
+        if (visible || sparks.length) {
+          var dx = mx - sx, dy = my - sy;
+          var dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist > 6) {
+            var cxp = (mx + sx) / 2;
+            var cyp = (my + sy) / 2 + Math.min(36, dist * 0.12);
+            ctx.strokeStyle = "rgba(217,0,255,.65)";
+            ctx.lineWidth = 1.6;
+            ctx.beginPath();
+            ctx.moveTo(mx, my);
+            ctx.quadraticCurveTo(cxp, cyp, sx, sy - 15);
+            ctx.stroke();
+          }
+          if (visible) {
+            var bank = Math.max(-22, Math.min(22, (mx - sx) * 0.5));
+            spider.style.transform = "translate(" + sx + "px, " + sy + "px) rotate(" + bank.toFixed(1) + "deg)";
+          }
+          for (var j = 0; j < sparks.length; j++) {
+            var p = sparks[j];
+            ctx.globalAlpha = Math.max(p.life, 0);
+            if (p.web) {
+              ctx.strokeStyle = p.color; ctx.lineWidth = 1;
+              for (var w = 0; w < 4; w++) {
+                var a2 = w * Math.PI / 2 + p.rot;
+                ctx.beginPath();
+                ctx.moveTo(p.x - Math.cos(a2) * p.r * 2, p.y - Math.sin(a2) * p.r * 2);
+                ctx.lineTo(p.x + Math.cos(a2) * p.r * 2, p.y + Math.sin(a2) * p.r * 2);
+                ctx.stroke();
+              }
+            } else {
+              ctx.fillStyle = p.color;
+              ctx.beginPath();
+              ctx.arc(p.x, p.y, p.r, 0, 7);
+              ctx.fill();
+            }
+          }
+          ctx.globalAlpha = 1;
+        }
+        requestAnimationFrame(frame);
+      }
+      requestAnimationFrame(frame);
+    }
+
+    hideLoader();
+    buildWeb();
+    initCursorFx();
+
+    /* ---------- disqus ---------- */
+    var disqus_config = function () { this.page.url = window.location.href; this.page.identifier = 'cafedream-zenhub-v1'; };
+    (function () {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://shrinkingviolets.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  })();
+</script>
+
+</body>
+</html>
