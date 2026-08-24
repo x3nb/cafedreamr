@@ -1,0 +1,1727 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="/.nekoweb-api/static/site.js" defer></script>
+  <script src="/.nekoweb-api/static/site.js" defer></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stella's Realm Chat</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,600;0,700;1,300&family=Cinzel:wght@700;900&family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap');
+
+    :root {
+      /* Dark Ambient Backgrounds */
+      --bg-deep-black: #0d0614;
+      --bg-dark-purple: #1a0b2e;
+      --panel-bg: rgba(26, 11, 46, 0.75);
+
+      /* Vibrant Neon Accents */
+      --accent-hot-pink: #ff007f;
+      --accent-fuchsia: #d900ff;
+      --accent-violet: #8a2be2;
+
+      /* Typography */
+      --text-main: #e6d5f7;
+      --text-muted: #c4a9e8;
+
+      /* Borders & Shadows */
+      --border-glow: rgba(217, 0, 255, 0.3);
+      --neon-glow-pink: rgba(255, 0, 127, 0.4);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-weight: 300;
+      letter-spacing: 0.3px;
+      background-color: var(--bg-deep-black);
+      background-image: 
+        radial-gradient(circle at 15% 20%, rgba(255, 0, 127, 0.15) 0%, transparent 40%),
+        radial-gradient(circle at 85% 80%, rgba(138, 43, 226, 0.2) 0%, transparent 40%),
+        linear-gradient(135deg, var(--bg-deep-black) 0%, var(--bg-dark-purple) 100%);
+      background-attachment: fixed;
+      color: var(--text-main);
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 30px 10px 120px 10px;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    .video-bg-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      z-index: -2;
+      pointer-events: none;
+    }
+
+    #bgVideo {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.25;
+      filter: hue-rotate(280deg) saturate(140%);
+    }
+
+    .blush-silver-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(
+        circle at center,
+        rgba(217, 0, 255, 0.15) 0%,
+        rgba(138, 43, 226, 0.1) 50%,
+        rgba(13, 6, 20, 0.85) 100%
+      );
+      mix-blend-mode: screen;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: radial-gradient(circle, transparent 50%, rgba(13, 6, 20, 0.9) 100%);
+      pointer-events: none;
+      z-index: 999;
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
+      background-size: 100% 4px;
+      pointer-events: none;
+      z-index: 998;
+      opacity: 0.6;
+    }
+
+    .zine-container {
+      width: 100%;
+      max-width: 850px;
+      background: var(--panel-bg); 
+      backdrop-filter: blur(16px) saturate(140%);
+      -webkit-backdrop-filter: blur(16px) saturate(140%);
+      border-radius: 28px;
+      border: 1px solid var(--border-glow);
+      box-shadow: 
+        0 10px 30px rgba(0, 0, 0, 0.7),
+        0 0 20px var(--border-glow);
+      padding: 40px;
+      position: relative;
+    }
+
+    .tape {
+      position: absolute;
+      top: -14px;
+      left: 42%;
+      width: 110px;
+      height: 26px;
+      background: rgba(217, 0, 255, 0.2);
+      border: 1px dashed var(--accent-fuchsia);
+      transform: rotate(-1.5deg);
+      box-shadow: 0 0 10px var(--border-glow);
+    }
+
+    .newspaper-header-bar {
+      display: flex;
+      justify-content: space-between;
+      border-top: 1px solid var(--accent-fuchsia);
+      border-bottom: 1px solid var(--accent-fuchsia);
+      padding: 6px 10px;
+      font-family: 'Courier Prime', monospace;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--text-muted);
+      margin-bottom: 15px;
+    }
+
+    .banner-section {
+      position: relative;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      border-bottom: 1px solid var(--border-glow);
+      padding-bottom: 25px;
+    }
+
+    .banner-image {
+      max-width: 100%;
+      border-radius: 14px;
+      border: 1px solid var(--border-glow);
+      box-shadow: 0 0 15px var(--border-glow);
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      font-family: 'Cinzel', serif;
+      font-weight: 900;
+      font-size: 3em;
+      color: #ffffff;
+      text-transform: uppercase;
+      letter-spacing: 4px;
+      margin: 15px 0 5px 0;
+      text-align: center;
+      line-height: 1.1;
+      text-shadow: 0 0 10px var(--accent-fuchsia), 0 0 20px var(--accent-hot-pink);
+    }
+
+    p.subtitle {
+      font-family: 'Courier Prime', monospace;
+      font-size: 0.85em;
+      color: var(--text-main);
+      text-align: center;
+      background: rgba(26, 11, 46, 0.8);
+      display: inline-block;
+      padding: 6px 14px;
+      border: 1px solid var(--accent-fuchsia);
+      border-radius: 8px;
+      margin-bottom: 15px;
+      font-style: italic;
+      box-shadow: 0 0 10px rgba(217, 0, 255, 0.2);
+    }
+
+    .newspaper-columns {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-top: 20px;
+      border-top: 1px solid var(--border-glow);
+      padding-top: 15px;
+      font-size: 0.9em;
+      line-height: 1.5;
+    }
+
+    .column-title {
+      font-family: 'Cinzel', serif;
+      font-weight: 700;
+      font-size: 1.1em;
+      color: var(--text-main);
+      margin-bottom: 6px;
+      border-bottom: 1px solid var(--accent-fuchsia);
+      padding-bottom: 3px;
+    }
+
+    .cta {
+      background: var(--bg-dark-purple);
+      color: var(--text-main);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 600;
+      font-size: 0.9em;
+      text-decoration: none;
+      padding: 10px 22px;
+      border: 1px solid var(--accent-fuchsia);
+      border-radius: 12px;
+      box-shadow: 0 0 10px var(--border-glow);
+      display: inline-block;
+      margin-top: 15px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .cta:hover {
+      background: var(--accent-hot-pink);
+      color: #fff;
+      box-shadow: 0 0 20px var(--neon-glow-pink);
+      transform: translateY(-2px);
+    }
+
+    .character-grid-container {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      width: 170px;
+      background: var(--panel-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-radius: 18px;
+      border: 1px solid var(--border-glow);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.7);
+      padding: 10px;
+      z-index: 9999;
+    }
+
+    .grid-title {
+      font-family: 'Cinzel', serif;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      text-align: center;
+      color: var(--accent-fuchsia);
+      margin-bottom: 8px;
+      border-bottom: 1px dashed var(--accent-violet);
+      padding-bottom: 4px;
+    }
+
+    .character-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+    }
+
+    .char-card {
+      position: relative;
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      border: 1px solid var(--accent-violet);
+      cursor: pointer;
+      overflow: visible;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .char-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 6px;
+      filter: hue-rotate(270deg) contrast(120%);
+    }
+
+    .char-card:hover {
+      transform: scale(1.15);
+      box-shadow: 0 0 12px var(--accent-fuchsia);
+      z-index: 10001;
+    }
+
+    .char-tooltip {
+      display: none;
+      position: absolute;
+      top: 40px;
+      left: 0;
+      width: 140px;
+      background: var(--bg-dark-purple);
+      color: var(--text-main);
+      border: 1px solid var(--accent-fuchsia);
+      padding: 5px 8px;
+      font-family: 'Courier Prime', monospace;
+      font-size: 0.68rem;
+      border-radius: 6px;
+      box-shadow: 0 0 10px var(--border-glow);
+      pointer-events: none;
+      z-index: 10002;
+    }
+
+    .char-card:hover .char-tooltip { display: block; }
+
+    #charModalOverlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(13, 6, 20, 0.8);
+      z-index: 10020;
+    }
+
+    #charModal {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 300px;
+      background: var(--panel-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: 20px;
+      border: 1px solid var(--accent-fuchsia);
+      box-shadow: 0 0 30px var(--border-glow);
+      padding: 20px;
+      z-index: 10025;
+      text-align: center;
+      color: var(--text-main);
+    }
+
+    #charModal img {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      border: 2px solid var(--accent-hot-pink);
+      margin-bottom: 8px;
+      filter: hue-rotate(270deg);
+    }
+
+    #charModal h2 {
+      font-family: 'Cinzel', serif;
+      font-size: 1.2rem;
+      color: #fff;
+      margin-bottom: 2px;
+    }
+
+    .modal-role {
+      font-family: 'Courier Prime', monospace;
+      font-size: 0.75rem;
+      font-style: italic;
+      color: var(--accent-fuchsia);
+      margin-bottom: 10px;
+      border-bottom: 1px solid var(--border-glow);
+      padding-bottom: 4px;
+    }
+
+    #charModalBio {
+      font-family: 'Courier Prime', monospace;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 15px;
+    }
+
+    .char-modal-btn {
+      display: inline-block;
+      background: var(--bg-dark-purple);
+      color: var(--text-main);
+      text-decoration: none;
+      padding: 6px 12px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.8rem;
+      border: 1px solid var(--accent-fuchsia);
+      border-radius: 8px;
+      margin-bottom: 5px;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .char-modal-btn:hover {
+      background: var(--accent-hot-pink);
+      color: #fff;
+      box-shadow: 0 0 10px var(--neon-glow-pink);
+    }
+
+    #sideMenu {
+      position: fixed;
+      top: 20px;
+      left: -350px;
+      width: 310px;
+      max-height: 85vh;
+      overflow-y: auto;
+      background: var(--panel-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: 20px;
+      border: 1px solid var(--accent-fuchsia);
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
+      padding: 20px;
+      z-index: 10000;
+      transition: left 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      color: var(--text-main);
+    }
+
+    #sideMenu.active { left: 20px; }
+
+    .menu-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--accent-fuchsia);
+      padding-bottom: 8px;
+      margin-bottom: 12px;
+    }
+
+    .menu-title {
+      font-family: 'Cinzel', serif;
+      font-weight: 700;
+      font-size: 1.2em;
+      color: #fff;
+      text-transform: uppercase;
+      text-shadow: 0 0 8px var(--accent-fuchsia);
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
+      color: var(--text-main);
+      font-size: 1.4em;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .barista-quote-box {
+      background: rgba(138, 43, 226, 0.15);
+      border-left: 3px solid var(--accent-hot-pink);
+      padding: 8px 10px;
+      font-family: 'Courier Prime', monospace;
+      font-size: 0.78em;
+      font-style: italic;
+      color: var(--text-muted);
+      margin-bottom: 15px;
+      border-radius: 4px;
+    }
+
+    .menu-section { margin-bottom: 15px; }
+
+    .menu-section-title {
+      font-family: 'Cinzel', serif;
+      font-size: 0.85em;
+      font-weight: bold;
+      color: var(--accent-fuchsia);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 6px;
+      border-bottom: 1px dashed var(--accent-violet);
+    }
+
+    .menu-items-grid { display: flex; flex-wrap: wrap; gap: 6px; }
+
+    .menu-chip {
+      background: var(--bg-dark-purple);
+      border: 1px solid var(--accent-violet);
+      border-radius: 6px;
+      padding: 5px 10px;
+      font-family: 'Courier Prime', monospace;
+      font-size: 0.78em;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      color: var(--text-main);
+    }
+
+    .menu-chip:hover {
+      background: var(--accent-hot-pink);
+      color: #fff;
+      border-color: var(--accent-hot-pink);
+      box-shadow: 0 0 10px var(--neon-glow-pink);
+      transform: translateY(-2px);
+    }
+
+    .menu-chip.custom-item {
+      border-color: var(--accent-hot-pink);
+      box-shadow: 0 0 8px var(--border-glow);
+    }
+
+    #chatContainer {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 360px;
+      height: 480px;
+      background: var(--panel-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: 22px;
+      border: 1px solid var(--accent-fuchsia);
+      box-shadow: 0 0 25px var(--border-glow);
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      z-index: 10000;
+      overflow: hidden;
+    }
+
+    .chat-empty-state {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      min-height: 250px;
+      background-color: var(--bg-deep-black); 
+      border: 1px solid var(--border-glow); 
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.9);
+      margin-bottom: 8px;
+    }
+
+    .orbs-background {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(25px);
+      opacity: 0.35;
+      animation: floatOrb 8s ease-in-out infinite alternate;
+    }
+
+    .orb-1 {
+      width: 120px;
+      height: 120px;
+      background: var(--accent-fuchsia);
+      top: -20px;
+      left: -20px;
+      animation-duration: 9s;
+    }
+
+    .orb-2 {
+      width: 150px;
+      height: 150px;
+      background: var(--accent-violet);
+      bottom: -40px;
+      right: -30px;
+      animation-duration: 11s;
+      animation-delay: -3s;
+    }
+
+    .orb-3 {
+      width: 90px;
+      height: 90px;
+      background: var(--accent-hot-pink);
+      top: 40%;
+      left: 30%;
+      animation-duration: 7s;
+      animation-delay: -5s;
+    }
+
+    @keyframes floatOrb {
+      0% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(25px, -20px) scale(1.15); }
+      100% { transform: translate(-15px, 20px) scale(0.9); }
+    }
+
+    .static-overlay {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background-image: radial-gradient(rgba(217, 0, 255, 0.1) 1px, transparent 0);
+      background-size: 4px 4px;
+      opacity: 0.6;
+    }
+
+    .scanner-ring {
+      width: 50px;
+      height: 50px;
+      border: 2px solid rgba(217, 0, 255, 0.2);
+      border-top: 2px solid var(--accent-hot-pink);
+      border-radius: 50%;
+      animation: spin 1.5s linear infinite;
+      box-shadow: 0 0 12px var(--accent-hot-pink);
+      margin-bottom: 15px;
+      z-index: 2;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .terminal-text {
+      font-family: 'Courier Prime', monospace;
+      color: var(--text-main);
+      font-size: 0.85rem;
+      letter-spacing: 1.5px;
+      text-shadow: 0 0 8px var(--accent-fuchsia);
+      z-index: 2;
+      padding: 0 10px;
+      text-align: center;
+    }
+
+    #chatHeader {
+      display: flex;
+      align-items: center;
+      background: rgba(13, 6, 20, 0.85);
+      padding: 8px 10px;
+      border-radius: 14px;
+      border: 1px solid var(--border-glow);
+      cursor: move;
+    }
+
+    .icon-svg { width: 20px; height: 20px; fill: var(--text-main); }
+
+    #avatar {
+      width: 30px;
+      height: 30px;
+      background: var(--bg-dark-purple);
+      border: 1px solid var(--accent-fuchsia);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 10px;
+    }
+
+    #chatTitle {
+      color: #fff;
+      font-family: 'Cinzel', serif;
+      font-size: 1em;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      text-shadow: 0 0 6px var(--accent-fuchsia);
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      background-color: var(--accent-hot-pink);
+      border-radius: 50%;
+      margin-left: 8px;
+      display: inline-block;
+      box-shadow: 0 0 8px var(--accent-hot-pink);
+      animation: pulseGlow 2s infinite alternate;
+      transition: background-color 0.4s ease, box-shadow 0.4s ease;
+    }
+
+    @keyframes pulseGlow {
+      0% { opacity: 0.4; box-shadow: 0 0 4px var(--accent-hot-pink); }
+      100% { opacity: 1; box-shadow: 0 0 12px var(--accent-hot-pink), 0 0 18px var(--accent-fuchsia); }
+    }
+
+    .status-dot.away {
+      background-color: var(--accent-violet);
+      animation: none;
+      box-shadow: none;
+    }
+
+    #chatLog {
+      flex: 1;
+      overflow-y: auto;
+      background: rgba(13, 6, 20, 0.6);
+      border: 1px solid var(--border-glow);
+      border-radius: 12px;
+      padding: 10px;
+      margin: 8px 0;
+      display: none;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .message { display: flex; align-items: flex-start; }
+    .message.user { flex-direction: row-reverse; }
+
+    .avatar-img {
+      width: 30px;
+      height: 30px;
+      border: 1px solid var(--accent-fuchsia);
+      border-radius: 50%;
+      margin: 0 6px;
+      flex-shrink: 0;
+      filter: hue-rotate(270deg);
+    }
+
+    .bubble {
+      max-width: 75%;
+      padding: 8px 12px;
+      font-family: 'Courier Prime', monospace;
+      font-size: 0.82em;
+      line-height: 1.35;
+      border-radius: 10px;
+    }
+
+    .message.stella .bubble {
+      background: var(--bg-dark-purple);
+      color: var(--text-main);
+      border: 1px solid var(--accent-fuchsia);
+      box-shadow: 0 0 10px var(--border-glow);
+    }
+
+    .message.user .bubble {
+      background: var(--accent-hot-pink);
+      color: #ffffff;
+      border: 1px solid var(--accent-fuchsia);
+      box-shadow: 0 0 12px var(--neon-glow-pink);
+    }
+
+    .typing-indicator {
+      font-family: 'Courier Prime', monospace;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      font-style: italic;
+      padding: 4px 10px;
+      margin-left: 38px;
+      animation: pulse 1s infinite alternate;
+    }
+
+    @keyframes pulse {
+      0% { opacity: 0.3; }
+      100% { opacity: 0.9; }
+    }
+
+    @keyframes hologramReveal {
+      0% {
+        opacity: 0;
+        transform: scale(0.85) translateY(10px);
+        filter: blur(8px);
+        text-shadow: 0 0 20px var(--accent-fuchsia);
+      }
+      50% {
+        opacity: 0.5;
+        filter: blur(2px);
+        text-shadow: 0 0 15px var(--accent-hot-pink);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+        filter: blur(0px);
+        text-shadow: none;
+      }
+    }
+
+    .hologram-appear {
+      animation: hologramReveal 2.5s ease-out forwards;
+    }
+
+    .input-wrapper { display: flex; gap: 5px; }
+
+    #userInput {
+      flex: 1;
+      background: var(--bg-deep-black);
+      color: var(--text-main);
+      border: 1px solid var(--accent-violet);
+      border-radius: 10px;
+      padding: 8px 12px;
+      font-family: 'Courier Prime', monospace;
+      font-size: 0.85em;
+      outline: none;
+      transition: border 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    #userInput:focus {
+      border-color: var(--accent-fuchsia);
+      box-shadow: 0 0 10px var(--border-glow);
+    }
+
+    .post-it {
+      display: none; 
+      position: absolute;
+      top: -125px;
+      left: 10px;
+      width: 220px;
+      background-color: var(--bg-dark-purple);
+      color: var(--text-main);
+      padding: 12px 15px;
+      box-shadow: 0 0 15px var(--border-glow);
+      transform: rotate(-3deg);
+      font-family: 'Courier Prime', monospace;
+      z-index: 10001;
+      border: 1px solid var(--accent-fuchsia);
+      border-radius: 8px;
+      transition: transform 0.6s ease-in, opacity 0.6s ease-in;
+    }
+
+    .post-it.fall-off {
+      transform: translateY(200px) rotate(25deg) !important;
+      opacity: 0;
+    }
+
+    .post-it .tape {
+      position: absolute;
+      top: -10px;
+      left: 35%;
+      width: 50px;
+      height: 18px;
+      background-color: rgba(217, 0, 255, 0.3);
+      border: 1px solid var(--accent-fuchsia);
+      transform: rotate(2deg);
+    }
+
+    .post-it h3 {
+      margin: 5px 0;
+      font-size: 1.1rem;
+      color: var(--accent-hot-pink);
+      text-align: center;
+      text-shadow: 0 0 6px var(--neon-glow-pink);
+    }
+
+    .handwritten-links { list-style: none; padding: 0; margin: 6px 0; }
+    .handwritten-links li { margin-bottom: 4px; }
+    .handwritten-links a {
+      color: var(--text-main);
+      text-decoration: underline;
+      font-weight: bold;
+      font-size: 0.9rem;
+    }
+
+    .post-it .close-btn {
+      background: none;
+      border: none;
+      font-family: inherit;
+      font-size: 0.8rem;
+      cursor: pointer;
+      color: var(--accent-hot-pink);
+      display: block;
+      margin: 5px auto 0 auto;
+      font-weight: bold;
+    }
+
+    #deliveryParcel {
+      position: fixed;
+      top: -120px;
+      right: 30px;
+      width: 75px;
+      height: 85px;
+      background: var(--bg-dark-purple);
+      border: 1px solid var(--accent-fuchsia);
+      box-shadow: 0 0 20px var(--border-glow);
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 10005;
+      opacity: 0;
+      transition: top 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.5), opacity 0.4s ease;
+    }
+
+    #deliveryParcel.show {
+      top: 30px;
+      opacity: 1;
+      animation: bobblehead 2.4s ease-in-out infinite alternate;
+    }
+
+    @keyframes bobblehead {
+      0% { transform: translateY(0) rotate(-4deg); }
+      50% { transform: translateY(-8px) rotate(4deg); }
+      100% { transform: translateY(0) rotate(-3deg); }
+    }
+
+    .parcel-ribbon {
+      position: absolute;
+      width: 100%;
+      height: 12px;
+      background: var(--accent-hot-pink);
+      box-shadow: 0 0 8px var(--neon-glow-pink);
+    }
+
+    .parcel-icon { font-size: 1.8rem; z-index: 2; }
+
+    .parcel-tag {
+      font-family: 'Courier Prime', monospace;
+      font-size: 0.6rem;
+      background: var(--bg-deep-black);
+      color: var(--accent-fuchsia);
+      border: 1px solid var(--accent-fuchsia);
+      padding: 1px 4px;
+      margin-top: 2px;
+      font-weight: bold;
+      z-index: 2;
+    }
+
+    #giftModalOverlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(13, 6, 20, 0.85);
+      z-index: 10008;
+    }
+
+    #giftModal {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 90%;
+      max-width: 520px;
+      background: var(--panel-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: 20px;
+      border: 1px solid var(--accent-fuchsia);
+      box-shadow: 0 0 35px var(--border-glow);
+      padding: 22px;
+      z-index: 10010;
+      text-align: center;
+      color: var(--text-main);
+    }
+
+    #giftModal h2 {
+      font-family: 'Cinzel', serif;
+      font-size: 1.4rem;
+      color: #fff;
+      margin-bottom: 8px;
+      border-bottom: 1px solid var(--accent-fuchsia);
+      padding-bottom: 6px;
+      text-shadow: 0 0 8px var(--accent-fuchsia);
+    }
+
+    #giftModal p {
+      font-family: 'Courier Prime', monospace;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 15px;
+    }
+
+    .video-container {
+      position: relative;
+      padding-bottom: 56.25%;
+      height: 0;
+      overflow: hidden;
+      border: 1px solid var(--accent-fuchsia);
+      border-radius: 12px;
+      box-shadow: 0 0 15px var(--border-glow);
+      margin-bottom: 15px;
+      background: #000;
+    }
+
+    .video-container iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
+    .gift-close {
+      background: var(--bg-dark-purple);
+      color: var(--text-main);
+      border: 1px solid var(--accent-fuchsia);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.85rem;
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      transition: all 0.2s ease;
+    }
+
+    .gift-close:hover {
+      background: var(--accent-hot-pink);
+      color: #fff;
+      box-shadow: 0 0 12px var(--neon-glow-pink);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="video-bg-container">
+    <video autoplay loop muted playsinline id="bgVideo">
+      <source src="https://assets.mixkit.co/videos/preview/mixkit-abstract-purple-and-pink-particles-40810-large.mp4" type="video/mp4" />
+    </video>
+    <div class="blush-silver-overlay"></div>
+  </div>
+
+  <div class="character-grid-container">
+    <div class="grid-title">Realm Roster</div>
+    <div class="character-grid">
+      <div class="char-card" onclick="openCharModal('Stella', 'Holographic Barista', 'https://3society.neocities.org/GUILD/StellasRealmChat/000logo.jpeg', '#', 'Stella is the realm\'s synthwave holographic barista, serving espresso & high-frequency wisdom.')">
+        <img src="https://3society.neocities.org/GUILD/StellasRealmChat/000logo.jpeg" alt="Stella">
+        <div class="char-tooltip">Stella (Barista)</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="charModalOverlay" onclick="closeCharModal()"></div>
+  <div id="charModal">
+    <img id="charModalImg" src="" alt="Character">
+    <h2 id="charModalName"></h2>
+    <div class="modal-role" id="charModalRole"></div>
+    <p id="charModalBio"></p>
+    <a class="char-modal-btn" id="charModalLink" href="#">View Full File</a>
+    <br>
+    <button class="char-modal-btn" style="margin-top: 8px;" onclick="closeCharModal()">Close</button>
+  </div>
+
+  <div id="sideMenu">
+    <div class="menu-header">
+      <span class="menu-title">Stella's Menu</span>
+      <button class="close-btn" onclick="toggleMenu()">&times;</button>
+    </div>
+    <div class="barista-quote-box" id="randomQuote">
+      Barista mood: Running on 3 hours of sleep & pure willpower...
+    </div>
+    <div id="menuContainer"></div>
+  </div>
+
+  <div class="zine-container">
+    <div class="tape"></div>
+    <div class="newspaper-header-bar">
+      <span>Vol. I — No. 1</span>
+      <span>Stella's Realm Matrix</span>
+      <span>Est. 1928 / Quantum Age</span>
+    </div>
+    <div class="banner-section">
+      <img src="https://xencafe.nekoweb.org/00SKEUOMORPHIC-STELLARCAFE-1800S/deeppurpleunusualgeisha.jpeg" alt="Realm Banner" class="banner-image" />
+      <h1>Stella's Realm</h1>
+      <p class="subtitle">"Where neon steam meets quantum teletype dispatches."</p>
+      <button class="cta" onclick="toggleMenu()">Open Menu</button>
+    </div>
+    <div class="newspaper-columns">
+      <div>
+        <div class="column-title">Telegraph Dispatch</div>
+        <p>Type into the portal window on the bottom right to establish a link with Stella. She will brew your orders and answer your questions directly via quantum frequency.</p>
+      </div>
+      <div>
+        <div class="column-title">Barista Notes</div>
+        <p>All beverages are synthesized fresh on arrival. Don't forget to check out the daily mood quotes or sample our fresh pastries!</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="chatContainer">
+    <div class="post-it" id="postItNote">
+      <div class="tape"></div>
+      <h3>Realm Index 📌</h3>
+      <ul class="handwritten-links">
+        <li><a href="https://youtube.com" target="_blank">YouTube Station</a></li>
+        <li><a href="https://amazon.com" target="_blank">Amazon Market</a></li>
+      </ul>
+      <button class="close-btn" onclick="closePostIt()">(Tear Off)</button>
+    </div>
+
+    <div id="chatHeader">
+      <div id="avatar">
+        <svg class="icon-svg" viewBox="0 0 24 24">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/>
+        </svg>
+      </div>
+      <span id="chatTitle">Stella</span>
+      <span class="status-dot" id="stellaStatus"></span>
+    </div>
+
+    <div class="chat-empty-state" id="emptyState">
+      <div class="orbs-background">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+        <div class="static-overlay"></div>
+      </div>
+      <div class="scanner-ring"></div>
+      <div class="terminal-text" id="terminalText">> INITIALIZING...</div>
+    </div>
+
+    <div id="chatLog"></div>
+
+    <div class="input-wrapper">
+      <input type="text" id="userInput" placeholder="Type a message or order..." onkeypress="handleKeyPress(event)" />
+    </div>
+  </div>
+
+  <div id="deliveryParcel" onclick="openGiftModal()">
+    <div class="parcel-ribbon"></div>
+    <div class="parcel-icon">🎁</div>
+    <div class="parcel-tag">SPECIAL</div>
+  </div>
+
+  <div id="giftModalOverlay" onclick="closeGiftModal()"></div>
+  <div id="giftModal">
+    <h2>Transmission Received!</h2>
+    <p>A special thank-you tutorial video has arrived from the realm.</p>
+    <div class="video-container">
+      <iframe id="lessonVideo" src="" allowfullscreen></iframe>
+    </div>
+    <button class="gift-close" onclick="closeGiftModal()">Close</button>
+  </div>
+
+  <script>
+    let currentOrder = [];
+    let isAwaitingFinalConfirmation = false;
+    const videoUrl = "https://www.youtube.com/embed/dQw4w9WgXcQ?enablejsapi=1";
+
+    const confirmationKeywords = [
+      "yes", "yeah", "yep", "sure", "ok", "okay", "that's all", "thats all", 
+      "that's it", "thats it", "no", "nothing else", "i'm good", "im good", 
+      "done", "final", "ready", "ring it up"
+    ];
+
+    const doneTriggers = [
+      "that's it", "thats it", "that's all", "thats all", "i'm done", 
+      "im done", "nothing else", "no thanks", "final", "that's complete", "all set"
+    ];
+
+    const summaryTriggers = [
+      "total", "grand total", "repeat my order", "summarize my order", "what did i order", 
+      "show my order", "order summary", "read my order", "read back my order", 
+      "check my order", "review my order", "what's on my ticket", "whats on my ticket"
+    ];
+
+    // Menu Map with pricing for automatic total calculation
+    const orderableItems = {
+      "pour-over": { name: "Pour-Over Coffee", price: 4.50 },
+      "caramel macchiato": { name: "Caramel Macchiato", price: 5.75 },
+      "chai latte": { name: "Chai Latte", price: 5.25 },
+      "chai": { name: "Chai Latte", price: 5.25 },
+      "americano": { name: "Americano", price: 4.00 },
+      "cold brew": { name: "Cold Brew", price: 4.75 },
+      "earl grey": { name: "Earl Grey Tea", price: 3.75 },
+      "matcha": { name: "Matcha Latte", price: 5.50 },
+      "green tea": { name: "Green Tea", price: 3.50 },
+      "lavender espresso": { name: "Lavender Espresso", price: 4.25 },
+      "espresso": { name: "Lavender Espresso", price: 4.25 },
+      "latte": { name: "Latte", price: 5.00 },
+      "house roast": { name: "House Coffee", price: 3.25 },
+      "house coffee": { name: "House Coffee", price: 3.25 },
+      "coffee": { name: "House Coffee", price: 3.25 },
+      "water": { name: "Ice Water", price: 0.00 },
+      "glazed donut": { name: "Glazed Donut", price: 2.75 },
+      "donut": { name: "Glazed Donut", price: 2.75 },
+      "butter croissant": { name: "Butter Croissant", price: 3.50 },
+      "croissant": { name: "Butter Croissant", price: 3.50 },
+      "blueberry scone": { name: "Blueberry Scone", price: 3.75 },
+      "scone": { name: "Blueberry Scone", price: 3.75 },
+      "muffin": { name: "Muffin", price: 3.25 },
+      "cinnamon roll": { name: "Cinnamon Roll", price: 4.00 },
+      "vanilla": { name: "Vanilla Syrup", price: 0.75 },
+      "lavender": { name: "Lavender Syrup", price: 0.75 },
+      "oat": { name: "Oat Milk", price: 0.80 },
+      "almond": { name: "Almond Milk", price: 0.80 },
+      "soy": { name: "Soy Milk", price: 0.80 },
+      "hot": { name: "Make it Hot", price: 0.00 },
+      "iced": { name: "Make it Iced", price: 0.00 }
+    };
+
+    const responses = {
+      "hello": [
+        "Stell's ComfyCafe! Oh—hold on, TIMMY DROP THE STEAM WAND—sorry about that! What can I craft for you today?",
+        "Thanks for calling Stell's! *ticket printer buzzing loudly* What can I get started for you?"
+      ],
+      "hi": [
+        "Hi there! Welcome to Stell's. What can I get brewing for you today?",
+        "Hey hey! Catching me between orders—what are we sipping today?"
+      ],
+      "stella": [
+        "That's me! What can I brew up for you today?",
+        "Present and accounted for! What's on your mind?"
+      ],
+      "thank you": [
+        "Aw, absolutely! Happy to help.",
+        "You're super welcome! Hope you enjoy your stay at Stell's."
+      ],
+      "bye": [
+        "Bye! Thanks for stopping by Stell's—hope your day is super cozy!",
+        "Bye-bye! Don't forget to sip something warm today!"
+      ],
+      "default": [
+        "Coming right up! Let me know if you'd like to add anything else to your order.",
+        "Added that to your note! Anything else I can brew or fetch for you today?"
+      ]
+    };
+
+    const lastResponseIndex = {};
+    function getRandomResponse(key, arr) {
+      if (!arr || arr.length === 0) return "Right away!";
+      if (arr.length === 1) return arr[0];
+      let newIndex;
+      do {
+        newIndex = Math.floor(Math.random() * arr.length);
+      } while (newIndex === lastResponseIndex[key]);
+      lastResponseIndex[key] = newIndex;
+      return arr[newIndex];
+    }
+
+    // Temporary Menu Registration Feature
+    function addTemporaryCustomItem(itemName) {
+      const key = itemName.toLowerCase();
+      const formattedName = itemName.charAt(0).toUpperCase() + itemName.slice(1);
+      const price = +(Math.random() * (5.50 - 2.50) + 2.50).toFixed(2); // Random dynamic price
+
+      orderableItems[key] = { name: formattedName, price: price, isCustom: true };
+      currentOrder.push(orderableItems[key]);
+
+      populateDynamicMenu(); // Refresh side menu with new custom item chip
+      return orderableItems[key];
+    }
+
+    function populateDynamicMenu() {
+      const container = document.getElementById("menuContainer");
+      if (!container) return;
+      container.innerHTML = "";
+
+      const uniqueItemsMap = new Map();
+      Object.values(orderableItems).forEach(item => {
+        uniqueItemsMap.set(item.name, item);
+      });
+
+      const categories = {
+        "Beverages": ["Coffee", "Espresso", "Latte", "Macchiato", "Chai", "Tea", "Cold Brew", "Water"],
+        "Pastries & Treats": ["Donut", "Croissant", "Scone", "Muffin", "Cinnamon Roll"],
+        "Customizations & Add-ons": ["Syrup", "Milk", "Hot", "Iced"],
+        "Special Requests (Custom)": []
+      };
+
+      const customItemsGroup = [];
+
+      uniqueItemsMap.forEach(item => {
+        let sorted = false;
+        if (item.isCustom) {
+          customItemsGroup.push(item);
+          return;
+        }
+
+        for (const [categoryName, keywords] of Object.entries(categories)) {
+          if (categoryName === "Special Requests (Custom)") continue;
+          if (keywords.some(kw => item.name.toLowerCase().includes(kw.toLowerCase()))) {
+            if (!categories[categoryName].items) categories[categoryName].items = [];
+            categories[categoryName].items.push(item);
+            sorted = true;
+            break;
+          }
+        }
+        if (!sorted) {
+          if (!categories["Pastries & Treats"].items) categories["Pastries & Treats"].items = [];
+          categories["Pastries & Treats"].items.push(item);
+        }
+      });
+
+      for (const [categoryName, categoryData] of Object.entries(categories)) {
+        if (categoryName === "Special Requests (Custom)") continue;
+        const items = categoryData.items || [];
+        if (items.length === 0) continue;
+
+        const secDiv = document.createElement("div");
+        secDiv.className = "menu-section";
+
+        const titleDiv = document.createElement("div");
+        titleDiv.className = "menu-section-title";
+        titleDiv.textContent = categoryName;
+
+        const gridDiv = document.createElement("div");
+        gridDiv.className = "menu-items-grid";
+
+        items.forEach(item => {
+          const chip = document.createElement("button");
+          chip.className = "menu-chip";
+          chip.textContent = `${item.name} ($${item.price.toFixed(2)})`;
+          chip.onclick = () => quickSend(item.name);
+          gridDiv.appendChild(chip);
+        });
+
+        secDiv.appendChild(titleDiv);
+        secDiv.appendChild(gridDiv);
+        container.appendChild(secDiv);
+      }
+
+      // Add Custom section if items exist
+      if (customItemsGroup.length > 0) {
+        const secDiv = document.createElement("div");
+        secDiv.className = "menu-section";
+
+        const titleDiv = document.createElement("div");
+        titleDiv.className = "menu-section-title";
+        titleDiv.textContent = "Special Requests (Custom)";
+
+        const gridDiv = document.createElement("div");
+        gridDiv.className = "menu-items-grid";
+
+        customItemsGroup.forEach(item => {
+          const chip = document.createElement("button");
+          chip.className = "menu-chip custom-item";
+          chip.textContent = `★ ${item.name} ($${item.price.toFixed(2)})`;
+          chip.onclick = () => quickSend(item.name);
+          gridDiv.appendChild(chip);
+        });
+
+        secDiv.appendChild(titleDiv);
+        secDiv.appendChild(gridDiv);
+        container.appendChild(secDiv);
+      }
+    }
+
+    let audioCtx = null;
+
+    function initAudio() {
+      if (!audioCtx) {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        audioCtx = new AudioContext();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+    }
+
+    function playStellaChime() {
+      initAudio();
+      if (!audioCtx) return;
+
+      const osc1 = audioCtx.createOscillator();
+      const gain1 = audioCtx.createGain();
+      osc1.type = 'sine';
+      osc1.frequency.setValueAtTime(523.25, audioCtx.currentTime);
+      gain1.gain.setValueAtTime(0.08, audioCtx.currentTime);
+      gain1.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.15);
+      osc1.connect(gain1);
+      gain1.connect(audioCtx.destination);
+
+      const osc2 = audioCtx.createOscillator();
+      const gain2 = audioCtx.createGain();
+      osc2.type = 'sine';
+      osc2.frequency.setValueAtTime(783.99, audioCtx.currentTime + 0.08);
+      gain2.gain.setValueAtTime(0.08, audioCtx.currentTime + 0.08);
+      gain2.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.3);
+      osc2.connect(gain2);
+      gain2.connect(audioCtx.destination);
+
+      osc1.start(audioCtx.currentTime);
+      osc1.stop(audioCtx.currentTime + 0.15);
+
+      osc2.start(audioCtx.currentTime + 0.08);
+      osc2.stop(audioCtx.currentTime + 0.3);
+    }
+
+    let idleTime = 0;
+    let isAway = false;
+
+    setInterval(() => {
+      idleTime++;
+      if (idleTime >= 5 && !isAway) {
+        isAway = true;
+        const statusDot = document.getElementById("stellaStatus");
+        if (statusDot) statusDot.classList.add("away");
+      }
+    }, 60000);
+
+    function resetIdleTimer() {
+      if (isAway) {
+        isAway = false;
+        const statusDot = document.getElementById("stellaStatus");
+        if (statusDot) statusDot.classList.remove("away");
+
+        setTimeout(() => {
+          appendMessage("stella", "Welcome back! Hope you found everything alright while you stepped away.");
+        }, 500);
+      }
+      idleTime = 0;
+    }
+
+    window.addEventListener("mousemove", resetIdleTimer);
+    window.addEventListener("keydown", resetIdleTimer);
+    window.addEventListener("click", resetIdleTimer);
+
+    const chatContainer = document.getElementById('chatContainer');
+    const chatHeader = document.getElementById('chatHeader');
+    let isDragging = false, offsetX = 0, offsetY = 0;
+
+    chatHeader.addEventListener('mousedown', (e) => {
+      isDragging = true;
+      offsetX = e.clientX - chatContainer.offsetLeft;
+      offsetY = e.clientY - chatContainer.offsetTop;
+      document.body.style.userSelect = 'none';
+    });
+
+    document.addEventListener('mousemove', (e) => {
+      if (!isDragging) return;
+      chatContainer.style.left = `${e.clientX - offsetX}px`;
+      chatContainer.style.top = `${e.clientY - offsetY}px`;
+    });
+
+    document.addEventListener('mouseup', () => {
+      isDragging = false;
+      document.body.style.userSelect = '';
+    });
+
+    const messages = [
+      "> INITIALIZING TELEGRAPH MATRIX...",
+      "> SCANNING FOR HOST...",
+      "> ESTABLISHING QUANTUM LINK...",
+      "> HOST LOCATED. AWAITING TRANSMISSION..."
+    ];
+
+    let messageIndex = 0;
+    let charIndex = 0;
+    const speed = 50; 
+    const textElement = document.getElementById("terminalText");
+    let typingTimeout;
+
+    function typeWriter() {
+      if (charIndex < messages[messageIndex].length) {
+        textElement.textContent += messages[messageIndex].charAt(charIndex);
+        charIndex++;
+        typingTimeout = setTimeout(typeWriter, speed);
+      } else {
+        typingTimeout = setTimeout(nextMessage, 2000);
+      }
+    }
+
+    function nextMessage() {
+      charIndex = 0;
+      messageIndex++;
+
+      if (messageIndex >= messages.length) {
+        setTimeout(() => {
+          hideEmptyState();
+        }, 800);
+      } else {
+        textElement.textContent = "";
+        typeWriter();
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      textElement.textContent = "";
+      typeWriter();
+      populateDynamicMenu();
+    });
+
+    function hideEmptyState() {
+      initAudio();
+      const emptyState = document.getElementById("emptyState");
+      const chatLog = document.getElementById("chatLog");
+      if (emptyState && emptyState.style.display !== "none") {
+        emptyState.style.display = "none";
+        chatLog.style.display = "flex";
+        clearTimeout(typingTimeout);
+
+        appendMessage(
+          "stella", 
+          "Greetings! I am Stella. What can I get started for you today?", 
+          true
+        );
+      }
+    }
+
+    const userInput = document.getElementById("userInput");
+    userInput.addEventListener("focus", hideEmptyState);
+    userInput.addEventListener("input", hideEmptyState);
+
+    function showTypingIndicator() {
+      const chatLog = document.getElementById("chatLog");
+      const typingDiv = document.createElement("div");
+      typingDiv.id = "stellaTyping";
+      typingDiv.className = "typing-indicator";
+      typingDiv.textContent = "Stella is typing...";
+      chatLog.appendChild(typingDiv);
+      chatLog.scrollTop = chatLog.scrollHeight;
+    }
+
+    function removeTypingIndicator() {
+      const typingDiv = document.getElementById("stellaTyping");
+      if (typingDiv) typingDiv.remove();
+    }
+
+    function handleKeyPress(e) {
+      if (e.key === 'Enter') {
+        handleUserInput();
+      }
+    }
+
+    function handleUserInput() {
+      hideEmptyState();
+      const input = document.getElementById('userInput');
+      const msg = input.value.trim();
+      if (!msg) return;
+
+      appendMessage('user', msg);
+      input.value = '';
+
+      const lowerMsg = msg.toLowerCase();
+      showTypingIndicator();
+
+      setTimeout(() => {
+        removeTypingIndicator();
+
+        const isDone = doneTriggers.some(trigger => lowerMsg.includes(trigger));
+        const isSummary = summaryTriggers.some(trigger => lowerMsg.includes(trigger));
+        const isConfirming = confirmationKeywords.some(kw => lowerMsg.includes(kw));
+
+        if (isAwaitingFinalConfirmation && (isConfirming || isDone)) {
+          isAwaitingFinalConfirmation = false;
+          appendMessage('stella', "Awesome! Ringing that up right now. ☕ Look at the top right of your screen—a special delivery parcel just dropped! Click it to unwrap your thank-you video lesson!");
+          triggerDeliveryParcel();
+          return;
+        }
+
+        // Match existing items or dynamic custom item creation
+        let matchedAnItem = false;
+        let addedItemObj = null;
+
+        for (const itemKey in orderableItems) {
+          if (lowerMsg.includes(itemKey)) {
+            const itemObj = orderableItems[itemKey];
+            if (!currentOrder.some(o => o.name === itemObj.name)) {
+              currentOrder.push(itemObj);
+            }
+            matchedAnItem = true;
+            addedItemObj = itemObj;
+            break;
+          }
+        }
+
+        // Check for order triggers e.g., "can I order X", "add X", "I want X"
+        const orderPhrases = ["can i get", "can i order", "add", "i want", "i'll have", "give me"];
+        const phraseFound = orderPhrases.find(phrase => lowerMsg.includes(phrase));
+
+        if (!matchedAnItem && phraseFound) {
+          const rawItem = lowerMsg.split(phraseFound)[1]?.trim().replace(/[.!?]/g, '');
+          if (rawItem && rawItem.length > 2) {
+            addedItemObj = addTemporaryCustomItem(rawItem);
+            matchedAnItem = true;
+          }
+        }
+
+        // Total / Summary request handler
+        if (isSummary || isDone) {
+          if (currentOrder.length === 0) {
+            appendMessage('stella', "Your ticket is currently empty! What can I brew or grab for you today?");
+          } else {
+            const itemListStr = currentOrder.map(i => `${i.name} ($${i.price.toFixed(2)})`).join(", ");
+            const totalPrice = currentOrder.reduce((acc, curr) => acc + curr.price, 0).toFixed(2);
+            
+            const summaryText = `Alright! Here's your current ticket: ${itemListStr}. Your total comes out to $${totalPrice}. Shall I ring that up for you?`;
+            isAwaitingFinalConfirmation = true;
+            appendMessage('stella', summaryText);
+          }
+          return;
+        }
+
+        if (matchedAnItem && addedItemObj) {
+          appendMessage('stella', `Got it! Added ${addedItemObj.name} ($${addedItemObj.price.toFixed(2)}) to your ticket! I've updated the realm menu for you as well. Anything else?`);
+          return;
+        }
+
+        let replyArray = null;
+        let matchedKey = 'default';
+
+        if (responses.hasOwnProperty(lowerMsg)) {
+          replyArray = responses[lowerMsg];
+          matchedKey = lowerMsg;
+        } else {
+          for (const key in responses) {
+            if (key !== 'default' && lowerMsg.includes(key)) {
+              replyArray = responses[key];
+              matchedKey = key;
+              break;
+            }
+          }
+        }
+
+        if (!replyArray) {
+          replyArray = responses['default'];
+        }
+
+        const replyText = getRandomResponse(matchedKey, replyArray);
+        appendMessage('stella', replyText);
+
+      }, 700);
+    }
+
+    function quickSend(itemName) {
+      hideEmptyState();
+      appendMessage("user", itemName);
+      showTypingIndicator();
+
+      let targetObj = Object.values(orderableItems).find(i => i.name.toLowerCase() === itemName.toLowerCase());
+      if (!targetObj) {
+        targetObj = addTemporaryCustomItem(itemName);
+      } else if (!currentOrder.some(o => o.name === targetObj.name)) {
+        currentOrder.push(targetObj);
+      }
+
+      setTimeout(() => {
+        removeTypingIndicator();
+        appendMessage("stella", `Added ${targetObj.name} ($${targetObj.price.toFixed(2)}) to your ticket! Anything else I can fetch for you?`);
+      }, 600);
+    }
+
+    function appendMessage(sender, text, isHologram = false) {
+      const chatLog = document.getElementById("chatLog");
+      const msgDiv = document.createElement("div");
+
+      const isStella = (sender === 'stella' || sender === 'Stella');
+      msgDiv.className = `message ${isStella ? 'stella' : 'user'}`;
+
+      if (isHologram) {
+        msgDiv.classList.add("hologram-appear");
+      }
+
+      const avatar = document.createElement("img");
+      avatar.className = "avatar-img";
+      avatar.src = isStella 
+        ? "https://3society.neocities.org/GUILD/StellasRealmChat/000logo.jpeg" 
+        : "https://3society.neocities.org/GUILD/tcup.jpeg";
+
+      const bubble = document.createElement("div");
+      bubble.className = "bubble";
+      bubble.textContent = text;
+
+      if (!isStella) {
+        msgDiv.appendChild(bubble);
+        msgDiv.appendChild(avatar);
+      } else {
+        msgDiv.appendChild(avatar);
+        msgDiv.appendChild(bubble);
+      }
+
+      chatLog.appendChild(msgDiv);
+      chatLog.scrollTop = chatLog.scrollHeight;
+
+      if (isStella) {
+        playStellaChime();
+      }
+    }
+
+    function togglePostIt() {
+      const postIt = document.getElementById('postItNote');
+      postIt.classList.remove('fall-off');
+      postIt.style.display = 'block';
+    }
+
+    function closePostIt() {
+      const postIt = document.getElementById('postItNote');
+      postIt.classList.add('fall-off');
+      setTimeout(() => { postIt.style.display = 'none'; }, 600);
+    }
+
+    function triggerDeliveryParcel() {
+      const parcel = document.getElementById('deliveryParcel');
+      parcel.classList.add('show');
+    }
+
+    const baristaQuotes = [
+      "Barista mood: Running on 3 hours of sleep & pure willpower...",
+      "Barista mood: My brain feels like an overheated steam wand!",
+      "Barista mood: 90% espresso shots, 10% tea leaves, 100% vibe.",
+      "Barista mood: Timmy just dropped the mug tray again... send help!",
+      "Barista mood: Mental health held together by lavender syrup."
+    ];
+
+    function toggleMenu() {
+      const menu = document.getElementById('sideMenu');
+      menu.classList.toggle('active');
+      if (menu.classList.contains('active')) {
+        const randomQuote = baristaQuotes[Math.floor(Math.random() * baristaQuotes.length)];
+        document.getElementById('randomQuote').textContent = randomQuote;
+      }
+    }
+
+    function openCharModal(name, role, img, link, bio) {
+      document.getElementById('charModalName').textContent = name;
+      document.getElementById('charModalRole').textContent = role;
+      document.getElementById('charModalImg').src = img;
+      document.getElementById('charModalLink').href = link;
+      document.getElementById('charModalBio').textContent = bio;
+
+      document.getElementById('charModalOverlay').style.display = 'block';
+      document.getElementById('charModal').style.display = 'block';
+    }
+
+    function closeCharModal() {
+      document.getElementById('charModalOverlay').style.display = 'none';
+      document.getElementById('charModal').style.display = 'none';
+    }
+
+    function openGiftModal() {
+      document.getElementById('lessonVideo').src = videoUrl;
+      document.getElementById('giftModalOverlay').style.display = 'block';
+      document.getElementById('giftModal').style.display = 'block';
+    }
+
+    function closeGiftModal() {
+      document.getElementById('lessonVideo').src = '';
+      document.getElementById('giftModalOverlay').style.display = 'none';
+      document.getElementById('giftModal').style.display = 'none';
+    }
+  </script>
+</body>
+</html>
