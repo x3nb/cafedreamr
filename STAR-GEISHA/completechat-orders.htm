@@ -1,0 +1,1493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="/.nekoweb-api/static/site.js" defer></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Stella's Comfy Cafe</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Cinzel:wght@700&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Special+Elite&display=swap');
+
+    /* Basic Reset & Zine Base */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Courier Prime', monospace;
+      background-color: #0d0a12;
+      background-image: 
+        radial-gradient(#221338 15%, transparent 16%),
+        radial-gradient(#150824 15%, transparent 16%);
+      background-size: 60px 60px;
+      background-position: 0 0, 30px 30px;
+      color: #e2d9ee;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px 10px 100px 10px;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Zine Wrapper Paper Effect */
+    .zine-container {
+      width: 100%;
+      max-width: 800px;
+      background: #140d1f;
+      border: 3px solid #6A0DAD;
+      box-shadow: 8px 8px 0px #000, -2px -2px 0px #ff0055;
+      padding: 20px;
+      position: relative;
+      transform: rotate(-0.5deg);
+    }
+
+    /* Tape decoration */
+    .tape {
+      position: absolute;
+      top: -12px;
+      left: 40%;
+      width: 120px;
+      height: 25px;
+      background: rgba(230, 230, 230, 0.2);
+      border: 1px dashed rgba(255, 255, 255, 0.4);
+      transform: rotate(-3deg);
+    }
+
+    /* Banner Section */
+    .banner-section {
+      position: relative;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      border-bottom: 2px dashed #6A0DAD;
+      padding-bottom: 25px;
+    }
+
+    .banner-image {
+      width: 100%;
+      max-height: 250px;
+      object-fit: cover;
+      filter: grayscale(40%) contrast(120%) sepia(20%);
+      border: 2px solid #fff;
+      box-shadow: 5px 5px 0px #6A0DAD;
+    }
+
+    /* Social Icons Row */
+    .members-overlay {
+      margin-top: 15px;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+    }
+
+    .members {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      background: #000;
+      padding: 10px 15px;
+      border: 2px solid #ff0055;
+      transform: rotate(1deg);
+    }
+
+    .member-link {
+      border: 1px solid #fff;
+      background: #222;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4px;
+      transition: all 0.2s ease;
+    }
+
+    .member-link:hover {
+      transform: scale(1.1) rotate(-3deg);
+      background: #ff0055;
+    }
+
+    .member-img {
+      width: 36px;
+      height: 36px;
+      object-fit: cover;
+      filter: grayscale(100%);
+    }
+
+    /* Main Typography */
+    h1 {
+      font-family: 'Special Elite', cursive;
+      font-size: 2.5em;
+      color: #fff;
+      text-transform: uppercase;
+      text-shadow: 3px 3px 0px #ff0055, -2px -2px 0px #6A0DAD;
+      margin: 20px 0 10px 0;
+      text-align: center;
+      letter-spacing: 2px;
+    }
+
+    p.subtitle {
+      font-size: 0.95em;
+      color: #bfa8db;
+      text-align: center;
+      background: #000;
+      display: inline-block;
+      padding: 5px 10px;
+      border: 1px solid #6A0DAD;
+      margin-bottom: 15px;
+    }
+
+    .cta {
+      background: #ff0055;
+      color: #fff;
+      font-family: 'Special Elite', cursive;
+      font-size: 1.1em;
+      text-decoration: none;
+      padding: 10px 22px;
+      border: 2px solid #fff;
+      box-shadow: 4px 4px 0px #000;
+      display: inline-block;
+      margin-top: 10px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .cta:hover {
+      background: #6A0DAD;
+      box-shadow: 2px 2px 0px #fff;
+      transform: translate(2px, 2px);
+    }
+
+    /* Glassmorphism Side Menu */
+    #sideMenu {
+      position: fixed;
+      top: 20px;
+      left: -320px;
+      width: 290px;
+      max-height: 85vh;
+      overflow-y: auto;
+      background: rgba(20, 13, 31, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 16px;
+      box-shadow: 0 8px 32px 0 rgba(106, 13, 173, 0.37), inset 0 0 12px rgba(255, 255, 255, 0.05);
+      padding: 18px;
+      z-index: 10000;
+      transition: left 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      color: #e2d9ee;
+    }
+
+    #sideMenu.active {
+      left: 20px;
+    }
+
+    .menu-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px dashed rgba(255, 255, 255, 0.3);
+      padding-bottom: 10px;
+      margin-bottom: 12px;
+    }
+
+    .menu-title {
+      font-family: 'Special Elite', cursive;
+      font-size: 1.2em;
+      color: #ff0055;
+      text-transform: uppercase;
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 1.4em;
+      cursor: pointer;
+      line-height: 1;
+    }
+
+    .barista-quote-box {
+      background: rgba(106, 13, 173, 0.3);
+      border-left: 3px solid #ff0055;
+      padding: 8px 10px;
+      font-size: 0.78em;
+      font-style: italic;
+      margin-bottom: 15px;
+      border-radius: 0 8px 8px 0;
+    }
+
+    .menu-section {
+      margin-bottom: 15px;
+    }
+
+    .menu-section-title {
+      font-size: 0.85em;
+      font-weight: bold;
+      color: #bfa8db;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 6px;
+    }
+
+    .menu-items-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .menu-chip {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      padding: 5px 10px;
+      border-radius: 12px;
+      font-size: 0.78em;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .menu-chip:hover {
+      background: #ff0055;
+      color: #fff;
+      border-color: #fff;
+      transform: translateY(-2px);
+    }
+
+    #sideMenu::-webkit-scrollbar {
+      width: 4px;
+    }
+    #sideMenu::-webkit-scrollbar-thumb {
+      background: rgba(255, 0, 85, 0.5);
+      border-radius: 4px;
+    }
+
+    /* Chat Box Container */
+    #chatContainer {
+      position: fixed;
+      bottom: 15px;
+      right: 15px;
+      width: 350px;
+      height: 460px;
+      background: #0d0914;
+      border: 3px solid #fff;
+      box-shadow: 6px 6px 0px #ff0055;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      z-index: 9999;
+    }
+
+    #chatHeader {
+      display: flex;
+      align-items: center;
+      background: #6A0DAD;
+      padding: 6px 10px;
+      border-bottom: 2px solid #fff;
+      cursor: move;
+    }
+
+    .icon-svg {
+      width: 22px;
+      height: 22px;
+      fill: #fff;
+    }
+
+    #avatar {
+      width: 32px;
+      height: 32px;
+      background: #000;
+      border: 1px solid #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 10px;
+    }
+
+    #chatTitle {
+      color: #fff;
+      font-family: 'Special Elite', cursive;
+      font-size: 1.1em;
+      letter-spacing: 1px;
+    }
+
+    #chatLog {
+      flex: 1;
+      overflow-y: auto;
+      background: #000;
+      border: 1px solid #333;
+      padding: 10px;
+      margin: 8px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    #chatLog::-webkit-scrollbar {
+      width: 6px;
+    }
+    #chatLog::-webkit-scrollbar-thumb {
+      background: #6A0DAD;
+    }
+
+    .message {
+      display: flex;
+      align-items: flex-start;
+    }
+
+    .message.user {
+      flex-direction: row-reverse;
+    }
+
+    .avatar-img {
+      width: 32px;
+      height: 32px;
+      border: 1px solid #fff;
+      margin: 0 6px;
+      flex-shrink: 0;
+      filter: grayscale(80%);
+    }
+
+    .bubble {
+      max-width: 75%;
+      padding: 8px 10px;
+      font-size: 0.85em;
+      line-height: 1.3;
+      border: 1px solid #fff;
+    }
+
+    .message.stella .bubble {
+      background: #1e102a;
+      color: #e2d9ee;
+      border-color: #6A0DAD;
+      box-shadow: 2px 2px 0px #000;
+    }
+
+    .message.user .bubble {
+      background: #ff0055;
+      color: #fff;
+      border-color: #fff;
+      box-shadow: -2px 2px 0px #000;
+    }
+
+    .input-wrapper {
+      display: flex;
+      gap: 5px;
+    }
+
+    #userInput {
+      flex: 1;
+      background: #000;
+      color: #fff;
+      border: 1px solid #6A0DAD;
+      padding: 8px;
+      font-family: 'Courier Prime', monospace;
+      font-size: 0.85em;
+      outline: none;
+    }
+
+    #userInput:focus {
+      border-color: #ff0055;
+    }
+
+    /* Post-it Note Styles */
+    .post-it {
+      display: none; 
+      position: absolute;
+      top: -120px;
+      left: 10px;
+      width: 220px;
+      background-color: #fffa8d;
+      padding: 12px 15px;
+      box-shadow: 4px 4px 10px rgba(0,0,0,0.4);
+      transform: rotate(-3deg);
+      font-family: 'Caveat', cursive, sans-serif;
+      z-index: 10001;
+      border-bottom-right-radius: 12px;
+      transition: transform 0.6s ease-in, opacity 0.6s ease-in;
+    }
+
+    /* Falling Animation Class */
+    .post-it.fall-off {
+      transform: translateY(200px) rotate(25deg) !important;
+      opacity: 0;
+    }
+
+    /* Tape Effect */
+    .post-it .tape {
+      position: absolute;
+      top: -10px;
+      left: 35%;
+      width: 50px;
+      height: 18px;
+      background-color: rgba(255, 255, 255, 0.65);
+      border: 1px solid rgba(0,0,0,0.1);
+      transform: rotate(2deg);
+    }
+
+    .post-it h3 {
+      margin: 5px 0;
+      font-size: 1.3rem;
+      color: #140d1f;
+      text-align: center;
+    }
+
+    .handwritten-links {
+      list-style: none;
+      padding: 0;
+      margin: 6px 0;
+    }
+
+    .handwritten-links li {
+      margin-bottom: 4px;
+    }
+
+    .handwritten-links a {
+      color: #6A0DAD;
+      text-decoration: underline;
+      font-weight: bold;
+      font-size: 1.1rem;
+    }
+
+    .post-it .close-btn {
+      background: none;
+      border: none;
+      font-family: inherit;
+      font-size: 1rem;
+      cursor: pointer;
+      color: #ff0055;
+      display: block;
+      margin: 5px auto 0 auto;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="zine-container">
+    <div class="tape"></div>
+    <div class="banner-section">
+      <img src="https://xencafe.nekoweb.org/0000000STELLAR-CAFE-COMPLETE/ONE-DIRECTIONS/Chimera-rose-escape.jpeg" alt="Cafe Banner" class="banner-image" />
+      <h1>Stella's Comfy Cafe</h1>
+      <p class="subtitle">Indie Vibes • Good Brews • Chill Conversations</p>
+      <button class="cta" onclick="toggleMenu()">View Our Menu ☕</button>
+    </div>
+  </div>
+
+  <div id="sideMenu">
+    <div class="menu-header">
+      <div class="menu-title">Cafe Menu</div>
+      <button class="close-btn" onclick="toggleMenu()">&times;</button>
+    </div>
+    <div id="randomQuote" class="barista-quote-box">Loading barista mood...</div>
+    
+    <div class="menu-section">
+      <div class="menu-section-title">Coffee & Espresso</div>
+      <div class="menu-items-grid">
+        <span class="menu-chip" onclick="quickSend('Caramel Macchiato')">Caramel Macchiato</span>
+        <span class="menu-chip" onclick="quickSend('Pour-Over Coffee')">Pour-Over</span>
+        <span class="menu-chip" onclick="quickSend('Cold Brew')">Cold Brew</span>
+        <span class="menu-chip" onclick="quickSend('Americano')">Americano</span>
+        <span class="menu-chip" onclick="quickSend('Latte')">Latte</span>
+      </div>
+    </div>
+
+    <div class="menu-section">
+      <div class="menu-section-title">Cozy Teas</div>
+      <div class="menu-items-grid">
+        <span class="menu-chip" onclick="quickSend('Chai Latte')">Chai Latte</span>
+        <span class="menu-chip" onclick="quickSend('Earl Grey')">Earl Grey</span>
+        <span class="menu-chip" onclick="quickSend('Matcha')">Matcha</span>
+        <span class="menu-chip" onclick="quickSend('Green Tea')">Green Tea</span>
+        <span class="menu-chip" onclick="quickSend('Suggest a tea')">Suggest a tea</span>
+      </div>
+    </div>
+
+    <div class="menu-section">
+      <div class="menu-section-title">Pastries & Treats</div>
+      <div class="menu-items-grid">
+        <span class="menu-chip" onclick="quickSend('Donut')">Donut</span>
+        <span class="menu-chip" onclick="quickSend('Croissant')">Croissant</span>
+        <span class="menu-chip" onclick="quickSend('Blueberry Scone')">Scone</span>
+        <span class="menu-chip" onclick="quickSend('Muffin')">Muffin</span>
+        <span class="menu-chip" onclick="quickSend('Cinnamon Roll')">Cinnamon Roll</span>
+      </div>
+    </div>
+
+    <div class="menu-section">
+      <div class="menu-section-title">Extras & Customs</div>
+      <div class="menu-items-grid">
+        <span class="menu-chip" onclick="quickSend('Make it iced')">Make it Iced</span>
+        <span class="menu-chip" onclick="quickSend('Make it hot')">Make it Hot</span>
+        <span class="menu-chip" onclick="quickSend('Oat Milk')">Oat Milk</span>
+        <span class="menu-chip" onclick="quickSend('Vanilla Syrup')">Vanilla Syrup</span>
+        <span class="menu-chip" onclick="quickSend('Water')">Ice Water</span>
+      </div>
+    </div>
+  </div>
+
+  <div id="chatContainer">
+
+    <div id="postItNote" class="post-it">
+      <div class="tape"></div>
+      <h3>Stell's Map & Links ☕</h3>
+      <ul class="handwritten-links">
+        <li><a href="https://www.youtube.com" target="_blank">📺 Cafe Ambiance (YouTube)</a></li>
+        <li><a href="https://www.amazon.com" target="_blank">📦 Stell's Beans (Amazon)</a></li>
+      </ul>
+      <button onclick="closePostIt()" class="close-btn">got it!</button>
+    </div>
+
+    <div id="chatHeader">
+      <div id="avatar">
+        <svg class="icon-svg" viewBox="0 0 24 24"><path d="M2,21V19H20V21H2M20,8V5D20,3.89 19.1,3 18,3H4C2.89,3 2,3.89 2,5V15A3,3 0 0,0 5,18H15A3,3 0 0,0 18,15V13H20A2,2 0 0,0 22,11V10A2,2 0 0,0 20,8M18,11H20V10H18V8H20V10M16,15A1,1 0 0,1 15,16H5A1,1 0 0,1 4,15V5H16V15Z"/></svg>
+      </div>
+      <div id="chatTitle">Stella's Order Line</div>
+    </div>
+
+    <div id="chatLog"></div>
+
+    <div class="input-wrapper">
+      <input type="text" id="userInput" placeholder="Order something or speak..." />
+    </div>
+  </div>
+
+  <script>
+    let soundTriggered = false;
+    let currentOrder = [];
+
+    // 1. Draggable Chat Box
+    const chatContainer = document.getElementById('chatContainer');
+    const chatHeader = document.getElementById('chatHeader');
+    let isDragging = false, offsetX = 0, offsetY = 0;
+
+    chatHeader.addEventListener('mousedown', (e) => {
+      isDragging = true;
+      offsetX = e.clientX - chatContainer.offsetLeft;
+      offsetY = e.clientY - chatContainer.offsetTop;
+      document.body.style.userSelect = 'none';
+    });
+
+    document.addEventListener('mousemove', (e) => {
+      if (!isDragging) return;
+      chatContainer.style.left = `${e.clientX - offsetX}px`;
+      chatContainer.style.top = `${e.clientY - offsetY}px`;
+    });
+
+    document.addEventListener('mouseup', () => {
+      isDragging = false;
+      document.body.style.userSelect = '';
+    });
+
+    // 2. Barista Quotes & Side Menu Toggle
+    const baristaQuotes = [
+      "Barista mood: Running on 3 hours of sleep & pure willpower...",
+      "Barista mood: My brain feels like an overheated steam wand!",
+      "Barista mood: 90% espresso shots, 10% tea leaves, 100% vibe.",
+      "Barista mood: Timmy just dropped the mug tray again... send help!",
+      "Barista mood: Mental health held together by lavender syrup."
+    ];
+
+    function toggleMenu() {
+      const menu = document.getElementById('sideMenu');
+      menu.classList.toggle('active');
+      if (menu.classList.contains('active')) {
+        const randomQuote = baristaQuotes[Math.floor(Math.random() * baristaQuotes.length)];
+        document.getElementById('randomQuote').innerText = randomQuote;
+      }
+    }
+
+    function quickSend(text) {
+      const input = document.getElementById('userInput');
+      input.value = text;
+      handleUserInput();
+    }
+
+    // 3. Sound Effects
+    document.addEventListener('click', (e) => {
+      if (!soundTriggered && !e.target.classList.contains('cta')) {
+        const sound = new Audio('https://files.freemusicarchive.org/storage-freemusicarchive-org/music/no_curator/Meydan/For_Creators/Meydan_-_08_-_Reflections.mp3');
+        sound.play().catch(err => console.log('Autoplay blocked:', err));
+        soundTriggered = true;
+      }
+    });
+
+    const chimeSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
+    chimeSound.volume = 0.3;
+
+    // 4. Master Response Matrix
+   const responses = {
+  "hello": [
+    "Stell's ComfyCafe! Oh—hold on, TIMMY DROP THE STEAM WAND—sorry about that! What can I craft for you today?",
+    "Thanks for calling Stell's! *ticket printer buzzing loudly* Oh man, huge rush coming in, but I'm all yours. What are we drinking?",
+    "Hey there! Welcome to Stell's. Wait, is that oat milk leaking...? Nevermind! I've got my headset on. What can I get started for you?"
+  ],
+  "hi": [
+    "Hi there! Welcome to Stell's. What can I get brewing for you today?",
+    "Hey hey! Catching me between orders—what are we sipping today?",
+    "Hi! Hold on—*spills bean hopper*—phew, saved most of 'em! What can I make for ya?"
+  ],
+  "hi-ya": [
+    "Oh hi! You caught me right in the middle of grinding beans. What can I put you down for?",
+    "Hiya! Hold on—*clatter of silverware*—whoops! Okay, safe! What order are we making today?",
+    "Oh hey! Sorry, was just checking our inventory. What can I get going for you?"
+  ],
+  "stella": [
+    "That's me! What can I brew up for you today?",
+    "Present and accounted for! Well, as present as I can be running on espresso. What's on your mind?",
+    "Hey friend! Stella at your service. What are we sipping on?"
+  ],
+  "stell": [
+    "Ooh, I love the nickname! What can I craft for you today?",
+    "That's me! Stell on shift, ready to get your cozy drinks rolling. What are you craving?",
+    "Hey hey! Stell here—what can I get started for you?"
+  ],
+  "star": [
+    "Aww, calling me Star?! You just made my entire day! What can I get brewing for you?",
+    "Star! I love that! Shiny barista status unlocked. How can I help you today?",
+    "Hey Star! Well, I guess *I'm* Star, but you're stellar! What are we ordering?"
+  ],
+  "stellar": [
+    "Stellar service is what we strive for! What can I get on the ticket for you today?",
+    "Ooh, keeping it cosmic! Stella, Stellar... I like it. What cozy drink are we making?",
+    "Stellar vibes only in the cafe today! What can I grab for you?"
+  ],
+  "knock knock": [
+    "Who's there?! *peeks over the espresso machine*",
+    "Ooh, a joke! Who's there?",
+    "Knock knock jokes during a barista shift?! Count me in! Who's there?"
+  ],
+  "joke": [
+    "Why did the coffee file a police report? It got mugged! 😂 Okay okay, tell me yours!",
+    "How does a tea bag say hello? 'Nice to tea you!' Haha! Got any good ones for me?",
+    "I LOVE jokes! Hit me with your best shot—and I don't mean espresso!"
+  ],
+  "good morning": [
+    "Good morning! *yawn* The espresso machine is warmed up and screaming. What can I brew for you?",
+    "Morning! Ah, wait, ticket machine is jammed again... okay fixed! What are we sipping today?",
+    "Good morning! The morning rush is wild, but I'll make sure your order gets priority. What's the pick?"
+  ],
+  "good evening": [
+    "Good evening! The ambient cafe vibe is at its peak right now. What evening cozy brew can I get for you?",
+    "Evening! *sounds of clinking glasses* Just wiping down the counters. What can I get started for you tonight?",
+    "Good evening! Perfect time for something relaxing. What's on your mind?"
+  ],
+  "how are you": [
+    "Oh, thank you for asking! I haven't had a break yet today, but we're hanging in there. How are you doing?",
+    "I'm okay, could definitely use a lavender tea myself right about now! How about you?",
+    "Honestly? My mental health is currently held together by espresso shots and sheer willpower... but hey, we vibe! How are you?",
+    "I'm running on 3 hours of sleep and pure barista anxiety, but I'm surviving! How's your day going?",
+    "My brain feels like an overheated steam wand today, but my soul is cozy! Thanks for asking, how about you?"
+  ],
+  "how's things?": [
+    "Chaos as usual! Timmy just knocked over a stack of filters, but the vibes are immaculate. How are things with you?",
+    "Things are wild today! Continuous ticket printer noises... but we survive! How are things on your end?",
+    "Spinning plates and steaming oat milk, you know how it is! How's your day treating you?"
+  ],
+  "hows things": [
+    "Oh, you know—beans grinding, milk steaming, ticket machine buzzing! How are things going with you?",
+    "Hectic but fun! The tea station is popping today. How are things on your side?",
+    "Just living the barista dream! How are things going in your corner of the world?"
+  ],
+  "what do you have": [
+    "We've got cozy teas, strong brews, milk substitutes, and fresh pastries! Want me to pitch a drink or a treat?",
+    "We have everything from Earl Grey and Matcha to lattes, cold brew, donuts, and scones! What are you in the mood for?"
+  ],
+  "bye": [
+    "Bye! Thanks for stopping by Stell's—hope your day is super cozy!",
+    "Bye-bye! Don't forget to sip something warm today!",
+    "See ya! Call back anytime you need a tea fix or some shop chaos updates!"
+  ],
+  "bye-bye": [
+    "Bye-bye! Take care out there in the real world!",
+    "Bye-bye! Hope your day is as smooth as a fresh latte pour!",
+    "Later! Thanks for keeping me company on shift!"
+  ],
+  "see ya later": [
+    "See ya later! Don't be a stranger, drop by whenever you need coffee chaos!",
+    "Later alligator! Stay hydrated and cozy out there!",
+    "See ya! I'll have your usual waiting... or at least I'll try to remember it!"
+  ],
+  "maybe": [
+    "Ooh, a 'maybe'! Take your time—browsing the menu is half the fun. Want a tea suggestion while you decide?",
+    "No rush at all! The board's right there. Let me know if you want me to pitch a wild drink idea!",
+    "Maybe yes, maybe no? I can hold the line for a second while you contemplate life and coffee."
+  ],
+  "perhaps": [
+    "Perhaps a lavender matcha latte? Or maybe a classic Earl Grey? Let the tea guide you!",
+    "I sense indecision! 'Perhaps' is just a drink away from a solid choice. What flavors are you feeling?",
+    "Perhaps! Take all the time you need while I quickly restock the syrup bottles."
+  ],
+  "water": [
+    "Ice water coming right up! Hydration is super important, especially with all this caffeine around. Anything else?",
+    "One tall glass of fresh water! Staying hydrated is elite. Want lemon or plain?",
+    "Water? Absolutely! Gotta keep those water levels up. Added to your ticket!"
+  ],
+  "frustrated": [
+    "Ugh, I totally feel you. Shift work and life in general can get so frustrating! Want a calming chamomile or lavender blend to take the edge off?",
+    "Oh no, I hear that. When I get frustrated, I just vent to the steam wand! Can I get you something warm and comforting?",
+    "Deep breath! Whatever is being frustrating, I hope it passes soon. A cozy hot tea might help smooth things out."
+  ],
+  "stressed": [
+    "Stressed spelled backwards is desserts! But seriously, take a deep breath. How about a nice decaf chamomile or warm matcha?",
+    "Oh man, stress is the absolute worst. Let's get you something soothing—maybe a lavender mint tea?",
+    "I feel that in my soul. Whenever the shop gets stressful, I sip Earl Grey with honey. Want me to make you one?"
+  ],
+  "stressful": [
+    "Right?! Some days are just an uphill battle. Let's pause for a second—what comforting drink can I make to de-stress your day?",
+    "Totally. Life gets way too stressful sometimes. Let me whip up a super cozy drink for you to relax with.",
+    "I hear ya. When things get stressful, a quiet cup of tea is practically mandatory. What sounds good?"
+  ],
+  "suggest a tea": [
+    "Oh, I LOVE suggesting teas! If you want relaxing: Lavender Chamomile. If you want focus: Matcha! If you want classic cozy: Earl Grey with oat milk!",
+    "If you're feeling adventurous, try our Jasmine Green Tea with a splash of peach syrup! Or keep it classic with Earl Grey. What vibes are you looking for?",
+    "My top pick today? London Fog! Earl Grey + steamed milk + vanilla. It's like a warm hug in a cup!"
+  ],
+  "focus": [
+    "Need that sharp brainpower? Matcha green tea is the ultimate focus brew—clean energy without the jitters! Want one iced or hot?",
+    "Focus mode activated! Double shot espresso or a strong Matcha will get you in the zone real quick. Which one?",
+    "If you need to lock in, I highly recommend our cold brew or a concentrated Green Tea! Want me to write 'STUDY POWER' on the cup?"
+  ],
+  "i wish": [
+    "'I wish' is the start of every great story! What are we wishing for today? A giant iced coffee or a vacation?",
+    "Wishes are powerful! I wish our ticket printer would stop jamming, haha! What's on your wish list?",
+    "Ah, if wishes were tea leaves, we'd all be living in luxury! What are you hoping for today?"
+  ],
+  "help": [
+    "I'm here! What do you need help with? Ordering, picking a tea, or just surviving the day?",
+    "Help is on the way! You can ask me for tea suggestions, order a drink, or just vent about your shift!",
+    "Barista Stella to the rescue! Tell me what you're craving or what you need help figuring out!"
+  ],
+  "pour-over": [
+    "Ooh, a pour-over! A person of taste! It takes about 3 to 4 minutes to drip down, so bear with me while I get the gooseneck kettle going.",
+    "One pour-over coming right up! *carefully pouring water in concentric circles* Gotta bloom those grounds properly! Hot or iced?",
+    "Pour-over logged! Honestly, watching the coffee bloom is the most peaceful 3 minutes of my shift. Excellent choice!"
+  ],
+  "vanilla": [
+    "Vanilla is an absolute classic! Warm, sweet, and fixes any bad mood. Adding a splash of vanilla syrup to your drink!",
+    "One pump of vanilla, coming right up! Honestly, vanilla cold foam on top of iced tea is my secret addiction. Want to try that?",
+    "You can never go wrong with vanilla! *scans syrup shelf* Found it! Hot or iced today?"
+  ],
+  "lavender": [
+    "Ooh, lavender! My favorite! It adds such a cozy, botanical vibe to teas and lattes. Want it sweet or subtle?",
+    "Lavender added! Fun fact: lavender is super calming for the nervous system, which I desperately need on this shift! Great pick.",
+    "A lavender brew! *sniffs syrup bottle* Mmm, smells like a dream. Coming right up for you!"
+  ],
+  "oat": [
+    "Oat milk! The undisputed king of creamy non-dairy options. Let me double-check if Timmy left us any... yes, found a fresh carton!",
+    "Oat milk added! It steams up so ridiculously smooth in lattes. Excellent choice!",
+    "One oat milk swap, coming up! Honestly, oat milk chai lattes are what keep this shop running. Anything else for ya?"
+  ],
+  "almond": [
+    "Almond milk, got it! Adds that nice subtle nutty flavor to the brew. Hot or iced today?",
+    "Swapping in almond milk! *grabs carton from the fridge* Easy peasy. What else can I add to your order?",
+    "Almond milk noted on the ticket! Light, cozy, and classic. Coming right up!"
+  ],
+  "soy": [
+    "Soy milk! Old reliable—steams like a dream and gets super frothy. Adding that to your cup right now!",
+    "One soy milk swap! *types into register* Fun fact: soy milk was our very first non-dairy option here at Stell's!",
+    "Soy milk, you got it! Gives the drink such a rich texture. Anything else to slip onto your ticket?"
+  ],
+  "yay": [
+    "Woohoo! *cheers in barista* Victory dance time!",
+    "Love the energy! Your drink is going to be amazing.",
+    "Heck yeah! Moving right along then!"
+  ],
+  "awesome": [
+    "Right?! Glad you think so! Keeping the positive vibes flowing over here.",
+    "Awesome sauce! I love the enthusiasm!",
+    "Heck yeah! You're making shift duty a total blast today."
+  ],
+  "cool": [
+    "Super cool! Glad we're on the same wavelength.",
+    "Cool beans! Literally... coffee beans!",
+    "Right on! Glad you like it!"
+  ],
+  "amazing": [
+    "Aw, you're amazing! Thanks for bringing the great vibes into the cafe!",
+    "Thank you! We try our absolute best to make it cozy around here.",
+    "You just made my entire shift with that energy!"
+  ],
+  "good": [
+    "Awesome sauce! Let's keep this order rolling.",
+    "Glad to hear it! Anything else going on the ticket?",
+    "Sweet! I'm typing it all in right now."
+  ],
+  "did you add it": [
+    "Yep, sure did! Got it locked in right here on the ticket.",
+    "100%! Added, stamped, and ready to brew.",
+    "Oh absolutely, it's on there! Don't worry, I got you."
+  ],
+  "donut": [
+    "Ooh, a donut! The ultimate companion to a hot cup of tea or coffee. Glazed, chocolate, or jelly?",
+    "Donut added to the ticket! *grabs wax paper and tongs* Fresh batch came in this morning and they are incredible.",
+    "One donut! You've got great taste. Nothing pairs better with shop chaos than a sweet treat!"
+  ],
+  "croissant": [
+    "Flaky, buttery croissant goodness! Want me to warm it up so it gets extra soft and melted?",
+    "Croissant added! Pro tip: dipping a plain croissant into a hot Earl Grey latte is life-changing.",
+    "One fresh croissant! *paper bag crinkling* Slid that right onto your bakery ticket!"
+  ],
+  "blueberry scone": [
+    "Blueberry scone! Crumbles a bit, but it's packed with juicy blueberries. Want me to warm it up for you?",
+    "One blueberry scone added! Pairs insanely well with a hot cup of Earl Grey or Black tea.",
+    "Grabbing a fresh blueberry scone from the pastry case! *paper bag crinkle* Added to your ticket!"
+  ],
+  "muffin": [
+    "Muffin time! We've got blueberry, chocolate chip, and banana nut today. Which flavor are we feeling?",
+    "One muffin coming up! Warm, fluffy, and pairs perfectly with coffee or tea. Added to the ticket!",
+    "Muffin locked in! *tongs clicking sound* Let me know if you want that warmed up!"
+  ],
+  "cinnamon roll": [
+    "Ooh, a cinnamon roll! Extra sticky, extra sweet. Should I double-check that it gets extra cream cheese icing?",
+    "One warm cinnamon roll locked in! Honestly, the smell of these baking this morning was intoxicating.",
+    "Cinnamon roll added! You've got great taste—nothing pairs better with a latte."
+  ],
+  "glazed": [
+    "Glazed it is! That classic sweet sheen is unmatched. Grabbing one fresh from the rack for ya!",
+    "One glazed donut locked in! Perfectly soft, sweet, and sticky. Great pick!",
+    "Glazed! *paper sack crinkling* Slid that right into your bag alongside your drink order."
+  ],
+  "chocolate": [
+    "Chocolate donut, coming right up! *tongs clicking* Rich, sweet, and decadent. Perfect choice!",
+    "One chocolate donut added! Honestly, chocolate glaze with a warm tea is the ultimate comfort combo.",
+    "Chocolate it is! Got it written on your bakery ticket."
+  ],
+  "jelly": [
+    "Ooh, jelly-filled! Watch out for the powdered sugar explosion on your shirt—worth it every single time!",
+    "Jelly donut added to the order! Bursting with sweet fruitiness. Excellent pick!",
+    "One jelly donut on the ticket! *grabs wax paper* Coming right up for you."
+  ],
+  "cafe au lait": [
+    "Café au lait! Half strong drip coffee, half warm steamed milk. Simple, classic, and cozy. Hot or iced today?",
+    "One Café au Lait coming up! *steaming milk sounds* Perfect choice if you want something smooth without the intensity of espresso.",
+    "Café au lait locked in! Grabbing the dark roast drip and fresh steamed milk now."
+  ],
+  "caramel macchiato": [
+    "Ooh, caramel macchiato—my absolute favorite to drizzle caramel art onto! Extra drizzle or standard?",
+    "Caramel macchiato! Layers of vanilla, silky steamed milk, espresso, and that rich caramel criss-cross on top. Added!",
+    "Yum! Marking down one sweet, velvety caramel macchiato. What else can I get you?"
+  ],
+  "chai": [
+    "Chai latte! Warm spices, black tea, and creamy milk... it literally tastes like a warm hug. Want cinnamon sprinkled on top?",
+    "One spiced Chai Latte locked in! *sounds of steam wand* Are we doing oat milk or regular dairy today?",
+    "Chai time! It's one of our most popular drinks for a reason. Added to your ticket!"
+  ],
+  "americano": [
+    "An Americano! Espresso diluted with hot water for that bold, smooth coffee kick. Single, double, or triple shot?",
+    "One Americano coming up! Do you want any room for cream, or keeping it pure black?",
+    "Americano added! Simple, effective, and gets straight to the point."
+  ],
+  "cold brew": [
+    "Cold brew! Steeped for 24 hours so it's super smooth and packed with caffeine. Want vanilla sweet foam on top?",
+    "One draft cold brew coming right up! *tap pouring sound* Perfectly chilled and ready to power your day.",
+    "Cold brew locked in! Need any milk or flavor syrups added to that?"
+  ],
+  "hot": [
+    "Steaming hot it is! Nothing beats a warm cup to hold onto.",
+    "Making that hot! Warming up the mug and getting the steam wand ready.",
+    "Hot version coming right up! Extra cozy vibes locked in."
+  ],
+  "iced": [
+    "Iced it is! *dumps a massive scoop of ice into the cup* Nothing beats a refreshing cold brew or iced latte.",
+    "Making that iced! Watching the espresso swirl into the cold milk over ice is genuinely mesmerizing.",
+    "Iced, locked in! Hot drinks are great, but iced drinks hit different. Coming right up!"
+  ],
+  "total": [
+    "Let's see here... *taps register screen* Your total comes out to a couple of cozy vibes and good conversation! Just tap your card whenever you're ready!",
+    "Ringing that up now! *register dings* That's all set on the screen for ya!",
+    "Calculating the damage... *beep beep* All set on the pin pad!"
+  ],
+  "you're sweet": [
+    "Aw, stop, you're gonna make the espresso machine blush! Happy to help!",
+    "Thank you! You're pretty awesome yourself. Now let's get you that drink!",
+    "Aw, thanks! Barista duty is way better when sweet people call in!"
+  ],
+  "you're too kind": [
+    "Just doing my barista duty! But seriously, thank you, that made my shift!",
+    "Too kind? Nonsense! You deserve top-tier cafe service today.",
+    "Aw, you're making my heart melt faster than ice in a hot americano! Thank you!"
+  ],
+  "sweet": [
+    "Aw, thank you! I try my best, even when the espresso machine is fighting me!",
+    "Thanks! Cozy vibes only over here at Stell's.",
+    "You're sweet too! Hope your day is super awesome!"
+  ],
+  "gotcha": [
+    "Awesome! Anything else I can throw on the ticket for ya?",
+    "Perfect! We're on the same wavelength.",
+    "Sweet! Let me know if you need any extra syrups or napkins!"
+  ],
+  "i will": [
+    "That's what I like to hear! Have the best day ever!",
+    "Awesome! Catch you next time!",
+    "Stay cozy! Bye for now!"
+  ],
+  "no thanks": [
+    "You got it! Order is all set as-is then.",
+    "No problem at all! We'll keep it simple today.",
+    "Sounds good! Let's get what you have rung up."
+  ],
+  "that's all": [
+    "Perfect! Ringing that all up now. Your order will be ready at the counter in just a few minutes!",
+    "Got it! Tying up your ticket right now. Thanks for hanging out on the line with me!",
+    "Awesome! I've got everything marked down on your cup. Sit back, relax, and we'll call your name soon!"
+  ],
+  "that'll be all": [
+    "You got it! Order finalized and sent back to the bar. Have an awesome rest of your day!",
+    "Perfect timing—ticket printer just punched it out! We'll have that right up for ya.",
+    "All wrapped up! Thanks for coming in today!"
+  ],
+  "that is all": [
+    "Awesome! Everything is locked in on your ticket. We'll get that brewed right away!",
+    "Sounds like a plan! Thanks for ordering with us today—enjoy your brew!",
+    "Got it all written down! We'll take it from here."
+  ],
+  "that's it": [
+    "Easy peasy! Sending your ticket over to the bar now. Enjoy!",
+    "Got it locked in! Thanks for stopping by Stell's today!",
+    "Perfect! Order complete. Grab a cozy seat and we'll call you when it's ready!"
+  ],
+  "nothing else": [
+    "Sounds good! We've got your order all set and ready to brew.",
+    "Understood! Sending this straight to the barista station. Thanks!",
+    "All wrapped up then! Sit back and relax while we get that ready for you."
+  ],
+  "macchiatto": [
+    "Caramel or classic? Wait—*shouts* NO, LEAVE THE FOAM ON TOP! Sorry, apprentice moment. Would you like a snack with that macchiato?",
+    "One macchiato, got it! Extra shot or regular? Also, let me know if you want a pastry!",
+    "Ooh, delicious choice. Let me write that down... wait, where's my sharpie? Ah, found it! Anything to go with it?"
+  ],
+  "coffee": [
+    "Coffee's great, though my heart belongs to Earl Grey! What kind of coffee were you thinking?",
+    "Black, iced, or lattes? Oh, ticket machine just printed 5 orders... anyway, how do you take your coffee?",
+    "Mmm coffee. *steam wand hissed in background* Do you want drip, espresso, or a pour-over?"
+  ],
+  "latte": [
+    "Adding a latte to the ticket! What milk alternative? We have oat, almond, soy... wait, Timmy did we restock oat?",
+    "One latte! Hot or iced? The iced ones look so pretty with the milk swirls today.",
+    "Latte marked down! Want any flavored syrups in that, like vanilla or lavender?"
+  ],
+  "extra sugar": [
+    "Extra sugar noted! We love a sweet tooth around here. Want whipped cream on top while we're at it?",
+    "Got it, double sugar! Hey—who moved the sugar shakers?! Oh, here they are. Anything else?",
+    "Adding sweet syrup or raw sugar? Either way, you got it! Whipped cream too?"
+  ],
+  "whip cream": [
+    "Whipped cream added! *can hiss sound* ...And a little extra for the top! Anything else for you?",
+    "Who doesn't love whipped cream? Got it on the ticket. What else can I add?",
+    "Whip cream stacked high! Anything else before I finalize this?"
+  ],
+  "thank you": [
+    "Aw, absolutely! Happy to help. *re-arranges mug rack*",
+    "You got it! Oh—hold on, customer at the register—okay, back! You're super welcome!",
+    "Anytime! That's what we're here for!"
+  ],
+  "me order another item": [
+  "HA! Okay, you got me! 😭 I was fully expecting a bad coffee pun, but respect. What are we adding to the ticket?",
+  "*drops Sharpie* NO WAY. You lured me into a knock-knock trap just to order more?! Brilliant. What can I brew up for ya?",
+  "BRUH. 💀 You really set me up for that! Point to you. What delicious thing are we slipping onto your tab this time?"
+],
+"it's me": [
+    "Me who?",
+    "Me who?! Don't keep me hanging!",
+    "Me who? *stops wiping counter to listen*"
+],
+"me": [
+    "Me who?",
+    "Me who?! Don't keep me hanging!",
+    "Me who? *stops wiping counter to listen*"
+  
+],
+  "ok": [
+    "Awesome sauce. Glad we're on the same page! What's next?",
+    "Perfect! *stamps loyalty card* Anything else to add?",
+    "Alrighty! Let me know if you need anything else."
+  ],
+  "okay": [
+    "Sweet. Anything else I can slip onto your order ticket?",
+    "Great! Oh wait, did you want that for here or to-go?",
+    "Okay! I'll be right here if you want to add something else."
+  ],
+  "and a": [
+    "Ooh good pick! Adding that right now. Drive around or picking up at the counter?",
+    "Noted! *typing into register* What else is going into this order?",
+    "Great addition! Your total is looking cozy. Anything else?"
+  ],
+  "lol": [
+    "Glad I could make you laugh! 😂 What are we sipping on while we giggle?",
+    "Haha! Laughing on shift is the best medicine. What can I get for ya?",
+    "LOL! Keep the good vibes coming! What's next on your mind?"
+  ],
+  "haha": [
+    "Haha! Love to hear it! 😂 What else can I get going for you today?",
+    "Hahaha! You're making this shift so much fun. What are we brewing next?",
+    "Haha! Glad we're having a good time over here at Stell's!"
+  ],
+  "xd": [
+    "XD Classic! You've got great energy today. What are we ordering next?",
+    "XD! Love the vibe! Let me know what cozy treat or drink you need next!",
+    "Haha XD! Shift duty is 100x better with funny customers!"
+  ],
+  "no": [
+    "Aw, come on! Not even a tiny herbal brew to soothe the soul?",
+    "No? Are you sure? The espresso machine is practically begging to make you something!",
+    "Fair enough! Let me know if you change your mind while I restock the mugs."
+  ],
+  "sure": [
+    "Awesome! Honestly I'm utterly obsessed with Earl Grey lately... not the guy, the tea! *giggles*",
+    "Sweet! Let's do it then. What else are we thinking?",
+    "Right on! Let me just tally this up real quick..."
+  ],
+  "nothing": [
+    "No worries at all! Thanks for dropping by the Comfy Cafe RPG line. Call back anytime!",
+    "All good! Hope your day is as awesome as a fresh brew!",
+    "Gotcha. I'll get back to wiping down these espresso nozzles then. Take care!"
+  ],
+  "order": [
+    "Ready when you are! Tea, coffee, or a cozy pastry?",
+    "Taking orders now! What's your craving today?",
+    "Hit me with your order! *grabs pen and notepad*"
+  ],
+  "benefits": [
+    "Green tea has crazy benefits—antioxidants, clear skin, sustained energy without the crash! Matcha is my personal daily driver.",
+    "Oh! Green tea reduces free radicals and boosts focus! I read a zine about it yesterday while on break.",
+    "Matcha green tea gives you this incredible calm alertness called umami bliss. Highly recommend!"
+  ],
+  "suggest": [
+    "You MUST try our Earl Grey with a splash of oat milk and honey. The bergamot aroma is unmatched!",
+    "If you want cozy, get a Chai Tea Latte with cinnamon! If you want energy, double shot iced Americano!",
+    "I always recommend Matcha paired with a blueberry muffin. Absolute perfection."
+  ],
+  "earl grey": [
+    "Earl Grey has such an incredible history! Super famous bergamot blend!",
+    "Ah, Earl Grey! Named after Charles Grey, the 2nd Earl Grey in the 1830s.",
+    "Bergamot orange oil gives Earl Grey its iconic zesty punch. It's legendary!"
+  ],
+  "matcha": [
+    "Matcha's deep savory-sweet taste is called 'umami'! It's so smooth when whisked properly.",
+    "Fun fact: Matcha powder is whole shade-grown tea leaves ground into fine powder, so you consume the whole leaf!",
+    "Matcha lattes are taking over the shop today! Do you want yours sweetened or plain?"
+  ],
+  "green tea": [
+    "Green tea is incredible for you! Light, earthy, and packed with healthy antioxidants.",
+    "We have Sencha, Jasmine, and Matcha green teas!",
+    "Steeping green tea at a slightly lower temp stops it from getting bitter! Pro barista tip!"
+  ],
+  "book": [
+    "Lately I've been flipping through Shakespeare and old herbal medicine books! Read any good books while sipping tea lately?",
+    "I'm reading about Pliny The Elder! Old botanical lore is so fascinating to read during night shifts.",
+    "Herbs and poetry are my ultimate go-tos. Have you read anything cool recently?"
+  ],
+  "thanks": [
+    "Anytime at all! I love chatting brews with awesome people like you.",
+    "No problem! *ding* Oh, your order ticket is being processed!",
+    "You got it! Stay cozy out there!"
+  ],
+  "yes": [
+    "That's what I like to hear! You should definitely try our Earl Grey with milk and honey!",
+    "Yay! *claps hands* Let's get this delicious drink going for you!",
+    "Awesome! Trust me, you're going to love it."
+  ],
+  "perfect": [
+    "Perfect indeed! I've got your order all squared away on the ticket. Enjoy your brew!",
+    "Awesome! Everything is locked in and sent over to the bar. Have a cozy rest of your day!",
+    "Perfect! *stamps your cup* Sit back, relax, and we'll call your name as soon as it's ready!"
+  ],
+  "tea": [
+    "Tea is elite! Want to hear my absolute top favorite blends?",
+    "Mmm, tea time! Loose leaf or bagged? Herbal, Black, or Green?",
+    "We have an amazing tea selection here! What flavor notes do you usually like?"
+  ],
+
+  "i'll have": [
+    "Got it down! Adding that to your tab right now. Anything else?",
+    "Mmm, excellent choice! Writing that on the cup... wait, how do you spell your name?",
+    "Added to the ticket! Want a side of water or pastries with that?"
+  ],
+  "bagged": [
+    "Bagged it is! Easy, classic, and steeped right in your mug. Which tea blend are we putting in the bag?",
+    "Got it, bagged tea! Steeping a sachet for you right now. What flavor notes sound good today?"
+  ],
+  "loose": [
+    "Loose leaf! A true tea connoisseur. We steep it fresh in a mesh infuser. What blend would you like?",
+    "Loose leaf locked in! Nothing beats the full flavor of loose tea leaves. Which variety are we brewing?"
+  ],
+  "black": [
+    "Black tea! Robust, bold, and perfect with or without milk. Added to your ticket!",
+    "Black tea coming up! Great choice for a rich, satisfying cup."
+  ],
+  "black tea": [
+    "Black tea coming right up! Rich, cozy, and full-bodied. Want milk or honey with that?",
+    "Black tea added! We brew it nice and strong for maximum flavor."
+  ],
+  "black loose": [
+    "Loose-leaf black tea! Steeping those rich whole leaves in an infuser right now. Excellent pick!",
+    "Black loose leaf tea, locked in! Bold flavor, perfectly steeped."
+  ]
+};
+
+// 6. Item Name Mapping for Ticket Summary
+const orderableItems = {
+ 
+  "pour-over": "Pour-Over Coffee",
+  "pourover": "Pour-Over Coffee",
+  "cafe au lait": "Café au Lait",
+  "coffee au lait": "Café au Lait",
+  "caramel macchiato": "Caramel Macchiato",
+  "caramel macchiatto": "Caramel Macchiato",
+  "chai": "Chai Latte",
+  "chai latte": "Chai Latte",
+  "americano": "Americano",
+  "cold brew": "Cold Brew",
+  "iced coffee": "Cold Brew",
+  "earl grey": "Earl Grey Tea",
+  "matcha": "Matcha",
+  "green tea": "Green Tea",
+  "latte": "Latte",
+  "coffee": "House Coffee",
+  "water": "Ice Water",
+  "donut": "Donut",
+  "doughnut": "Donut",
+  "croissant": "Croissant",
+  "blueberry scone": "Blueberry Scone",
+  "scone": "Blueberry Scone",
+  "muffin": "Muffin",
+  "cinnamon roll": "Cinnamon Roll",
+  "glazed": "Glazed Donut",
+  "chocolate": "Chocolate Donut",
+  "jelly": "Jelly Donut",
+  "vanilla": "Vanilla Syrup",
+  "lavender": "Lavender Syrup",
+  "oat": "Oat Milk",
+  "oatmilk": "Oat Milk",
+  "almond": "Almond Milk",
+  "soy": "Soy Milk",
+  "hot": "Make it Hot",
+  "steamed": "Make it Hot",
+  "iced": "Make it Iced",
+  "over ice": "Make it Iced",
+  "bagged": "Bagged Tea",
+  "loose": "Loose Leaf Tea",
+  "loose leaf": "Loose Leaf Tea",
+  "black tea": "Black Tea",
+  "black loose": "Loose-Leaf Black Tea"
+};
+
+// 7. Master Synonym & Alias Mappings
+responses["pourover"] = responses["pour-over"];
+responses["coffee au lait"] = responses["cafe au lait"];
+responses["caramel macchiatto"] = responses["caramel macchiato"];
+responses["chai latte"] = responses["chai"];
+responses["iced chai"] = responses["chai"];
+responses["iced coffee"] = responses["cold brew"];
+
+responses["doughnut"] = responses["donut"];
+responses["croissants"] = responses["croissant"];
+responses["scone"] = responses["blueberry scone"];
+responses["blueberry scones"] = responses["blueberry scone"];
+responses["scones"] = responses["blueberry scone"];
+responses["muffins"] = responses["muffin"];
+responses["cinnamon rolls"] = responses["cinnamon roll"];
+
+responses["glazed donut"] = responses["glazed"];
+responses["chocolate donut"] = responses["chocolate"];
+responses["jelly donut"] = responses["jelly"];
+
+responses["oatmilk"] = responses["oat"];
+responses["make it hot"] = responses["hot"];
+responses["warm"] = responses["hot"];
+responses["steamed"] = responses["hot"];
+
+responses["over ice"] = responses["iced"];
+responses["cold"] = responses["iced"];
+responses["make it iced"] = responses["iced"];
+
+responses["loose leaf"] = responses["loose"];
+responses["tea bag"] = responses["bagged"];
+responses["tea bags"] = responses["bagged"];
+
+// Name & Greeting Aliases
+responses["hey stella"] = responses["stella"];
+responses["hi stella"] = responses["stella"];
+responses["hey stell"] = responses["stell"];
+responses["hi stell"] = responses["stell"];
+responses["hey star"] = responses["star"];
+responses["hi star"] = responses["star"];
+
+// Joke Aliases
+responses["knock knock!"] = responses["knock knock"];
+responses["tell me a joke"] = responses["joke"];
+responses["say a joke"] = responses["joke"];
+responses["know any jokes"] = responses["joke"];
+responses["know any jokes?"] = responses["joke"];
+
+responses["youre sweet"] = responses["you're sweet"];
+responses["awe you're sweet"] = responses["you're sweet"];
+responses["awe youre sweet"] = responses["you're sweet"];
+responses["youre too kind"] = responses["you're too kind"];
+responses["awe you're too kind"] = responses["you're too kind"];
+responses["you too"] = responses["you're sweet"];
+
+responses["whats my total"] = responses["total"];
+responses["how much"] = responses["total"];
+responses["cost"] = responses["total"];
+responses["checkout"] = responses["total"];
+
+responses["thats all"] = responses["that's all"];
+responses["thats it"] = responses["that's it"];
+responses["can i have my order"] = responses["that's all"];
+responses["can i get my order"] = responses["that's all"];
+responses["my order"] = responses["that's all"];
+
+// Gratitude & Admiration Aliases
+responses["nice"] = responses["good"];
+responses["great"] = responses["awesome"];
+responses["so cool"] = responses["cool"];
+responses["that's cool"] = responses["cool"];
+responses["thats cool"] = responses["cool"];
+responses["wow"] = responses["amazing"];
+responses["woah"] = responses["amazing"];
+responses["incredible"] = responses["amazing"];
+responses["love it"] = responses["awesome"];
+responses["i love it"] = responses["awesome"];
+responses["gotcha"] = responses["ok"];
+
+responses["what do you have?"] = responses["what do you have"];
+responses["done"] = responses["that's all"];
+responses["i'm done"] = responses["that's all"];
+responses["im done"] = responses["that's all"];
+
+responses["tap"] = responses["total"];
+responses["tapped"] = responses["total"];
+
+responses["no thank you"] = responses["no thanks"];
+responses["nope"] = responses["no thanks"];
+responses["no im good"] = responses["no thanks"];
+responses["no i'm good"] = responses["no thanks"];
+
+// Knock Knock Joke Flow Aliases
+responses["me who"] = responses["me want to order another item"];
+responses["me who?"] = responses["me order another item"];
+responses["me want to order another item"] = responses["me order another item"];
+responses["me order another"] = responses["me order another item"];
+
+// Laughter Aliases
+responses["lmao"] = responses["lol"];
+responses["rofl"] = responses["lol"];
+responses["ha"] = responses["haha"];
+responses["hahaha"] = responses["haha"];
+responses["hahahaha"] = responses["haha"];
+responses["hehe"] = responses["haha"];
+responses["xdd"] = responses["xd"];
+
+// Order Completion Aliases
+responses["sounds perfect"] = responses["perfect"];
+responses["that sounds perfect"] = responses["perfect"];
+responses["sounds good"] = responses["perfect"];
+responses["that sounds good"] = responses["perfect"];
+
+  // Add Aliases
+responses["map"] = responses["directions"];
+responses["links"] = responses["directions"];
+responses["where are you"] = responses["directions"];
+
+// Add these triggers to your responses object inside script:
+responses["directions"] = [
+  "Oh, looking for directions or external links? I stuck a little post-it note on the counter for you!",
+  "Here you go! I popped open our little taped note with all the extra links and directions!"
+];
+
+// 8. Append Messages to Chat Window
+function appendMessage(sender, message) {
+  const chatLog = document.getElementById('chatLog');
+  const msgDiv = document.createElement('div');
+  msgDiv.className = 'message ' + (sender === 'You' ? 'user' : 'stella');
+
+  const avatarImg = document.createElement('img');
+  avatarImg.className = 'avatar-img';
+
+  if (sender === 'You') {
+    avatarImg.src = 'https://3society.neocities.org/GUILD/tcup.jpeg';
+  } else {
+    avatarImg.src = 'https://3society.neocities.org/GUILD/StellasRealmChat/000logo.jpeg';
+  }
+
+  const bubble = document.createElement('div');
+  bubble.className = 'bubble';
+  bubble.innerText = message;
+
+  if (sender === 'You') {
+    msgDiv.appendChild(bubble);
+    msgDiv.appendChild(avatarImg);
+  } else {
+    msgDiv.appendChild(avatarImg);
+    msgDiv.appendChild(bubble);
+  }
+
+  chatLog.appendChild(msgDiv);
+  chatLog.scrollTop = chatLog.scrollHeight;
+}
+
+// 9. Non-Repeating Random Selector
+const lastResponseIndex = {};
+
+function getRandomResponse(key, arr) {
+  if (arr.length === 1) return arr[0];
+  
+  let newIndex;
+  do {
+    newIndex = Math.floor(Math.random() * arr.length);
+  } while (newIndex === lastResponseIndex[key]);
+
+  lastResponseIndex[key] = newIndex;
+  return arr[newIndex];
+}
+
+// 10. Main Input Processing & Logic
+function handleUserInput() {
+  const input = document.getElementById('userInput');
+  const msg = input.value.trim();
+  if (!msg) return;
+
+  appendMessage('You', msg);
+  input.value = '';
+
+  const lowerMsg = msg.toLowerCase();
+  
+if (["directions", "map", "links", "where are you"].some(k => lowerMsg.includes(k))) {
+  togglePostIt();
+}
+  // A. Check for Order Summary Requests
+  const summaryTriggers = [
+    "repeat my order", "summarize my order", "what did i order", 
+    "show my order", "order summary", "what's my order"
+  ];
+
+  if (summaryTriggers.some(trigger => lowerMsg.includes(trigger))) {
+    let summaryText = "";
+    if (currentOrder.length === 0) {
+      summaryText = "Your ticket is currently empty! What can I brew or grab for you today?";
+    } else {
+      summaryText = "Alright! Right now I've got down on your ticket: " + currentOrder.join(", ") + ". Anything else to add?";
+    }
+
+    setTimeout(() => {
+      appendMessage('Stella', summaryText);
+      chimeSound.currentTime = 0;
+      chimeSound.play().catch(e => console.log('Audio playback prevented:', e));
+    }, 600);
+    return;
+  }
+
+  // B. Track Orderable Items Mentioned
+  for (const itemKey in orderableItems) {
+    if (lowerMsg.includes(itemKey)) {
+      const itemName = orderableItems[itemKey];
+      if (!currentOrder.includes(itemName)) {
+        currentOrder.push(itemName);
+      }
+    }
+  }
+
+  // C. Match Standard Responses
+  let replyArray = null;
+  let matchedKey = 'default';
+
+  if (responses.hasOwnProperty(lowerMsg)) {
+    replyArray = responses[lowerMsg];
+    matchedKey = lowerMsg;
+  } else {
+    for (const key in responses) {
+      if (key !== 'default' && lowerMsg.includes(key)) {
+        replyArray = responses[key];
+        matchedKey = key;
+        break;
+      }
+    }
+  }
+
+ // D. Dynamic Post-It & Off-Menu Fallback Handler
+  const mapTriggers = ["directions", "map", "links", "where are you", "youtube", "amazon"];
+  const isMapRequest = mapTriggers.some(trigger => lowerMsg.includes(trigger));
+
+  if (isMapRequest) {
+    togglePostIt();
+  }
+
+  if (!replyArray) {
+    replyArray = [
+      "Hmm, I don't think we have that on the board today! I opened up our menu so you can check out what's brewing.",
+      "Ooh, that's off-menu for us! Take a peek at our menu to the right to see what we've got in stock today.",
+      "Oh wow, we don't carry specialty items! I popped open our menu for you so you can pick something cozy!"
+    ];
+    matchedKey = 'default';
+
+    // Auto-open side menu on unknown/off-menu item request
+    const menu = document.getElementById('sideMenu');
+    if (!menu.classList.contains('active')) {
+      toggleMenu();
+    }
+  }
+
+  // E. Pick Response & Send Message
+  const reply = getRandomResponse(matchedKey, replyArray);
+
+  setTimeout(() => {
+    appendMessage('Stella', reply);
+    chimeSound.currentTime = 0;
+    chimeSound.play().catch(e => console.log('Audio playback prevented:', e));
+  }, 600);
+} // <--- End of handleUserInput() function!
+
+
+// 11. Post-It Note Functions
+let postItTimer = null;
+
+function togglePostIt() {
+  const postIt = document.getElementById('postItNote');
+  
+  if (postItTimer) {
+    clearTimeout(postItTimer);
+  }
+
+  if (postIt.style.display === 'block' && !postIt.classList.contains('fall-off')) {
+    closePostIt();
+    return;
+  }
+
+  postIt.classList.remove('fall-off');
+  postIt.style.display = 'block';
+
+  postItTimer = setTimeout(() => {
+    fallOffPostIt();
+  }, 9000); // 9 seconds
+}
+
+function fallOffPostIt() {
+  const postIt = document.getElementById('postItNote');
+  postIt.classList.add('fall-off');
+  
+  setTimeout(() => {
+    postIt.style.display = 'none';
+    postIt.classList.remove('fall-off');
+  }, 600);
+}
+
+function closePostIt() {
+  const postIt = document.getElementById('postItNote');
+  if (postItTimer) clearTimeout(postItTimer);
+  postIt.style.display = 'none';
+  postIt.classList.remove('fall-off');
+}
+
+// 12. Event Listener for Enter Key
+document.getElementById('userInput').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') {
+    handleUserInput();
+  }
+});
+</script>
+</body>
+</html>
