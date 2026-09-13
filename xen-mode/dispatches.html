@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="/.nekoweb-api/static/site.js" defer></script>
+<meta charset="UTF-8">
+<title>Xen Dispatches Portal</title>
+<script src="/.nekoweb-api/static/site.js" defer></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Spectral:wght@400;700&family=Roboto:wght@300;500&display=swap');
+
+body {
+  margin: 0;
+  font-family: 'Roboto', sans-serif;
+  background: radial-gradient(circle at top, #1a0b2c, #0c0714 70%);
+  color: #e6e6ff;
+  overflow-x: hidden;
+}
+
+.container {
+  max-width: 900px;
+  margin: 100px auto;
+  padding: 40px;
+  text-align: center;
+}
+
+/* Header */
+.header {
+  font-family: 'Spectral', serif;
+  font-weight: 700;
+  font-size: 3rem;
+  color: #cfcfff;
+  text-shadow: 0 0 12px rgba(180,160,255,0.5);
+}
+
+.header-sub {
+  font-weight: 300;
+  font-size: 1rem;
+  color: #a0a0ff;
+  margin-bottom: 60px;
+  display: block;
+}
+
+/* Subscribe Card */
+.subscribe-card {
+  display: inline-block;
+  padding: 30px 40px;
+  background: linear-gradient(135deg, #2a1f4a, #3b2ec0);
+  border: 2px solid rgba(180,160,255,0.3);
+  border-radius: 16px;
+  box-shadow: 0 0 30px rgba(100,80,255,0.25);
+  transform: rotate(-1deg);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.6s ease;
+}
+
+/* Floating Shapes */
+.floating-shape {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  background: url('https://xencafe.nekoweb.org/2027/SUBSCRIBE/teacupviewfishrbg.png') center/cover no-repeat;
+  opacity: 0.3;
+  animation: float 6s ease-in-out infinite;
+}
+.left { top: -40px; left: -60px; transform: rotate(8deg);}
+.right { bottom: -50px; right: -60px; transform: rotate(-10deg); animation-delay: 2s; }
+
+@keyframes float {
+  0% { transform: translateY(0px) rotate(8deg); }
+  50% { transform: translateY(-10px) rotate(10deg); }
+  100% { transform: translateY(0px) rotate(8deg); }
+}
+
+/* Form */
+input[type="email"] {
+  padding: 12px;
+  border-radius: 8px;
+  border: none;
+  width: 250px;
+}
+
+button.subscribe-btn {
+  padding: 12px 20px;
+  border-radius: 10px;
+  border: none;
+  background: linear-gradient(45deg,#9a6cff,#6f5cff);
+  color: white;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Fall pieces */
+.fall-piece {
+  display: inline-block;
+  margin: 5px;
+  padding: 10px;
+  background: rgba(120,90,255,0.3);
+  border-radius: 8px;
+  transition: 1s;
+}
+
+/* Secret message */
+.hidden-message {
+  margin-top: 20px;
+  opacity: 0;
+  transition: 0.6s;
+}
+.hidden-message.reveal { opacity: 1; }
+
+/* Grid */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px,1fr));
+  gap: 30px;
+  margin-top: 20px;
+}
+
+/* Modules */
+.module {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 16px;
+  padding: 20px;
+  backdrop-filter: blur(10px);
+  transition: box-shadow 0.6s ease, transform 0.3s ease, background 0.3s ease;
+  --r: 0deg;
+}
+
+/* Featured dispatch module */
+.module.featured {
+  grid-column: span 2;
+  text-align: left;
+  --r: -1deg;
+}
+
+/* Subtle printed imperfection on others */
+.module:nth-child(2) { --r: 0.8deg; }
+.module:nth-child(3) { --r: -0.6deg; }
+.module:nth-child(4) { --r: 1deg; }
+
+/* Ghost drift */
+.module {
+  animation: drift 14s ease-in-out infinite;
+}
+
+.module:nth-child(2) { animation-delay: 2s; }
+.module:nth-child(3) { animation-delay: 4s; }
+.module:nth-child(4) { animation-delay: 6s; }
+
+@keyframes drift {
+  0%   { transform: translateY(0px) rotate(var(--r)); }
+  50%  { transform: translateY(-8px) rotate(calc(var(--r) + 0.5deg)); }
+  100% { transform: translateY(0px) rotate(var(--r)); }
+}
+
+/* Hover glow with cornflower blue essence */
+.module:hover {
+  border-color: #9a6cff; /* violet accent */
+  box-shadow: 0 0 25px rgba(154,108,255,0.5), 0 0 40px rgba(100,149,237,0.3); /* cornflower blue glow */
+  cursor: pointer;
+  background: rgba(100,149,237,0.05); /* subtle blue wash */
+}
+
+/* Overlay */
+#overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(10,10,20,0.9);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+#overlayContent {
+  background: rgba(20,10,40,0.95);
+  padding: 30px;
+  border-radius: 16px;
+  max-width: 600px;
+  color: #e6e6ff;
+  text-align: left;
+}
+#overlayContent a { color: #cfcfff; text-decoration: underline; }
+
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <div class="header">
+    Xen Dispatches
+    <span class="header-sub">a portal into the Quiet Guild & Café</span>
+  </div>
+
+  <!-- Subscribe card -->
+  <div class="subscribe-card" id="subscribeCard">
+
+    <div class="floating-shape left"></div>
+    <div class="floating-shape right"></div>
+
+    <form id="subscribeForm"
+      action="https://buttondown.com/api/emails/embed-subscribe/Xen"
+      method="post"
+      target="hidden_iframe">
+
+      <input type="email" name="email" placeholder="Enter your email" required>
+      <button class="subscribe-btn">Subscribe</button>
+    </form>
+
+    <iframe name="hidden_iframe" style="display:none;"></iframe>
+
+    <div class="fall-pieces">
+      <span class="fall-piece">☕</span>
+      <span class="fall-piece">📜</span>
+      <span class="fall-piece">✨</span>
+      <span class="fall-piece">🌌</span>
+    </div>
+
+    <div id="secret" class="hidden-message">
+      You’re in.<br><br>
+      <span style="opacity:0.7;">The Quiet Guild opens slowly. Sip. Explore.</span>
+    </div>
+
+  </div>
+
+  <!-- Café Grid -->
+  <div id="cafeGrid" style="opacity:0; transform:translateY(40px); transition:1.2s; margin-top:80px;">
+    <div class="grid">
+
+      <!-- Featured Latest Dispatch -->
+      <div class="module featured" onclick="openOverlay('latest')">
+        <h2 id="latestTitle">Latest Dispatch</h2>
+        <p id="latestDate" style="opacity:0.6;"></p>
+        <p id="latestDesc">Loading latest dispatch…</p>
+      </div>
+
+      <div class="module" onclick="openOverlay('cafe')">
+        <h3>The Café</h3>
+        <p>Conversations, presence</p>
+      </div>
+
+      <div class="module" onclick="openOverlay('academy')">
+        <h3>The Academy</h3>
+        <p>Systems & frameworks</p>
+      </div>
+
+      <div class="module" onclick="openOverlay('archive')">
+        <h3>Archive</h3>
+        <p>All dispatches</p>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<!-- Overlay -->
+<div id="overlay">
+  <div class="module" id="overlayContent"></div>
+</div>
+
+<script>
+// Ripple effect
+document.querySelector('.subscribe-btn').addEventListener('click', function(e){
+  const ripple = document.createElement('span');
+  ripple.className = 'ripple';
+  ripple.style.left = e.offsetX + 'px';
+  ripple.style.top = e.offsetY + 'px';
+  this.appendChild(ripple);
+  setTimeout(()=>ripple.remove(),600);
+});
+
+// Form submission animation
+document.getElementById('subscribeForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  const pieces = document.querySelectorAll('.fall-piece');
+  const secret = document.getElementById('secret');
+  const grid = document.getElementById('cafeGrid');
+
+  setTimeout(()=>{
+    pieces.forEach(p=>{
+      p.style.transform = `translate(${(Math.random()-0.5)*400}px, ${(Math.random()-0.5)*400}px)`;
+      p.style.opacity = 0;
+    });
+    secret.classList.add('reveal');
+    document.getElementById('subscribeForm').style.display = 'none';
+  },4000);
+
+  setTimeout(()=>{
+    grid.style.opacity = 1;
+    grid.style.transform = 'translateY(0)';
+    grid.scrollIntoView({behavior:'smooth'});
+  },5200);
+});
+
+// Overlay logic
+function openOverlay(type){
+  const overlay = document.getElementById('overlay');
+  const content = document.getElementById('overlayContent');
+
+  if(type==='latest'){
+    content.innerHTML = `
+      <h2>Latest Dispatch</h2>
+      <p><a href="${window.latestLink}" target="_blank">Read the full dispatch</a></p>
+      <div onclick='closeOverlay()' style="margin-top:15px; cursor:pointer; opacity:0.7;">Close</div>
+    `;
+  } else if(type==='archive'){
+    content.innerHTML = `
+      <h2>Archive</h2>
+      <p><a href='https://buttondown.com/Xen/archive/' target='_blank'>Enter archive</a></p>
+      <div onclick='closeOverlay()' style="margin-top:15px; cursor:pointer; opacity:0.7;">Close</div>
+    `;
+  } else {
+    content.innerHTML = `<h2>${type}</h2><p>Inside the ${type}.</p><div onclick='closeOverlay()' style="margin-top:15px; cursor:pointer; opacity:0.7;">Close</div>`;
+  }
+
+  overlay.style.display='flex';
+}
+
+function closeOverlay(){ document.getElementById('overlay').style.display='none'; }
+
+// Fetch latest dispatch from Buttondown RSS
+async function loadLatestDispatch(){
+  try{
+    const res = await fetch("https://api.rss2json.com/v1/api.json?rss_url=https://buttondown.com/Xen/rss");
+    const data = await res.json();
+    const item = data.items[0];
+
+    document.getElementById("latestTitle").innerText = item.title;
+    document.getElementById("latestDate").innerText = new Date(item.pubDate).toLocaleDateString();
+    document.getElementById("latestDesc").innerText = item.description.replace(/<[^>]*>/g, "").slice(0,120) + "...";
+
+    window.latestLink = item.link;
+
+  }catch(err){
+    document.getElementById("latestDesc").innerText = "Unable to load dispatch right now.";
+  }
+}
+loadLatestDispatch();
+</script>
+</body>
+</html>
