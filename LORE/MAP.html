@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="/.nekoweb-api/static/site.js" defer></script>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Character & Location Map - Cerulean Parlour Theme</title>
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Orbitron:wght@500;700&display=swap" rel="stylesheet" />
+
+<style>
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center;     /* Center vertically */
+    padding: 20px;
+    /* Matching Cerulean Blue & Slate Grey Ombre */
+    background: linear-gradient(135deg, #0b131f 0%, #1c2d42 40%, #2b3a4e 70%, #46637f 100%);
+    font-family: 'Orbitron', sans-serif;
+    color: #6495ed; /* Cornflower Blue */
+  }
+
+  /* Responsive Map Container */
+  #mapContainer {
+    position: relative;
+    width: 100%;
+    max-width: 900px;
+    aspect-ratio: 4 / 3; /* Maintains proper aspect ratio across devices */
+    min-height: 520px;
+    background: rgba(11, 19, 31, 0.85);
+    border: 3px solid #5c9fb9; /* Cerulean border */
+    border-radius: 15px;
+    box-shadow: 0 0 25px rgba(92, 159, 185, 0.3);
+    padding: 10px;
+    overflow: hidden;
+  }
+
+  /* Center Cafe Banner */
+  .cafe-banner {
+    position: absolute;
+    top: 42%;
+    left: 58%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+  }
+
+  .cafe-banner img {
+    width: clamp(80px, 15vw, 130px);
+    height: clamp(80px, 15vw, 130px);
+    border-radius: 12px;
+    border: 2px solid #5c9fb9;
+    box-shadow: 0 0 15px rgba(100, 149, 237, 0.4);
+    object-fit: cover;
+  }
+
+  .cafe-title {
+    color: #87cefa; /* Light Sky Blue Accent */
+    font-family: 'Great Vibes', cursive;
+    font-size: clamp(1.4rem, 2.5vw, 2.2rem);
+    margin-top: 4px;
+    text-shadow: 0 0 8px rgba(100, 149, 237, 0.5);
+  }
+
+  /* Map Nodes (Percentage-positioned for mobile responsiveness) */
+  .node {
+    position: absolute;
+    width: clamp(70px, 12vw, 95px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: rgba(15, 23, 36, 0.9);
+    border: 2px solid #3b6e8c;
+    border-radius: 12px;
+    box-shadow: 0 0 10px rgba(92, 159, 185, 0.3);
+    padding: 6px;
+    cursor: pointer;
+    transition: all 0.25s ease-in-out;
+    transform: translate(-50%, -50%);
+  }
+
+  .node:hover {
+    border-color: #6495ed;
+    box-shadow: 0 0 15px rgba(100, 149, 237, 0.6);
+    transform: translate(-50%, -50%) scale(1.08);
+  }
+
+  .node img {
+    width: clamp(45px, 8vw, 65px);
+    height: clamp(45px, 8vw, 65px);
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #5c9fb9;
+  }
+
+  .node-label {
+    margin-top: 5px;
+    font-size: clamp(0.6rem, 1.2vw, 0.75rem);
+    color: #6495ed; /* Cornflower Blue */
+    font-weight: 700;
+    text-align: center;
+    word-wrap: break-word;
+  }
+</style>
+</head>
+<body>
+<div id="mapContainer">
+
+  <div class="cafe-banner">
+    <img src="https://3society.neocities.org/COMFORTCAFE_LORE/COFFEE%20HOUSE%20INTERFACE/IMAGES/comfortcafe1.jpeg" alt="Cafe Banner" />
+    <div class="cafe-title">The Cafe</div>
+  </div>
+
+  <div style="top: 15%; left: 15%;" class="node">
+    <img src="https://xencafe.nekoweb.org/2026-MAP-LORE/HANS-OFFICIAL-CHIMERA.jpeg" alt="Hans" />
+    <div class="node-label">Hans</div>
+  </div>
+
+  <div style="top: 15%; left: 85%;" class="node">
+    <img src="https://3society.neocities.org/COMFORTCAFE_LORE/CHARACTER.CARDS/STELLAR.jpeg" alt="Stell" />
+    <div class="node-label">Stell</div>
+  </div>
+
+   <a href="https://xencafe.nekoweb.org/2026-LIVESTREAM/MIKIS-REALM-ARTPOST/MIKI-BLUE2REVEAL/MIKIS-LORE/Miki-Interview0.html" target="_blank" style="top: 45%; left: 10%;" class="node">
+    <img src="https://3society.neocities.org/COMFORTCAFE_LORE/MAP/Miki-Official.jpeg" alt="Miki" />
+    <div class="node-label">Miki</div>
+  </a>
+
+ <a href="https://3society.neocities.org/COMFORTCAFE_LORE/MILO/Milo" target="_blank" style="top: 45%; left: 90%;" class="node">
+    <img src="https://3society.neocities.org/COMFORTCAFE_LORE/CHARACTER.CARDS/Milo.jpeg" alt="Minty Milo" />
+    <div class="node-label">Minty Milo</div>
+  </a>
+
+  <a href="
+https://xencafe.nekoweb.org/2025-COFFEECOUNTER/HANS-REALM-INTERACTIVE/24hr-revised-complete-Hans-ritual/hans-24-hr-response.html" target="_blank" style="top: 82%; left: 20%;" class="node">
+    <img src="https://xencafe.nekoweb.org/2026-MAP-LORE/HANS-OFFICIAL-CHIMERA.jpeg" alt="Hans" />
+    <div class="node-label">Hans</div>
+  </a>
+
+  <a href="https://xencafe.nekoweb.org/2024-ARCHIVES/ZINE-ROOM-BIOS/bio-gamecards-backbutton.html" target="_blank" style="top: 82%; left: 80%;" class="node">
+    <img src="https://xencafe.nekoweb.org/2026-MAP-LORE/Chari-Barista.jpeg" alt="Chari" />
+    <div class="node-label">Chari</div>
+  </a>
+
+  <a href="https://example.com/food-orders" target="_blank" style="top: 20%; left: 42%;" class="node">
+    <img src="https://xencafe.nekoweb.org/2026-MAP-LORE/lavalatte.jpg" alt="Food Orders" />
+    <div class="node-label">Food Orders</div>
+  </a>
+
+  <a href="https://xencafe.nekoweb.org/2026-FOLLOWTHELIGHT/movie-candy-intro/FINAL02/KLEE1FONT-NEW/codex-game/CORNFLOWERBLUE/milo-garden.html" target="_blank" style="top: 52%; left: 30%;" class="node">
+    <img src="https://xencafe.nekoweb.org/2026-MAP-LORE/lavenderseeds.jpg" alt="Herb Garden" />
+    <div class="node-label">Herb Garden</div>
+  </a>
+
+  <a href="https://example.com/pillow-room" target="_blank" style="top: 72%; left: 45%;" class="node">
+    <img src="https://images.unsplash.com/photo-1603791442216-6b7d0d1a7f1b?ixlib=rb-4.0.4&auto=format&fit=crop&w=80&q=80" alt="Pillow Room" />
+    <div class="node-label">Pillow Room</div>
+  </a>
+
+  <a href="https://example.com/letters" target="_blank" style="top: 85%; left: 60%;" class="node">
+    <img src="https://images.unsplash.com/photo-1603791442216-6b7d0d1a7f1b?ixlib=rb-4.0.4&auto=format&fit=crop&w=80&q=80" alt="Letters" />
+    <div class="node-label">Letters</div>
+  </a>
+
+</div>
+
+</body>
+</html>
