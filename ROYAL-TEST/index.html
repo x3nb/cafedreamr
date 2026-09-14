@@ -1,0 +1,707 @@
+<!doctype html>
+<html lang="en">
+<head><script src="/.nekoweb-api/static/site.js" defer></script>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ROYAL — Courtly Initiation & Coronation</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700;800&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg-deep:#100515;
+      --accent-royal:#8a3fd0;
+      --accent-corn:#6ea0ff;
+      --muted:#b7c3d8;
+      --good:#4ad07a;
+      --bad:#ff6b6b;
+      --glass-border: rgba(255,255,255,0.04);
+      --toggle-on-bg: linear-gradient(90deg, var(--accent-royal), var(--accent-corn));
+      --card-bg: rgba(255,255,255,0.01);
+    }
+    html,body{ height:100%; }
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
+      font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background:
+        radial-gradient(900px 320px at 8% 12%, rgba(138,63,208,0.10), transparent 12%),
+        radial-gradient(700px 260px at 92% 92%, rgba(110,160,255,0.05), transparent 12%),
+        linear-gradient(180deg,var(--bg-deep), #0a0410);
+      color:#e8f0ff;
+      -webkit-font-smoothing:antialiased;
+      padding:18px;
+      display:flex;
+      align-items:flex-start;
+      justify-content:center;
+      min-height:100vh;
+      overflow-x:hidden;
+    }
+
+    .container{
+      width:1100px; max-width:100%; border-radius:14px; padding:18px;
+      display:grid; grid-template-columns: 1fr 360px; gap:18px; align-items:start; position:relative;
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.008));
+      border:1px solid var(--glass-border); backdrop-filter: blur(10px) saturate(120%);
+      box-shadow: 0 10px 40px rgba(4,2,8,0.6), inset 0 1px 0 rgba(255,255,255,0.02);
+    }
+
+    header{ display:flex; gap:12px; align-items:center; margin-bottom:8px; }
+    .crown { width:46px; height:46px; display:inline-block; flex:0 0 46px; }
+    h1{
+      margin:0;
+      font-family: "Cormorant Garamond", serif;
+      font-size: clamp(1.05rem, 2.2vw, 1.4rem);
+      line-height:1.02;
+      color: var(--accent-royal);
+      font-weight:800;
+      letter-spacing:0.4px;
+    }
+    .salute{ margin:0; font-size:0.92rem; color:var(--muted); font-family:Inter, sans-serif; }
+
+    .card{ background: var(--card-bg); border-radius:12px; padding:16px; box-shadow: 0 8px 28px rgba(6,4,10,0.6); border:1px solid rgba(255,255,255,0.02); }
+
+    .scene-title{ display:flex; align-items:center; gap:10px; margin-bottom:12px; }
+    .badge{ background: linear-gradient(90deg, rgba(110,160,255,0.12), rgba(138,63,208,0.08)); color:#fff; padding:6px 10px; border-radius:999px; font-weight:800; font-size:0.85rem; border:1px solid rgba(255,255,255,0.02); }
+    .prompt{ font-size: clamp(0.98rem, 1.6vw, 1.06rem); margin-bottom:12px; color:#eef6ff; font-family:Inter, sans-serif; }
+
+    .stage{ display:flex; gap:12px; align-items:center; justify-content:space-between; border-radius:10px; padding:14px; border:1px solid rgba(255,255,255,0.02); background: linear-gradient(180deg, rgba(255,255,255,0.008), rgba(255,255,255,0.006)); }
+    .table{ flex:1; display:flex; gap:12px; align-items:center; justify-content:center; position:relative; min-height:140px; }
+    .avatar{ width:92px; height:92px; border-radius:12px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px; cursor:pointer; border:2px solid transparent; transition: transform .28s, box-shadow .28s, opacity .18s; box-shadow: 0 6px 18px rgba(20,14,40,0.36); color:#eaf0ff; background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.008)); }
+    .avatar .name{ font-weight:800; font-size:0.92rem; font-family: "Cormorant Garamond", serif; }
+    .avatar .title{ font-size:0.72rem; color:var(--muted); font-family: Inter, sans-serif; }
+    .avatar.dim{ opacity:.36; transform:scale(.98); }
+    .avatar.correct{ border-color: rgba(74,208,122,0.12); transform:translateY(-6px); box-shadow: 0 14px 36px rgba(74,208,122,0.06); }
+    .avatar.wrong{ border-color: rgba(255,107,107,0.06); transform:translateY(-3px); box-shadow: 0 10px 28px rgba(255,107,107,0.04); }
+
+    .controls{ display:flex; flex-direction:column; gap:8px; min-width:240px; align-items:stretch; }
+    .btn{ appearance:none; border:0; background: var(--toggle-on-bg); color:white; padding:10px 14px; border-radius:10px; font-weight:800; cursor:pointer; transition:transform .12s, box-shadow .12s; box-shadow:0 8px 28px rgba(60,30,90,0.22); }
+    .btn.secondary{ background:transparent; color:#dfe9ff; border:1px solid rgba(255,255,255,0.03); box-shadow:none; font-weight:700; }
+    .btn:active{ transform:translateY(1px) }
+
+    .options{ display:grid; gap:10px; grid-template-columns: 1fr; margin-bottom:8px; }
+    .option{ position:relative; padding:12px; border-radius:10px; cursor:pointer; font-weight:800; color:#eef6ff; background: linear-gradient(180deg, rgba(255,255,255,0.016), rgba(255,255,255,0.008)); border:1px solid rgba(255,255,255,0.02); transition: transform .18s, box-shadow .18s, opacity .12s; min-height:48px; display:flex; align-items:center; font-size:0.95rem; }
+    .option:hover{ transform: translateY(-6px); box-shadow: 0 18px 50px rgba(106,63,208,0.12); }
+    .option.ambient{ animation: ambientPulse 4.5s ease-in-out infinite; }
+    @keyframes ambientPulse { 0% { box-shadow: 0 8px 26px rgba(106,63,208,0.06); transform: translateY(0); } 50% { box-shadow: 0 18px 40px rgba(110,160,255,0.06); transform: translateY(-2px); } 100% { box-shadow: 0 8px 26px rgba(106,63,208,0.06); transform: translateY(0); } }
+
+    .feedback{ padding:10px 12px; border-radius:8px; font-weight:700; display:none; }
+    .feedback.show{ display:block; }
+    .feedback.good{ background: linear-gradient(90deg, rgba(74,208,122,0.06), rgba(74,208,122,0.03)); color:var(--good); border:1px solid rgba(74,208,122,0.06) }
+    .feedback.bad{ background: linear-gradient(90deg, rgba(255,107,107,0.05), rgba(255,107,107,0.02)); color:var(--bad); border:1px solid rgba(255,107,107,0.04) }
+
+    .sidebar{ display:flex; flex-direction:column; gap:12px; align-items:stretch; }
+    .panel{ background: linear-gradient(180deg, rgba(255,255,255,0.012), rgba(255,255,255,0.008)); padding:14px; border-radius:10px; box-shadow:0 8px 24px rgba(0,0,0,0.6); border:1px solid rgba(255,255,255,0.02); color:#eaf2ff; }
+    .score .big{ font-size: clamp(1.6rem, 4vw, 2.2rem); color:var(--accent-corn); font-weight:900; font-family: "Cormorant Garamond", serif; }
+    .progress{ height:10px; background: rgba(255,255,255,0.02); border-radius:8px; overflow:hidden; border:1px solid rgba(255,255,255,0.02); }
+    .progress > i{ display:block; height:100%; background: linear-gradient(90deg, var(--accent-royal), var(--accent-corn)); width:0%; transition:width .6s cubic-bezier(.2,.9,.3,1); }
+
+    .toggle-switch{ display:inline-flex; gap:8px; align-items:center; cursor:pointer; user-select:none; }
+    .switch-btn{ --size-w:46px; --size-h:26px; width:var(--size-w); height:var(--size-h); border-radius:999px; padding:3px; display:inline-flex; align-items:center; position:relative; border:1px solid rgba(255,255,255,0.04); transition: background-color .18s ease, box-shadow .18s; background: rgba(255,255,255,0.04); }
+    .switch-btn .knob{ width:18px; height:18px; border-radius:999px; background:#fff; transition: transform .18s cubic-bezier(.2,.9,.3,1); transform: translateX(0); box-shadow:0 6px 18px rgba(0,0,0,0.25); }
+    .switch-btn.on{ background: var(--toggle-on-bg); box-shadow:0 8px 28px rgba(60,30,90,0.18); }
+    .switch-btn.on .knob{ transform: translateX(20px); }
+    .switch-label{ font-size:0.9rem; color:var(--muted); min-width:46px; text-align:left; }
+
+    #certificateModal{
+      position:fixed; inset:0; display:none; z-index:4000; align-items:center; justify-content:center;
+      background: rgba(3,1,6,0.64); padding:20px;
+    }
+    #certificateModal .modalCard{
+      width:860px; max-width:96%; background: linear-gradient(180deg,#fff,#faf8ff); border-radius:12px; padding:22px; box-shadow:0 30px 80px rgba(0,0,0,0.6); border:6px solid rgba(111,40,182,0.06); position:relative;
+    }
+    #certificateModal .modalCloseX{
+      position:absolute; right:12px; top:8px; background:transparent; border:0; color:#333; font-size:20px; cursor:pointer; padding:6px; border-radius:6px;
+    }
+    #certificateModal .modalCloseX:hover{ background:rgba(0,0,0,0.04); }
+    #certificateModal .seal{ position:absolute; right:20px; top:20px; width:84px; height:84px; border-radius:50%; background: radial-gradient(circle at 30% 30%, rgba(255,216,107,0.95), rgba(255,178,77,0.95)); display:flex; align-items:center; justify-content:center; color:#2b1b4a; font-weight:900; box-shadow:0 8px 24px rgba(111,40,182,0.08); }
+    #certificateModal h2{ margin:8px 0 4px 0; font-family:'Cormorant Garamond', serif; font-size:1.8rem; color:var(--accent-royal); }
+    #certificateModal .recipient{ font-family:'Cormorant Garamond', serif; font-size:1.6rem; color:#2b1b4a; font-weight:700; margin:6px 0; }
+    #certificateModal .controls{ display:flex; gap:10px; justify-content:center; margin-top:16px; }
+    @media print{ #certificateModal{ display:none !important } }
+
+    @media (max-width:1000px){ .container{ grid-template-columns: 1fr; padding:14px; gap:14px; } .controls{ min-width:100%; } .options{ grid-template-columns: 1fr; } .table{ min-height:120px; padding:8px; } .avatar{ width:84px; height:84px; } }
+  </style>
+</head>
+<body>
+  <!-- Invitation overlay -->
+  <div id="inviteOverlay" aria-hidden="false" role="dialog" aria-modal="true" style="position:fixed;inset:0;z-index:3500;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg, rgba(3,1,6,0.86), rgba(3,1,6,0.9));backdrop-filter:blur(6px);padding:24px;">
+    <div class="inviteCard" role="document" aria-labelledby="inviteTitle" style="width:720px;max-width:94%;border-radius:14px;padding:28px;background:linear-gradient(180deg, rgba(20,8,30,0.9), rgba(12,5,20,0.86));border:1px solid rgba(255,255,255,0.03);box-shadow:0 30px 80px rgba(2,0,8,0.8);color:#fff;text-align:center;">
+      <div id="inviteTitle" class="inviteTitle" style="font-family:Cormorant Garamond,serif;font-size:clamp(1.4rem,4vw,2rem);font-weight:900;margin:0 0 8px 0;color:var(--accent-royal)">A Royal Invitation</div>
+      <div id="inviteLines" style="font-family:Inter, sans-serif;color:#e6eef8;font-size:1rem;min-height:28px;margin-bottom:12px;" aria-live="polite"></div>
+      <div style="color:var(--muted);margin-bottom:18px;line-height:1.4;font-size:1.05rem;">A hush falls over the hall. The court awaits one who will learn the rites and claim the crown. Enter your name to accept the summons.</div>
+
+      <div style="width:100%;max-width:420px;margin:0 auto 12px auto;display:flex;gap:8px;">
+        <input id="playerNameInput" type="text" placeholder="Enter your name, noble traveler..." aria-label="Player name" style="flex:1;padding:12px 14px;border-radius:10px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#fff;font-size:1rem;outline:none;" />
+        <button id="acceptNameBtn" type="button" disabled aria-disabled="true" style="padding:12px 14px;border-radius:10px;border:0;font-weight:800;background:var(--toggle-on-bg);color:#fff;cursor:pointer;">Begin</button>
+      </div>
+
+      <div style="font-size:0.88rem;color:rgba(255,255,255,0.6);margin-top:10px;">Tip: your name will be spoken by the bard during the ceremony.</div>
+    </div>
+  </div>
+
+  <div class="container" role="application" aria-label="ROYAL Courtly Initiation, Trial & Coronation">
+    <div>
+      <header>
+        <svg class="crown" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <defs><linearGradient id="cg" x1="0" x2="1"><stop offset="0" stop-color="#ffd86b"/><stop offset="1" stop-color="#ffb84d"/></linearGradient></defs>
+          <g fill="url(#cg)" stroke="#8a5b12" stroke-width="1"><path d="M6 44 L58 44 L50 20 L40 36 L32 12 L24 36 L14 20 Z"/><circle cx="12" cy="20" r="2.4" fill="#ffe9b2"/><circle cx="32" cy="10" r="3.6" fill="#fff4d6"/><circle cx="52" cy="20" r="2.6" fill="#fff0b8"/></g>
+        </svg>
+
+        <div>
+          <h1 id="mainTitle">ROYAL — Courtly Initiation & Coronation</h1>
+          <div class="salute" id="saluteLine">Salutation: <strong id="saluteName" style="color:var(--accent-corn)">Your Grace</strong></div>
+        </div>
+      </header>
+
+      <div class="card" id="gameCard" aria-live="polite">
+        <div class="scene-title">
+          <span class="badge" id="sceneBadge">Initiation</span>
+          <div>
+            <div id="sceneName" style="font-weight:900;color:#eef6ff;font-family:'Cormorant Garamond',serif;">Greeting</div>
+            <div style="font-size:0.85rem;color:var(--muted)">Select the most fitting action; the bard will sing your fate.</div>
+          </div>
+        </div>
+
+        <div class="prompt" id="prompt">A visiting dignitary approaches the host. What is the most proper opening?</div>
+
+        <div class="stage" aria-hidden="false">
+          <div class="table" id="stageVisual" role="group" aria-label="stage characters"></div>
+
+          <div class="controls" style="min-width:240px">
+            <div class="options" id="options"></div>
+            <div class="feedback" id="feedback" role="status" aria-live="polite"></div>
+
+            <div style="display:flex;gap:8px;margin-top:6px;align-items:center;">
+              <button class="btn" id="nextBtn" disabled>Next</button>
+              <button class="btn secondary" id="restartBtn">Restart</button>
+            </div>
+
+            <div style="height:8px"></div>
+
+            <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
+              <div class="toggle-switch" role="group" aria-label="Bard speech toggle">
+                <button id="speechSwitch" class="switch-btn on" role="switch" aria-checked="true" aria-label="Bard speech toggle" title="Toggle bard speech"><span class="knob" aria-hidden="true"></span></button>
+                <div class="switch-label" id="speechLabel" aria-live="polite">Bard: <strong style="color:#fff">On</strong></div>
+              </div>
+
+              <div class="toggle-switch" role="group" aria-label="Sound effects toggle">
+                <button id="soundSwitch" class="switch-btn on" role="switch" aria-checked="true" aria-label="Sound effects toggle" title="Toggle sound effects"><span class="knob" aria-hidden="true"></span></button>
+                <div class="switch-label" id="soundLabel" aria-live="polite">Sound: <strong style="color:#fff">On</strong></div>
+              </div>
+            </div>
+
+            <div style="margin-top:8px;font-size:0.86rem;color:var(--muted)">Tip: 1–3 to answer, Enter to continue, R to restart, B to toggle bard, S to toggle sound.</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <aside class="sidebar" aria-hidden="false">
+      <div class="panel score" aria-label="Score panel">
+        <div>
+          <div style="font-size:0.85rem;color:var(--muted)">Score</div>
+          <div class="big" id="score">0</div>
+        </div>
+        <div style="width:140px">
+          <div style="font-size:0.85rem;color:var(--muted);margin-bottom:6px">Progress</div>
+          <div class="progress" aria-hidden="true"><i id="progressFill"></i></div>
+        </div>
+      </div>
+
+      <div class="panel" id="summaryPanel" aria-live="polite">
+        <div style="font-weight:900;margin-bottom:8px">Courtly Guidance</div>
+        <ul id="guidance" style="margin:0;padding-left:20px;color:var(--muted);font-size:0.95rem">
+          <li>Greet with a measured salutation and a humble inclination of the head.</li>
+          <li>Honor rank at the table — precedence guides seating.</li>
+          <li>For toasts: attend the host, raise your cup, and sip with poise.</li>
+        </ul>
+      </div>
+
+      <div class="panel final" id="finalPanel" style="display:none">
+        <div id="finalMsg" style="font-weight:900;font-size:1.05rem;color:var(--accent-corn)"></div>
+        <div id="finalAdvice" style="margin-top:6px;color:var(--muted)"></div>
+        <div style="margin-top:10px;display:flex;gap:8px;justify-content:center">
+          <button class="btn" id="beginTrialBtn">Begin Courtly Trial</button>
+          <button class="btn secondary" id="replayInitBtn">Replay Initiation</button>
+        </div>
+        <div style="margin-top:10px;display:flex;gap:8px;justify-content:center">
+          <button class="btn" id="beginNextBtn" style="display:none">Begin Coronation</button>
+        </div>
+      </div>
+
+      <div class="panel small" style="text-align:center;font-size:0.86rem;color:var(--muted)">
+        Regal glass edition • Bard voice &amp; chimes • Open this file to play
+      </div>
+    </aside>
+  </div>
+
+  <!-- Congratulatory banner overlay (fallback certificate will attach here if popup blocked) -->
+  <div id="congratsBanner" role="dialog" aria-modal="true" aria-hidden="true">
+    <div style="display:flex;align-items:center;gap:12px;justify-content:center;">
+      <svg viewBox="0 0 64 64" width="56" height="56" aria-hidden="true" style="filter:drop-shadow(0 10px 30px rgba(110,160,255,0.12))">
+        <defs><linearGradient id="cg2" x1="0" x2="1"><stop offset="0" stop-color="#ffd86b"/><stop offset="1" stop-color="#ffb84d"/></linearGradient></defs>
+        <g fill="url(#cg2)" stroke="#8a5b12" stroke-width="1"><path d="M6 44 L58 44 L50 20 L40 36 L32 12 L24 36 L14 20 Z"/><circle cx="32" cy="10" r="3.6" fill="#fff4d6"/></g>
+      </svg>
+      <div style="text-align:left">
+        <div style="font-size:1.12rem; font-weight:900; color:#fff">All Hail! You Ascend to Coronation</div>
+        <div style="color:rgba(255,255,255,0.9); margin-top:6px">The hall rings with your name — proceed and claim your crown.</div>
+      </div>
+    </div>
+    <div style="margin-top:12px; display:flex; gap:10px; justify-content:center">
+      <button id="proceedCoronation" class="btn">Proceed to Coronation</button>
+      <button id="dismissBanner" class="btn secondary">Return</button>
+    </div>
+    <div class="confetti" id="confettiLayer" aria-hidden="true"></div>
+  </div>
+
+  <!-- Certificate modal (single, printable, closable, restart/home options) -->
+  <div id="certificateModal" aria-hidden="true">
+    <div class="modalCard" role="dialog" aria-modal="true" aria-labelledby="certTitle">
+      <button class="modalCloseX" id="modalCloseX" aria-label="Close certificate">✕</button>
+      <div class="seal" aria-hidden="true">ROYAL</div>
+
+      <svg viewBox="0 0 64 64" width="84" height="84" style="display:block;margin:6px auto 0;">
+        <defs><linearGradient id="cgx" x1="0" x2="1"><stop offset="0" stop-color="#ffd86b"/><stop offset="1" stop-color="#ffb84d"/></linearGradient></defs>
+        <g fill="url(#cgx)" stroke="#8a5b12" stroke-width="1"><path d="M6 44 L58 44 L50 20 L40 36 L32 12 L24 36 L14 20 Z"/><circle cx="32" cy="10" r="3.6" fill="#fff4d6"/></g>
+      </svg>
+
+      <h2 id="certTitle">Certificate of Coronation</h2>
+      <div class="subtitle" style="color:#444;margin-top:0;">By Royal Decree and Courtly Counsel</div>
+
+      <div class="meta" style="color:#444">This certifies that</div>
+      <div id="certName" class="recipient">—</div>
+
+      <div class="meta" style="color:#444">has completed the ROYAL Initiation and Coronet Trials and is hereby recognized for conduct befitting the court.</div>
+      <div id="certScore" class="scoreline" style="color:#2b1b4a;font-weight:700;margin-top:12px;"></div>
+
+      <div class="controls" style="margin-top:18px;">
+        <button id="printCertBtn" class="btn">Print / Save PDF</button>
+        <button id="closeCertBtn" class="btn secondary">Return to Game</button>
+        <button id="restartCertBtn" class="btn secondary" style="background:transparent;border:1px solid rgba(255,255,255,0.04);color:#fff">Restart from Home</button>
+      </div>
+
+      <div style="margin-top:12px;color:#666;font-size:0.95rem;text-align:center;">Use Print to save a PDF keepsake. Or return/restart to play again.</div>
+    </div>
+  </div>
+
+  <script>
+  (function(){
+    // Scenes
+    const initiation = [
+      { id:'greeting', title:'Greeting', prompt:'A visiting dignitary approaches the host. What is the most proper opening?', avatars:[{name:'Host',title:'Host'},{name:'Dignitary',title:'Guest'},{name:'Usher',title:'Usher'}], options:[{label:'Offer a warm, informal hug and “Hey!”',delta:-1,explain:'Too casual for formal introductions.'},{label:'Stand, present your name with a slight bow, formal salutation',delta:2,explain:'Correct: formal salutation with a respectful nod or bow.'},{label:'Ignore and continue conversation with someone else',delta:-2,explain:'Rude: ignoring guests is an etiquette breach.'}]},
+      { id:'seating', title:'Seating', prompt:'The host must seat guests at a round table. Which guest should be seated first?', avatars:[{name:'Lady Elm',title:'Ambassador'},{name:'Sir March',title:'Viscount'},{name:'Ms. Hale',title:'Host'}], options:[{label:'Seat the host first, then highest-ranking guest',delta:1,explain:'Partial credit: host arranges seating but precedence is key.'},{label:'Seat the highest-ranking guest first, then proceed by rank',delta:2,explain:'Correct: precedence determines seating order.'},{label:'Seat guests in arrival order',delta:-1,explain:'Casual and incorrect for formal occasions.'}]},
+      { id:'toast', title:'Toast', prompt:'At dinner, the host stands and proposes a toast. What should you do as a guest?', avatars:[{name:'Host',title:'Host'},{name:'Guest A',title:'Guest'},{name:'Guest B',title:'Guest'}], options:[{label:'Stand, raise glass slightly, look at the host, sip after host',delta:2,explain:'Correct: polite posture and wait for the host before sipping.'},{label:'Shout a long speech and gulp your drink immediately',delta:-2,explain:'Rude and disruptive.'},{label:'Ignore and check phone',delta:-2,explain:'Disrespectful behavior at a formal table.'}]}
+    ];
+    const trial = [
+      { id:'parley', title:'Diplomatic Parley', prompt:'A visiting envoy speaks in veiled terms. How should you reply?', avatars:[{name:'Envoy',title:'Envoy'},{name:'Interpreter',title:'Interpreter'},{name:'You',title:'Representative'}], options:[{label:'Reply with measured courtesy, restating intent plainly',delta:2,explain:'Correct: polite clarity keeps diplomacy steady.'},{label:'Make a jest that could be misread',delta:-1,explain:'Risky humor may damage rapport.'},{label:'Reply angrily and curtly',delta:-2,explain:'Unbecoming: wrath breaks diplomatic ties.'}]},
+      { id:'procession', title:'Procession', prompt:'You lead a small procession to a ceremonial hall. What is the most proper formation?', avatars:[{name:'Banner',title:'Standard'},{name:'Marshal',title:'Marshal'},{name:'Guests',title:'Retinue'}], options:[{label:'Marshal leads, guests follow by precedence, banner centered',delta:2,explain:'Correct: order and symbolism matter.'},{label:'Banner leads, marshal at rear',delta:-1,explain:'Symbolism misplaced; lead by rank and purpose.'},{label:'Scatter informally',delta:-2,explain:'Disorder undermines ceremony.'}]}
+    ];
+    const coronation = [
+      { id:'coronation', title:'Coronation', prompt:'The crown is near — which phrase should you speak when bestowing honor?', avatars:[{name:'Herald',title:'Herald'},{name:'Noble',title:'Noble'},{name:'You',title:'Monarch'}], options:[{label:'“By crown and crownless, I pledge gentle rule.”',delta:3,explain:'A measured, gracious oath befitting a sovereign.'},{label:'“I shall rule with iron and fear!”',delta:-2,explain:'Martial words are unbecoming.'},{label:'Remain silent and let others speak for you',delta:0,explain:'Silence may be humility, but a brief vow is expected.'}]}
+    ];
+
+    // refs
+    const inviteOverlay = document.getElementById('inviteOverlay');
+    const inviteLines = document.getElementById('inviteLines');
+    const playerNameInput = document.getElementById('playerNameInput');
+    const acceptNameBtn = document.getElementById('acceptNameBtn');
+
+    const sceneBadge = document.getElementById('sceneBadge');
+    const sceneName = document.getElementById('sceneName');
+    const promptEl = document.getElementById('prompt');
+    const optionsEl = document.getElementById('options');
+    const stageVisual = document.getElementById('stageVisual');
+    const feedback = document.getElementById('feedback');
+    const nextBtn = document.getElementById('nextBtn');
+    const restartBtn = document.getElementById('restartBtn');
+    const scoreEl = document.getElementById('score');
+    const progressFill = document.getElementById('progressFill');
+    const finalPanel = document.getElementById('finalPanel');
+    const finalMsg = document.getElementById('finalMsg');
+    const finalAdvice = document.getElementById('finalAdvice');
+    const beginTrialBtn = document.getElementById('beginTrialBtn');
+    const replayInitBtn = document.getElementById('replayInitBtn');
+    const beginNextBtn = document.getElementById('beginNextBtn');
+    const speechSwitch = document.getElementById('speechSwitch');
+    const soundSwitch = document.getElementById('soundSwitch');
+    const speechLabel = document.getElementById('speechLabel');
+    const soundLabel = document.getElementById('soundLabel');
+    const saluteName = document.getElementById('saluteName');
+
+    const congratsBanner = document.getElementById('congratsBanner');
+    const confettiLayer = document.getElementById('confettiLayer');
+    const proceedCoronation = document.getElementById('proceedCoronation');
+    const dismissBanner = document.getElementById('dismissBanner');
+
+    const certificateModal = document.getElementById('certificateModal');
+    const certName = document.getElementById('certName');
+    const certScore = document.getElementById('certScore');
+    const printCertBtn = document.getElementById('printCertBtn');
+    const closeCertBtn = document.getElementById('closeCertBtn');
+    const restartCertBtn = document.getElementById('restartCertBtn');
+    const modalCloseX = document.getElementById('modalCloseX');
+
+    // state
+    let playerName = '';
+    let currentScenes = initiation.slice();
+    let state = { index:0, score:0, answered:false, phase:'initiation' };
+    let audioCtx = null;
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    let soundEnabled = true;
+    let speechEnabled = true;
+    let droneOsc = null;
+
+    // invitation typewriter
+    const inviteTextLines = [
+      "A sealed vellum arrives by moonlight.",
+      "A whisper among gilded halls speaks your name.",
+      "The court beckons for those who seek to learn and lead."
+    ];
+
+    function wait(ms){ return new Promise(r=>setTimeout(r, ms)); }
+    function typeLine(text){
+      return new Promise(resolve=>{
+        let i=0;
+        inviteLines.textContent = '';
+        const timer = setInterval(()=> {
+          inviteLines.textContent += text[i++];
+          if(i>=text.length){ clearInterval(timer); resolve(); }
+        }, 28);
+      });
+    }
+    async function playInvitation(){
+      inviteLines.textContent = '';
+      const saved = localStorage.getItem('royal_player');
+      if(saved){
+        playerNameInput.value = saved;
+        enableStartIfName();
+      }
+      for(let i=0;i<inviteTextLines.length;i++){
+        await typeLine(inviteTextLines[i]);
+        await wait(700);
+      }
+      playerNameInput.focus();
+      startDrone();
+    }
+
+    // audio helpers
+    function ensureAudio(){ if(!audioCtx && AudioCtx) audioCtx = new AudioCtx(); return audioCtx; }
+    function startDrone(){ const ctx = ensureAudio(); if(!ctx) return; if(droneOsc) return; const o = ctx.createOscillator(), g = ctx.createGain(); o.type='sine'; o.frequency.value=110; g.gain.value=0.0001; o.connect(g); g.connect(ctx.destination); g.gain.exponentialRampToValueAtTime(0.02, ctx.currentTime+0.6); o.start(); droneOsc={o,g}; }
+    function stopDrone(){ if(!droneOsc) return; try{ const {o,g}=droneOsc; g.gain.exponentialRampToValueAtTime(0.0001,(audioCtx||{}).currentTime+0.3); setTimeout(()=>{ try{o.stop(); }catch(e){} droneOsc=null; },450);}catch(e){} }
+    function playChime(){ if(!soundEnabled) return; const ctx=ensureAudio(); if(!ctx) return; const now=ctx.currentTime; const o=ctx.createOscillator(),g=ctx.createGain(); o.type='sine'; o.frequency.setValueAtTime(880,now); g.gain.setValueAtTime(0.0001,now); g.gain.exponentialRampToValueAtTime(0.12,now+0.02); g.gain.exponentialRampToValueAtTime(0.0001,now+0.9); o.connect(g); g.connect(ctx.destination); o.start(now); o.stop(now+1.0); }
+    function playFanfare(){ if(!soundEnabled) return; const ctx=ensureAudio(); if(!ctx) return; const now=ctx.currentTime; const notes=[440,660,880]; let t=now; notes.forEach(n=>{ const o=ctx.createOscillator(), g=ctx.createGain(); o.type='sawtooth'; o.frequency.setValueAtTime(n,t); g.gain.setValueAtTime(0.0001,t); g.gain.exponentialRampToValueAtTime(0.12,t+0.02); g.gain.exponentialRampToValueAtTime(0.0001,t+0.28); o.connect(g); g.connect(ctx.destination); o.start(t); o.stop(t+0.32); t+=0.12; }); }
+    function playDissonant(){ if(!soundEnabled) return; const ctx=ensureAudio(); if(!ctx) return; const now=ctx.currentTime; const o1=ctx.createOscillator(), o2=ctx.createOscillator(), g=ctx.createGain(); o1.type='square'; o2.type='sine'; o1.frequency.setValueAtTime(200,now); o2.frequency.setValueAtTime(300,now); g.gain.setValueAtTime(0.0001,now); g.gain.exponentialRampToValueAtTime(0.12,now+0.01); g.gain.exponentialRampToValueAtTime(0.0001,now+0.6); o1.connect(g); o2.connect(g); g.connect(ctx.destination); o1.start(now); o2.start(now); o1.stop(now+0.6); o2.stop(now+0.6); }
+
+    function bardSpeak(text){ if(!speechEnabled) return; if(!('speechSynthesis' in window)) return; const ss=window.speechSynthesis; if(ss.speaking) ss.cancel(); const utt=new SpeechSynthesisUtterance(text); utt.rate=0.92; utt.pitch=1.08; const voices=ss.getVoices(); const chosen = voices.find(v=>/female|google uk|samantha|zira/i.test(v.name)) || voices[0]; if(chosen) utt.voice = chosen; ss.speak(utt); }
+    function bardifyLine(line){ const opens=["Hark, noble","Lo, attend","By moon and crown","Hearken,","Hear now,"]; const closes=["Thus sings the court bard.","So saith the hall.","By royal favor.","Thus the proverb goes."]; const open=opens[Math.floor(Math.random()*opens.length)]; const close=closes[Math.floor(Math.random()*closes.length)]; const namePart = playerName ? `${playerName},` : ''; return `${open} ${namePart} ${line} ${close}`; }
+
+    // invitation handlers
+    function enableStartIfName(){ const val = playerNameInput.value.trim(); const disabled = val.length === 0; acceptNameBtn.disabled = disabled; acceptNameBtn.setAttribute('aria-disabled', String(disabled)); }
+    playerNameInput.addEventListener('input', enableStartIfName);
+    playerNameInput.addEventListener('keyup', (e)=>{ enableStartIfName(); if(e.key==='Enter' && !acceptNameBtn.disabled) startAfterInvite(); });
+
+    function startAfterInvite(){
+      const val = playerNameInput.value.trim();
+      if(!val){ enableStartIfName(); playerNameInput.focus(); return; }
+      playerName = val;
+      localStorage.setItem('royal_player', playerName);
+      saluteName.textContent = playerName;
+      stopDrone();
+      inviteOverlay.style.transition = 'opacity .6s ease'; inviteOverlay.style.opacity = '0';
+      setTimeout(()=>{ inviteOverlay.style.display = 'none'; inviteOverlay.setAttribute('aria-hidden','true'); resetGame(); }, 620);
+      try { bardSpeak(bardifyLine(`Welcome, ${playerName}. The court welcomes thy presence.`)); } catch(e){}
+    }
+    acceptNameBtn.addEventListener('click', startAfterInvite);
+
+    // toggle UI
+    function setSwitchState(buttonEl,labelEl,on){ if(on){ buttonEl.classList.add('on'); buttonEl.setAttribute('aria-checked','true'); labelEl.innerHTML = (labelEl.id==='speechLabel')?`Bard: <strong style="color:#fff">On</strong>`:`Sound: <strong style="color:#fff">On</strong>`; } else { buttonEl.classList.remove('on'); buttonEl.setAttribute('aria-checked','false'); labelEl.innerHTML = (labelEl.id==='speechLabel')?`Bard: <strong style="color:var(--muted)">Off</strong>`:`Sound: <strong style="color:var(--muted)">Off</strong>`; } }
+    setSwitchState(speechSwitch, speechLabel, true);
+    setSwitchState(soundSwitch, soundLabel, true);
+    speechSwitch.addEventListener('click', ()=>{ speechEnabled = !speechEnabled; setSwitchState(speechSwitch,speechLabel,speechEnabled); if(!speechEnabled && 'speechSynthesis' in window) window.speechSynthesis.cancel(); speakPrompt(speechEnabled ? 'Bard voice enabled.' : 'Bard voice silenced.'); });
+    soundSwitch.addEventListener('click', ()=>{ soundEnabled = !soundEnabled; setSwitchState(soundSwitch,soundLabel,soundEnabled); if(soundEnabled) playChime(); });
+
+    // render scene / interaction
+    function renderScene(){
+      const s = currentScenes[state.index];
+      sceneBadge.textContent = (state.phase==='initiation')?`Initiation — ${state.index+1}/${currentScenes.length}`:(state.phase==='trial'?'Courtly Trial — '+(state.index+1)+'/'+currentScenes.length:'Coronation — '+(state.index+1)+'/'+currentScenes.length);
+      sceneName.textContent = s.title;
+      promptEl.textContent = s.prompt.replace('{name}', playerName);
+      optionsEl.innerHTML = ''; feedback.className='feedback'; feedback.textContent=''; nextBtn.disabled=true; state.answered=false;
+      stageVisual.innerHTML = '';
+      s.avatars.forEach((a,i)=>{
+        const av = document.createElement('button'); av.type='button'; av.className='avatar'; av.setAttribute('data-index',i); av.setAttribute('aria-label', `${a.name}, ${a.title}`);
+        av.innerHTML = `<svg width="54" height="54" viewBox="0 0 48 48" aria-hidden="true"><defs><linearGradient id="g-${s.id}-${i}" x1="0" x2="1"><stop offset="0" stop-color="#fff" stop-opacity="0.03"/><stop offset="1" stop-color="#000" stop-opacity="0.02"/></linearGradient></defs><rect x="0" y="0" width="48" height="48" rx="10" fill="url(#g-${s.id}-${i})" /><circle cx="24" cy="14" r="10" fill="${i===1 ? '#f3d18a' : i===0 ? '#b8e0d2' : '#d7c8f6'}" /><rect x="10" y="30" width="28" height="10" rx="3" fill="#fff" opacity="0.06" /></svg><div style="text-align:center;margin-top:4px;"><div class="name">${a.name}</div><div class="title">${a.title}</div></div>`;
+        av.addEventListener('click', ()=>{ if(state.answered) return; const optionIndex = i % s.options.length; selectOption(optionIndex,av); });
+        stageVisual.appendChild(av);
+      });
+      s.options.forEach((opt,oi)=>{
+        const btn = document.createElement('button'); btn.className='option ambient'; btn.type='button'; btn.textContent = opt.label.replace('{name}', playerName);
+        btn.addEventListener('click', ()=>{ if(state.answered) return; const avatars = stageVisual.querySelectorAll('.avatar'); avatars.forEach((a,idx)=>{ a.classList.toggle('dim', idx !== (oi % avatars.length)); }); selectOption(oi, avatars[oi % avatars.length]); });
+        optionsEl.appendChild(btn);
+      });
+      speakPrompt(s.prompt.replace('{name}', playerName));
+      updateSidebar();
+    }
+
+    function selectOption(optionIndex, avatarEl){
+      const s = currentScenes[state.index];
+      const opt = s.options[optionIndex];
+      state.answered = true;
+      state.score += opt.delta;
+      scoreEl.textContent = state.score;
+      feedback.textContent = opt.explain.replace('{name}', playerName);
+      feedback.className = 'feedback show ' + (opt.delta > 0 ? 'good' : 'bad');
+
+      const avatars = stageVisual.querySelectorAll('.avatar');
+      avatars.forEach((a,idx)=>{ a.classList.add('dim'); a.classList.remove('correct','wrong'); });
+      avatarEl.classList.remove('dim');
+      if(opt.delta > 0){ avatarEl.classList.add('correct'); playChime(); if(opt.delta >= 2) setTimeout(playFanfare,80); } else { avatarEl.classList.add('wrong'); playDissonant(); const posIndex = s.options.findIndex(o=>o.delta>0); if(posIndex>=0){ const correctAvatar = avatars[posIndex % avatars.length]; if(correctAvatar && correctAvatar !== avatarEl){ correctAvatar.classList.remove('dim'); correctAvatar.classList.add('correct'); } } }
+
+      const bardText = `${opt.explain}. ${playerName ? playerName+',' : ''} score is ${state.score >=0 ? '+' : ''}${state.score}`;
+      speakPrompt(bardText);
+
+      nextBtn.disabled = false; updateSidebar();
+    }
+
+    function updateSidebar(){ const pct = Math.round(((state.index) / currentScenes.length) * 100); progressFill.style.width = `${Math.min(100, pct + (state.answered ? Math.round(100/currentScenes.length) : 0))}%`; }
+
+    // progression & controls
+    nextBtn.addEventListener('click', ()=>{ if(!state.answered) return; state.index++; if(state.index >= currentScenes.length){ if(state.phase==='initiation'){ showFinal(); } else if(state.phase==='trial'){ showTrialFinal(); } else if(state.phase==='next'){ showCoronationFinal(); } } else renderScene(); });
+    restartBtn.addEventListener('click', ()=>{ state.index = 0; state.score = 0; state.answered = false; scoreEl.textContent='0'; progressFill.style.width='0%'; renderScene(); });
+    beginTrialBtn.addEventListener('click', ()=>{ state.phase='trial'; currentScenes = trial.slice(); state.index=0; state.answered=false; finalPanel.style.display='none'; speakPrompt('Now begins the Courtly Trial — steel thy wit and temper thy tongue.'); renderScene(); playChime(); });
+    replayInitBtn.addEventListener('click', ()=>{ state.phase='initiation'; currentScenes = initiation.slice(); state.index=0; state.score=0; state.answered=false; scoreEl.textContent='0'; progressFill.style.width='0%'; finalPanel.style.display='none'; renderScene(); });
+
+    // ensure Begin Coronation starts next level
+    beginNextBtn.addEventListener('click', startNextLevel);
+
+    // keyboard
+    window.addEventListener('keydown',(e)=>{ if(e.key>='1'&&e.key<='3'){ const idx=parseInt(e.key,10)-1; const opts=document.querySelectorAll('.option'); if(opts[idx] && !state.answered) opts[idx].click(); } else if(e.key==='Enter' && !nextBtn.disabled) nextBtn.click(); else if(e.key==='r'||e.key==='R') restartBtn.click(); else if(e.key==='b'||e.key==='B') speechSwitch.click(); else if(e.key==='s'||e.key==='S') soundSwitch.click(); });
+
+    // final screens
+    function showFinal(){
+      finalPanel.style.display='block';
+      let msg='Adept Initiate', advice='Well done — thy manners glimmer like a candle in the courtly dusk.';
+      if(state.score <= 0){ msg='Novice'; advice='Practice bows, precedence, and mindful toasts.'; }
+      else if(state.score < 3){ msg='Apprentice'; advice='Good start. Return to the hall for refinement.'; }
+      finalMsg.textContent = `${msg} — Initiation Score: ${state.score}`;
+      finalAdvice.textContent = advice;
+      progressFill.style.width='100%';
+      nextBtn.disabled = true;
+      speakPrompt(`${msg}. ${advice}`);
+      if(state.score >= 4) playFanfare();
+      beginTrialBtn.style.display='inline-block';
+      beginNextBtn.style.display='none';
+    }
+
+    function startTrial(){ state.phase='trial'; currentScenes = trial.slice(); state.index=0; state.answered=false; finalPanel.style.display='none'; sceneBadge.textContent='Courtly Trial'; speakPrompt('Now begins the Courtly Trial — steel thy wit and temper thy tongue.'); renderScene(); playChime(); }
+    function showTrialFinal(){ finalPanel.style.display='block'; let msg='Courtly Virtuoso', advice='You have proven your grace in the trial. The hall applauds.'; if(state.score <= 1){ msg='Court Novice'; advice='More practice is needed.'; } else if(state.score < 5){ msg='Seasoned Courtier'; advice='A respectable showing.'; } finalMsg.textContent = `${msg} — Total Score: ${state.score}`; finalAdvice.textContent = advice; speakPrompt(`${msg}. ${advice}`); if(state.score >= 6) playFanfare(); else if(state.score <= 1) playDissonant(); progressFill.style.width='100%'; nextBtn.disabled = true; beginTrialBtn.style.display = 'none'; beginNextBtn.style.display = 'inline-block'; }
+
+    // coronation flow
+    function startNextLevel(){
+      congratsBanner.style.display = 'block';
+      congratsBanner.setAttribute('aria-hidden','false');
+      spawnConfetti();
+      playFanfare();
+      speakPrompt('All hail! The coronation beckons — rejoice and proceed!');
+      proceedCoronation.addEventListener('click', proceedToCoronationOnce);
+      dismissBanner.addEventListener('click', dismissBannerOnce);
+      setTimeout(()=>{ confettiLayer.innerHTML=''; },4800);
+    }
+    function proceedToCoronationOnce(){
+      proceedCoronation.removeEventListener('click', proceedToCoronationOnce);
+      dismissBanner.removeEventListener('click', dismissBannerOnce);
+      congratsBanner.style.display='none';
+      congratsBanner.setAttribute('aria-hidden','true');
+      state.phase='next';
+      currentScenes = coronation.slice();
+      state.index=0;
+      state.answered=false;
+      finalPanel.style.display='none';
+      speakPrompt('Crown thyself with humility and speak the vow of the realm.');
+      renderScene();
+    }
+    function dismissBannerOnce(){
+      proceedCoronation.removeEventListener('click', proceedToCoronationOnce);
+      dismissBanner.removeEventListener('click', dismissBannerOnce);
+      congratsBanner.style.display='none';
+      congratsBanner.setAttribute('aria-hidden','true');
+    }
+
+    function showCoronationFinal(){
+      finalPanel.style.display='block';
+      finalMsg.textContent = `Coronation Complete — Glory and Grace`;
+      finalAdvice.textContent = `The court honors you, ${playerName}. Your total score: ${state.score}.`;
+      speakPrompt(`Coronation complete. The hall proclaims you, ${playerName}.`);
+      playFanfare();
+      progressFill.style.width='100%';
+      nextBtn.disabled = true;
+      beginNextBtn.style.display = 'none';
+      setTimeout(()=>{ openCertificateModal(); },900);
+    }
+
+    // confetti
+    function spawnConfetti(){ confettiLayer.innerHTML=''; const colors=['#ffe66d','#ffd6a5','#8a3fd0','#6ea0ff','#b2f7ef']; for(let i=0;i<30;i++){ const el=document.createElement('span'); el.style.left=(Math.random()*100)+'%'; el.style.top=(Math.random()*-30 -10)+'vh'; el.style.background=colors[Math.floor(Math.random()*colors.length)]; el.style.width=(6+Math.random()*10)+'px'; el.style.height=(12+Math.random()*18)+'px'; el.style.transform=`rotate(${Math.random()*360}deg)`; el.style.opacity=0.95; el.style.animationDuration=(2.4+Math.random()*2.0)+'s'; el.style.animationDelay=(Math.random()*0.3)+'s'; confettiLayer.appendChild(el); } }
+
+    // certificate modal functions
+    function openCertificateModal(){
+      certName.textContent = playerName || 'Traveler';
+      certScore.textContent = `Final Score: ${state.score} • ${new Date().toLocaleDateString()}`;
+      certificateModal.style.display = 'flex';
+      certificateModal.setAttribute('aria-hidden','false');
+      spawnConfetti();
+      speakPrompt(`All hail, ${playerName}. Receive thy coronation certificate.`);
+    }
+
+    // Print handler: open new window; if blocked fallback to hidden iframe print
+    printCertBtn.addEventListener('click', ()=>{
+      const html = buildCertificateHTML(playerName, state.score);
+      // Try to open a popup
+      const w = window.open('', '_blank', 'noopener,noreferrer,width=900,height=700');
+      if(w){
+        try{
+          w.document.open();
+          w.document.write(html);
+          w.document.close();
+          // Focus then print. Some browsers need a small delay to render fonts.
+          w.focus();
+          setTimeout(()=>{ try{ w.print(); }catch(e){} }, 300);
+        } catch(e){
+          // If writing is blocked, fallback to iframe printing
+          fallbackPrintWithIframe(html);
+        }
+      } else {
+        // Popup blocked -> fallback
+        fallbackPrintWithIframe(html);
+      }
+    });
+
+    function fallbackPrintWithIframe(html){
+      // Create a hidden iframe, set its srcdoc and print from it, then remove it.
+      const iframe = document.createElement('iframe');
+      iframe.style.position = 'fixed';
+      iframe.style.right = '0';
+      iframe.style.bottom = '0';
+      iframe.style.width = '0';
+      iframe.style.height = '0';
+      iframe.style.border = '0';
+      iframe.setAttribute('aria-hidden','true');
+      document.body.appendChild(iframe);
+      // Use srcdoc for content
+      try {
+        iframe.srcdoc = html;
+        iframe.onload = () => {
+          try {
+            iframe.contentWindow.focus();
+            iframe.contentWindow.print();
+          } catch (e) {
+            // final fallback: open in new tab
+            const blob = new Blob([html], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            window.open(url, '_blank');
+          }
+          setTimeout(()=>{ try{ document.body.removeChild(iframe); }catch(e){} }, 800);
+        };
+      } catch (e) {
+        // Very old browsers: open new window with data URI
+        const win = window.open();
+        if(win){
+          win.document.open();
+          win.document.write(html);
+          win.document.close();
+          win.print();
+        } else {
+          alert('Unable to open print window. Please allow popups or try a different browser.');
+        }
+      }
+    }
+
+    // Close and Restart handlers
+    closeCertBtn.addEventListener('click', ()=>{
+      certificateModal.style.display='none';
+      certificateModal.setAttribute('aria-hidden','true');
+      congratsBanner.style.display='none';
+    });
+    modalCloseX.addEventListener('click', ()=>{
+      certificateModal.style.display='none';
+      certificateModal.setAttribute('aria-hidden','true');
+      congratsBanner.style.display='none';
+    });
+    restartCertBtn.addEventListener('click', ()=>{
+      certificateModal.style.display='none';
+      certificateModal.setAttribute('aria-hidden','true');
+      congratsBanner.style.display='none';
+      inviteOverlay.style.display = 'flex';
+      inviteOverlay.style.opacity = '1';
+      inviteOverlay.setAttribute('aria-hidden','false');
+      playerNameInput.value = '';
+      localStorage.removeItem('royal_player');
+      enableStartIfName();
+      state = { index:0, score:0, answered:false, phase:'initiation' };
+      currentScenes = initiation.slice();
+      scoreEl.textContent = '0';
+      progressFill.style.width = '0%';
+      playInvitation();
+    });
+
+    // Build certificate standalone HTML (clean, printable)
+    function buildCertificateHTML(name, score){
+      const nameEsc = escapeHtml(name || 'Traveler');
+      const scoreEsc = escapeHtml(String(score || 0));
+      const dateStr = new Date().toLocaleDateString();
+      return `<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Coronation Certificate — ${nameEsc}</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700;800&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{ --accent-royal:#6f28b6; --accent-gold:#ffd86b; }
+  html,body{ height:100%; margin:0; -webkit-print-color-adjust:exact; print-color-adjust:exact; background:#fff; color:#111; font-family:Inter,system-ui; display:flex; align-items:center; justify-content:center; padding:10mm; }
+  .page{ width:100%; max-width:800px; border:8px solid rgba(111,40,182,0.06); padding:28px; border-radius:6px; background:linear-gradient(180deg,#fff,#faf8ff); }
+  h1{ font-family:Cormorant Garamond,serif; font-size:28px; color:var(--accent-royal); margin:0 0 6px; }
+  .recipient{ font-family:Cormorant Garamond,serif; font-size:24px; margin:12px 0; color:#2b1b4a; font-weight:700; }
+  .meta{ color:#444; margin-top:8px; }
+  .scoreline{ margin-top:18px; font-weight:700; color:#2b1b4a; }
+  .controls{ margin-top:22px; }
+  button{ padding:10px 14px; border-radius:8px; border:0; background:linear-gradient(90deg,var(--accent-royal),#6ea0ff); color:white; font-weight:700; cursor:pointer; }
+  @media print{ .controls{ display:none; } body{ padding:0; } .page{ border:none; box-shadow:none; } }
+</style>
+</head>
+<body>
+  <div class="page" role="document" aria-label="Coronation Certificate">
+    <h1>Certificate of Coronation</h1>
+    <div class="meta">This certifies that</div>
+    <div class="recipient">${nameEsc}</div>
+    <div class="meta">has completed the ROYAL Initiation and Coronet Trials and is hereby recognized for conduct befitting the court.</div>
+    <div class="scoreline">Final Score: ${scoreEsc} • ${escapeHtml(dateStr)}</div>
+    <div class="controls"><button onclick="window.print()">Print / Save as PDF</button></div>
+  </div>
+</body>
+</html>`;
+    }
+
+    function escapeHtml(s){ return String(s).replace(/[&<>"']/g, function(m){ return { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m]; }); }
+
+    // helpers
+    function resetGame(){ state.phase='initiation'; currentScenes=initiation.slice(); state.index=0; state.score=0; state.answered=false; finalPanel.style.display='none'; scoreEl.textContent='0'; progressFill.style.width='0%'; setSwitchState(speechSwitch,speechLabel,true); setSwitchState(soundSwitch,soundLabel,true); speechEnabled=true; soundEnabled=true; document.getElementById('guidance').innerHTML = `<li>Greet with a measured salutation and a humble inclination of the head.</li><li>Honor rank at the table — precedence guides seating.</li><li>At toasts, attend the host, raise your cup, and sip with poise.</li>`; renderScene(); }
+    function speakPrompt(text){ try{ const bardLine = bardifyLine(text); bardSpeak(bardLine); }catch(e){} }
+
+    // unlock audio
+    function unlockAudio(){ if(!AudioCtx) return; if(audioCtx) return; try{ audioCtx = new AudioCtx(); const buf = audioCtx.createBuffer(1,1,22050); const src = audioCtx.createBufferSource(); src.buffer = buf; src.connect(audioCtx.destination); src.start(0); }catch(e){} }
+    ['click','keydown','touchstart'].forEach(ev => window.addEventListener(ev, unlockAudio, { once:true, passive:true }));
+
+    // start
+    playInvitation();
+
+    // keep old hook if needed
+    window._royal_showCoronationFinal = showCoronationFinal;
+
+  })();
+  </script>
+</body>
+</html>
