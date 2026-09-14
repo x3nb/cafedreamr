@@ -1,0 +1,622 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0b0b0e">
+<title>the chimera collective · cafedreamr</title>
+<meta name="description" content="The chimera collective — collectible dossiers. Drag to shuffle, tap a card for intel.">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' shape-rendering='crispEdges'%3E%3Cpath d='M3 0h10a3 3 0 013 3v10a3 3 0 01-3 3H3a3 3 0 01-3-3V3a3 3 0 013-3z' fill='%230b0b0e'/%3E%3Crect x='2' y='6' width='12' height='4' fill='%231b1b22'/%3E%3Crect x='3' y='7' width='10' height='1' fill='%23ccff00'/%3E%3Crect x='3' y='9' width='4' height='1' fill='%23ff2d95'/%3E%3Crect x='9' y='9' width='4' height='1' fill='%2300e5ff'/%3E%3C/svg%3E">
+
+<style type="text/css">@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&family=Klee+One:wght@400;600&family=Vampiro+One&display=swap');</style>
+<style>
+/* ============================================================
+   the chimera collective — card deck
+   reskin to match cafedreamr.art / the vendi machine
+   palette + type tokens reused from cafedreamr.art
+   ============================================================ */
+:root{
+  --plum:#0d001a;
+  --ink:#0b0b0e; --ink2:#141419; --ink3:#1b1b22;
+  --lime:#ccff00; --pink:#ff2d95; --cyan:#00e5ff;
+  --violet:#bf40bf; --violet2:#ee82ee;
+  --corn:#6495ed; --mint:#98fb98;
+  --cream:#e9e6de; --lav:#fff0f5; --dim:#7d848b;
+  --line:rgba(255,255,255,.10);
+  --glow:0 0 12px rgba(191,64,191,.55), 0 0 34px rgba(191,64,191,.22);
+  --mono:'Space Mono', ui-monospace, monospace;
+  --disp:'Bebas Neue', impact, sans-serif;
+  --logo:'Vampiro One', cursive;
+  --body:'Klee One', system-ui, sans-serif;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+[hidden]{display:none!important}
+html,body{margin:0;padding:0}
+body{
+  background:var(--ink); color:var(--lav); font-family:var(--body);
+  text-align:left; overflow-x:hidden; min-height:100dvh;
+}
+.stage,.cabinet,.deck,.char-card,.card-face,.nameplate,.cb-body,.panel,.marquee{text-align:left}
+
+/* ---------- BACKGROUND (shared motif w/ cafedreamr.art) ---------- */
+.bg{position:fixed;inset:0;z-index:0;background:
+  radial-gradient(1200px 800px at 50% -10%, rgba(100,149,237,.16), transparent 60%),
+  radial-gradient(900px 700px at 82% 112%, rgba(255,45,149,.13), transparent 60%),
+  linear-gradient(180deg,#0d001a 0%, #0b0b0e 55%, #050508 100%);}
+#stars{position:absolute;inset:0;width:100%;height:100%;display:block;opacity:.8}
+.vign{position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(120% 100% at 50% 42%, transparent 52%, rgba(0,0,0,.78) 100%)}
+.hazard{position:fixed;left:0;right:0;bottom:0;height:9px;z-index:6;pointer-events:none;
+  background:repeating-linear-gradient(45deg,var(--lime) 0 10px,#0b0b0e 10px 20px);opacity:.55}
+
+/* ---------- STAGE ---------- */
+.stage{position:relative;z-index:2;min-height:100dvh;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:12px;padding:16px 12px 24px}
+
+/* ---------- CABINET ---------- */
+.cabinet{
+  width:min(97vw,1020px);
+  background:linear-gradient(180deg,#202027 0%, #141419 30%, #1b1b22 100%);
+  border:3px solid #050508; border-radius:18px; padding:11px 13px 14px; position:relative;
+  box-shadow:0 0 0 2px #000, 0 0 30px rgba(255,45,149,.18), 0 0 90px rgba(0,229,255,.08),
+    0 40px 90px rgba(0,0,0,.7), inset 0 1px 0 rgba(255,255,255,.06), inset 0 -8px 20px rgba(0,0,0,.55);
+}
+.cabinet::before{content:"";position:absolute;inset:6px;border-radius:13px;pointer-events:none;
+  border:1px solid rgba(255,255,255,.05)}
+.rivet{position:absolute;width:8px;height:8px;border-radius:50%;
+  background:radial-gradient(circle at 35% 35%, #5a5a63, #16161b 70%);box-shadow:0 1px 2px #000}
+.rivet.tl{top:7px;left:7px}.rivet.tr{top:7px;right:7px}
+.rivet.bl{bottom:7px;left:7px}.rivet.br{bottom:7px;right:7px}
+
+/* marquee */
+.marquee{display:flex;align-items:center;gap:12px;padding:4px 10px 11px;
+  border-bottom:1px dashed rgba(255,255,255,.10)}
+.brand{font-family:var(--disp);font-size:clamp(26px,6.4vw,36px);letter-spacing:.12em;line-height:1;
+  white-space:nowrap;color:var(--lime);text-shadow:0 0 12px rgba(204,255,0,.45)}
+.tag{font-family:var(--mono);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--dim);flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.led{width:9px;height:9px;border-radius:50%;background:var(--pink);flex:none;
+  box-shadow:0 0 10px var(--pink);animation:pulse 1.6s infinite ease-in-out}
+@keyframes pulse{0%,100%{opacity:.35;transform:scale(.85)}50%{opacity:1;transform:scale(1)}}
+
+/* ---------- SCREEN / DECK ---------- */
+.screen{position:relative;margin:12px 0 0;height:clamp(272px,60vh,560px);border-radius:16px;
+  overflow:hidden;background:
+    linear-gradient(180deg,rgba(6,1,12,.9),rgba(4,0,10,.96)),
+    repeating-linear-gradient(0deg,rgba(255,255,255,.018) 0 1px,transparent 1px 26px),
+    repeating-linear-gradient(90deg,rgba(255,255,255,.018) 0 1px,transparent 1px 26px);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.08), inset 0 0 70px rgba(0,0,0,.9),
+    0 0 26px rgba(191,64,191,.16)}
+.deck{position:absolute;inset:0;touch-action:none}
+.scan{position:absolute;inset:0;pointer-events:none;mix-blend-mode:multiply;opacity:.4;
+  background:repeating-linear-gradient(180deg,rgba(0,0,0,.32) 0 1px,rgba(0,0,0,0) 1px 3px)}
+.glare{position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(115deg,rgba(255,255,255,.07) 0%,transparent 38%,transparent 70%,rgba(255,45,149,.07) 100%)}
+.osd{position:absolute;top:0;left:0;right:0;height:34px;display:flex;align-items:center;
+  justify-content:space-between;padding:0 13px;pointer-events:none;z-index:40;
+  background:linear-gradient(180deg,rgba(6,1,12,.96) 0%,rgba(6,1,12,.72) 60%,rgba(6,1,12,0) 100%);
+  font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--lime)}
+.osd .r{color:var(--dim)}
+.osd .dot{font-style:normal;color:var(--pink);animation:pulse 1.4s infinite}
+
+/* ---------- CARDS ---------- */
+.deck{--cw:clamp(112px,min(17.4vw,25vh),184px)}
+.char-card{
+  position:absolute;top:0;left:0;width:var(--cw);
+  height:calc(var(--cw) + 80px);
+  cursor:grab;user-select:none;touch-action:none;will-change:transform;
+  transform-origin:50% 50%;
+  transition:transform .55s cubic-bezier(.2,.85,.25,1);
+  outline:none;
+}
+.char-card:focus-visible .card-face{box-shadow:0 0 0 2px var(--cyan),0 18px 40px rgba(0,0,0,.6)}
+.char-card.dragging{cursor:grabbing;transition:none!important;z-index:9000}
+.card-rotor{position:absolute;inset:0;transform-style:preserve-3d;
+  transition:transform .62s cubic-bezier(.4,0,.2,1)}
+.char-card.is-flipped .card-rotor{transform:rotateY(180deg)}
+.card-face{
+  position:absolute;inset:0;overflow:hidden;border-radius:14px;
+  backface-visibility:hidden;-webkit-backface-visibility:hidden;
+  background:linear-gradient(180deg,var(--ink2),var(--ink));
+  border:1px solid var(--line);
+  box-shadow:0 18px 40px rgba(0,0,0,.62), inset 0 1px 0 rgba(255,255,255,.05);
+}
+.card-face::after{content:"";position:absolute;top:-60%;left:-60%;width:220%;height:220%;
+  pointer-events:none;transition:transform .5s;
+  background:linear-gradient(45deg,transparent 46%,rgba(255,255,255,.13) 50%,transparent 54%)}
+.char-card:hover .card-face::after{transform:translate(9%,9%)}
+
+/* front */
+.card-front{display:flex;flex-direction:column}
+.portrait{position:relative;width:100%;aspect-ratio:1/1;overflow:hidden;background:#000;flex:none}
+.portrait img{width:100%;height:100%;object-fit:cover;display:block;
+  filter:saturate(1.06) contrast(1.04)}
+.portrait::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.32;
+  background:repeating-linear-gradient(180deg,rgba(0,0,0,.22) 0 1px,transparent 1px 3px)}
+.rec{position:absolute;top:8px;left:8px;font-family:var(--mono);font-size:8.5px;letter-spacing:.13em;
+  color:var(--lav);background:rgba(6,1,12,.72);border:1px solid var(--line);
+  padding:2px 6px;border-radius:5px;backdrop-filter:blur(4px)}
+.stamp{position:absolute;top:7px;right:8px;font-family:var(--logo);font-size:12px;
+  color:var(--accent);text-shadow:0 0 10px var(--accent);opacity:.95}
+.nameplate{position:relative;flex:1;display:flex;flex-direction:column;justify-content:center;gap:4px;
+  padding:10px 36px 12px 12px;border-top:2px solid var(--accent);
+  background:linear-gradient(180deg,rgba(10,0,20,.9),rgba(6,1,12,.97))}
+.nameplate h2{margin:0;font-family:var(--disp);line-height:.95;letter-spacing:.10em;
+  font-size:calc(var(--cw) * .128);color:var(--accent);text-shadow:0 0 12px currentColor}
+.nameplate .role{font-family:var(--mono);font-size:8px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--dim);line-height:1.45}
+.dogear{position:absolute;bottom:0;right:0;width:32px;height:32px;z-index:5;cursor:pointer;
+  background:linear-gradient(135deg,transparent 50%,var(--lime) 50%);
+  display:flex;align-items:flex-end;justify-content:flex-end;padding:3px 3px;
+  font-family:var(--mono);font-weight:700;font-size:6.5px;letter-spacing:.04em;color:#0b0b0e;
+  transition:filter .2s}
+.char-card:hover .dogear{filter:brightness(1.18)}
+
+/* back */
+.card-back{transform:rotateY(180deg);display:flex;flex-direction:column;
+  font-size:calc(var(--cw) * .056);
+  background:linear-gradient(160deg,var(--ink3) 0%,var(--ink) 70%)}
+.cb-head{display:flex;align-items:baseline;justify-content:space-between;gap:.5em;
+  padding:.55em .75em;background:var(--accent);color:#0b0b0e;flex:none}
+.cb-head h3{margin:0;font-family:var(--disp);letter-spacing:.09em;
+  font-size:1.75em;line-height:.9}
+.cb-head span{font-family:var(--mono);font-size:.6em;letter-spacing:.1em;opacity:.8}
+.cb-body{flex:1;display:flex;flex-direction:column;gap:.55em;padding:.8em .85em;
+  overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--accent) transparent}
+.cb-body::-webkit-scrollbar{width:4px}
+.cb-body::-webkit-scrollbar-thumb{background:var(--accent);border-radius:9px}
+.cb-kicker{font-family:var(--mono);font-size:.58em;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--accent);opacity:.95}
+.cb-bio{font-size:1em;line-height:1.5;color:var(--lav)}
+.cb-dna{margin-top:auto;padding-top:.55em;border-top:1px dashed var(--line);
+  font-family:var(--mono);font-size:.56em;letter-spacing:.08em;line-height:1.5;color:var(--dim)}
+.cb-dna b{color:var(--accent);font-weight:700}
+.cb-flip{font-family:var(--mono);font-size:.52em;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--dim);text-align:right}
+.barcode{display:flex;gap:.16em;align-items:flex-end;height:1.1em;opacity:.5;flex:none}
+.barcode i{display:block;width:.14em;background:var(--dim);height:100%}
+.barcode i:nth-child(2n){height:60%}
+.barcode i:nth-child(3n){height:80%}
+
+/* ---------- PANEL ---------- */
+.panel{margin-top:13px;padding:0 2px;display:flex;flex-direction:column;gap:10px}
+.btns{display:flex;gap:8px;flex-wrap:wrap}
+.startBtn,.wide,.guest{font-family:var(--disp);letter-spacing:.16em;cursor:pointer;border:0;
+  border-radius:11px;transition:transform .08s ease, filter .2s;line-height:1}
+.startBtn{flex:2;min-width:130px;font-size:20px;padding:12px 18px;color:#0b0b0e;
+  background:linear-gradient(180deg,var(--lime),#9fce00);
+  box-shadow:0 0 22px rgba(204,255,0,.32), inset 0 -3px 0 rgba(0,0,0,.25)}
+.startBtn:hover,.wide:hover{filter:brightness(1.08)}
+.startBtn:active,.wide:active,.guest:active{transform:translateY(2px)}
+.wide{flex:1;min-width:110px;font-size:20px;padding:12px 16px;color:#0b0b0e;
+  background:linear-gradient(180deg,var(--cyan),#009fce);
+  box-shadow:0 0 20px rgba(0,229,255,.3), inset 0 -3px 0 rgba(0,0,0,.25)}
+.guest{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+  background:transparent;border:1px dashed rgba(255,255,255,.18);color:var(--lav);
+  padding:12px 14px;border-radius:11px}
+.guest:hover{border-color:var(--violet2);color:var(--violet2)}
+.note{font-family:var(--mono);font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--dim);text-align:center;min-height:14px}
+.note b{color:var(--lime)}
+.note.pink b{color:var(--pink)}
+.note.cyan b{color:var(--cyan)}
+
+/* ---------- FOOT ---------- */
+.foot{font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--dim);text-align:center;opacity:.8;line-height:2;padding-bottom:12px}
+.foot a{color:var(--dim);text-decoration:none;border-bottom:1px dotted rgba(255,255,255,.2);
+  transition:.2s}
+.foot a:hover{color:var(--lime);border-color:var(--lime)}
+.foot em{color:var(--pink);font-style:normal}
+
+@media (max-width:760px){
+  .stage{padding:10px 8px 20px;justify-content:flex-start}
+  .cabinet{width:99vw;padding:9px 9px 12px;border-radius:14px}
+  .marquee{padding:2px 4px 9px;gap:9px}
+  .tag{display:none}
+  .screen{height:clamp(300px,54vh,520px)}
+  .deck{--cw:clamp(122px,min(40vw,30vh),190px)}
+  .nameplate h2{font-size:calc(var(--cw) * .145)}
+}
+@media (max-width:360px){ .deck{--cw:132px} }
+@media (prefers-reduced-motion:reduce){
+  *{transition:none!important;animation:none!important}
+}
+</style>
+</head>
+<body>
+
+<div class="bg"><canvas id="stars"></canvas><div class="vign"></div></div>
+<div class="hazard"></div>
+
+<main class="stage">
+
+  <section class="cabinet" aria-label="the chimera collective deck">
+    <span class="rivet tl"></span><span class="rivet tr"></span>
+    <span class="rivet bl"></span><span class="rivet br"></span>
+
+    <div class="marquee">
+      <span class="led" aria-hidden="true"></span>
+      <span class="brand">THE CHIMERA COLLECTIVE</span>
+      <span class="tag">collectible dossiers · deck v1.0</span>
+    </div>
+
+    <div class="screen">
+      <div class="osd">
+        <span>// COLLECTIVE_DECK</span>
+        <span class="r">5 RECORDS <i class="dot">&#9679;</i></span>
+      </div>
+      <div class="deck" id="deck">
+
+        <article class="char-card" id="star" tabindex="0" role="button" aria-pressed="false"
+                 style="--accent:#8a2be2">
+          <div class="card-rotor">
+            <div class="card-face card-front">
+              <div class="portrait">
+                <img src="https://xencafe.nekoweb.org/2024-ARCHIVES/CHIMERACAT-LORE/STAR.jpeg" alt="star, a purple cat-human hybrid holding a cup of coffee">
+                <span class="rec">CC-001</span>
+                <span class="stamp">star</span>
+              </div>
+              <div class="nameplate">
+                <h2>STAR</h2>
+                <div class="role">cafe owner &middot; literary navigator</div>
+              </div>
+              <div class="dogear">INTEL</div>
+            </div>
+            <div class="card-face card-back">
+              <div class="cb-head"><h3>STAR</h3><span>CC-001</span></div>
+              <div class="cb-body">
+                <div class="cb-kicker">// dossier</div>
+                <p class="cb-bio">Cafe owner &amp; literary navigator. A german-japanese hybrid bridging feline elegance and human likeness. Redeemed.</p>
+                <div class="cb-dna"><b>DNA:</b> purple (romantic goth)</div>
+                <div class="barcode" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+                <div class="cb-flip">tap to close</div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="char-card" id="chari" tabindex="0" role="button" aria-pressed="false"
+                 style="--accent:#e6e6fa">
+          <div class="card-rotor">
+            <div class="card-face card-front">
+              <div class="portrait">
+                <img src="https://xencafe.nekoweb.org/2024-ARCHIVES/CHIMERACAT-LORE/Chari-Barista.jpeg" alt="chari, a pale lilac cat-human hybrid">
+                <span class="rec">CC-002</span>
+                <span class="stamp">chari</span>
+              </div>
+              <div class="nameplate">
+                <h2>CHARI</h2>
+                <div class="role">cafe-apprentice &middot; support</div>
+              </div>
+              <div class="dogear">INTEL</div>
+            </div>
+            <div class="card-face card-back">
+              <div class="cb-head"><h3>CHARI</h3><span>CC-002</span></div>
+              <div class="cb-body">
+                <div class="cb-kicker">// dossier</div>
+                <p class="cb-bio">Cafe-apprentice &amp; star's younger sibling through YESHUA by adoption. Human-albino-cat DNA. Incredibly observant, quiet intelligence.</p>
+                <div class="cb-dna"><b>DNA:</b> soft lilac (support)</div>
+                <div class="barcode" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+                <div class="cb-flip">tap to close</div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="char-card" id="miki" tabindex="0" role="button" aria-pressed="false"
+                 style="--accent:#ccff00">
+          <div class="card-rotor">
+            <div class="card-face card-front">
+              <div class="portrait">
+                <img src="https://xencafe.nekoweb.org/2024-ARCHIVES/CHIMERACAT-LORE/Miki-Official.jpeg" alt="miki, a yellow-streaked half-cat half-machine">
+                <span class="rec">CC-003</span>
+                <span class="stamp">miki</span>
+              </div>
+              <div class="nameplate">
+                <h2>MIKI</h2>
+                <div class="role">security &middot; rockstar</div>
+              </div>
+              <div class="dogear">INTEL</div>
+            </div>
+            <div class="card-face card-back">
+              <div class="cb-head"><h3>MIKI</h3><span>CC-003</span></div>
+              <div class="cb-body">
+                <div class="cb-kicker">// dossier</div>
+                <p class="cb-bio">Security &amp; rockstar. Snarky, bold, and fiercely protective. Expert in cyborg-tech security. Redeemed &mdash; interest piqued.</p>
+                <div class="cb-dna"><b>DNA:</b> neon yellow stripe, cyborg-human-bengalcat (security)</div>
+                <div class="barcode" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+                <div class="cb-flip">tap to close</div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="char-card" id="milo" tabindex="0" role="button" aria-pressed="false"
+                 style="--accent:#98fb98">
+          <div class="card-rotor">
+            <div class="card-face card-front">
+              <div class="portrait">
+                <img src="https://xencafe.nekoweb.org/2024-ARCHIVES/CHIMERACAT-LORE/Emo-Milo-Japanese-Parisian.jpeg" alt="milo, a mint-green cat-human hybrid">
+                <span class="rec">CC-004</span>
+                <span class="stamp">milo</span>
+              </div>
+              <div class="nameplate">
+                <h2>MILO</h2>
+                <div class="role">gardener &middot; spiritual buffer</div>
+              </div>
+              <div class="dogear">INTEL</div>
+            </div>
+            <div class="card-face card-back">
+              <div class="cb-head"><h3>MILO</h3><span>CC-004</span></div>
+              <div class="cb-body">
+                <div class="cb-kicker">// dossier</div>
+                <p class="cb-bio">Gardener &amp; spiritual buffer. Friend of YESHUA, soft-spoken mediator tending to the cafe's soil and spirit.</p>
+                <div class="cb-dna"><b>DNA:</b> mint green (zen)</div>
+                <div class="barcode" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+                <div class="cb-flip">tap to close</div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="char-card" id="hans" tabindex="0" role="button" aria-pressed="false"
+                 style="--accent:#6495ed">
+          <div class="card-rotor">
+            <div class="card-face card-front">
+              <div class="portrait">
+                <img src="https://xencafe.nekoweb.org/2024-ARCHIVES/CHIMERACAT-LORE/HANS-OFFICIAL-CHIMERA.jpeg" alt="hans, a cornflower-blue fox-bat gentleman">
+                <span class="rec">CC-005</span>
+                <span class="stamp">hans</span>
+              </div>
+              <div class="nameplate">
+                <h2>HANS</h2>
+                <div class="role">historian &middot; tea academy</div>
+              </div>
+              <div class="dogear">INTEL</div>
+            </div>
+            <div class="card-face card-back">
+              <div class="cb-head"><h3>HANS</h3><span>CC-005</span></div>
+              <div class="cb-body">
+                <div class="cb-kicker">// dossier</div>
+                <p class="cb-bio">A redeemed vampire &mdash; 'tech-allergic', historian and tea snob &mdash; who views a perfectly brewed cup as a divine right, and finds his sanity in earl grey and shakespeare. The unwavering anchor of etiquette.</p>
+                <div class="cb-dna"><b>DNA:</b> cornflower blue (scribe)</div>
+                <div class="barcode" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+                <div class="cb-flip">tap to close</div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+      </div>
+      <div class="scan"></div>
+      <div class="glare"></div>
+    </div>
+
+    <div class="panel">
+      <div class="btns">
+        <button class="startBtn" id="shuffleBtn" type="button">SHUFFLE</button>
+        <button class="wide" id="flipBtn" type="button">FLIP ALL</button>
+        <button class="guest" id="resetBtn" type="button">RESET DECK</button>
+      </div>
+      <div class="note" id="note">drag to shuffle &middot; <b>tap a card</b> for intel</div>
+    </div>
+  </section>
+
+  <footer class="foot">
+    <a href="https://xencafe.nekoweb.org/2024-ARCHIVES/CHIMERACAT-LORE/breathing-LORE-character-map.html">&larr; the lore nexus</a>
+    &nbsp;&middot;&nbsp;
+    <a href="https://cafedreamr.art">cafedreamr.art</a>
+    <br>&copy; the keeper &middot; all rights reserved, <em>unless you're a sibling</em>
+  </footer>
+
+</main>
+
+<script>
+(function(){
+  "use strict";
+  var deck = document.getElementById("deck");
+  var cards = [].slice.call(deck.querySelectorAll(".char-card"));
+  var note = document.getElementById("note");
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var PAD = 14;
+  var pos = {};          // id -> {fx, fy, r}  fractions of available travel
+  var started = false;
+
+  function box(){
+    return { w: deck.clientWidth, h: deck.clientHeight };
+  }
+  function cw(){ return cards[0].offsetWidth; }
+  function ch(){ return cards[0].offsetHeight; }
+  function travel(){
+    var b = box();
+    return { x: Math.max(0, b.w - cw() - PAD * 2), y: Math.max(0, b.h - ch() - PAD * 2 - 26) };
+  }
+  function put(c, x, y, r, ease){
+    c.style.transition = ease ? "" : "none";
+    c.style.transform = "translate(" + x + "px," + y + "px) rotate(" + r + "deg)";
+    if(!ease){ void c.offsetWidth; c.style.transition = ""; }
+  }
+  function fromFrac(id, i, n){
+    var t = travel(), p = pos[id] || {};
+    var fx = (p.fx != null) ? p.fx : 0.5, fy = (p.fy != null) ? p.fy : 0.5;
+    return { x: PAD + fx * t.x, y: PAD + 26 + fy * t.y, r: (p.r != null ? p.r : 0) };
+  }
+
+  function fanLayout(){
+    var b = box(), n = cards.length, wide = b.w >= 760;
+    for(var i = 0; i < n; i++){
+      var t = n > 1 ? i / (n - 1) : 0.5;
+      var fx, fy, r;
+      if(wide){
+        fx = t;
+        fy = 0.70 - (1 - Math.abs(t - 0.5) * 2) * 0.36;
+        r = (t - 0.5) * 10;
+      } else {
+        fx = 0.5 + (i - (n - 1) / 2) * 0.06;
+        fy = 0.5 + (i - (n - 1) / 2) * 0.075;
+        r = (i - (n - 1) / 2) * 4.2;
+      }
+      pos[cards[i].id] = { fx: clamp01(fx), fy: clamp01(fy), r: r };
+    }
+  }
+  function clamp01(v){ return Math.max(0, Math.min(1, v)); }
+
+  function layout(stagger){
+    var t = travel();
+    cards.forEach(function(c, i){
+      var p = fromFrac(c.id, i, cards.length);
+      if(stagger && !reduce){
+        c.style.transition = "none";
+        put(c, PAD + t.x / 2, PAD + 26 + t.y / 2, 0, false);
+      }
+      if(stagger && !reduce){
+        (function(c2, p2, d){
+          setTimeout(function(){
+            c2.style.transition = "transform .7s cubic-bezier(.2,.85,.25,1)";
+            put(c2, p2.x, p2.y, p2.r, true);
+          }, 70 + d * 70);
+        })(c, p, i);
+      } else {
+        put(c, p.x, p.y, p.r, true);
+      }
+    });
+  }
+
+  function shuffle(){
+    var t = travel(), n = cards.length;
+    cards.forEach(function(c){
+      pos[c.id] = { fx: Math.random(), fy: Math.random(), r: (Math.random() * 30 - 15) };
+    });
+    layout(false);
+    cards.forEach(function(c){ c.style.zIndex = ""; });
+    say('deck shuffled &middot; <b>' + n + '</b> records', 'cyan');
+  }
+
+  function say(html, cls){
+    note.innerHTML = html;
+    note.className = "note" + (cls ? " " + cls : "");
+  }
+
+  /* ---- flip ---- */
+  function flip(c, force){
+    var on = (force != null) ? force : !c.classList.contains("is-flipped");
+    c.classList.toggle("is-flipped", on);
+    c.setAttribute("aria-pressed", on ? "true" : "false");
+    return on;
+  }
+
+  /* ---- drag + tap (pointer events: mouse + touch) ---- */
+  var drag = null;
+  cards.forEach(function(c){
+    c.addEventListener("pointerdown", function(e){
+      if(e.button && e.button !== 0) return;
+      var r = c.getBoundingClientRect(), d = deck.getBoundingClientRect();
+      var sx = r.left - d.left, sy = r.top - d.top;
+      drag = { c: c, id: c.id, sx: sx, sy: sy, px: e.clientX, py: e.clientY, moved: false, r: pos[c.id].r };
+      c.classList.add("dragging");
+      c.style.zIndex = ++z;
+      try{ c.setPointerCapture(e.pointerId); }catch(_){}
+      e.preventDefault();
+    });
+    c.addEventListener("pointermove", function(e){
+      if(!drag || drag.c !== c) return;
+      var dx = e.clientX - drag.px, dy = e.clientY - drag.py;
+      if(Math.abs(dx) + Math.abs(dy) > 5) drag.moved = true;
+      if(!drag.moved) return;
+      put(c, drag.sx + dx, drag.sy + dy, drag.r, false);
+    });
+    function end(e){
+      if(!drag || drag.c !== c) return;
+      var d = drag; drag = null;
+      c.classList.remove("dragging");
+      if(!d.moved){
+        flip(c);
+        say('<b>' + c.id.toUpperCase() + '</b> intel ' + (c.classList.contains("is-flipped") ? "opened" : "closed"), "pink");
+        return;
+      }
+      // commit fraction
+      var t = travel(), r = c.getBoundingClientRect(), dd = deck.getBoundingClientRect();
+      pos[c.id] = {
+        fx: clamp01((r.left - dd.left - PAD) / (t.x || 1)),
+        fy: clamp01((r.top - dd.top - PAD - 26) / (t.y || 1)),
+        r: d.r
+      };
+    }
+    c.addEventListener("pointerup", end);
+    c.addEventListener("pointercancel", function(){ if(drag && drag.c === c){ drag.c.classList.remove("dragging"); drag = null; } });
+    c.addEventListener("keydown", function(e){
+      if(e.key === "Enter" || e.key === " "){ e.preventDefault(); flip(c); }
+    });
+    c.addEventListener("dblclick", function(e){ e.preventDefault(); });
+  });
+  var z = 20;
+
+  /* ---- buttons ---- */
+  document.getElementById("shuffleBtn").addEventListener("click", shuffle);
+  document.getElementById("resetBtn").addEventListener("click", function(){
+    pos = {};
+    fanLayout();
+    layout(false);
+    cards.forEach(function(c){ flip(c, false); c.style.zIndex = ""; });
+    say('deck reset &middot; <b>tap a card</b> for intel', "");
+  });
+  document.getElementById("flipBtn").addEventListener("click", function(){
+    var any = cards.some(function(c){ return !c.classList.contains("is-flipped"); });
+    cards.forEach(function(c, i){
+      (function(c2, d){ setTimeout(function(){ flip(c2, any); }, d * 60); })(c, i);
+    });
+    say(any ? 'showing <b>all intel</b>' : 'closing <b>all intel</b>', "pink");
+  });
+
+  /* ---- resize ---- */
+  var rt;
+  window.addEventListener("resize", function(){
+    clearTimeout(rt);
+    rt = setTimeout(function(){ layout(false); }, 160);
+  });
+
+  /* ---- entrance ---- */
+  function boot(){
+    fanLayout();
+    layout(true);
+    setTimeout(function(){ layout(false); }, 900);
+    say('drag to shuffle &middot; <b>tap a card</b> for intel', "");
+  }
+  if(document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);
+  else boot();
+
+  /* ---- starfield (shared motif) ---- */
+  var cv = document.getElementById("stars"), ctx = cv.getContext("2d"), stars = [];
+  function seedStars(){
+    var dpr = Math.min(2, window.devicePixelRatio || 1);
+    cv.width = Math.floor(innerWidth * dpr); cv.height = Math.floor(innerHeight * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    stars = [];
+    var n = Math.round(innerWidth * innerHeight / 16000);
+    for(var i = 0; i < n; i++){
+      stars.push({ x: Math.random() * innerWidth, y: Math.random() * innerHeight,
+        r: Math.random() * 1.3 + 0.2, a: Math.random(), s: Math.random() * 0.02 + 0.004,
+        c: Math.random() < 0.14 ? "100,149,237" : (Math.random() < 0.5 ? "255,255,255" : "238,130,238") });
+    }
+  }
+  function draw(){
+    ctx.clearRect(0, 0, innerWidth, innerHeight);
+    for(var i = 0; i < stars.length; i++){
+      var st = stars[i];
+      if(!reduce){ st.a += st.s; if(st.a > 1 || st.a < 0.12) st.s *= -1; }
+      ctx.beginPath();
+      ctx.fillStyle = "rgba(" + st.c + "," + st.a.toFixed(2) + ")";
+      ctx.arc(st.x, st.y, st.r, 0, 6.2832);
+      ctx.fill();
+    }
+    if(!reduce) requestAnimationFrame(draw);
+  }
+  seedStars();
+  if(reduce){ draw(); } else { requestAnimationFrame(draw); }
+  window.addEventListener("resize", seedStars);
+})();
+</script>
+</body>
+</html>
