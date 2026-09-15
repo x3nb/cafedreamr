@@ -1,0 +1,1821 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PLAY &middot; cafedreamr &middot; the long day</title>
+<meta name="description" content="cafedreamr PLAY — the long day. Five levels, five orbs, one day at a time.">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%230d001a'/%3E%3Ccircle cx='8' cy='8' r='5.6' fill='none' stroke='%23c0a6ff' stroke-width='1.1'/%3E%3Ccircle cx='8' cy='8' r='2.4' fill='%23ccff00'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Klee+One:wght@400;600&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Vampiro+One&display=swap" rel="stylesheet">
+<style>
+:root{
+  --plum:#0d001a;
+  --ink:#0b0b0e; --ink2:#141419; --ink3:#1b1b22;
+  --lime:#ccff00; --pink:#ff2d95; --cyan:#00e5ff;
+  --violet:#bf40bf; --violet2:#ee82ee;
+  --purple:#9d71e4; --purple2:#c0a6ff; --grape:#5b1a96;
+  --corn:#6495ed; --mint:#98fb98;
+  --pearl:#fff0f5; --lav:#fff0f5; --dim:#8b83a0;
+  --line:rgba(255,255,255,.10);
+  --pline:rgba(157,113,228,.32);
+  --glow:0 0 12px rgba(157,113,228,.6), 0 0 36px rgba(157,113,228,.25);
+  --mono:'Space Mono', ui-monospace, monospace;
+  --disp:'Bebas Neue', impact, sans-serif;
+  --logo:'Vampiro One', cursive;
+  --body:'Klee One', system-ui, sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--plum); color:var(--lav); font-family:var(--body);
+  text-align:left; min-height:100vh; overflow-x:hidden;
+  display:flex; flex-direction:column;
+  -webkit-tap-highlight-color:transparent;
+}
+[hidden]{display:none!important}
+button{font:inherit}
+
+/* ---------------- background ---------------- */
+.bg{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;
+  background:
+    radial-gradient(1100px 720px at 50% -14%, rgba(157,113,228,.22), transparent 62%),
+    radial-gradient(820px 640px at 84% 108%, rgba(255,45,149,.11), transparent 62%),
+    radial-gradient(760px 620px at 8% 92%, rgba(0,229,255,.09), transparent 62%),
+    linear-gradient(180deg,#170029 0%, var(--plum) 48%, #07000f 100%)}
+#stars{position:absolute;inset:0;width:100%;height:100%;display:block;opacity:.8}
+.floor{position:absolute;left:-25%;right:-25%;bottom:-4%;height:46%;
+  background:
+    repeating-linear-gradient(90deg, rgba(157,113,228,.20) 0 1px, transparent 1px 6%),
+    repeating-linear-gradient(0deg, rgba(157,113,228,.20) 0 1px, transparent 1px 32px);
+  transform:perspective(360px) rotateX(73deg); transform-origin:50% 100%;
+  -webkit-mask-image:linear-gradient(180deg,transparent, #000 62%);
+  mask-image:linear-gradient(180deg,transparent, #000 62%); opacity:.6;
+  animation:floor 7s linear infinite}
+@keyframes floor{to{background-position:0 32px, 0 32px}}
+.band{position:absolute;left:0;right:0;height:190px;top:-200px;
+  background:linear-gradient(180deg,transparent, rgba(192,166,255,.07), transparent);
+  animation:band 11s linear infinite}
+@keyframes band{to{top:100%}}
+.vign{position:absolute;inset:0;background:
+  radial-gradient(150% 120% at 50% 42%, transparent 34%, rgba(4,0,10,.78) 100%)}
+.scan{position:absolute;inset:0;opacity:.3;
+  background:repeating-linear-gradient(to bottom, rgba(255,255,255,.035) 0 1px, transparent 1px 3px)}
+.grain{position:absolute;inset:0;opacity:.5;mix-blend-mode:overlay;
+  background-image:radial-gradient(rgba(255,255,255,.06) 1px, transparent 1px);
+  background-size:3px 3px}
+
+.stage{position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:22px 16px 40px;flex:1;width:100%;display:flex;flex-direction:column}
+
+/* ---------------- marquee ---------------- */
+.marquee{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;
+  border:1px solid var(--pline);border-radius:16px 16px 6px 6px;
+  background:linear-gradient(180deg,rgba(157,113,228,.14),rgba(157,113,228,.03));
+  padding:13px 16px;position:relative;overflow:hidden}
+.marquee:before{content:"";position:absolute;left:0;right:0;top:0;height:2px;
+  background:linear-gradient(90deg,var(--purple),var(--cyan),var(--pink));opacity:.85}
+.marquee:after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.5;
+  background:repeating-linear-gradient(90deg, rgba(157,113,228,.10) 0 1px, transparent 1px 26px)}
+.mtitle{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;min-width:0;position:relative;z-index:1}
+.brand{font-family:var(--logo);font-size:28px;letter-spacing:.05em;color:var(--purple2);
+  white-space:nowrap;line-height:1.1;
+  text-shadow:0 0 12px rgba(157,113,228,.75), 0 0 38px rgba(157,113,228,.3),
+              2px 0 0 rgba(255,45,149,.4), -2px 0 0 rgba(0,229,255,.32);
+  animation:flick 9s ease-in-out infinite}
+@keyframes flick{0%,93%,100%{opacity:1}94%{opacity:.66}95.5%{opacity:.95}97%{opacity:.8}}
+.tag{font-family:var(--mono);font-size:9px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--dim);border:1px solid var(--line);border-radius:999px;padding:4px 9px;white-space:nowrap}
+.led{width:8px;height:8px;border-radius:50%;background:var(--violet2);
+  box-shadow:0 0 12px var(--violet2);animation:blip 2.2s ease-in-out infinite;align-self:center}
+@keyframes blip{0%,100%{opacity:1}50%{opacity:.2}}
+.back{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--lav);text-decoration:none;border:1px solid var(--pline);border-radius:999px;
+  padding:8px 12px;white-space:nowrap;transition:.18s;background:rgba(13,0,26,.5);
+  display:inline-block;position:relative;z-index:1}
+.back:hover,.back:focus-visible{border-color:var(--purple2);color:var(--purple2);
+  box-shadow:0 0 16px rgba(192,166,255,.3);outline:none}
+
+/* ---------------- hud ---------------- */
+.hud{margin-top:11px;display:flex;align-items:center;justify-content:space-between;gap:12px;
+  flex-wrap:wrap;border:1px solid var(--line);border-radius:9px;padding:8px 12px;
+  background:linear-gradient(180deg,rgba(18,0,31,.9),rgba(11,0,20,.75))}
+.boot{font-family:var(--mono);font-size:10px;letter-spacing:.06em;color:var(--mint);min-width:0;
+  display:flex;align-items:center;gap:7px;flex:1 1 260px}
+.boot #bootTxt{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cur{display:inline-block;width:6px;height:11px;background:var(--mint);vertical-align:-1px;
+  animation:blink 1s steps(1) infinite;flex:0 0 auto}
+@keyframes blink{50%{opacity:0}}
+.meters{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.meter{font-family:var(--mono);font-size:8.5px;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--dim);border:1px solid var(--line);border-radius:999px;padding:5px 10px;white-space:nowrap}
+.meter b{color:var(--purple2);font-weight:700}
+.meter.clock b{color:var(--cyan)}
+.meter.done{border-color:rgba(204,255,0,.55)}
+.meter.done b{color:var(--lime)}
+.meter.pop{animation:pop .6s ease}
+@keyframes pop{0%{transform:scale(1)}35%{transform:scale(1.14)}100%{transform:scale(1)}}
+.mini{font-family:var(--mono);font-size:8.5px;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--dim);background:transparent;border:1px solid var(--line);border-radius:999px;
+  padding:5px 10px;cursor:pointer;transition:.16s}
+.mini:hover,.mini:focus-visible{color:var(--pink);border-color:rgba(255,45,149,.5);outline:none}
+
+/* ---------------- layout ---------------- */
+.cols{display:grid;grid-template-columns:minmax(280px,1fr) minmax(320px,1.08fr);
+  gap:14px;margin-top:12px;align-items:stretch;flex:1;min-height:440px}
+.board{position:relative;border:1px solid var(--pline);border-radius:12px;
+  padding:11px;overflow:hidden;display:flex;flex-direction:column;
+  background:linear-gradient(180deg,rgba(157,113,228,.07),rgba(11,0,20,.55));
+  box-shadow:inset 0 0 70px rgba(0,0,0,.55), 0 0 30px rgba(157,113,228,.10)}
+.boardbar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;
+  font-family:var(--mono);font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);
+  padding:0 3px 9px}
+.boardbar b{color:var(--purple2);font-weight:700}
+.boardbar .sd{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--lime);
+  box-shadow:0 0 8px var(--lime);margin:0 2px -1px 3px;animation:blip 1.8s ease-in-out infinite}
+.sweep{position:absolute;left:-10%;right:-10%;height:150px;top:-160px;pointer-events:none;z-index:6;
+  background:linear-gradient(180deg,transparent, rgba(192,166,255,.075), transparent);
+  animation:band 8.5s linear infinite}
+.brk{position:absolute;width:14px;height:14px;pointer-events:none;z-index:7;opacity:.6}
+.brk:before,.brk:after{content:"";position:absolute;background:var(--purple)}
+.brk:before{width:100%;height:1px} .brk:after{height:100%;width:1px}
+.brk.tl{top:5px;left:5px} .brk.tr{top:5px;right:5px;transform:scaleX(-1)}
+.brk.bl{bottom:5px;left:5px;transform:scaleY(-1)} .brk.br{bottom:5px;right:5px;transform:scale(-1)}
+
+/* ---------------- level list ---------------- */
+.levs{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px;justify-content:space-between;position:relative;z-index:2;flex:1}
+.levs>li{min-width:0;flex:1;max-height:150px;display:flex}
+.lev{display:flex;align-items:center;gap:11px;width:100%;text-align:left;min-height:75px;
+  border:1px solid var(--line);border-radius:10px;padding:10px 11px;cursor:pointer;
+  background:linear-gradient(180deg,rgba(20,0,36,.75),rgba(11,0,20,.55));
+  transition:transform .18s ease, border-color .18s ease, background .18s ease;
+  font-family:var(--body);color:var(--lav)}
+.lev:hover,.lev:focus-visible{transform:translateX(3px);outline:none;
+  border-color:var(--oc,var(--purple2));background:rgba(157,113,228,.10)}
+.lev .lno{font-family:var(--disp);font-size:22px;letter-spacing:.05em;line-height:1;
+  min-width:34px;color:var(--oc,var(--purple2));text-shadow:0 0 12px hsla(0,0%,100%,.05)}
+.lev .lmain{flex:1;min-width:0}
+.lev .lname{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--lav);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lev .lmeta{display:block;font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;
+  color:#b6acca;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lev .ldo{font-family:var(--body);font-size:11px;line-height:1.4;color:#928aab;
+  margin-top:5px;white-space:normal;overflow:hidden;
+  display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;max-height:31px}
+.lev .lstat{font-family:var(--mono);font-size:8px;letter-spacing:.12em;text-transform:uppercase;
+  border:1px solid var(--line);border-radius:999px;padding:4px 8px;color:var(--dim);white-space:nowrap}
+.lev.done .lstat{color:var(--lime);border-color:rgba(204,255,0,.5);background:rgba(204,255,0,.07)}
+.lev.open{border-color:var(--oc,var(--purple2));
+  box-shadow:0 0 22px -8px var(--oc,var(--purple2)), inset 0 0 30px rgba(0,0,0,.4)}
+.lev.open .lstat{color:var(--lime);border-color:rgba(204,255,0,.5)}
+.lev.open .lno{animation:pop 2.4s ease-in-out infinite}
+.lev.locked{opacity:.68;cursor:not-allowed}
+.lev.locked:hover{transform:none;border-color:var(--line);background:linear-gradient(180deg,rgba(20,0,36,.75),rgba(11,0,20,.55))}
+.lev.sealed .lname{color:var(--purple2)}
+.lev.sealed .lstat{color:var(--purple2);border-color:var(--pline)}
+.lev .lock{font-family:var(--mono);font-size:11px;color:var(--dim)}
+.hint{margin:10px 3px 0;font-family:var(--mono);font-size:8.5px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--dim);line-height:1.7;position:relative;z-index:2;margin-top:auto}
+
+/* ---------------- map ---------------- */
+.mapwrap{position:relative;z-index:2;padding:4px 2px 0;flex:1 1 auto;display:grid;place-items:center}
+#map{width:100%;height:auto;max-height:352px;display:block;overflow:visible}
+.horizon{fill:none;stroke:rgba(157,113,228,.16);stroke-width:1;stroke-dasharray:2 7}
+.star{fill:rgba(240,235,255,.20)}
+.seg{fill:none;stroke:rgba(157,113,228,.34);stroke-width:2;stroke-dasharray:5 8;stroke-linecap:round}
+.seg.live{stroke:rgba(204,255,0,.8);animation:dash 2.2s linear infinite}
+@keyframes dash{to{stroke-dashoffset:-26}}
+.seg.done{stroke:rgba(192,166,255,.85);stroke-dasharray:none}
+.orb{cursor:pointer}
+.orb .halo{fill:var(--oc,#c0a6ff);opacity:.13;transition:opacity .2s}
+.orb .ring{fill:none;stroke:var(--oc,#c0a6ff);stroke-width:1.6;opacity:.9;transition:stroke-width .2s}
+.orb .disc{fill:#12001f;stroke:var(--oc,#c0a6ff);stroke-width:1.2;opacity:.92}
+.orb .core{fill:var(--oc,#c0a6ff);opacity:.9}
+.orb .num{font-family:var(--mono);font-size:11px;font-weight:700;fill:var(--oc,#c0a6ff);text-anchor:middle}
+.orb .lab{font-family:var(--mono);font-size:11px;letter-spacing:.08em;fill:rgba(240,235,255,.74);
+  text-anchor:middle;paint-order:stroke;stroke:#0d001a;stroke-width:3px;stroke-linejoin:round}
+.orb .lab.sub{font-size:8.5px;letter-spacing:.14em;fill:rgba(240,235,255,.5)}
+.labplate{fill:#0a0014;stroke:rgba(157,113,228,.22);stroke-width:.7}
+.orb:hover .halo{opacity:.26}
+.orb:hover .ring{stroke-width:3}
+.orb.locked{opacity:.42}
+.orb.sealed .disc{stroke-dasharray:3 3}
+.orb.open .ring{animation:orbpulse 2.4s ease-in-out infinite}
+@keyframes orbpulse{0%,100%{stroke-width:1.6;opacity:.9}50%{stroke-width:3.6;opacity:1}}
+.orb.open .halo{animation:halopulse 2.4s ease-in-out infinite}
+@keyframes halopulse{0%,100%{opacity:.13}50%{opacity:.26}}
+.maplabel{font-family:var(--mono);font-size:8px;letter-spacing:.16em;text-transform:uppercase;
+  fill:rgba(240,235,255,.3)}
+.mapnote{margin:9px 3px 0;font-family:var(--mono);font-size:8.5px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--dim);line-height:1.7}
+.mlegend{display:flex;flex-wrap:wrap;gap:6px 16px;justify-content:center;margin-top:auto;padding-top:10px;
+  font-family:var(--mono);font-size:8px;letter-spacing:.15em;text-transform:uppercase;color:var(--dim);
+  position:relative;z-index:2}
+.mlegend span{display:inline-flex;align-items:center;gap:6px}
+.mlegend i{width:9px;height:9px;border-radius:50%;border:1px solid var(--pline);display:inline-block}
+.mlegend i.op{background:var(--lime);border-color:transparent;box-shadow:0 0 8px var(--lime)}
+.mlegend i.wk{background:var(--purple2);border-color:transparent;opacity:.85}
+.mlegend i.lk{background:transparent;opacity:.55}
+.mlegend i.se{background:transparent;border-style:dashed;border-color:var(--purple2);opacity:.8}
+
+/* ---------------- footer ---------------- */
+.foot{margin-top:16px;font-family:var(--mono);font-size:9px;letter-spacing:.15em;
+  text-transform:uppercase;color:var(--dim);text-align:center;line-height:1.9}
+.foot em{color:var(--pink);font-style:normal}
+.foot a{color:var(--lav);text-decoration:none;border-bottom:1px solid var(--line)}
+.foot a:hover{color:var(--purple2);border-color:var(--purple2)}
+
+/* ---------------- popup / level stage ---------------- */
+.popup{position:fixed;inset:0;z-index:70;display:none;align-items:center;justify-content:center;
+  padding:18px;background:rgba(6,0,12,.78);backdrop-filter:blur(7px)}
+.popup.active{display:flex}
+.pcard{position:relative;width:100%;max-width:580px;max-height:88vh;display:flex;flex-direction:column;
+  border:1px solid var(--accent,var(--purple));border-radius:14px;overflow:hidden;
+  background:linear-gradient(180deg,#1a0b2c,#0c0018);
+  box-shadow:0 26px 80px rgba(0,0,0,.85), 0 0 44px -14px var(--accent,var(--purple));
+  animation:pin .24s ease both}
+@keyframes pin{from{opacity:0;transform:translateY(14px) scale(.97)}to{opacity:1;transform:none}}
+.pcard:before{content:"";position:absolute;left:0;right:0;top:0;height:3px;
+  background:linear-gradient(90deg,var(--accent,var(--purple)),transparent)}
+.pbar{display:flex;align-items:center;gap:9px;padding:11px 13px;border-bottom:1px solid var(--line);
+  background:rgba(11,0,20,.5);flex:0 0 auto}
+.pglyph{width:22px;height:22px;flex:0 0 auto;border-radius:6px;display:grid;place-items:center;
+  font-family:var(--mono);font-size:11px;color:var(--accent,var(--purple2));
+  border:1px solid var(--accent,var(--purple2));background:rgba(255,255,255,.03)}
+.ptitle{font-family:var(--mono);font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--accent,var(--purple2));flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;
+  white-space:nowrap}
+.pmeta{font-family:var(--mono);font-size:8.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+.px{width:26px;height:26px;flex:0 0 auto;border-radius:50%;border:1px solid var(--line);
+  background:rgba(11,0,20,.7);color:var(--lav);font-family:var(--mono);font-size:12px;line-height:1;
+  cursor:pointer;transition:.18s;padding:0}
+.px:hover,.px:focus-visible{border-color:var(--pink);color:var(--pink);outline:none}
+.pbody{padding:15px;overflow:auto;overscroll-behavior:contain}
+.dtext{margin:0 0 11px;font-size:13.5px;line-height:1.65;color:#e4dff0}
+.dtext:last-child{margin-bottom:0}
+.dtext.ok{color:var(--lime)}
+.dtext.bad{color:var(--pink)}
+.dtext.dim{color:var(--dim);font-size:12.5px}
+.choices{display:flex;flex-wrap:wrap;gap:8px;margin-top:13px;align-items:center}
+.chip{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--lav);background:rgba(157,113,228,.10);border:1px solid rgba(157,113,228,.55);
+  border-radius:999px;padding:9px 14px;cursor:pointer;transition:.16s;text-decoration:none;
+  display:inline-flex;align-items:center;gap:7px;line-height:1.2}
+.chip:hover,.chip:focus-visible{border-color:var(--lime);color:var(--lime);
+  box-shadow:0 0 16px rgba(204,255,0,.22);outline:none}
+.chip.tag{pointer-events:none;cursor:default;padding:6px 11px;font-size:8.5px}
+.chip.tag.dim{color:var(--dim);border-color:var(--line);background:transparent}
+.chip.tag.pink{color:var(--pink);border-color:rgba(255,45,149,.55);background:rgba(255,45,149,.10)}
+.chip.tag.lime{color:var(--lime);border-color:rgba(204,255,0,.55);background:rgba(204,255,0,.08)}
+.chip[disabled]{opacity:.45;cursor:not-allowed}
+
+/* ---------------- typewriter dialogue ---------------- */
+.dlg{border-left:2px solid var(--accent,var(--purple2));padding:2px 0 2px 12px;margin-bottom:4px}
+.dwho{font-family:var(--mono);font-size:8.5px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--accent,var(--purple2));margin-bottom:7px}
+.dtxt{font-size:14px;line-height:1.7;color:#efe9fb;min-height:1.7em}
+
+/* ---------------- stations strip ---------------- */
+.stns{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.stn{font-family:var(--mono);font-size:8px;letter-spacing:.14em;text-transform:uppercase;
+  border:1px solid var(--line);border-radius:999px;padding:4px 9px;color:var(--dim);
+  display:inline-flex;align-items:center;gap:6px}
+.stn i{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.18);display:block}
+.stn.on{color:var(--lime);border-color:rgba(204,255,0,.4)}
+.stn.on i{background:var(--lime);box-shadow:0 0 8px var(--lime)}
+.stn.act{color:var(--lav);border-color:var(--accent,var(--purple2));
+  box-shadow:0 0 14px -4px var(--accent,var(--purple2))}
+.stn.act i{background:var(--accent,var(--purple2));box-shadow:0 0 8px var(--accent,var(--purple2))}
+
+/* ---------------- recipe / info card ---------------- */
+.cardbox{border:1px dashed var(--pline);border-radius:10px;padding:12px 13px;
+  background:rgba(11,0,20,.5)}
+.ctitle{font-family:var(--mono);font-size:9px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--accent,var(--purple2));margin-bottom:9px}
+.clines{list-style:none;margin:0;padding:0;display:grid;gap:7px}
+.clines li{font-size:13px;line-height:1.6;color:#e4dff0;padding-left:16px;position:relative}
+.clines li:before{content:"\25b8";position:absolute;left:2px;color:var(--accent,var(--purple2));font-size:10px}
+
+/* ---------------- gauges (timing / hold / taps) ---------------- */
+.gauge{position:relative;height:26px;border-radius:8px;margin:14px 0 6px;
+  background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02));
+  border:1px solid var(--line);overflow:hidden}
+.gband{position:absolute;top:0;bottom:0;background:linear-gradient(180deg,rgba(204,255,0,.30),rgba(204,255,0,.12));
+  border-left:1px solid rgba(204,255,0,.6);border-right:1px solid rgba(204,255,0,.6)}
+.gneedle{position:absolute;top:-3px;bottom:-3px;width:3px;border-radius:2px;background:var(--pink);
+  box-shadow:0 0 12px var(--pink);transform:translateX(-1.5px)}
+.gfill{position:absolute;top:0;bottom:0;left:0;width:0%;
+  background:linear-gradient(90deg,rgba(0,229,255,.55),rgba(255,45,149,.65))}
+.gticks{position:absolute;inset:0;
+  background:repeating-linear-gradient(90deg, rgba(255,255,255,.10) 0 1px, transparent 1px 10%)}
+.ghint{display:flex;justify-content:space-between;font-family:var(--mono);font-size:8px;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin-top:5px}
+.feed{font-family:var(--mono);font-size:10px;letter-spacing:.1em;line-height:1.7;margin:11px 0 0;
+  color:var(--mint)}
+.feed.bad{color:var(--pink)}
+.pdots{display:flex;gap:9px;margin:14px 0 2px;flex-wrap:wrap}
+.pdot{width:22px;height:22px;border-radius:50%;border:1px dashed rgba(192,166,255,.45);display:block;
+  transition:.2s}
+.pdot.on{border-style:solid;border-color:var(--accent,var(--purple2));
+  background:radial-gradient(circle at 50% 40%, var(--accent,var(--purple2)), transparent 72%);
+  box-shadow:0 0 14px -3px var(--accent,var(--purple2))}
+
+/* ---------------- quiz (miki's questions) ---------------- */
+.qprog{font-family:var(--mono);font-size:8.5px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--dim);margin-bottom:9px}
+.qtext{font-size:15px;line-height:1.6;color:#f2ecff;margin:0 0 13px}
+.qopts{display:grid;gap:7px}
+.qopt{text-align:left;font-family:var(--body);font-size:13px;line-height:1.55;color:var(--lav);
+  background:linear-gradient(180deg,rgba(20,0,36,.7),rgba(11,0,20,.5));
+  border:1px solid var(--line);border-radius:9px;padding:10px 12px;cursor:pointer;
+  transition:transform .16s ease,border-color .16s ease,color .16s ease;
+  display:flex;gap:9px;align-items:flex-start}
+.qopt:before{content:"\25b8";color:var(--accent,var(--purple2));font-size:10px;line-height:1.7;flex:none}
+.qopt:hover,.qopt:focus-visible{border-color:var(--accent,var(--purple2));color:#fff;
+  outline:none;transform:translateX(3px)}
+.qopt.sel{border-color:var(--lime);color:var(--lime);box-shadow:0 0 18px -5px rgba(204,255,0,.6)}
+.qopt[disabled]{opacity:.42;cursor:not-allowed;transform:none}
+.qopt.sel[disabled]{opacity:1}
+
+/* ---------------- tape (a tune you keep) ---------------- */
+.tape{margin-top:12px;border:1px solid rgba(204,255,0,.35);border-radius:12px;
+  padding:13px 14px 14px;position:relative;overflow:hidden;
+  background:linear-gradient(180deg,rgba(204,255,0,.07),rgba(11,0,20,.6))}
+.tape:before{content:"";position:absolute;left:0;right:0;top:0;height:2px;
+  background:linear-gradient(90deg,var(--lime),rgba(0,229,255,.6),transparent)}
+.tname{font-family:var(--disp);font-size:27px;letter-spacing:.03em;line-height:1;color:var(--lime)}
+.trole{font-family:var(--mono);font-size:8px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--dim);margin-top:7px}
+.tneed{font-size:13px;line-height:1.65;color:#e9e4f4;margin:9px 0 0}
+.taudio{width:100%;margin-top:12px;border-radius:999px;color-scheme:dark;accent-color:#ccff00}
+.twords{margin-top:12px;display:grid;gap:2px;font-size:13px;line-height:1.7;color:#cfc7e4;font-style:italic}
+.twcap{font-family:var(--mono);font-size:8px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--dim);font-style:normal;margin-bottom:5px}
+
+/* ---------------- breathe ---------------- */
+.bwrap{display:grid;place-items:center;padding:6px 0 4px}
+.bring{width:158px;height:158px;border-radius:50%;display:grid;place-items:center;
+  border:1px solid var(--accent,var(--purple2));
+  background:radial-gradient(circle at 50% 50%, rgba(152,251,152,.12), transparent 70%);
+  transition:transform 4s ease-in-out, box-shadow .5s ease;transform:scale(.86)}
+.bring .bphase{font-family:var(--mono);font-size:9px;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--accent,var(--purple2))}
+.bring .bnum{font-family:var(--disp);font-size:34px;line-height:1;color:var(--lav);margin-top:2px}
+.bring.in{box-shadow:0 0 40px -10px rgba(152,251,152,.6)}
+.brow{display:flex;justify-content:center;gap:8px;margin-top:12px;flex-wrap:wrap}
+
+/* ---------------- verse / scripture ---------------- */
+.verse{border:1px solid var(--pline);border-radius:10px;padding:13px 14px;margin:12px 0 0;
+  background:linear-gradient(180deg,rgba(255,240,245,.05),rgba(11,0,20,.5));
+  position:relative;overflow:hidden}
+.verse:before{content:"";position:absolute;left:0;top:0;bottom:0;width:2px;
+  background:linear-gradient(180deg,var(--accent,var(--purple2)),transparent)}
+.vref{font-family:var(--mono);font-size:8.5px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--accent,var(--purple2));margin-bottom:8px}
+.vtext{font-size:13.5px;line-height:1.75;color:#f2ecff}
+.vnum{position:absolute;right:10px;top:8px;font-family:var(--mono);font-size:8px;color:var(--dim)}
+
+/* ---------------- completion ---------------- */
+.unlockbox{margin-top:13px;border:1px solid rgba(204,255,0,.45);border-radius:10px;
+  padding:12px 13px;background:rgba(204,255,0,.05)}
+.utitle{font-family:var(--mono);font-size:9px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--lime);margin-bottom:8px}
+.sealedbox{border:1px dashed var(--pline);border-radius:10px;padding:12px 13px;
+  background:rgba(157,113,228,.06)}
+
+/* ---------------- responsive ---------------- */
+@media (max-width:880px){
+  .cols{grid-template-columns:1fr}
+  .stage{padding:16px 12px 56px}
+  .lev .lname{white-space:normal}
+  .lev .lmeta{white-space:normal}
+  .lev .ldo{white-space:normal;display:block;-webkit-line-clamp:unset;max-height:none}
+}
+@media (max-width:420px){
+  .brand{font-size:23px}
+  .lev{padding:10px 9px;gap:9px}
+  .lev .lno{font-size:19px;min-width:26px}
+  .lev .lstat{font-size:7px;padding:3px 7px}
+  .bring{width:132px;height:132px}
+  .pbody{padding:13px}
+}
+@media (prefers-reduced-motion:reduce){
+  .floor,.band,.sweep,.marquee .brand,.orb.open .ring,.orb.open .halo,.lev.open .lno{animation:none}
+}
+</style>
+</head>
+<body>
+
+<div class="bg" aria-hidden="true">
+  <canvas id="stars"></canvas>
+  <div class="floor"></div>
+  <div class="band"></div>
+  <div class="vign"></div>
+  <div class="scan"></div>
+  <div class="grain"></div>
+</div>
+
+<main class="stage">
+
+  <header class="marquee">
+    <div class="mtitle">
+      <span class="brand">cafedreamr</span>
+      <span class="tag">play &middot; the long day</span>
+      <span class="led" aria-hidden="true"></span>
+    </div>
+    <a class="back" href="https://www.cafedreamr.art/">&larr; the terminal</a>
+  </header>
+
+  <section class="hud">
+    <div class="boot"><span class="pr">&gt;</span><span id="bootTxt"></span><span class="cur" aria-hidden="true"></span></div>
+    <div class="meters">
+      <span class="meter" id="dayMeter">the day &middot; <b>0 / 5</b></span>
+      <span class="meter clock" id="clockMeter">clock &middot; <b>06:40</b></span>
+      <button class="mini" id="resetDay" type="button">reset the day</button>
+    </div>
+  </section>
+
+  <div class="cols">
+
+    <section class="board">
+      <span class="brk tl" aria-hidden="true"></span><span class="brk tr" aria-hidden="true"></span>
+      <span class="brk bl" aria-hidden="true"></span><span class="brk br" aria-hidden="true"></span>
+      <div class="sweep" aria-hidden="true"></div>
+      <div class="boardbar"><span><b>THE LONG DAY</b> &middot; LEVELS</span><span>sheet 07</span></div>
+      <ol class="levs" id="levs"></ol>
+      <p class="hint" id="listHint"></p>
+    </section>
+
+    <section class="board">
+      <span class="brk tl" aria-hidden="true"></span><span class="brk tr" aria-hidden="true"></span>
+      <span class="brk bl" aria-hidden="true"></span><span class="brk br" aria-hidden="true"></span>
+      <div class="sweep" aria-hidden="true"></div>
+      <div class="boardbar"><span><b>THE MAP</b> &middot; ORBS<span class="sd"></span></span>
+        <span id="mapStatus">1 of 5 open</span></div>
+      <div class="mapwrap">
+        <svg id="map" viewBox="0 0 420 336" role="img" aria-label="the long day, five orbs on a winding path"></svg>
+      </div>
+      <p class="mlegend" aria-hidden="true">
+        <span><i class="op"></i>open</span>
+        <span><i class="wk"></i>walked</span>
+        <span><i class="se"></i>in progress</span>
+        <span><i class="lk"></i>locked</span>
+      </p>
+      <p class="mapnote">click an open orb to play that part of the day &middot; finished levels can be replayed</p>
+    </section>
+
+  </div>
+
+  <footer class="foot">
+    vendi &mdash; a little broken machine &middot; no refunds on feelings<br>
+    <a href="https://www.cafedreamr.art/">the terminal</a> &middot;
+    <a href="https://www.cafedreamr.art/LORE/MAP.html">the realm map</a> &middot;
+    <a href="https://www.cafedreamr.art/LORE/OCS/CARDS-SOUNDS/cards.html">the collective, in dossiers</a>
+  </footer>
+
+</main>
+
+<div class="popup" id="stage" role="dialog" aria-modal="true" aria-label="level">
+  <div class="pcard" id="scard">
+    <div class="pbar">
+      <span class="pglyph" id="sGlyph">&#9670;</span>
+      <span class="ptitle" id="sTitle">level</span>
+      <span class="pmeta" id="sMeta"></span>
+      <button class="px" id="sx" type="button" aria-label="close">&times;</button>
+    </div>
+    <div class="pbody" id="sbody"></div>
+  </div>
+</div>
+
+<script>
+(function(){
+"use strict";
+
+/* ================================================================= */
+/*                          STORAGE                                  */
+/* ================================================================= */
+
+var DONE_KEY = "cd_play_done", J_KEY = "cd_play_journal";
+var done = [], journal = {};
+
+function load(){
+  try{
+    var d = JSON.parse(localStorage.getItem(DONE_KEY) || "[]");
+    if(Object.prototype.toString.call(d) === "[object Array]"){ done = d; }
+    var j = JSON.parse(localStorage.getItem(J_KEY) || "{}");
+    if(j && typeof j === "object"){ journal = j; }
+  }catch(e){ done = []; journal = {}; }
+}
+function save(){
+  try{
+    localStorage.setItem(DONE_KEY, JSON.stringify(done));
+    localStorage.setItem(J_KEY, JSON.stringify(journal));
+  }catch(e){}
+}
+function isDone(id){ return done.indexOf(id) > -1; }
+function markDone(id){ if(!isDone(id)){ done.push(id); save(); } }
+
+/* ================================================================= */
+/*                       THE LEVELS (edit me)                        */
+/* ================================================================= */
+
+/* the tapes miki's level hands out. to host the mp3s on cafedreamr.art
+   yourself, drop them in PLAY/audio/ and swap each url for one like
+   "PLAY/audio/the-hum.mp3". */
+
+var TRACKS = {
+  "miki-theme": {
+    name:"miki's workshop", role:"miki's own \u00b7 118 bpm",
+    url:"https://user.uploads.dev/file/2606abfca5cef14efb301fd252cc8f25.mp3",
+    need:"what she listens to while she plans. glockenspiel, a sneaky little riff, woodblock, one proud kazoo.",
+    file:"cafedreamr - miki's workshop.mp3"
+  },
+  "slow-drip": {
+    name:"the slow drip", role:"for the foggy, hard-to-start hours",
+    url:"https://user.uploads.dev/file/05c8b1687079da7febc8db547fcff262.mp3",
+    need:"warm, dusty, soft drums \u2014 nothing in it that asks you for anything.",
+    verdict:"This is the slow drip. Warm, dusty, drums like a heartbeat two streets over. You don't need a soundtrack, you need a lamp and for everyone to stop hurrying you.",
+    file:"cafedreamr - the slow drip.mp3"
+  },
+  "the-hum": {
+    name:"the hum", role:"for reading something hard",
+    url:"https://user.uploads.dev/file/4e27fadec762eb08be99aeda7df9d63d.mp3",
+    need:"no words, no drums \u2014 one long warm note to hold your head still.",
+    verdict:"The hum. No words, no drums. One big warm machine humming in the next room, keeping your thoughts from sliding off the desk.",
+    file:"cafedreamr - the hum.mp3"
+  },
+  "the-lift": {
+    name:"the lift", role:"for lists, chores and momentum",
+    url:"https://user.uploads.dev/file/a89c2a041d104cac648d73eb07928aba.mp3",
+    need:"kick, claps, and a bassline that refuses to sit down.",
+    verdict:"The lift. Your feet have to move before your brain agrees \u2014 that's not a flaw, that's your operating system. Go on. I'll be here.",
+    file:"cafedreamr - the lift.mp3"
+  },
+  "wide-open": {
+    name:"the wide open", role:"for making something that matters",
+    url:"https://user.uploads.dev/file/b984dcaa6d344ab079a0e9cc09554164.mp3",
+    need:"strings and piano, swelling like a door opening.",
+    verdict:"The wide open. You need to feel like it matters before you start. It does, by the way. That's not a pep talk, that's just true.",
+    file:"cafedreamr - the wide open.mp3"
+  },
+  "joy-song": {
+    name:"this is the day", role:"miki's own song \u00b7 with words",
+    url:"https://user.uploads.dev/file/3607e57fa4855ed0b031b489c1a4c7d3.mp3",
+    need:"the one she wrote at 6:04 this morning. sung, not just played.",
+    file:"cafedreamr - this is the day.mp3"
+  }
+};
+
+var LEVELS = [
+  {
+    id:"l1", num:1, who:"star", whoLabel:"star \u00b7 host of cafedreamr",
+    title:"the lavender spiced latte", place:"the counter", time:"dawn", clock:"06:40",
+    accent:"#c0a6ff", glyph:"\u2726", orb:{ x:74, y:240 },
+    blurb:"The machine only wakes for the early ones. Star is already behind the counter, sleeves up, and she has decided the two of you are making something.",
+    howto:"watch the gauge and trust your hands: pull a double shot into the warm band, steam the milk to sixty-something, two pumps of lavender, three taps of spice, then serve it while it is still singing.",
+    tag:"steam, spice, and serve it while it sings",
+    stations:["the shot","the milk","the lavender","the spice","the serve"],
+    steps:[
+      { type:"say", who:"STAR", st:0,
+        text:"You're up before the sun. Good \u2014 the machine only listens to early people.",
+        cta:"\u2026" },
+      { type:"say", who:"STAR", st:0,
+        text:"We're making a lavender spiced latte. Together. I'll talk, you pour.",
+        cta:"ready \u2192" },
+      { type:"card", st:0, title:"the recipe",
+        lines:[
+          "one \u00b7 pull a double shot \u2014 stop it in the warm band",
+          "two \u00b7 steam the milk to sixty-something degrees",
+          "three \u00b7 two pumps of lavender. two.",
+          "four \u00b7 three taps of spice over the top",
+          "five \u00b7 serve it while it's still singing"
+        ],
+        cta:"start pulling \u2192" },
+      { type:"timing", st:0, title:"station 1 \u00b7 the shot",
+        prompt:"Pull the shot when the needle sits in the warm band.",
+        band:[38,58], speed:54,
+        ok:"Golden. That's a shot with a spine in it.",
+        bad:"Too far off \u2014 that one runs bitter. Tip it out, we'll go again.",
+        hint:"the band is the pale stripe in the middle" },
+      { type:"hold", st:1, title:"station 2 \u00b7 the milk",
+        prompt:"Hold to steam. Let go inside the warm band \u2014 don't walk away from it.",
+        start:18, lose:80, rate:19, band:[58,68], unit:"\u00b0C",
+        ok:"Silk. Not a scorch on it.",
+        tooLow:"Too cool \u2014 it won't hold the foam.",
+        tooHigh:"Scalded. Tip it out and breathe.",
+        hint:"hold steady, let go early" },
+      { type:"taps", st:2, title:"station 3 \u00b7 the lavender",
+        prompt:"Two pumps of lavender syrup. Not three.",
+        need:2, unit:"pump",
+        ok:"Two. Exactly two. The whole cup goes purple.",
+        over:"Three and it turns to soap. Start the syrup over.",
+        hint:"count out loud if you have to" },
+      { type:"taps", st:3, title:"station 4 \u00b7 the spice",
+        prompt:"Three taps of spice, over the top.",
+        need:3, unit:"tap",
+        ok:"Dusted like snow on a purple hill.",
+        over:"That's a snowdrift, not a dusting. Sweep the excess off and try again.",
+        hint:"short, light taps" },
+      { type:"say", who:"STAR", st:4,
+        text:"There. Lavender and gold, and you didn't spill a drop. The machine likes you \u2014 it doesn't like everybody.",
+        cta:"hand it over \u2192" }
+    ],
+    outro:"Star takes the cup, holds it up to the light, and nods once \u2014 which, from Star, is a standing ovation. The morning light leans in through the window and the map on the wall tilts: a second orb wakes up in the green."
+  },
+  {
+    id:"l2", num:2, who:"milo", whoLabel:"milo \u00b7 keeper of the zen",
+    title:"the zen", place:"the zen garden", time:"morning", clock:"07:25",
+    accent:"#98fb98", glyph:"\u2740", orb:{ x:166, y:126 },
+    blurb:"Milo is where the floor turns to moss. He has two cushions, one pot of tea, and absolutely nothing to do before noon.",
+    howto:"sit down on a cushion. breathe in for four, hold for two, out for six \u2014 three rounds. after each round a verse arrives; read it slowly. then read the rest of what Milo left you, and choose the one word you carry into the day.",
+    tag:"breathe three rounds, then read what milo left",
+    stations:["sit","breathe","the scriptures","carry it"],
+    steps:[
+      { type:"say", who:"MILO", st:0,
+        text:"Sit. The cushions don't bite. You made Star's drink \u2014 good, that's the only thing that has to happen fast today.",
+        cta:"sit down \u2192" },
+      { type:"card", st:0, title:"how to meditate",
+        lines:[
+          "in for four \u00b7 hold for two \u00b7 out for six",
+          "three rounds. nothing to achieve, nothing to fix.",
+          "when your thoughts wander \u2014 and they will \u2014 come back.",
+          "that's the whole practice. the coming back is the practice."
+        ],
+        cta:"begin \u2192" },
+      { type:"breathe", st:1, title:"three rounds",
+        rounds:[
+          { in:4, hold:2, out:6, verse:{
+              ref:"psalm 1:2\u20133",
+              text:"But his delight is in the law of the LORD; and in his law doth he meditate day and night. And he shall be like a tree planted by the rivers of water, that bringeth forth his fruit in his season; his leaf also shall not wither; and whatsoever he doeth shall prosper." } },
+          { in:4, hold:2, out:6, verse:{
+              ref:"joshua 1:8",
+              text:"This book of the law shall not depart out of thy mouth; but thou shalt meditate therein day and night, that thou mayest observe to do according to all that is written therein: for then thou shalt make thy way prosperous, and then thou shalt have good success." } },
+          { in:4, hold:2, out:6, verse:{
+              ref:"john 15:4\u20135",
+              text:"Abide in me, and I in you. As the branch cannot bear fruit of itself, except it abide in the vine; no more can ye, except ye abide in me. I am the vine, ye are the branches: he that abideth in me, and I in him, the same bringeth forth much fruit." } }
+        ] },
+      { type:"read", st:2, title:"the scriptures milo left",
+        verses:[
+          { ref:"jeremiah 29:11",
+            text:"For I know the thoughts that I think toward you, saith the LORD, thoughts of peace, and not of evil, to give you an expected end." },
+          { ref:"philippians 4:6\u20137",
+            text:"Be careful for nothing; but in every thing by prayer and supplication with thanksgiving let your requests be made known unto God. And the peace of God, which passeth all understanding, shall keep your hearts and minds through Christ Jesus." },
+          { ref:"psalm 119:15",
+            text:"I will meditate in thy precepts, and have respect unto thy ways." }
+        ] },
+      { type:"reflect", st:3, title:"carry it",
+        prompt:"Which word do you carry out of the garden and into the rest of the day?",
+        options:["meditate","abide","peace","prosper"],
+        replies:{
+          meditate: "Then let it be the last thing you turn over tonight, and the first thing you reach for in the morning. Day and night \u2014 that's the whole instruction.",
+          abide: "Good. Branches don't strain. They stay attached, and the fruit shows up on its own schedule, not yours.",
+          peace: "Carry that one. It isn't the absence of noise \u2014 it's a keep that holds you while the noise is still going.",
+          prosper: "Not a bank balance. A way that works, and a life that holds together. He is not short on either."
+        } },
+      { type:"say", who:"MILO", st:3,
+        text:"That's the practice for today. Same time tomorrow, if you like. The tea stays warm either way.",
+        cta:"bow \u2192" }
+    ],
+    outro:"You stand up and the moss holds your footprint for a moment, then lets it go. Somewhere ahead of you a loud, lime-green part of the map is already awake: Miki has been planning something since about six o'clock."
+  },
+  {
+    id:"l3", num:3, who:"miki", whoLabel:"miki \u00b7 the plan-maker",
+    title:"miki's realm", place:"the planning room", time:"midday", clock:"12:10",
+    accent:"#ccff00", glyph:"\u2699", orb:{ x:252, y:64 },
+    blurb:"Miki's room is string, paper and half-finished contraptions. She has been awake since six, she has built you a day-board, and she has music to play you \u2014 hers first, then one built entirely out of your answers.",
+    howto:"answer miki's questions honestly (she says five. there are six.). she composes you a tune that fits the answers \u2014 play it, keep it, download it. then she plays you the song she wrote this morning.",
+    tag:"answer five questions, keep the tune she makes you",
+    stations:["her tape","the questions","your tape","her song"],
+    steps:[
+      { type:"say", who:"MIKI", st:0,
+        text:"You're late by four minutes. I'm not annoyed, I'm just extremely aware of it. Sit down \u2014 I've been planning since six and you're in the plan.",
+        cta:"sit \u2192" },
+      { type:"say", who:"MIKI", st:0,
+        text:"First. This is what I listen to while I plan. I made it. I have played it nine times today and I will not be discussing that.",
+        cta:"press play \u2192" },
+      { type:"track", track:"miki-theme", st:0, title:"her tape",
+        say:"that is the sound of a good idea arriving before anyone else is awake.",
+        cta:"enough about me \u2192" },
+      { type:"card", st:1, title:"the plan",
+        lines:[
+          "you tell me what you're about to do, and what your head is like today",
+          "i ask five questions. i wrote them myself, which you will be able to tell.",
+          "the machine spits out a tune that fits your answers \u2014 yours, made here, today",
+          "you keep it. download it. press play when you start the thing.",
+          "and then i play you mine."
+        ],
+        cta:"ask me \u2192" },
+      { type:"quiz", st:1, cta:"compose it \u2192",
+        questions:[
+          { q:"first \u2014 what are you actually about to do?",
+            opts:[
+              { t:"write something that doesn't exist yet", p:"wide-open", s:"good. that one gets the strings." },
+              { t:"read or study something hard", p:"the-hum", s:"then you don't need music. you need a blanket with a note in it." },
+              { t:"get through a list of small awful tasks", p:"the-lift", s:"a list. i love a list. i love other people's lists." },
+              { t:"sit with something i've been avoiding", p:"slow-drip", s:"sit with it warm. you don't have to be brave, just started." }
+            ] },
+          { q:"how's your head? be honest, i can see it from here.",
+            opts:[
+              { t:"foggy. slow to start.", p:"slow-drip", s:"fog is fine. fog just wants a lamp and a beat that doesn't rush." },
+              { t:"too many tabs open", p:"the-hum", s:"close six of them. i'm not asking, i'm telling." },
+              { t:"heavy, but i'm going anyway", p:"the-lift", s:"the 'anyway' part is the whole thing. i'll bring the drums." },
+              { t:"quiet. weirdly ready.", p:"wide-open", s:"then we open the door properly. no point being ready in a corridor." }
+            ] },
+          { q:"how loud is the room you're in?",
+            opts:[
+              { t:"dead silent", p:"the-hum", s:"perfect. i'll be as quiet as a machine in the next room." },
+              { t:"quiet \u2014 someone else is home", p:"slow-drip", s:"then we stay under the floorboards. i'm excellent at that." },
+              { t:"busy, and i can't control it", p:"the-lift", s:"we won't fight it. we'll out-drum it." },
+              { t:"i'm the one making the noise", p:"wide-open", s:"yes you are. i have met you." }
+            ] },
+          { q:"pick an instrument and i'll believe you.",
+            opts:[
+              { t:"a dusty piano with one sticky key", p:"slow-drip", s:"one sticky key is character, not damage." },
+              { t:"a low hum from a very big machine", p:"the-hum", s:"that's the vending machine at four in the morning. i know it well." },
+              { t:"a drum you hit with your whole hand", p:"the-lift", s:"correct answer. no notes." },
+              { t:"a whole orchestra, quietly promising something", p:"wide-open", s:"you're the only one who ever picks that. i like it." }
+            ] },
+          { q:"last real one \u2014 what do you do the second it's finished?",
+            opts:[
+              { t:"close the laptop and walk outside", p:"slow-drip", s:"good. leave the cup on the desk, it can wait." },
+              { t:"sit and stare at it for a bit", p:"the-hum", s:"staring is a legitimate part of the process. i don't make the rules." },
+              { t:"start the next one immediately", p:"the-lift", s:"of course you do. fine. i'll make it fast." },
+              { t:"say it out loud to someone", p:"wide-open", s:"then it's real. that's how it works, unfortunately." }
+            ] },
+          { q:"and finally \u2014 how many spoons are in your sink right now?",
+            prog:"question six \u00b7 of five \u00b7 miki",
+            aside:"that one wasn't for the tape. i just wanted to know. (i wrote it at six this morning. i was curious.)",
+            opts:[
+              { t:"one", s:"one. a manageable spoon situation. i'm relieved." },
+              { t:"three, and i'm not proud", s:"three is fine. three is a tuesday." },
+              { t:"i genuinely don't know", s:"honesty. noted. i'll be thinking about it all afternoon." },
+              { t:"why is that question in here", s:"because i wanted it to be. it's my level." }
+            ] }
+        ] },
+      { type:"say", who:"MIKI", st:2,
+        text:"Hm. Hm. Okay \u2014 I'm going to say something now, and you're going to say \u2018that's exactly it\u2019, and then we are both going to pretend that's normal.",
+        cta:"say it \u2192" },
+      { type:"track", track:"quiz", st:2, title:"your tape",
+        note:"keep it. it's yours \u2014 loop it, download it, press play the second you start.",
+        cta:"put it on the day \u2192" },
+      { type:"reflect", who:"miki", st:3,
+        prompt:"So \u2014 when are you pressing play on this?",
+        options:["right now","after lunch","the moment i start the thing i'm avoiding","tonight, in the dark"],
+        replies:{
+          "right now":"now is a good answer. now is the only answer that has ever worked.",
+          "after lunch":"lunch is sacred. put it on the moment the plate goes in the sink.",
+          "the moment i start the thing i'm avoiding":"then that's the button. tune first, dread second. that's the order.",
+          "tonight, in the dark":"i'll allow it. the slow one sounds better at night anyway."
+        },
+        verse:{ ref:"nehemiah 8:10",
+          text:"Go your way, eat the fat, and drink the sweet, and send portions unto them for whom nothing is prepared: for this day is holy unto our Lord: neither be ye sorry; for the joy of the LORD is your strength." } },
+      { type:"track", track:"joy-song", st:3, title:"her song",
+        say:"this one's mine. i wrote it at 6:04 this morning, while you were asleep. it has words. the book says sing to him a new song \u2014 so i did, and this morning so did you.",
+        words:[
+          "this is the day that the Lord has made",
+          "i will rejoice and be glad in it",
+          "the joy of the Lord is my strength today",
+          "and the morning road is wide",
+          "sing, sing, sing \u2014 the day is a gift",
+          "sing, sing, sing \u2014 and let your heart lift"
+        ],
+        verse:{ ref:"zephaniah 3:17",
+          text:"The LORD thy God in the midst of thee is mighty; he will save, he will rejoice over thee with joy; he will rest in his love, he will joy over thee with singing." },
+        cta:"thank her \u2192" },
+      { type:"say", who:"MIKI", st:3,
+        text:"Joy isn't a mood you wait for. It's the strength you keep finding. Go on \u2014 Hans has a cart of misfiled lore and he's been looming since noon.",
+        cta:"leave the workshop \u2192" }
+    ],
+    outro:"Miki kicks the day-board over so it leans against the wall, corks the syrup bottle, and points at the map without looking at it. Somewhere in the blue part of the afternoon a stack of paper settles \u2014 and the orb over the stacks goes quietly bright. Hans has finished cataloguing you."
+  },
+  {
+    id:"l4", num:4, who:"hans", whoLabel:"hans \u00b7 historian of the collective",
+    title:"the library & the academy", place:"the stacks", time:"afternoon", clock:"15:30",
+    accent:"#6495ed", glyph:"\u25a4", orb:{ x:338, y:150 },
+    sealed:true,
+    theme:"organising. hans has the archives, the literature, and the academy of etiquette \u2014 everything catalogued, everything cross-referenced, everything exactly where it should be.",
+    planned:[
+      "shelve a cart of misfiled lore in the right order",
+      "the academy of etiquette: a short examination",
+      "black tea, one sugar, no conversation until it's done"
+    ],
+    note:"hans is still filing this one. the level hasn't been catalogued yet.",
+    howto:"planned: sort hans' cart of misfiled lore, then sit a short examination at the academy of etiquette."
+    ,tag:"shelve the archive, then sit the examination"
+  },
+  {
+    id:"l5", num:5, who:"pearl", whoLabel:"pearl \u00b7 the initiator",
+    title:"the shop floor", place:"closing time", time:"evening", clock:"19:05",
+    accent:"#ff2d95", glyph:"\u25c6", orb:{ x:352, y:252 },
+    sealed:true,
+    theme:"the end of the day. pearl is the initiator \u2014 she gets things moving, she finishes what everyone else started, and she closes the machine down properly.",
+    planned:[
+      "the closing sequence, in order, no skipping",
+      "what actually got done today, and what carries over",
+      "the lights, the till, the last cup, the door"
+    ],
+    note:"pearl hasn't written hers yet \u2014 she's busy getting things done.",
+    howto:"planned: run the closing sequence for the cafe floor, and decide what carries over to tomorrow."
+    ,tag:"close the floor and decide what carries over"
+  }
+];
+
+/* ================================================================= */
+/*                          HELPERS                                  */
+/* ================================================================= */
+
+function esc(s){
+  return String(s == null ? "" : s).replace(/[&<>"']/g, function(c){
+    return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];
+  });
+}
+function pad(n){ return (n < 10 ? "0" : "") + n; }
+function lvIndex(id){ for(var i=0;i<LEVELS.length;i++){ if(LEVELS[i].id === id) return i; } return -1; }
+function lvById(id){ var i = lvIndex(id); return i < 0 ? null : LEVELS[i]; }
+function isOpen(lv){
+  var i = lvIndex(lv.id);
+  if(i <= 0) return true;
+  return isDone(LEVELS[i-1].id);
+}
+function nextIndex(){
+  for(var i=0;i<LEVELS.length;i++){ if(!isDone(LEVELS[i].id)) return i; }
+  return LEVELS.length;
+}
+function doneCount(){
+  var n = 0;
+  for(var i=0;i<LEVELS.length;i++){ if(isDone(LEVELS[i].id)) n++; }
+  return n;
+}
+
+var actx = null;
+function beep(freq, dur, type){
+  try{
+    if(!actx) actx = new (window.AudioContext || window.webkitAudioContext)();
+    if(actx.state === "suspended") actx.resume();
+    var o = actx.createOscillator(), g = actx.createGain();
+    o.type = type || "square"; o.frequency.value = freq;
+    g.gain.value = 0.03;
+    g.gain.exponentialRampToValueAtTime(0.0001, actx.currentTime + (dur || 0.06));
+    o.connect(g); g.connect(actx.destination);
+    o.start(); o.stop(actx.currentTime + (dur || 0.06) + 0.02);
+  }catch(e){}
+}
+
+function trackOf(step){
+  var id = step.track === "quiz" ? (journal.l3track || "the-hum") : step.track;
+  return TRACKS[id] || TRACKS["the-hum"];
+}
+
+/* ================================================================= */
+/*                     THE LIST + THE MAP                            */
+/* ================================================================= */
+
+var levsEl = document.getElementById("levs");
+var mapEl  = document.getElementById("map");
+var mapStatusEl = document.getElementById("mapStatus");
+var dayMeterEl = document.getElementById("dayMeter");
+var clockMeterEl = document.getElementById("clockMeter");
+var listHint = document.getElementById("listHint");
+
+function statOf(lv){
+  if(isDone(lv.id)) return { cls:"done", text:"complete \u2713" };
+  if(!isOpen(lv))   return { cls:"locked", text:"locked" };
+  if(lv.sealed)     return { cls:"sealed", text:"in progress" };
+  return { cls:"open", text:"open \u00b7 play" };
+}
+
+function paintList(){
+  levsEl.innerHTML = LEVELS.map(function(lv){
+    var st = statOf(lv);
+    return '<li><button class="lev ' + st.cls + '" type="button" data-id="' + lv.id + '" '
+      + 'style="--oc:' + lv.accent + '" aria-label="level ' + lv.num + ', ' + esc(lv.title) + '">'
+      + '<span class="lno">' + pad(lv.num) + '</span>'
+      + '<span class="lmain">'
+      +   '<span class="lname">' + esc(lv.title) + '</span>'
+      +   '<span class="lmeta">' + esc(lv.who) + ' &middot; ' + esc(lv.place) + ' &middot; ' + esc(lv.time) + '</span>'
+      +   '<span class="ldo">' + esc(lv.tag || lv.howto) + '</span>'
+      + '</span>'
+      + '<span class="lstat">' + st.text + '</span>'
+      + (st.cls === "locked" ? '<span class="lock" aria-hidden="true">\u25a0</span>' : '')
+      + '</button></li>';
+  }).join("");
+}
+
+function svgEl(tag, attrs){
+  var el = document.createElementNS("http://www.w3.org/2000/svg", tag);
+  if(attrs){ for(var k in attrs){ el.setAttribute(k, attrs[k]); } }
+  return el;
+}
+function segPath(a, b, bend){
+  var mx = (a.x + b.x) / 2, my = (a.y + b.y) / 2;
+  var dx = b.x - a.x, dy = b.y - a.y;
+  var len = Math.sqrt(dx*dx + dy*dy) || 1;
+  var nx = -dy / len, ny = dx / len;
+  var cx = mx + nx * bend, cy = my + ny * bend;
+  return "M" + a.x + " " + a.y + " Q" + cx.toFixed(1) + " " + cy.toFixed(1) + " " + b.x + " " + b.y;
+}
+
+function paintMap(){
+  mapEl.innerHTML = "";
+
+  var defs = svgEl("defs");
+  var filt = svgEl("filter", { id:"orbglow", x:"-80%", y:"-80%", width:"260%", height:"260%" });
+  filt.appendChild(svgEl("feGaussianBlur", { stdDeviation:"3.2", result:"b" }));
+  var merge = svgEl("feMerge");
+  merge.appendChild(svgEl("feMergeNode", { in:"b" }));
+  merge.appendChild(svgEl("feMergeNode", { in:"SourceGraphic" }));
+  filt.appendChild(merge);
+  defs.appendChild(filt);
+  mapEl.appendChild(defs);
+
+  var deco = svgEl("g", { "aria-hidden":"true" });
+  var seed = 91;
+  for(var si=0; si<34; si++){
+    seed = (seed * 1103515245 + 12345) & 0x7fffffff;
+    var srx = 14 + (seed % 392);
+    seed = (seed * 1103515245 + 12345) & 0x7fffffff;
+    var sry = 14 + (seed % 300);
+    deco.appendChild(svgEl("circle", { cx:srx.toFixed(1), cy:sry.toFixed(1), r:(si % 6 === 0 ? "1.3" : "0.75"), "class":"star" }));
+  }
+  deco.appendChild(svgEl("path", { d:"M6 330 Q210 300 414 330", "class":"horizon" }));
+  deco.appendChild(svgEl("path", { d:"M6 214 Q210 186 414 214", "class":"horizon" }));
+  deco.appendChild(svgEl("text", { x:"12", y:"22", "class":"maplabel" })).textContent = "the long day";
+  deco.appendChild(svgEl("text", { x:"408", y:"22", "class":"maplabel", "text-anchor":"end" })).textContent = "dawn \u2192 night";
+  mapEl.appendChild(deco);
+
+  var segs = svgEl("g");
+  for(var i=0;i<LEVELS.length-1;i++){
+    var a = LEVELS[i].orb, b = LEVELS[i+1].orb;
+    var bend = (i % 2 === 0) ? -34 : 34;
+    var cls = "seg";
+    if(isDone(LEVELS[i].id) && isDone(LEVELS[i+1].id)) cls += " done";
+    else if(isDone(LEVELS[i].id) && isOpen(LEVELS[i+1])) cls += " live";
+    segs.appendChild(svgEl("path", { d:segPath(a, b, bend), "class":cls }));
+  }
+  mapEl.appendChild(segs);
+
+  var g = svgEl("g");
+  LEVELS.forEach(function(lv){
+    var o = lv.orb;
+    var state = isDone(lv.id) ? "done" : (!isOpen(lv) ? "locked" : (lv.sealed ? "sealed open" : "open"));
+    var grp = svgEl("g", { "class":"orb " + state, style:"--oc:" + lv.accent });
+    grp.appendChild(svgEl("circle", { cx:o.x, cy:o.y, r:27, "class":"halo" }));
+    grp.appendChild(svgEl("circle", { cx:o.x, cy:o.y, r:21, "class":"ring" }));
+    grp.appendChild(svgEl("circle", { cx:o.x, cy:o.y, r:13, "class":"disc" }));
+    grp.appendChild(svgEl("circle", { cx:o.x, cy:o.y, r:4.6, "class":"core", filter:"url(#orbglow)" }));
+    var mark = isDone(lv.id) ? "\u2713" : pad(lv.num);
+    var t = svgEl("text", { x:o.x, y:o.y + 4, "class":"num" });
+    t.textContent = mark;
+    grp.appendChild(t);
+    var plate = svgEl("rect", { "class":"labplate", rx:"5", ry:"5" });
+    grp.appendChild(plate);
+    var l1 = svgEl("text", { x:o.x, y:o.y + 42, "class":"lab" });
+    l1.textContent = lv.place;
+    grp.appendChild(l1);
+    var l2 = svgEl("text", { x:o.x, y:o.y + 55, "class":"lab sub" });
+    l2.textContent = (lv.sealed && !isDone(lv.id) ? "level " + pad(lv.num) + " \u00b7 in progress" : "level " + pad(lv.num) + " \u00b7 " + lv.clock);
+    grp.appendChild(l2);
+    var tip = svgEl("title");
+    tip.textContent = "level " + lv.num + " \u2014 " + lv.title + " (" + lv.time + ")";
+    grp.appendChild(tip);
+    grp.addEventListener("click", function(){ openLevel(lv); });
+    g.appendChild(grp);
+  });
+  mapEl.appendChild(g);
+  sizePlates(g);
+}
+
+function sizePlates(g){
+  for(var i=0;i<g.children.length;i++){
+    var grp = g.children[i];
+    var plate = grp.querySelector(".labplate");
+    var t1 = grp.querySelector(".lab");
+    var t2 = grp.querySelector(".lab.sub");
+    if(!plate || !t1 || !t2) continue;
+    var a1 = t1.getBBox(), a2 = t2.getBBox();
+    if(!a1.width || !a2.width) continue;
+    var px = Math.min(a1.x, a2.x) - 8, py = Math.min(a1.y, a2.y) - 4;
+    var pw = Math.max(a1.x + a1.width, a2.x + a2.width) - px + 8;
+    var ph = Math.max(a1.y + a1.height, a2.y + a2.height) - py + 4;
+    plate.setAttribute("x", px.toFixed(1));
+    plate.setAttribute("y", py.toFixed(1));
+    plate.setAttribute("width", pw.toFixed(1));
+    plate.setAttribute("height", ph.toFixed(1));
+  }
+}
+
+function paintMeters(){
+  var n = doneCount();
+  dayMeterEl.innerHTML = "the day &middot; <b>" + n + " / " + LEVELS.length + "</b>";
+  dayMeterEl.classList.toggle("done", n === LEVELS.length);
+  var i = nextIndex();
+  var clock = i < LEVELS.length ? LEVELS[i].clock : "20:15";
+  var time = i < LEVELS.length ? LEVELS[i].time : "night";
+  clockMeterEl.innerHTML = "clock &middot; <b>" + clock + " " + time + "</b>";
+  var openN = 0;
+  LEVELS.forEach(function(lv){ if(isOpen(lv)) openN++; });
+  mapStatusEl.textContent = openN + " of " + LEVELS.length + " open";
+}
+
+function paintHint(){
+  var done = LEVELS.filter(function(lv){ return isDone(lv.id); }).length;
+  if(done === 0){
+    listHint.innerHTML = "pick a lit orb on the map, or a bright row here";
+  } else if(done >= LEVELS.length){
+    listHint.innerHTML = "the whole day is written \u00b7 reset it and walk it again";
+  } else {
+    var next = LEVELS[done];
+    listHint.innerHTML = done + " of " + LEVELS.length + " written \u00b7 next stop <b style=\"color:"
+      + next.accent + "\">" + esc(next.title) + "</b>";
+  }
+}
+
+function paintAll(){
+  paintList();
+  paintMap();
+  paintMeters();
+  paintHint();
+}
+
+/* ================================================================= */
+/*                       THE LEVEL STAGE                             */
+/* ================================================================= */
+
+var stageEl = document.getElementById("stage");
+var scard   = document.getElementById("scard");
+var sbody   = document.getElementById("sbody");
+var sTitle  = document.getElementById("sTitle");
+var sMeta   = document.getElementById("sMeta");
+var sGlyph  = document.getElementById("sGlyph");
+
+var cur = null, stepIx = -1, cleanup = null;
+
+function stageHead(o){
+  scard.style.setProperty("--accent", o.accent || "#9d71e4");
+  sTitle.textContent = o.title || "level";
+  sMeta.textContent = o.meta || "";
+  sGlyph.textContent = o.glyph || "\u25c6";
+}
+function stageOpen(){ stageEl.classList.add("active"); }
+function stageClose(){
+  stageEl.classList.remove("active");
+  if(cleanup){ try{ cleanup(); }catch(e){} cleanup = null; }
+}
+document.getElementById("sx").addEventListener("click", stageClose);
+stageEl.addEventListener("click", function(e){ if(e.target === stageEl) stageClose(); });
+document.addEventListener("keydown", function(e){ if(e.key === "Escape" && stageEl.classList.contains("active")) stageClose(); });
+
+/* one delegated handler for every data-* button in the stage body */
+sbody.addEventListener("click", function(e){
+  var b = e.target.closest ? e.target.closest("button") : null;
+  if(!b || !sbody.contains(b)) return;
+  if(b.hasAttribute("data-go")){
+    var nx = lvById(b.getAttribute("data-go"));
+    if(nx) openLevel(nx);
+  } else if(b.hasAttribute("data-again")){
+    var ag = lvById(b.getAttribute("data-again"));
+    if(ag) openLevel(ag, true);
+  } else if(b.hasAttribute("data-yes")){
+    wipeDay();
+  } else if(b.getAttribute("data-act") === "close"){
+    stageClose();
+  }
+});
+
+levsEl.addEventListener("click", function(e){
+  var b = e.target.closest ? e.target.closest("button.lev") : null;
+  if(!b) return;
+  var lv = lvById(b.getAttribute("data-id"));
+  if(lv) openLevel(lv);
+});
+
+function stationStrip(lv, step){
+  if(!lv.stations) return "";
+  var curSt = (step && step.st != null) ? step.st : lv.stations.length - 1;
+  return '<div class="stns">' + lv.stations.map(function(name, i){
+    var cls = i < curSt ? "on" : (i === curSt ? "act" : "");
+    return '<span class="stn ' + cls + '"><i></i>' + esc(name) + '</span>';
+  }).join("") + '</div>';
+}
+
+function advance(){
+  if(!cur) return;
+  stepIx++;
+  renderStep();
+}
+
+function renderStep(){
+  if(!cur) return;
+  if(cleanup){ try{ cleanup(); }catch(e){} cleanup = null; }
+  if(stepIx < 0){ renderIntro(cur); return; }
+  if(stepIx >= cur.steps.length){ completeLevel(cur); return; }
+  var step = cur.steps[stepIx];
+  stageHead({ title: cur.title, meta: step.title || ("level " + pad(cur.num)), accent: cur.accent, glyph: cur.glyph });
+  sbody.innerHTML = stationStrip(cur, step) + stepHTML(step);
+  sbody.scrollTop = 0;
+  wireStep(step);
+}
+
+function renderIntro(lv){
+  stageHead({ title: lv.title, meta: "level " + pad(lv.num) + " \u00b7 " + lv.time, accent: lv.accent, glyph: lv.glyph });
+  sbody.innerHTML =
+    '<div class="dlg"><div class="dwho">' + esc(lv.whoLabel) + '</div>'
+    + '<div class="dtxt">' + esc(lv.blurb) + '</div></div>'
+    + '<div class="cardbox" style="margin-top:12px"><div class="ctitle">how to play</div>'
+    + '<ul class="clines"><li>' + esc(lv.howto) + '</li></ul></div>'
+    + '<div class="choices"><button class="chip" id="begin" type="button">begin \u2192</button>'
+    + '<span class="chip tag dim">' + (isDone(lv.id) ? "replaying" : "unplayed") + '</span></div>';
+  document.getElementById("begin").addEventListener("click", function(){
+    beep(760, 0.07, "triangle");
+    stepIx = 0;
+    renderStep();
+  });
+}
+
+function stepHTML(step){
+  if(step.type === "say"){
+    return '<div class="dlg"><div class="dwho">' + esc(step.who) + '</div>'
+      + '<div class="dtxt" id="typeTxt"></div></div>'
+      + '<div class="choices"><button class="chip" id="nx" type="button">' + esc(step.cta || "continue \u2192") + '</button></div>';
+  }
+  if(step.type === "card"){
+    return '<div class="cardbox"><div class="ctitle">' + esc(step.title) + '</div>'
+      + '<ul class="clines">' + step.lines.map(function(l){ return '<li>' + esc(l) + '</li>'; }).join("") + '</ul></div>'
+      + '<div class="choices"><button class="chip" id="nx" type="button">' + esc(step.cta || "continue \u2192") + '</button></div>';
+  }
+  if(step.type === "timing"){
+    var lo = step.band[0], hi = step.band[1];
+    return '<p class="dtext">' + esc(step.prompt) + '</p>'
+      + '<div class="gauge"><div class="gticks"></div>'
+      +   '<div class="gband" style="left:' + lo + '%;width:' + (hi - lo) + '%"></div>'
+      +   '<div class="gneedle" id="gneedle" style="left:0%"></div></div>'
+      + '<div class="ghint"><span>0</span><span>' + esc(step.hint || "") + '</span><span>100</span></div>'
+      + '<div class="choices"><button class="chip" id="pull" type="button">pull the shot</button>'
+      + '<span class="chip tag dim" id="gval">0</span></div>'
+      + '<p class="feed" id="feed">the needle is moving \u2014 pull in the band.</p>';
+  }
+  if(step.type === "hold"){
+    var lo2 = step.band[0], hi2 = step.band[1];
+    return '<p class="dtext">' + esc(step.prompt) + '</p>'
+      + '<div class="gauge" style="height:30px"><div class="gticks"></div>'
+      +   '<div class="gfill" id="hfill"></div>'
+      +   '<div class="gband" style="left:' + (lo2 / step.lose * 100) + '%;width:' + ((hi2 - lo2) / step.lose * 100) + '%"></div></div>'
+      + '<div class="ghint"><span>cold</span><span>' + esc(step.hint || "") + '</span><span>scalded</span></div>'
+      + '<div class="choices"><button class="chip" id="hold" type="button">hold to steam</button>'
+      + '<span class="chip tag dim" id="hval">' + step.start + ' ' + esc(step.unit) + '</span></div>'
+      + '<p class="feed" id="feed">press and hold \u2014 let go inside the band.</p>';
+  }
+  if(step.type === "taps"){
+    var dots = "";
+    for(var i=0;i<step.need + 2;i++){ dots += '<i class="pdot" data-i="' + i + '"></i>'; }
+    return '<p class="dtext">' + esc(step.prompt) + '</p>'
+      + '<div class="pdots" id="pdots">' + dots + '</div>'
+      + '<div class="choices"><button class="chip" id="pump" type="button">' + esc(step.unit) + '</button>'
+      + '<button class="chip" id="pstop" type="button">that\'s enough</button>'
+      + '<span class="chip tag dim" id="pcount">0 / ' + step.need + '</span></div>'
+      + '<p class="feed" id="feed">' + esc(step.hint || "") + '</p>';
+  }
+  if(step.type === "breathe"){
+    return '<p class="dtext">in for four &middot; hold for two &middot; out for six. follow the ring.</p>'
+      + '<div class="bwrap"><div class="bring" id="bring">'
+      +   '<span class="bphase" id="bphase">ready</span><span class="bnum" id="bnum">\u2013</span></div></div>'
+      + '<div class="brow"><span class="chip tag dim" id="bround">round 1 of ' + step.rounds.length + '</span></div>'
+      + '<div id="verseBox"></div>';
+  }
+  if(step.type === "read"){
+    return '<div id="verseBox"></div>';
+  }
+  if(step.type === "reflect"){
+    return '<p class="dtext">' + esc(step.prompt) + '</p>'
+      + '<div class="choices" id="ropts">' + step.options.map(function(w){
+          return '<button class="chip" type="button" data-word="' + esc(w) + '">' + esc(w) + '</button>';
+        }).join("") + '</div>'
+      + '<div id="rreply"></div>';
+  }
+  if(step.type === "quiz"){
+    return '<div class="qprog" id="qprog"></div>'
+      + '<p class="qtext" id="qtext"></p>'
+      + '<div class="qopts" id="qopts"></div>'
+      + '<div id="qreply"></div>';
+  }
+  if(step.type === "track"){
+    var t = trackOf(step);
+    var line = step.say || t.verdict || "";
+    var words = step.words
+      ? '<div class="twords"><span class="twcap">the words</span>'
+        + step.words.map(function(l){ return '<span>' + esc(l) + '</span>'; }).join("") + '</div>'
+      : "";
+    var verse = step.verse
+      ? '<div class="verse" style="margin-top:12px"><div class="vref">' + esc(step.verse.ref) + '</div>'
+        + '<div class="vtext">' + esc(step.verse.text) + '</div></div>'
+      : "";
+    return (line ? '<div class="dlg"><div class="dwho">' + esc(step.who || "miki") + '</div>'
+        + '<div class="dtxt">' + esc(line) + '</div></div>' : "")
+      + '<div class="tape"><div class="tname">' + esc(t.name) + '</div>'
+      +   '<div class="trole">' + esc(t.role) + '</div>'
+      +   '<p class="tneed">' + esc(t.need) + '</p>'
+      +   '<audio class="taudio" id="tapeAudio" controls loop preload="metadata" src="' + esc(t.url) + '"></audio>'
+      +   words + '</div>'
+      + verse
+      + (step.note ? '<p class="dtext dim" style="margin-top:11px">' + esc(step.note) + '</p>' : "")
+      + '<div class="choices">'
+      +   '<button class="chip" id="tapeKeep" type="button">keep it \u2193</button>'
+      +   '<button class="chip" id="tapeLoop" type="button">loop: on</button>'
+      +   '<span class="chip tag dim" id="tapeLen">\u00b7</span>'
+      +   '<button class="chip" id="nx" type="button">' + esc(step.cta || "continue \u2192") + '</button>'
+      + '</div>';
+  }
+  return "";
+}
+
+/* ---------------- step wiring ---------------- */
+
+function wireStep(step){
+  if(step.type === "say"){
+    var el = document.getElementById("typeTxt");
+    typeInto(el, step.text);
+    document.getElementById("nx").addEventListener("click", function(){ beep(720, 0.05); advance(); });
+    return;
+  }
+  if(step.type === "card"){
+    document.getElementById("nx").addEventListener("click", function(){ beep(720, 0.05); advance(); });
+    return;
+  }
+  if(step.type === "timing"){ wireTiming(step); return; }
+  if(step.type === "hold"){ wireHold(step); return; }
+  if(step.type === "taps"){ wireTaps(step); return; }
+  if(step.type === "breathe"){ wireBreathe(step); return; }
+  if(step.type === "read"){ wireRead(step); return; }
+  if(step.type === "reflect"){ wireReflect(step); return; }
+  if(step.type === "quiz"){ wireQuiz(step); return; }
+  if(step.type === "track"){ wireTrack(step); return; }
+}
+
+function typeInto(el, text, speed){
+  if(!el) return;
+  var i = 0;
+  el.textContent = "";
+  (function step(){
+    el.textContent = text.slice(0, i++);
+    if(i <= text.length) setTimeout(step, (speed || 18) + (i % 5) * 6);
+  })();
+}
+
+function finishStep(msg){
+  var feed = document.getElementById("feed");
+  if(feed){
+    feed.className = "feed";
+    feed.textContent = msg;
+  } else {
+    var p = document.createElement("p");
+    p.className = "feed";
+    p.textContent = msg;
+    sbody.appendChild(p);
+  }
+  var ch = document.createElement("div");
+  ch.className = "choices";
+  ch.innerHTML = '<button class="chip" id="nx" type="button">next station \u2192</button>';
+  sbody.appendChild(ch);
+  document.getElementById("nx").addEventListener("click", function(){ beep(820, 0.06, "triangle"); advance(); });
+}
+
+function failStep(msg){
+  var box = sbody;
+  var feed = document.getElementById("feed");
+  if(feed){ feed.className = "feed bad"; feed.textContent = msg; }
+  else if(box){
+    var p = document.createElement("p");
+    p.className = "feed bad"; p.textContent = msg;
+    box.appendChild(p);
+  }
+  var old = document.getElementById("retry");
+  if(old) old.parentNode.removeChild(old);
+  var ch = document.createElement("div");
+  ch.className = "choices"; ch.id = "retry";
+  ch.innerHTML = '<button class="chip" id="again" type="button">go again \u2192</button>';
+  box.appendChild(ch);
+  document.getElementById("again").addEventListener("click", function(){
+    beep(420, 0.09, "square");
+    renderStep();
+  });
+}
+
+function wireTiming(step){
+  var needle = document.getElementById("gneedle");
+  var val = document.getElementById("gval");
+  var pos = 0, dir = 1, live = true, last = 0;
+  var speed = step.speed || 50;
+  function frame(ts){
+    if(!live) return;
+    if(!last) last = ts;
+    var dt = Math.min(0.05, (ts - last) / 1000); last = ts;
+    pos += dir * speed * dt;
+    if(pos >= 100){ pos = 100; dir = -1; }
+    if(pos <= 0){ pos = 0; dir = 1; }
+    needle.style.left = pos + "%";
+    val.textContent = Math.round(pos);
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+  cleanup = function(){ live = false; };
+
+  document.getElementById("pull").addEventListener("click", function(){
+    if(!live) return;
+    live = false;
+    var hit = (pos >= step.band[0] && pos <= step.band[1]);
+    beep(hit ? 980 : 320, 0.1, hit ? "triangle" : "square");
+    document.getElementById("pull").disabled = true;
+    if(hit){ finishStep("\u2713 " + step.ok); }
+    else { failStep("\u2717 " + step.bad); }
+  });
+}
+
+function wireHold(step){
+  var fill = document.getElementById("hfill");
+  var valEl = document.getElementById("hval");
+  var btn = document.getElementById("hold");
+  var v = step.start, held = false, live = true, timer = null;
+
+  function paint(){
+    fill.style.width = Math.min(100, (v / step.lose) * 100) + "%";
+    valEl.textContent = Math.round(v) + " " + step.unit;
+    valEl.style.color = (v >= step.band[0] && v <= step.band[1]) ? "var(--lime)" : "";
+  }
+  paint();
+
+  function stop(){
+    if(!live) return;
+    live = false;
+    if(timer){ clearInterval(timer); timer = null; }
+    held = false;
+    btn.disabled = true;
+    if(v < step.band[0]){
+      beep(340, 0.1, "square");
+      failStep("\u2717 " + step.tooLow + " (" + Math.round(v) + step.unit + ")");
+    } else if(v > step.band[1]){
+      beep(300, 0.12, "square");
+      failStep("\u2717 " + step.tooHigh + " (" + Math.round(v) + step.unit + ")");
+    } else {
+      beep(1000, 0.1, "triangle");
+      finishStep("\u2713 " + step.ok + " (" + Math.round(v) + step.unit + ")");
+    }
+  }
+  cleanup = function(){ live = false; if(timer){ clearInterval(timer); timer = null; } };
+
+  function down(e){
+    if(e && e.preventDefault) e.preventDefault();
+    if(!live || held) return;
+    held = true;
+    beep(600, 0.04);
+    timer = setInterval(function(){
+      if(!live) return;
+      v += step.rate * 0.1;
+      paint();
+      if(v > step.lose){ v = step.lose + 2; paint(); stop(); }
+    }, 100);
+  }
+  function up(e){
+    if(e && e.preventDefault) e.preventDefault();
+    if(!live || !held) return;
+    stop();
+  }
+  btn.addEventListener("pointerdown", down);
+  btn.addEventListener("pointerup", up);
+  btn.addEventListener("pointerleave", up);
+  btn.addEventListener("pointercancel", up);
+  btn.addEventListener("keydown", function(e){ if(e.key === " " || e.key === "Enter") down(e); });
+  btn.addEventListener("keyup", function(e){ if(e.key === " " || e.key === "Enter") up(e); });
+  btn.addEventListener("click", function(e){ e.preventDefault(); });
+}
+
+function wireTaps(step){
+  var n = 0, live = true;
+  var dots = document.querySelectorAll("#pdots .pdot");
+  var count = document.getElementById("pcount");
+  cleanup = function(){ live = false; };
+
+  document.getElementById("pump").addEventListener("click", function(){
+    if(!live) return;
+    n++;
+    beep(560 + n * 70, 0.05, "triangle");
+    if(dots[n - 1]) dots[n - 1].classList.add("on");
+    count.textContent = n + " / " + step.need;
+  });
+  document.getElementById("pstop").addEventListener("click", function(){
+    if(!live) return;
+    live = false;
+    this.disabled = true;
+    document.getElementById("pump").disabled = true;
+    if(n === step.need){
+      beep(980, 0.1, "triangle");
+      finishStep("\u2713 " + step.ok);
+    } else if(n < step.need){
+      beep(360, 0.1, "square");
+      failStep("\u2717 " + n + " " + step.unit + (n === 1 ? "" : "s") + " isn't " + step.need + ". " + (step.hint || ""));
+    } else {
+      beep(300, 0.12, "square");
+      failStep("\u2717 " + step.over);
+    }
+  });
+}
+
+function wireBreathe(step){
+  var ring = document.getElementById("bring");
+  var phaseEl = document.getElementById("bphase");
+  var numEl = document.getElementById("bnum");
+  var roundEl = document.getElementById("bround");
+  var verseBox = document.getElementById("verseBox");
+  var stopped = false, timers = [];
+  cleanup = function(){ stopped = true; timers.forEach(clearTimeout); timers = []; };
+
+  function wait(ms){ return new Promise(function(res){ timers.push(setTimeout(res, ms)); }); }
+  function say(phase, secs, scale){
+    return new Promise(function(res){
+      if(stopped) return res();
+      phaseEl.textContent = phase;
+      ring.style.transitionDuration = (secs * 0.92) + "s";
+      ring.style.transform = "scale(" + scale + ")";
+      ring.classList.toggle("in", phase === "in");
+      numEl.textContent = secs;
+      var t = 0;
+      var iv = setInterval(function(){
+        if(stopped){ clearInterval(iv); return res(); }
+        t += 0.5;
+        numEl.textContent = Math.max(0, Math.round(secs - t));
+        if(t >= secs){ clearInterval(iv); res(); }
+      }, 500);
+      timers.push(iv);
+    });
+  }
+  function verseCard(v, last, roundNo, total){
+    verseBox.innerHTML = '<div class="verse"><span class="vnum">' + roundNo + "/" + total + '</span>'
+      + '<div class="vref">' + esc(v.ref) + '</div>'
+      + '<div class="vtext">' + esc(v.text) + '</div>'
+      + '<div class="choices"><button class="chip" id="nx" type="button">'
+      + (last ? "stay with it \u2192" : "keep breathing \u2192") + '</button></div></div>';
+    beep(880, 0.12, "triangle");
+    document.getElementById("nx").addEventListener("click", function(){
+      beep(700, 0.05);
+      if(last){ advance(); }
+      else { runRound(roundNo + 1); }
+    });
+  }
+  function runRound(i){
+    if(stopped) return;
+    var r = step.rounds[i - 1];
+    if(!r){ advance(); return; }
+    roundEl.textContent = "round " + i + " of " + step.rounds.length;
+    verseBox.innerHTML = "";
+    (async function(){
+      await say("in", r.in, 1.22);
+      if(stopped) return;
+      await say("hold", r.hold, 1.22);
+      if(stopped) return;
+      await say("out", r.out, 0.86);
+      if(stopped) return;
+      phaseEl.textContent = "still";
+      numEl.textContent = "\u2013";
+      verseCard(r.verse, i === step.rounds.length, i, step.rounds.length);
+    })();
+  }
+  runRound(1);
+}
+
+function wireRead(step){
+  var box = document.getElementById("verseBox");
+  var i = 0;
+  function paint(){
+    var v = step.verses[i];
+    var last = i === step.verses.length - 1;
+    box.innerHTML = '<div class="verse"><span class="vnum">' + (i + 1) + "/" + step.verses.length + '</span>'
+      + '<div class="vref">' + esc(v.ref) + '</div>'
+      + '<div class="vtext">' + esc(v.text) + '</div>'
+      + '<div class="choices"><button class="chip" id="nx" type="button">'
+      + (last ? "close the book \u2192" : "turn the page \u2192") + '</button></div></div>';
+    beep(760, 0.08, "triangle");
+    document.getElementById("nx").addEventListener("click", function(){
+      beep(680, 0.05);
+      if(last) advance(); else { i++; paint(); }
+    });
+  }
+  paint();
+}
+
+function wireReflect(step){
+  var opts = document.getElementById("ropts");
+  opts.addEventListener("click", function(e){
+    var b = e.target.closest ? e.target.closest("[data-word]") : null;
+    if(!b) return;
+    var word = b.getAttribute("data-word");
+    journal[step.store || cur.id] = word;
+    save();
+    beep(900, 0.1, "triangle");
+    opts.querySelectorAll("button").forEach(function(x){ x.disabled = true; });
+    b.style.borderColor = "var(--lime)";
+    b.style.color = "var(--lime)";
+    var reply = step.replies && step.replies[word] ? step.replies[word] : "Then carry it.";
+    var box = document.getElementById("rreply");
+    var extra = step.verse
+      ? '<div class="verse"><div class="vref">' + esc(step.verse.ref) + '</div>'
+        + '<div class="vtext">' + esc(step.verse.text) + '</div></div>'
+      : "";
+    box.innerHTML = '<div class="verse"><div class="vref">' + esc(step.who || "milo") + '</div>'
+      + '<div class="vtext">' + esc(reply) + '</div></div>'
+      + extra
+      + '<div class="choices"><button class="chip" id="nx" type="button">next \u2192</button></div>';
+    document.getElementById("nx").addEventListener("click", function(){ beep(780, 0.06); advance(); });
+  });
+}
+
+/* ---------------- quiz (miki's questions) ---------------- */
+
+function wireQuiz(step){
+  var qi = 0, picks = [];
+  var progEl = document.getElementById("qprog");
+  var qtextEl = document.getElementById("qtext");
+  var qoptsEl = document.getElementById("qopts");
+  var replyEl = document.getElementById("qreply");
+
+  function paint(){
+    var Q = step.questions[qi];
+    progEl.textContent = Q.prog
+      || ("question " + (qi + 1) + " of " + step.questions.length + " \u00b7 miki");
+    qtextEl.textContent = Q.q;
+    replyEl.innerHTML = "";
+    qoptsEl.innerHTML = Q.opts.map(function(o){
+      return '<button class="qopt" type="button">' + esc(o.t) + '</button>';
+    }).join("");
+    beep(660, 0.04);
+  }
+
+  qoptsEl.addEventListener("click", function(e){
+    var b = e.target.closest ? e.target.closest(".qopt") : null;
+    if(!b || b.disabled) return;
+    var Q = step.questions[qi];
+    var o = Q.opts[Array.prototype.indexOf.call(qoptsEl.children, b)];
+    if(!o) return;
+    if(o.p) picks.push(o.p);
+    beep(880, 0.07, "triangle");
+    Array.prototype.forEach.call(qoptsEl.children, function(x){
+      x.disabled = true;
+      x.classList.remove("sel");
+    });
+    b.classList.add("sel");
+    var last = qi === step.questions.length - 1;
+    replyEl.innerHTML = '<div class="dlg"><div class="dwho">miki</div><div class="dtxt">'
+      + esc([o.s, Q.aside].filter(Boolean).join(" ") || "\u2026") + '</div></div>'
+      + '<div class="choices"><button class="chip" id="qnext" type="button">'
+      + (last ? esc(step.cta || "that's all of them \u2192") : "next question \u2192") + '</button></div>';
+    document.getElementById("qnext").addEventListener("click", function(){
+      beep(720, 0.05);
+      if(last){ compose(); } else { qi++; paint(); }
+    });
+  });
+
+  function compose(){
+    var tally = {}, max = 0, best = null;
+    picks.forEach(function(p){ tally[p] = (tally[p] || 0) + 1; });
+    for(var k in tally){ if(tally[k] > max) max = tally[k]; }
+    for(var i = picks.length - 1; i >= 0; i--){
+      if(tally[picks[i]] === max){ best = picks[i]; break; }
+    }
+    journal.l3track = best || "the-hum";
+    save();
+    advance();
+  }
+
+  paint();
+}
+
+/* ---------------- a kept tune ---------------- */
+
+function wireTrack(step){
+  var t = trackOf(step);
+  var au = document.getElementById("tapeAudio");
+  var lenEl = document.getElementById("tapeLen");
+  if(au){
+    cleanup = function(){ try{ au.pause(); }catch(e){} };
+    au.addEventListener("loadedmetadata", function(){
+      if(lenEl && isFinite(au.duration)){
+        var m = Math.floor(au.duration / 60), s = Math.round(au.duration % 60);
+        lenEl.textContent = m + ":" + (s < 10 ? "0" : "") + s + " \u00b7 looping";
+      }
+    });
+    au.addEventListener("error", function(){ if(lenEl) lenEl.textContent = "tape jammed"; });
+  }
+  var loopBtn = document.getElementById("tapeLoop");
+  if(loopBtn){
+    loopBtn.addEventListener("click", function(){
+      if(!au) return;
+      au.loop = !au.loop;
+      loopBtn.textContent = au.loop ? "loop: on" : "loop: off";
+      beep(au.loop ? 760 : 520, 0.05);
+    });
+  }
+  var keepBtn = document.getElementById("tapeKeep");
+  if(keepBtn){
+    keepBtn.addEventListener("click", function(){
+      if(keepBtn.disabled) return;
+      keepBtn.disabled = true;
+      keepBtn.textContent = "saving\u2026";
+      beep(700, 0.05);
+      fetch(t.url).then(function(r){ return r.blob(); }).then(function(b){
+        var u = URL.createObjectURL(b);
+        var a = document.createElement("a");
+        a.href = u;
+        a.download = t.file || (t.name + ".mp3");
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(function(){ a.remove(); URL.revokeObjectURL(u); }, 8000);
+        keepBtn.textContent = "saved \u2713";
+        beep(1020, 0.12, "triangle");
+      }).catch(function(){
+        keepBtn.disabled = false;
+        keepBtn.textContent = "keep it \u2193";
+        if(lenEl) lenEl.textContent = "couldn't save \u2014 use the player";
+      });
+    });
+  }
+  document.getElementById("nx").addEventListener("click", function(){ beep(800, 0.06); advance(); });
+}
+
+/* ---------------- completion ---------------- */
+
+function completeLevel(lv){
+  var wasDone = isDone(lv.id);
+  markDone(lv.id);
+  paintAll();
+  beep(880, 0.12, "triangle");
+  setTimeout(function(){ beep(1180, 0.16, "triangle"); }, 130);
+
+  var i = lvIndex(lv.id);
+  var nxt = LEVELS[i + 1] || null;
+  var html = '<p class="dtext ok">LEVEL ' + pad(lv.num) + ' complete \u00b7 ' + esc(lv.place) + '</p>'
+    + '<p class="dtext">' + esc(lv.outro) + '</p>';
+
+  if(nxt){
+    html += '<div class="unlockbox"><div class="utitle">level ' + pad(nxt.num) + ' unlocked \u00b7 '
+      + esc(nxt.place) + ' \u00b7 ' + esc(nxt.time) + '</div>'
+      + '<p class="dtext">' + esc(nxt.whoLabel) + ' is waiting. how to play:</p>'
+      + '<ul class="clines"><li>' + esc(nxt.howto) + '</li></ul>'
+      + '<div class="choices"><button class="chip" data-go="' + nxt.id + '" type="button">begin level '
+      + nxt.num + ' \u2192</button>'
+      + '<button class="chip" data-act="close" type="button">back to the map</button></div></div>';
+  } else {
+    html += '<div class="unlockbox"><div class="utitle">the day is complete</div>'
+      + '<p class="dtext">Every written chapter of the long day is done. ' + doneCount() + ' of '
+      + LEVELS.length + ' levels played.</p>'
+      + '<div class="choices"><button class="chip" data-act="close" type="button">back to the map</button></div></div>';
+  }
+
+  html += '<div class="choices"><button class="chip" data-again="' + lv.id + '" type="button">run this level again</button>'
+    + '<span class="chip tag dim">' + (wasDone ? "replayed" : "first clear") + '</span></div>';
+
+  stageHead({ title: lv.title, meta: "complete \u00b7 " + lv.time, accent: lv.accent, glyph: "\u2713" });
+  sbody.innerHTML = html;
+  sbody.scrollTop = 0;
+  stageOpen();
+}
+
+/* ---------------- open / locked / sealed ---------------- */
+
+function openLevel(lv, skipIntro){
+  if(!isOpen(lv)){ showLocked(lv); return; }
+  if(lv.sealed){ showSealed(lv); return; }
+  cur = lv;
+  stepIx = skipIntro ? 0 : -1;
+  stageOpen();
+  renderStep();
+}
+
+function showLocked(lv){
+  var i = lvIndex(lv.id);
+  var prev = LEVELS[i - 1];
+  var note = prev.sealed
+    ? 'This orb is still dark. <b>Level ' + pad(prev.num) + ' \u00b7 ' + esc(prev.place)
+      + '</b> hasn\'t been written yet \u2014 the day comes to a stop there for now.'
+    : 'This orb is still dark. Finish <b>level ' + pad(prev.num) + ' \u00b7 ' + esc(prev.place)
+      + '</b> first \u2014 the day opens in order.';
+  stageHead({ title: lv.title, meta: "locked", accent:"#8b83a0", glyph: "\u25a0" });
+  sbody.innerHTML = '<p class="dtext">' + note + '</p>'
+    + '<div class="choices"><button class="chip" data-go="' + prev.id + '" type="button">go to level '
+    + prev.num + '</button><button class="chip" data-act="close" type="button">back to the map</button></div>';
+  stageOpen();
+}
+
+function showSealed(lv){
+  stageHead({ title: lv.title, meta: "in progress", accent: lv.accent, glyph: lv.glyph });
+  sbody.innerHTML =
+    '<div class="dlg"><div class="dwho">' + esc(lv.whoLabel) + ' \u00b7 ' + esc(lv.time) + '</div>'
+    + '<div class="dtxt">' + esc(lv.theme) + '</div></div>'
+    + '<div class="sealedbox" style="margin-top:12px"><div class="ctitle">what this level will do</div>'
+    + '<ul class="clines">' + lv.planned.map(function(l){ return '<li>' + esc(l) + '</li>'; }).join("") + '</ul></div>'
+    + '<p class="dtext dim" style="margin-top:12px">' + esc(lv.note) + '</p>'
+    + '<p class="dtext dim">how to play (planned): ' + esc(lv.howto) + '</p>'
+    + '<div class="choices"><button class="chip" data-act="close" type="button">back to the map</button>'
+    + '<span class="chip tag dim">the day stops here for now</span></div>';
+  stageOpen();
+}
+
+/* ---------------- reset ---------------- */
+
+document.getElementById("resetDay").addEventListener("click", function(){
+  if(!done.length && !Object.keys(journal).length){
+    stageHead({ title:"reset the day", meta:"nothing to wipe", accent:"#9d71e4", glyph:"\u21ba" });
+    sbody.innerHTML = '<p class="dtext">The day hasn\'t started yet \u2014 no orbs lit, no journal entries. Nothing to wipe.</p>'
+      + '<div class="choices"><button class="chip" data-act="close" type="button">close</button></div>';
+    stageOpen();
+    return;
+  }
+  stageHead({ title:"reset the day", meta:"confirm", accent:"#ff2d95", glyph:"\u21ba" });
+  sbody.innerHTML = '<p class="dtext">Wipe the day? Every lit orb goes dark and the journal empties. The levels stay, the day starts over at dawn.</p>'
+    + '<div class="choices"><button class="chip" data-yes type="button">yes, start over</button>'
+    + '<button class="chip" data-act="close" type="button">never mind</button></div>';
+  stageOpen();
+});
+
+function wipeDay(){
+  done = []; journal = {}; save(); paintAll();
+  beep(420, 0.12, "square");
+  stageHead({ title:"reset the day", meta:"dawn", accent:"#9d71e4", glyph:"\u21ba" });
+  sbody.innerHTML = '<p class="dtext">Wiped. Five orbs, one lit, a whole day ahead.</p>'
+    + '<div class="choices"><button class="chip" data-act="close" type="button">back to the map</button></div>';
+}
+
+/* ================================================================= */
+/*                          STARFIELD                                */
+/* ================================================================= */
+
+(function stars(){
+  var c = document.getElementById("stars");
+  if(!c) return;
+  var x = c.getContext("2d");
+  var dpr = Math.min(window.devicePixelRatio || 1, 2);
+  var w = 0, h = 0, list = [];
+  function build(){
+    w = c.width  = Math.floor(innerWidth  * dpr);
+    h = c.height = Math.floor(innerHeight * dpr);
+    list = [];
+    var n = Math.min(200, Math.round(innerWidth * innerHeight / 8500));
+    for(var i=0;i<n;i++){
+      list.push({ x:Math.random()*w, y:Math.random()*h,
+        r:(Math.random()*1.25 + 0.35) * dpr, a:Math.random()*0.6 + 0.2,
+        s:Math.random()*0.16 + 0.02, p:Math.random()*Math.PI*2 });
+    }
+  }
+  function tick(){
+    x.clearRect(0,0,w,h);
+    for(var i=0;i<list.length;i++){
+      var s = list[i];
+      s.p += 0.012;
+      x.globalAlpha = s.a * (0.62 + 0.38*Math.sin(s.p));
+      x.fillStyle = i % 13 === 0 ? "#ff2d95" : (i % 7 === 0 ? "#c0a6ff" : (i % 5 === 0 ? "#00e5ff" : "#fff0f5"));
+      x.beginPath(); x.arc(s.x, s.y, s.r, 0, 6.284); x.fill();
+      s.y += s.s * dpr;
+      if(s.y > h + 2){ s.y = -2; s.x = Math.random()*w; }
+    }
+    x.globalAlpha = 1;
+    requestAnimationFrame(tick);
+  }
+  build();
+  addEventListener("resize", build, { passive:true });
+  requestAnimationFrame(tick);
+})();
+
+/* ---------------- HUD boot line ---------------- */
+
+(function bootLine(){
+  var el = document.getElementById("bootTxt");
+  var narrow = innerWidth < 720;
+  var n = doneCount();
+  var msg;
+  if(n >= LEVELS.length) msg = "the day is complete \u00b7 five orbs lit \u00b7 night";
+  else if(n === 0) msg = narrow ? "the long day \u00b7 level 1 is open at the counter"
+                                : "the long day \u00b7 five levels, five orbs, one day \u00b7 level 1 is open at the counter";
+  else msg = narrow ? ("the day so far \u00b7 " + n + " orbs lit \u00b7 level " + pad(LEVELS[nextIndex()].num) + " is open")
+                    : ("the day so far \u00b7 " + n + " of " + LEVELS.length + " orbs lit \u00b7 level "
+                       + pad(LEVELS[nextIndex()].num) + " \u00b7 " + LEVELS[nextIndex()].place + " is open");
+  var i = 0;
+  (function step(){
+    el.textContent = msg.slice(0, i++);
+    if(i <= msg.length) setTimeout(step, 22 + (i % 6) * 10);
+  })();
+})();
+
+/* ---------------- go ---------------- */
+
+load();
+paintAll();
+
+/* deep links: PLAY/index.html#l2 opens level 2 */
+(function deepLink(){
+  var id = (location.hash || "").replace(/^#/, "").toLowerCase();
+  if(!id) return;
+  var lv = lvById(id);
+  if(lv) setTimeout(function(){ openLevel(lv); }, 300);
+})();
+
+})();
+</script>
+</body>
+</html>
