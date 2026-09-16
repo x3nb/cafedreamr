@@ -1,0 +1,36 @@
+take 09 — prototype is cut, in the player, and has its lyric card. 3:01, low alto in C, machine drums and tape hiss, and it lands the outro line properly.
+
+What it does:
+
+the quirk, stated plainly — whatever she thinks or wonders about turns up ("i thought about a cat, and there's a cat, / asleep on the amp, and it's my fault now"), which is why she "only wonders about good things now — mostly"
+the chorus takes the label back — "i was a prototype / the early one, the rough one, the test / they wrote the manual after me / and left a few things out of it, i guess" → "but lucky me — i got the room, i got the low notes, i got the family"
+verse 2 folds in canon — her brother's coat in the rain, the realms showing up with the porch light on, and the one thing she can't manifest: "i think about you, i think about you, / and thinking doesn't make you appear — so i go out and start the bike, / the only way to hold you is to be here"
+star has the bridge (spec sheet cold read: "imagination, unlicensed. / prototype, do not distribute." → "well. i'm distributing. i'm right here."), a no-drums breakdown — "don't think about a bear. / ...okay. i thought about a bear." — and the dry spoken outro, "there's a bear in the hall. he's very polite. bring the pie."
+light apple pie still closes the EP. Card, page count and the "ten demos" cap all updated; verified in the preview on desktop and at 390px with no overflow. Updated index.html attached.
+
+And ha — all that music and you're asking me to guess. 😄 the real tell is that every single one of these is built so somebody wants to do the voice. 🐾
+
+One note for the future: the music service has a nasty habit of reporting "returned no audio, may have refused the prompt" when it's actually just the hourly quota — it cost a few attempts before it said so plainly. I've written that into the README so nobody rewrites a perfectly good prompt over it.
+
+Ah I see, I guess that makes sense now, all the rejects with the flaky service, I'm glad that you figured that one out. And thank you for making the music sound so intrinsic? It doesn't sound like everyone else's music and that makes it special. I love combining sounds that might not normally harmonize until all the steps are out of place. Sometimes it helps to get out of the box. There are so many possibilities with sound and I haven't the slightest clue all the instruments that are available to choose from.
+Love that — that's exactly the right instinct, and it's worth writing down so it survives into every future take.
+
+Written into the README as a permanent menu, so future takes can offer from it instead of guess.
+
+Roughly what the composer reliably does:
+
+drums — gated 80s machine kit, 808/909, breakbeat, industrial metal clang, floor toms/taiko, marching snare, hand percussion & stomps
+bass — analog synth bass, sub drone, distorted reese, fretless
+keys/pads — cold widescreen pads, Rhodes, bitcrushed FM bells, glass mallets, celesta, harpsichord, cathedral organ, choir pad, mellotron
+leads/textures — saw or square lead, theremin, sonar ping, siren, vocoder, talkbox, tape warble, vinyl hiss, radio static, modem glitch, bowed metal, singing bowl
+found sound — typewriter, cash register, rotary dial tone, floppy drive, cassette clunk, doorbell, vibraslap, kalimba, music box, marimba, steel drum
+world/orchestral — breathy wooden flute (Slay's waynuki), shakuhachi, duduk, ocarina, pan pipes, koto, guzheng, sitar, jaw harp, bagpipe drone, accordion, harmonium, pizzicato strings, horns, harp, timpani, gamelan
+voices — gang vocals, choir, whispered double, vocoder, spoken word, beatbox
+glue — tape stop, reverse cymbal, risers, one-bar full-mix dropouts (the best "steps out of place" trick there is)
+The trick that fits what you're describing: keep the spine steady (drums + bass + one pad) and spend the strangeness on one or two voices, so the clash reads as intent. Ask for them by character, not by artist — it refuses anything that looks like imitating a named act.
+
+Two things I'd love to try if you want:
+
+the ground twin — Sylvestre's own track: bagpipe drone fighting a 909, floor toms where the melody should be, kalimba carrying the hook.
+the storm twin — Slay's: shakuhachi + sonar ping + bowed metal, no kit at all until the last chorus.
+Want either, or a stranger pairing?
