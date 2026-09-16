@@ -1,0 +1,1597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>vendi — a little broken machine</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+body {
+  background: #0b0b0e;
+  color: #e9e6de;
+  font-family: "Space Mono", monospace;
+  overflow-x: hidden;
+  text-align: left;
+}
+body::before {
+  content: "";
+  position: fixed; inset: 0;
+  background:
+    radial-gradient(900px 500px at 50% -10%, rgba(255,45,149,.14), transparent 60%),
+    radial-gradient(700px 500px at 85% 110%, rgba(0,229,255,.08), transparent 60%),
+    repeating-linear-gradient(0deg, rgba(255,255,255,.015) 0 1px, transparent 1px 4px),
+    repeating-linear-gradient(90deg, rgba(255,255,255,.015) 0 1px, transparent 1px 4px);
+  pointer-events: none;
+  z-index: 0;
+}
+.hazard {
+  position: fixed; left: 0; right: 0; bottom: 0; height: 14px; z-index: 5;
+  background: repeating-linear-gradient(45deg, #ccff00 0 14px, #0b0b0e 14px 28px);
+  opacity: .8;
+}
+.stage {
+  position: relative; z-index: 1;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; justify-content: safe center;
+  gap: 14px; padding: 30px 10px 40px;
+}
+.tagline {
+  font-size: 13px; letter-spacing: 2px; color: #7d848b; text-transform: lowercase;
+}
+.tagline b { color: #ff2d95; font-weight: 700; }
+
+.machine-wrap { margin: 0 auto; }
+.machine {
+  position: relative;
+  width: 540px;
+  padding: 12px 14px 14px;
+  border-radius: 16px;
+  background:
+    linear-gradient(180deg, #202027 0%, #141419 30%, #1b1b22 100%);
+  border: 3px solid #050508;
+  box-shadow:
+    0 0 0 2px #000,
+    0 0 30px rgba(255,45,149,.25),
+    0 0 90px rgba(0,229,255,.10),
+    inset 0 1px 0 rgba(255,255,255,.06),
+    inset 0 -8px 20px rgba(0,0,0,.6);
+  transform-origin: top left;
+}
+.machine::before {
+  content: "";
+  position: absolute; inset: 6px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,.05);
+  pointer-events: none;
+}
+.rivet { position: absolute; width: 8px; height: 8px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #5a5a63, #16161b 70%); box-shadow: 0 1px 2px #000; }
+.sign {
+  text-align: center;
+  font-family: "Bebas Neue", sans-serif;
+  font-size: 66px;
+  line-height: 1;
+  letter-spacing: 6px;
+  color: #fff;
+  text-shadow: 0 0 6px #ff2d95, 0 0 18px #ff2d95, 0 0 42px #ff2d95;
+  animation: flicker 4s infinite;
+  padding: 2px 0 8px;
+  user-select: none;
+  cursor: pointer;
+}
+.sign small {
+  display: block;
+  font-family: "Space Mono", monospace;
+  font-size: 10px; letter-spacing: 3px; color: #00e5ff;
+  text-shadow: 0 0 8px #00e5ff;
+  margin-top: -6px;
+}
+.sign .sign-hint {
+  display: block;
+  font-family: "Space Mono", monospace; font-style: normal;
+  font-size: 9px; letter-spacing: 2px;
+  color: #ff2d95; opacity: .85;
+  text-shadow: 0 0 8px rgba(255,45,149,.6);
+  margin-top: 5px;
+}
+@keyframes flicker {
+  0%, 100% { opacity: 1; }
+  92% { opacity: 1; }
+  93% { opacity: .55; }
+  94% { opacity: 1; }
+  96% { opacity: .75; }
+  97% { opacity: 1; }
+}
+.glass {
+  position: relative;
+  margin: 4px 0 10px;
+  padding: 8px;
+  border-radius: 8px;
+  background:
+    linear-gradient(160deg, rgba(0,229,255,.07), rgba(0,10,20,.85) 55%),
+    #0a141c;
+  border: 3px solid #050508;
+  box-shadow: inset 0 0 30px rgba(0,0,0,.8), inset 0 0 8px rgba(0,229,255,.15);
+}
+.glass::after {
+  content: "";
+  position: absolute; top: 0; left: 0; right: 0; height: 45%;
+  background: linear-gradient(180deg, rgba(255,255,255,.09), transparent);
+  pointer-events: none;
+}
+.shelf-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; margin-bottom: 4px; }
+.slot {
+  position: relative;
+  height: 78px;
+  background: linear-gradient(180deg, #101318, #0c0e12);
+  border: 1px solid #050508;
+  border-radius: 4px;
+  box-shadow: inset 0 2px 6px rgba(0,0,0,.7);
+  cursor: pointer;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
+  transition: box-shadow .15s, transform .15s, background .15s;
+}
+.slot:hover { box-shadow: inset 0 2px 6px rgba(0,0,0,.7), 0 0 10px rgba(255,45,149,.35); }
+.slot.sel {
+  background: linear-gradient(180deg, #231a26, #160f1a);
+  box-shadow: inset 0 0 0 2px #ff2d95, 0 0 14px rgba(255,45,149,.55);
+  transform: translateY(-2px);
+}
+.slot-spr { image-rendering: pixelated; width: 46px; height: 46px; display: flex; align-items: center; justify-content: center; }
+.slot-spr img { image-rendering: pixelated; }
+.slot-label {
+  font-size: 11px; letter-spacing: 1px; color: #7d848b; font-weight: 700;
+  background: rgba(0,0,0,.5); padding: 1px 5px; border-radius: 3px;
+}
+.controls { display: grid; grid-template-columns: 1.1fr 1fr; gap: 12px; }
+.led {
+  font-size: 15px; font-weight: 700; color: #7dffa0;
+  background: #04130a;
+  border: 2px solid #050508;
+  border-radius: 6px;
+  padding: 8px 10px;
+  height: 44px;
+  white-space: nowrap; overflow: hidden;
+  text-shadow: 0 0 8px rgba(125,255,160,.7);
+  box-shadow: inset 0 0 12px rgba(0,0,0,.8), inset 0 0 4px rgba(125,255,160,.2);
+  line-height: 24px;
+}
+.keypad {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px;
+}
+.key {
+  font-family: "Space Mono", monospace;
+  font-weight: 700; font-size: 15px;
+  color: #0b0b0e;
+  background: linear-gradient(180deg, #c9c6bc, #8f8d86);
+  border: 2px solid #050508;
+  border-radius: 5px;
+  height: 36px;
+  cursor: pointer;
+  box-shadow: 0 3px 0 #050508, inset 0 1px 0 rgba(255,255,255,.4);
+  transition: transform .05s, box-shadow .05s;
+  text-transform: lowercase;
+}
+.key:hover { filter: brightness(1.1); }
+.key:active { transform: translateY(2px); box-shadow: 0 1px 0 #050508; }
+.key.selkey { background: linear-gradient(180deg, #ff7bc0, #ff2d95); color: #0b0b0e; }
+.coinrow { display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap; }
+.coin {
+  flex: 1; min-width: 62px;
+  font-family: "Space Mono", monospace; font-weight: 700; font-size: 14px;
+  border-radius: 50px; border: 2px solid #050508;
+  height: 36px; cursor: pointer;
+  box-shadow: 0 3px 0 #050508, inset 0 1px 0 rgba(255,255,255,.4);
+  transition: transform .05s, box-shadow .05s;
+}
+.coin:active { transform: translateY(2px); box-shadow: 0 1px 0 #050508; }
+.coin.c5 { background: linear-gradient(180deg, #e5ff6b, #ccff00); color: #0b0b0e; }
+.coin.c10 { background: linear-gradient(180deg, #6bebff, #00e5ff); color: #0b0b0e; }
+.coin.c25 { background: linear-gradient(180deg, #ff7bc0, #ff2d95); color: #0b0b0e; }
+.coin.act { background: linear-gradient(180deg, #4a4d52, #2c2e33); color: #c9c6bc; }
+.tray {
+  position: relative;
+  margin-top: 12px;
+  min-height: 78px;
+  background: linear-gradient(180deg, #0c0c10, #16161b);
+  border: 3px solid #050508;
+  border-top: none;
+  border-radius: 0 0 10px 10px;
+  padding: 10px;
+  display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap;
+  box-shadow: inset 0 10px 20px rgba(0,0,0,.7);
+}
+.tray::before {
+  content: "";
+  position: absolute; top: -1px; left: 0; right: 0; height: 6px;
+  background: repeating-linear-gradient(45deg, #ccff00 0 8px, #0b0b0e 8px 16px);
+  opacity: .55;
+}
+.tray-item {
+  cursor: pointer;
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+  padding: 6px;
+  border: 1px dashed rgba(255,45,149,.35);
+  border-radius: 6px;
+  transition: background .15s, transform .15s;
+  animation: pop .3s cubic-bezier(.2,1.6,.4,1);
+}
+.tray-item:hover { background: rgba(255,45,149,.08); transform: translateY(-2px); }
+.tray-spr img { image-rendering: pixelated; }
+.tray-name { font-size: 11px; color: #c9c6bc; max-width: 76px; text-align: center; }
+@keyframes pop { from { transform: scale(.3); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+.falling {
+  position: fixed; z-index: 60;
+  pointer-events: none;
+  image-rendering: pixelated;
+  transition: transform .62s cubic-bezier(.45, -.1, .7, .9);
+  filter: drop-shadow(0 0 6px rgba(255,45,149,.5));
+}
+
+.web { position: fixed; top: 0; left: 0; z-index: 8; pointer-events: none; }
+.spider-wrap {
+  position: fixed; top: 0; left: 0; z-index: 9;
+  pointer-events: none;
+}
+.spider-wrap .thread {
+  position: absolute; left: 50px; top: 44px; width: 2px; height: 0;
+  background: rgba(233,230,222,.6);
+  transition: height .5s ease-in;
+}
+.spider {
+  position: absolute; left: 6px; top: 44px;
+  cursor: pointer;
+  pointer-events: auto;
+  transform: translateY(0);
+  transition: transform .5s ease-in;
+  background: transparent; border: none; padding: 0;
+  filter: drop-shadow(0 0 2px rgba(233,230,222,.7));
+}
+.spider img { image-rendering: pixelated; }
+.spider-wrap.down .spider { transform: translateY(30vh); }
+.spider-wrap.down .thread { height: 30vh; }
+.spider-wrap.down .spider { animation: sway 2.6s ease-in-out infinite; }
+@keyframes sway {
+  0%, 100% { margin-left: 0; }
+  50% { margin-left: 14px; }
+}
+.spider.wiggle { animation: wiggle .3s; }
+@keyframes wiggle { 0%,100% { transform: translateY(0);} 25% { transform: translateY(-6px);} 75% { transform: translateY(-2px);} }
+
+.toast {
+  position: fixed; top: 14px; left: 50%; transform: translate(-50%, -80px);
+  background: #141419; color: #e9e6de;
+  border: 1px solid #ff2d95;
+  border-radius: 6px;
+  padding: 8px 16px;
+  font-size: 13px;
+  z-index: 80;
+  opacity: 0;
+  transition: transform .25s, opacity .25s;
+  box-shadow: 0 0 18px rgba(255,45,149,.35);
+  pointer-events: none;
+}
+.toast.show { transform: translate(-50%, 0); opacity: 1; }
+
+.menu {
+  position: fixed; z-index: 40;
+  width: 170px;
+  background: rgba(16,16,21,.92);
+  border: 1px solid #ff2d95;
+  border-radius: 8px;
+  box-shadow: 0 0 20px rgba(255,45,149,.25), 0 8px 24px rgba(0,0,0,.6);
+  backdrop-filter: blur(4px);
+  font-size: 12px;
+  user-select: none;
+}
+.menu-head {
+  cursor: move;
+  touch-action: none;
+  padding: 7px 10px;
+  font-family: "Bebas Neue", sans-serif;
+  font-size: 18px; letter-spacing: 3px;
+  color: #ff2d95;
+  border-bottom: 1px solid rgba(255,45,149,.25);
+  text-shadow: 0 0 8px rgba(255,45,149,.5);
+  display: flex; justify-content: space-between; align-items: center;
+}
+.menu-head .grip { font-family: "Space Mono", monospace; font-size: 10px; color: #5a5a63; }
+.menu-body { padding: 6px; }
+.menu.closed .menu-body { display: none; }
+.menu.closed { box-shadow: 0 0 18px rgba(255,45,149,.42), 0 6px 18px rgba(0,0,0,.6); }
+.menu-link {
+  display: block;
+  padding: 7px 9px;
+  border-radius: 5px;
+  color: #e9e6de;
+  text-decoration: none;
+  letter-spacing: 1px;
+  transition: background .12s, color .12s;
+  border: 1px solid transparent;
+  background: transparent;
+  width: 100%; text-align: left;
+  font-family: "Space Mono", monospace; font-size: 13px; cursor: pointer;
+}
+.menu-link:hover { background: rgba(255,45,149,.12); color: #ff2d95; }
+.menu-link .tag { color: #00e5ff; font-size: 9px; margin-right: 6px; }
+.menu-news {
+  padding: 8px 9px;
+  border-top: 1px dashed rgba(255,45,149,.3);
+  display: none;
+}
+.menu-news.open { display: block; }
+.menu-news input {
+  width: 100%;
+  background: #0b0b0e;
+  border: 1px solid #3c3f44;
+  color: #e9e6de;
+  font-family: "Space Mono", monospace;
+  font-size: 12px;
+  padding: 6px 7px;
+  border-radius: 4px;
+  margin-bottom: 6px;
+}
+.menu-news input:focus { outline: none; border-color: #00e5ff; }
+.menu-news button {
+  width: 100%;
+  background: linear-gradient(180deg, #ff7bc0, #ff2d95);
+  border: none; border-radius: 4px;
+  color: #0b0b0e; font-weight: 700;
+  font-family: "Space Mono", monospace; font-size: 12px;
+  padding: 6px; cursor: pointer;
+}
+.menu-news button:active { transform: translateY(1px); }
+
+.modal {
+  position: fixed; inset: 0; z-index: 70;
+  background: rgba(5,5,8,.8);
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; pointer-events: none;
+  transition: opacity .2s;
+}
+.modal.open { opacity: 1; pointer-events: auto; }
+.modal-card {
+  width: 360px; max-width: 92vw;
+  background: #141419;
+  border: 1px solid #ff2d95;
+  border-radius: 12px;
+  box-shadow: 0 0 40px rgba(255,45,149,.35);
+  padding: 22px 24px;
+  transform: scale(.9);
+  transition: transform .2s;
+  position: relative;
+}
+.modal.open .modal-card { transform: scale(1); }
+.modal-spr { text-align: center; margin-bottom: 10px; }
+.modal-spr img { image-rendering: pixelated; }
+.modal-title {
+  font-family: "Bebas Neue", sans-serif;
+  font-size: 30px; letter-spacing: 2px; color: #ff2d95;
+  text-align: center; margin-bottom: 12px;
+  text-shadow: 0 0 10px rgba(255,45,149,.5);
+  text-wrap: balance;
+}
+.modal-body { font-size: 14px; line-height: 1.6; color: #c9c6bc; }
+.modal-body .guide { white-space: pre-wrap; }
+.modal-body .note { color: #7d848b; font-size: 12px; margin-top: 8px; }
+.modal-actions { display: flex; gap: 8px; margin-top: 16px; flex-wrap: wrap; }
+.mbtn {
+  flex: 1;
+  font-family: "Space Mono", monospace; font-weight: 700; font-size: 12px;
+  padding: 9px 6px;
+  border-radius: 6px;
+  border: 2px solid #050508;
+  cursor: pointer;
+  box-shadow: 0 3px 0 #050508;
+  transition: transform .05s, box-shadow .05s;
+}
+.mbtn:active { transform: translateY(2px); box-shadow: 0 1px 0 #050508; }
+.mbtn.play { background: linear-gradient(180deg, #6bebff, #00e5ff); color: #0b0b0e; }
+.mbtn.dl { background: linear-gradient(180deg, #e5ff6b, #ccff00); color: #0b0b0e; }
+.mbtn.close { background: linear-gradient(180deg, #4a4d52, #2c2e33); color: #c9c6bc; }
+a.mbtn { display: flex; align-items: center; justify-content: center; text-decoration: none; }
+.mbtn.wide { flex: 1 1 100%; }
+.mbtn.zine { background: linear-gradient(180deg, #ff7bc0, #ff2d95); color: #0b0b0e; }
+.modal-close {
+  position: absolute; top: 8px; right: 10px;
+  background: none; border: none;
+  color: #5a5a63; font-size: 18px; cursor: pointer;
+}
+.modal-close:hover { color: #ff2d95; }
+
+footer { text-align: center; padding-bottom: 10px; display: flex; flex-direction: column; align-items: center; gap: 7px; }
+footer .footer-note { font-size: 12px; letter-spacing: 2px; color: #3c3f44; }
+footer .footer-copy { font-size: 10px; letter-spacing: 2px; color: #3c3f44; }
+footer .footer-copy a { color: #5a5a63; text-decoration: none; border-bottom: 1px dotted rgba(255,45,149,.4); }
+footer .footer-copy a:hover { color: #ff2d95; }
+.donate-btn {
+  display: inline-block;
+  font-family: "Space Mono", monospace; font-size: 12px; letter-spacing: 3px;
+  color: #0b0b0e; background: #ccff00;
+  border: 1px solid #ccff00; border-radius: 4px;
+  padding: 6px 16px; text-decoration: none; cursor: pointer;
+  box-shadow: 0 0 12px rgba(204,255,0,.35);
+  transition: transform .1s, box-shadow .15s, background .15s, border-color .15s, color .15s;
+}
+.donate-btn:hover { background: #ff2d95; border-color: #ff2d95; color: #0b0b0e; box-shadow: 0 0 16px rgba(255,45,149,.5); transform: translateY(-1px); }
+.donate-btn:active { transform: translateY(0); }
+
+/* ---------- the handbill: a free zine, taped up next to the machine ---------- */
+.bill {
+  position: relative;
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+  width: 268px;
+  padding: 12px 16px 14px;
+  background: #e9e6de;
+  background-image:
+    repeating-linear-gradient(0deg, rgba(11,11,14,.045) 0 1px, transparent 1px 3px),
+    repeating-linear-gradient(90deg, rgba(11,11,14,.03) 0 1px, transparent 1px 4px);
+  border: 2px solid #050508;
+  border-radius: 2px;
+  color: #0b0b0e;
+  text-decoration: none;
+  transform: rotate(-1.7deg);
+  box-shadow: 0 0 26px rgba(255,45,149,.22), 0 10px 22px rgba(0,0,0,.5);
+  transition: transform .18s, box-shadow .18s;
+}
+.bill:hover { transform: rotate(-.5deg) translateY(-3px); box-shadow: 0 0 30px rgba(255,45,149,.4), 0 14px 26px rgba(0,0,0,.55); }
+.bill::before {
+  content: ""; position: absolute; top: -8px; left: 50%;
+  transform: translateX(-50%) rotate(-2deg);
+  width: 76px; height: 16px;
+  background: rgba(255,255,255,.3);
+  border-left: 1px solid rgba(0,0,0,.08); border-right: 1px solid rgba(0,0,0,.08);
+  box-shadow: 0 1px 3px rgba(0,0,0,.3);
+}
+.bill-title {
+  font-family: "Bebas Neue", sans-serif;
+  font-size: 31px; line-height: 1; letter-spacing: 2px;
+}
+.bill-sub { font-size: 10px; letter-spacing: 1.6px; color: #2b2b30; text-align: center; }
+.bill-stamp {
+  position: absolute; top: 7px; right: 9px;
+  font-family: "Space Mono", monospace; font-weight: 700; font-size: 9px; letter-spacing: 2px;
+  color: #ff2d95; border: 2px solid #ff2d95; border-radius: 3px;
+  padding: 1px 4px; transform: rotate(9deg);
+  background: rgba(255,45,149,.06);
+}
+
+@media (min-width: 1180px) {
+  .bill {
+    position: absolute; right: calc(50% + 302px); top: 50%;
+    transform: translateY(-50%) rotate(-2.2deg);
+  }
+  .bill:hover { transform: translateY(-50%) rotate(-.7deg) scale(1.02); }
+}
+@media (max-width: 1024px) {
+  .stage { justify-content: flex-start; padding-top: 78px; }
+}
+@media (max-width: 760px) {
+  .stage { padding-bottom: 108px; }
+}
+@media (max-width: 620px) {
+  .stage { justify-content: flex-start; padding: 78px 8px 118px; gap: 12px; }
+  .web { width: 78px; height: 78px; top: -14px; left: -14px; opacity: .4; }
+  .tagline { font-size: 10px; letter-spacing: .8px; padding: 0 8px; line-height: 1.5; }
+  .spider::after { content: ""; position: absolute; inset: -14px; }
+  .menu { width: 158px; }
+  .menu-head { padding: 13px 10px; }
+  .machine-wrap { width: 100%; max-width: 460px; }
+  .machine { width: 100%; padding: 10px 10px 12px; border-radius: 12px; }
+  .sign { font-size: clamp(36px, 12.5vw, 52px); letter-spacing: 4px; padding: 0 0 6px; }
+  .sign small { font-size: 9px; letter-spacing: 2px; }
+  .sign .sign-hint { font-size: 9px; letter-spacing: 1.5px; }
+  .glass { padding: 6px; margin: 2px 0 8px; }
+  .shelf-row { gap: 3px; margin-bottom: 3px; }
+  .slot { height: clamp(52px, 15vw, 68px); }
+  .slot-spr { width: 38px; height: 38px; }
+  .slot-label { font-size: 10px; }
+  .controls { grid-template-columns: 1fr; gap: 8px; }
+  .led { height: 42px; font-size: 12px; line-height: 21px; padding: 9px; }
+  .keypad { gap: 5px; }
+  .key { height: 44px; font-size: 16px; }
+  .coinrow { gap: 5px; margin-top: 8px; }
+  .coin { height: 44px; font-size: 14px; min-width: 66px; flex: 1 1 18%; }
+  .tray { min-height: 62px; padding: 8px; }
+  .tray-name { font-size: 10px; }
+  .bill { width: 100%; max-width: 330px; padding: 11px 12px 13px; }
+  .bill-title { font-size: 27px; }
+  .modal-card { width: 92vw; padding: 20px 16px 18px; }
+  .modal-title { font-size: 21px; letter-spacing: 1.5px; }
+  .modal-body { font-size: 13px; }
+  .modal-close { width: 44px; height: 44px; top: 2px; right: 2px; font-size: 20px; }
+  .toast { font-size: 12px; max-width: 88vw; width: max-content; }
+}
+@media (any-pointer: coarse) {
+  .key { height: 46px; }
+  .coin { height: 44px; }
+  .modal-close { width: 44px; height: 44px; top: 2px; right: 2px; font-size: 20px; }
+  .menu-head { padding: 13px 10px; }
+  .slot:hover { box-shadow: inset 0 2px 6px rgba(0,0,0,.7); }
+  .spider::after { content: ""; position: absolute; inset: -14px; }
+}
+@media (max-width: 460px) {
+  .slot { height: 54px; }
+  .slot-spr { width: 34px; height: 34px; }
+  .sign { font-size: clamp(30px, 12vw, 44px); }
+  .led { height: 38px; font-size: 11px; line-height: 19px; }
+  .key { height: 44px; font-size: 15px; }
+  .coin { min-width: 62px; font-size: 13px; }
+  .slot-label { font-size: 9px; }
+}
+@media (max-width: 560px) {
+  .spider-wrap .thread { left: 39px; }
+}
+</style>
+</head>
+<body>
+<div class="hazard"></div>
+
+<svg class="web" width="150" height="150" viewBox="0 0 150 150" fill="none">
+  <g stroke="#c9c6bc" stroke-width="1" opacity="0.5">
+    <line x1="0" y1="0" x2="150" y2="0"/>
+    <line x1="0" y1="0" x2="0" y2="150"/>
+    <line x1="0" y1="0" x2="106" y2="106"/>
+    <line x1="0" y1="0" x2="150" y2="46"/>
+    <line x1="0" y1="0" x2="46" y2="150"/>
+    <path d="M10 0 Q 5 5 0 10"/>
+    <path d="M24 0 Q 12 12 0 24"/>
+    <path d="M40 0 Q 20 20 0 40"/>
+    <path d="M58 0 Q 29 29 0 58"/>
+    <path d="M78 0 Q 39 39 0 78"/>
+    <path d="M100 0 Q 50 50 0 100"/>
+    <path d="M125 0 Q 62 62 0 125"/>
+    <path d="M150 0 Q 75 75 0 150"/>
+    <path d="M150 18 Q 108 9 76 0"/>
+    <path d="M150 40 Q 120 20 93 0"/>
+    <path d="M150 66 Q 133 33 105 0"/>
+    <path d="M150 96 Q 147 48 112 0"/>
+    <path d="M150 128 Q 149 64 116 0"/>
+    <path d="M18 150 Q 9 108 0 76"/>
+    <path d="M40 150 Q 20 120 0 93"/>
+    <path d="M66 150 Q 33 133 0 105"/>
+    <path d="M96 150 Q 48 147 0 112"/>
+    <path d="M128 150 Q 64 149 0 116"/>
+  </g>
+  <g stroke="#00e5ff" stroke-width="2" opacity="0.55">
+    <path d="M150 0 Q 75 75 0 150"/>
+  </g>
+</svg>
+
+<div class="spider-wrap" id="spiderWrap">
+  <div class="thread"></div>
+  <button class="spider" id="spider" aria-label="the spider"></button>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<div class="menu" id="menu">
+  <div class="menu-head" id="menuHead"><span>menu</span><span class="grip">:::drag</span></div>
+  <div class="menu-body">
+    <button class="menu-link" id="newsBtn"><span class="tag">01</span>newsletter</button>
+    <div class="menu-news" id="newsBox">
+      <input id="emailInput" type="email" placeholder="your@email.here" autocomplete="email">
+      <button id="joinBtn">join</button>
+    </div>
+    <a class="menu-link" id="contactLink" href="#"><span class="tag">02</span>contact</a>
+    <a class="menu-link" id="cafeLink" href="#" target="_blank" rel="noopener"><span class="tag">03</span>cafedreamr</a>
+    <button class="menu-link" id="muteBtn"><span class="tag">04</span><span id="muteLabel">chimes: on</span></button>
+    <a class="menu-link" id="donateLink" href="#" target="_blank" rel="noopener"><span class="tag">05</span>donate</a>
+    <a class="menu-link" id="zineLink" href="https://www.cafedreamr.art/ZINE/" target="_blank" rel="noopener"><span class="tag">06</span>the zine</a>
+  </div>
+</div>
+
+<div class="stage">
+  <div class="tagline">a little broken machine. <b>everything drops eventually.</b></div>
+
+  <div class="machine-wrap" id="machineWrap">
+  <div class="machine" id="machine">
+    <div class="rivet" style="top:8px;left:8px;"></div>
+    <div class="rivet" style="top:8px;right:8px;"></div>
+    <div class="rivet" style="bottom:8px;left:8px;"></div>
+    <div class="rivet" style="bottom:8px;right:8px;"></div>
+
+    <div class="sign" id="sign" role="button" tabindex="0" title="tap the sign — the machine hands you a zine">vendi<small>est. the great before</small><em class="sign-hint">tap for a free zine →</em></div>
+
+    <div class="glass" id="glass"></div>
+
+    <div class="controls">
+      <div class="led" id="led"></div>
+      <div class="keypad" id="keypad"></div>
+    </div>
+
+    <div class="coinrow">
+      <button class="coin c5" data-amt="0.05">.05</button>
+      <button class="coin c10" data-amt="0.10">.10</button>
+      <button class="coin c25" data-amt="0.25">.25</button>
+      <button class="coin act" id="returnBtn">return</button>
+      <button class="coin act" id="restockBtn">restock</button>
+    </div>
+
+    <div class="tray" id="tray"></div>
+  </div>
+  </div>
+
+  <a class="bill" id="zineBill" href="https://www.cafedreamr.art/ZINE/" target="_blank" rel="noopener">
+    <span class="bill-stamp">free</span>
+    <span class="bill-title">miki's zine</span>
+    <span class="bill-sub">issue no. 3 &middot; the cover &middot; take one &rarr;</span>
+  </a>
+
+  <footer>
+    <a class="donate-btn" id="donateBtn" href="#" target="_blank" rel="noopener">[ donate ]</a>
+    <div class="footer-note">vendi — insert a coin, take a chance. no refunds on feelings.</div>
+    <div class="footer-copy">© <span id="yearEl"></span> <a id="copyLink" href="#" target="_blank" rel="noopener">cafedreamr</a>. all rights reserved.</div>
+  </footer>
+</div>
+
+<div class="modal" id="modal">
+  <div class="modal-card">
+    <button class="modal-close" id="modalClose" aria-label="close">x</button>
+    <div class="modal-spr" id="modalSpr"></div>
+    <div class="modal-title" id="modalTitle"></div>
+    <div class="modal-body" id="modalBody"></div>
+    <div class="modal-actions" id="modalActions"></div>
+  </div>
+</div>
+
+<script>
+const CONFIG = {
+  cafeUrl: "https://cafedreamr.art",
+  donateUrl: "https://ko-fi.com/cafedreamr",
+  zineUrl: "https://www.cafedreamr.art/ZINE/",
+  copyright: "cafedreamr",
+  email: "hello@cafedreamr.art",
+  music: {
+    tape: "https://user.uploads.dev/file/28af5cd9bbb9d30691a4ba39bf359455.mp3",
+    vinyl: "https://user.uploads.dev/file/e3e1ae23acf8d8ef21687528565069d9.mp3",
+    cd: "https://user.uploads.dev/file/057dbc8e97da4d4d3c778d891d81d945.mp3",
+    synth: "https://user.uploads.dev/file/f8ffbf4d0e0f82f67bbdcbbbf92f0e07.mp3",
+    disk: "https://user.uploads.dev/file/fca98a622483e14baae8ae083580f86a.mp3",
+    phones: "https://user.uploads.dev/file/42d2f4cc59e9fa3436b563d61629f727.mp3"
+  }
+};
+
+const PAL = {
+  K:"#141419", W:"#e9e6de", w:"#9b978c", g:"#3c3f44", G:"#7d848b",
+  c:"#00e5ff", y:"#ccff00", Y:"#86a400", B:"#16244a", o:"#ff8a3d",
+  r:"#ff2d95", R:"#a0145e", n:"#b0835a", s:"#6f4a26", t:"#2fd06b", e:"#d9a06b"
+};
+
+const SPR = {
+  book: [
+    "................",
+    "................",
+    "....nnnnnnnn....",
+    "...nnnnnnnnnn...",
+    "...nWWWWWWWWn...",
+    "...nWrrrrrrWn...",
+    "...nWrrrrrrWn...",
+    "...nWrrrrrrWn...",
+    "...nWrrrrrrWn...",
+    "...nWrrrrrrWn...",
+    "...nWWWWWWWWn...",
+    "...nnnnnnnnnn...",
+    "....nnnnnnnn....",
+    "................",
+    "................",
+    "................"
+  ],
+  scroll: [
+    "................",
+    "................",
+    "................",
+    "....nn....nn....",
+    "...nWWn..nWWn...",
+    "...nWeeWnWeeWn..",
+    "...nWeeWnWeeWn..",
+    "...nWeeWnWeeWn..",
+    "...nWeeWnWeeWn..",
+    "...nWeeWnWeeWn..",
+    "...nWWWnnWWWn...",
+    "....nnnnnnnn....",
+    "................",
+    "................",
+    "................",
+    "................"
+  ],
+  tape: [
+    "................",
+    "................",
+    "....KKKKKKKK....",
+    "...KKWWWWWWKK...",
+    "...KWKKKKKKWK...",
+    "...KWKWWWWKWK...",
+    "...KWKWKKWKWK...",
+    "...KWKWWWWKWK...",
+    "...KWKWKKWKWK...",
+    "...KWKWWWWKWK...",
+    "...KKWWWWWWKK...",
+    "....KKKKKKKK....",
+    "................",
+    "................",
+    "................",
+    "................"
+  ],
+  soda: [
+    "................",
+    "................",
+    "....WWWWWWWW....",
+    "...WWWWWWWWWW...",
+    "...WccccccccW...",
+    "...WccWWWWccW...",
+    "...WccWWWWccW...",
+    "...WccWWWWccW...",
+    "...WccccccccW...",
+    "...WccWWWWccW...",
+    "...WWWWWWWWWW...",
+    "....WWWWWWWW....",
+    "................",
+    "................",
+    "................",
+    "................"
+  ],
+  vinyl: [
+    "................",
+    "................",
+    ".......KK.......",
+    "......KWWK......",
+    ".....KWKKWK.....",
+    "....KWKKKKWK....",
+    "...KWKWWWWKWK...",
+    "...KWKWKKWKWK...",
+    "...KWKWKKWKWK...",
+    "...KWKWWWWKWK...",
+    "...KWKKKKKKWK...",
+    "....KWKKKKWK....",
+    ".....KWKKWK.....",
+    "......KWWK......",
+    ".......KK.......",
+    "................"
+  ],
+  map: [
+    "................",
+    "................",
+    "................",
+    "....gggggggg....",
+    "...ggWWWWWWgg...",
+    "...gWWggggWWg...",
+    "...gWgWWWWgWg...",
+    "...gWgWWWWgWg...",
+    "...gWWggggWWg...",
+    "...ggWWWWWWgg...",
+    "....gggggggg....",
+    "................",
+    "................",
+    "................",
+    "................",
+    "................"
+  ],
+  zine: [
+    "................",
+    "................",
+    "................",
+    "....rrrrrrrr....",
+    "...rrWWWWWWrr...",
+    "...rWWWWWWWWr...",
+    "...rWWrrWWWWr...",
+    "...rWWWrrWWWr...",
+    "...rWWWWrrWWr...",
+    "...rWWWWWWWWr...",
+    "...rrWWWWWWrr...",
+    "....rrrrrrrr....",
+    "................",
+    "................",
+    "................",
+    "................"
+  ],
+  snack: [
+    "................",
+    "................",
+    "................",
+    "....yyyyyyyy....",
+    "...yYYYYYYYYy...",
+    "...yYccyyccYy...",
+    "...yYccyyccYy...",
+    "...yYyyccyyYy...",
+    "...yYyyccyyYy...",
+    "...yYyyyyyyYy...",
+    "...yyyyyyyyyy...",
+    "....yyyyyyyy....",
+    "................",
+    "................",
+    "................",
+    "................"
+  ],
+  potion: [
+    "................",
+    "................",
+    ".......KK.......",
+    "......KGGK......",
+    "......KGGK......",
+    "......KGGK......",
+    ".....KKKKKK.....",
+    "....KttttttK....",
+    "...KttttttttK...",
+    "...KttttttttK...",
+    "...KttttttttK...",
+    "....KttttttK....",
+    ".....KKKKKK.....",
+    "................",
+    "................",
+    "................"
+  ],
+  battery: [
+    "................",
+    "................",
+    "................",
+    ".....YYYYYY.....",
+    "....YWWWWWWY....",
+    "...YWWYYYYWWY...",
+    "...YWWYWYYWWY...",
+    "...YWWYWYYWWY...",
+    "...YWWYYYYWWY...",
+    "....YWWWWWWY....",
+    ".....YYYYYY.....",
+    "................",
+    "................",
+    "................",
+    "................",
+    "................"
+  ],
+  cd: [
+    "................",
+    "................",
+    ".......KK.......",
+    "......KWWK......",
+    ".....KWKKWK.....",
+    "....KWKKKKWK....",
+    "...KWKyyyyKWK...",
+    "...KWKyyyyKWK...",
+    "...KWKyyyyKWK...",
+    "...KWKyyyyKWK...",
+    "...KWKKKKKKWK...",
+    "....KWKKKKWK....",
+    ".....KWKKWK.....",
+    "......KWWK......",
+    ".......KK.......",
+    "................"
+  ],
+  synth: [
+    "................",
+    "................",
+    ".GGGGGGGGGGGGGG.",
+    "GccccccccccGyGyG",
+    "GGGGGGGGGGGGGGGG",
+    "GWWKWWKWWWKWKWKG",
+    "GWWWWWWWWWWWWWWG",
+    "GWWWWWWWWWWWWWWG",
+    "GWWWWWWWWWWWWWWG",
+    ".GGGGGGGGGGGGGG.",
+    "................",
+    "................",
+    "................",
+    "................",
+    "................",
+    "................"
+  ],
+  disk: [
+    "................",
+    "................",
+    "..GGGGGGGGGGGG..",
+    "..GWWWWWWWWWWG..",
+    "..GWKKKKKKKKWG..",
+    "..GWKGGGGGGKWG..",
+    "..GWKGGGGGGKWG..",
+    "..GWKKKKKKKKWG..",
+    "..GWWWWWWWWWWG..",
+    "..GWccccccccWG..",
+    "..GWcWWWWWWcWG..",
+    "..GWccccccccWG..",
+    "..GWWWWWWWWWWG..",
+    "..GGGGGGGGGGGG..",
+    "................",
+    "................"
+  ],
+  phones: [
+    "................",
+    "................",
+    "....WWWWWWWW....",
+    "...WW......WW...",
+    "..WW........WW..",
+    "..WW........WW..",
+    "..WW........WW..",
+    ".WWWW......WWWW.",
+    ".WrrW......WrrW.",
+    ".WrrW......WrrW.",
+    ".WWWW......WWWW.",
+    "..WW........WW..",
+    "................",
+    "................",
+    "................",
+    "................"
+  ],
+  spider: [
+    "...........W............",
+    "...........W............",
+    "..W........W.........W..",
+    "...W.......W........W...",
+    "....W......W.......W....",
+    ".....W.....WW.....W.....",
+    "......W...KWWK...W......",
+    ".WWW..W..WKWWKW..W..WWWW",
+    ".WWWWW.W..WWWW..W.WWW...",
+    ".....WWWW.WWWW.WWWW.....",
+    ".......WWWWWWWWWW.......",
+    "..WWWWWWWWWWWWWWWWWWWW..",
+    ".WWW....GWWWWWWG.WWWWWWW",
+    ".......WGGGWWGGGW......W",
+    "......WW.WWWWWW.W.......",
+    "......W.WWWWWWWWWW......",
+    ".....W..WWWWWWWW..W.....",
+    "....W...WWWWWWWW...W....",
+    "...W....WWWWWWWW....W...",
+    ".........WWWWWW.........",
+    "................",
+    "................",
+    "................",
+    "................"
+  ]
+};
+
+const GUIDE_BOOK = "step one: pick a stupid name and commit to it.\nstep two: write about what makes you furious or joyful. both work.\nstep three: cut, paste, photocopy. the zine is allowed to be ugly.\nstep four: leave stacks at gigs, bus stops, doctor's waiting rooms.\nstep five: when they tell you nobody reads anymore, hand them a copy.";
+const GUIDE_SCROLL = "the vending machine listens to no prayers.\nbut you are not the machine.\n\nrecite: i will not be vended.\nrecite: i am not for sale.\nrecite: my hunger is mine.\nrecite: the power is a button, and buttons can be pressed.\n\nthen press them.";
+const GUIDE_MAP = "you are here.\n\nnorth: the caffeine fields, always brewing.\neast: the dusty record shelf, volume two of the broken machine.\nsouth: the letter room, where the mail goes to sleep.\nwest: the spider's corner. don't mind the spider.\n\nbeyond the map: everything else, eventually.";
+const GUIDE_ZINE = "rule one: carry a lighter even if you don't smoke.\nrule two: your voice is a tool. lose it at shows, not at work.\nrule three: the system will sell you safety. it's overpriced.\nrule four: feed the people around you. literally and otherwise.\nrule five: when in doubt, make a zine about it.";
+
+const ITEMS = {
+  book:    { name:"zine bible",     price:0.10, kind:"guide", spr:"book",    sound:"book",    title:"how to run your own zine", body:GUIDE_BOOK },
+  scroll:  { name:"old scroll",     price:0.10, kind:"guide", spr:"scroll",  sound:"scroll",  title:"incantations for the machine age", body:GUIDE_SCROLL },
+  map:     { name:"folded map",     price:0.10, kind:"guide", spr:"map",     sound:"map",     title:"the cafedreamr atlas", body:GUIDE_MAP },
+  zine:    { name:"miki's zine",    price:0.10, kind:"guide", spr:"zine",    sound:"zine",    title:"miki's zine — issue no. 3", body:GUIDE_ZINE, link:CONFIG.zineUrl, linkLabel:"read the zine", note:"the cover of issue no. 3. free — read it in the browser, or print it and leave it somewhere." },
+  soda:    { name:"pink fizz",      price:0.05, kind:"fun",   spr:"soda",    sound:"soda",    msg:"pink fizz. now with 100% more anarcho-flavour. don't shake it in front of the machine." },
+  snack:   { name:"bag of mystery", price:0.05, kind:"fun",   spr:"snack",   sound:"snack",   msg:"a bag of mystery. probably crisps. maybe gravel. enjoy." },
+  potion:  { name:"swamp potion",   price:0.05, kind:"fun",   spr:"potion",  sound:"potion",  msg:"tastes like battery acid and regret. drink anyway. it's punk." },
+  battery: { name:"fresh battery",  price:0.05, kind:"fun",   spr:"battery", sound:"battery", msg:"freshly charged. handle with care. absolutely do not lick it." },
+  tape:    { name:"the fast one",   price:0.25, kind:"music", spr:"tape",   sound:"tape",   track:CONFIG.music.tape,  title:"vendi tape — vol.1 (the fast one)" },
+  vinyl:   { name:"the moody one",  price:0.25, kind:"music", spr:"vinyl",  sound:"vinyl",  track:CONFIG.music.vinyl, title:"vendi vinyl — vol.2 (the moody one)" },
+  cd:      { name:"goin' bananas",  price:0.25, kind:"music", spr:"cd",     sound:"cd",     track:CONFIG.music.cd,    title:"vendi cd — vol.3 (goin' bananas)" },
+  synth:   { name:"the neon one",   price:0.25, kind:"music", spr:"synth",  sound:"synth",  track:CONFIG.music.synth, title:"vendi synth — vol.4 (the neon one)" },
+  disk:    { name:"the glitch one", price:0.25, kind:"music", spr:"disk",   sound:"disk",   track:CONFIG.music.disk,  title:"vendi disk — vol.5 (the glitch one)" },
+  phones:  { name:"the deep one",   price:0.25, kind:"music", spr:"phones", sound:"phones", track:CONFIG.music.phones,title:"vendi phones — vol.6 (the deep one)" }
+};
+
+const ITEM_KEYS = Object.keys(ITEMS);
+const LETTERS = ["a","b","c","d"];
+const POOL = ["book","scroll","map","zine","soda","snack","potion","battery","tape","vinyl","cd","synth","disk","phones"];
+
+const $ = s => document.querySelector(s);
+
+function spriteImg(key, scale) {
+  const grid = SPR[key];
+  const h = grid.length;
+  const w = grid[0].length;
+  const c = document.createElement("canvas");
+  c.width = w; c.height = h;
+  const x = c.getContext("2d");
+  for (let y = 0; y < h; y++) {
+    const row = grid[y];
+    for (let i = 0; i < w; i++) {
+      const col = row[i];
+      if (!col || col === ".") continue;
+      x.fillStyle = PAL[col] || "#f0f";
+      x.fillRect(i, y, 1, 1);
+    }
+  }
+  const img = document.createElement("img");
+  const px = (scale || 2);
+  img.width = w * px;
+  img.height = h * px;
+  img.style.imageRendering = "pixelated";
+  img.src = c.toDataURL();
+  return img;
+}
+
+let AC = null;
+let sfxMuted = false;
+try { sfxMuted = localStorage.getItem("vendi.muted") === "1"; } catch (e) {}
+function ac() {
+  if (!AC) AC = new (window.AudioContext || window.webkitAudioContext)();
+  if (AC.state === "suspended") AC.resume();
+  return AC;
+}
+function tone(f0, f1, dur, type, vol) {
+  if (sfxMuted) return;
+  const a = ac();
+  const o = a.createOscillator();
+  const g = a.createGain();
+  o.type = type || "square";
+  o.frequency.setValueAtTime(f0, a.currentTime);
+  if (f1 !== f0) o.frequency.exponentialRampToValueAtTime(Math.max(1, f1), a.currentTime + dur);
+  g.gain.setValueAtTime(vol || 0.12, a.currentTime);
+  g.gain.exponentialRampToValueAtTime(0.0001, a.currentTime + dur);
+  o.connect(g).connect(a.destination);
+  o.start();
+  o.stop(a.currentTime + dur + 0.02);
+}
+function hiss(dur, cutoff, vol, q) {
+  if (sfxMuted) return;
+  const a = ac();
+  const n = a.createBufferSource();
+  const buf = a.createBuffer(1, a.sampleRate * dur, a.sampleRate);
+  const d = buf.getChannelData(0);
+  for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+  n.buffer = buf;
+  const f = a.createBiquadFilter();
+  f.type = "bandpass";
+  f.frequency.value = cutoff;
+  f.Q.value = q || 0.8;
+  const g = a.createGain();
+  g.gain.setValueAtTime(vol || 0.1, a.currentTime);
+  g.gain.exponentialRampToValueAtTime(0.0001, a.currentTime + dur);
+  n.connect(f).connect(g).connect(a.destination);
+  n.start();
+}
+const sfx = {
+  coin() { tone(1500, 2100, 0.07, "square", 0.1); setTimeout(() => tone(2200, 2600, 0.08, "square", 0.08), 55); },
+  button() { hiss(0.03, 1400, 0.06, 1.2); },
+  select() { tone(520, 780, 0.08, "triangle", 0.12); },
+  error() { tone(160, 90, 0.18, "sawtooth", 0.09); },
+  vend() { tone(130, 55, 0.22, "sine", 0.22); },
+  web() { tone(640, 640, 0.5, "triangle", 0.07); tone(960, 960, 0.4, "sine", 0.04); },
+  return() { [2000, 1500, 1000, 600].forEach((f, i) => setTimeout(() => tone(f, f * 0.7, 0.09, "square", 0.08), i * 90)); },
+  restock() { tone(240, 60, 0.7, "sawtooth", 0.08); setTimeout(() => tone(90, 60, 0.15, "sine", 0.2), 500); },
+  item(kind) {
+    switch (kind) {
+      case "book": tone(90, 45, 0.2, "sine", 0.2); setTimeout(() => hiss(0.12, 2200, 0.05, 2), 40); break;
+      case "scroll": hiss(0.35, 900, 0.09, 2); setTimeout(() => hiss(0.35, 2400, 0.05, 1.5), 30); break;
+      case "tape": for (let i = 0; i < 4; i++) setTimeout(() => tone(600 + Math.random() * 800, 200, 0.03, "square", 0.07), i * 45); break;
+      case "soda": tone(120, 50, 0.15, "sine", 0.2); setTimeout(() => hiss(0.5, 6000, 0.06, 0.5), 60); break;
+      case "vinyl": tone(70, 40, 0.35, "sine", 0.2); tone(50, 45, 0.3, "triangle", 0.12); break;
+      case "map": for (let i = 0; i < 5; i++) setTimeout(() => hiss(0.06, 1600 + Math.random() * 2000, 0.05, 2), i * 55); break;
+      case "zine": hiss(0.06, 3000, 0.07, 2); setTimeout(() => hiss(0.07, 1800, 0.06, 2), 90); break;
+      case "snack": hiss(0.35, 5000, 0.06, 0.6); hiss(0.3, 9000, 0.04, 0.6); break;
+      case "potion": tone(300, 620, 0.12, "sine", 0.12); setTimeout(() => tone(420, 800, 0.14, "sine", 0.1), 120); break;
+      case "battery": tone(1800, 1200, 0.03, "square", 0.09); break;
+      case "cd": tone(900, 2400, 0.3, "sawtooth", 0.07); break;
+      case "synth": [880, 1108.7, 1318.5, 1760].forEach((f, i) => setTimeout(() => tone(f, f, 0.14, "sawtooth", 0.055), i * 70)); break;
+      case "disk": hiss(0.45, 2100, 0.05, 1.4); setTimeout(() => hiss(0.1, 1700, 0.06, 2), 160); setTimeout(() => tone(320, 760, 0.11, "square", 0.06), 260); break;
+      case "phones": tone(80, 42, 0.32, "sine", 0.2); setTimeout(() => tone(130, 58, 0.26, "triangle", 0.1), 95); break;
+      default: hiss(0.1, 1000, 0.06, 1);
+    }
+  }
+};
+
+let shelf = [];
+let selection = null;
+let credit = 0;
+let vending = false;
+
+function stock() {
+  shelf = [];
+  for (let i = 0; i < 16; i++) shelf.push(POOL[Math.floor(Math.random() * POOL.length)]);
+  shelf[Math.floor(Math.random() * shelf.length)] = "zine";
+}
+function fmt(x) { return (Math.round(x * 100) / 100).toFixed(2); }
+
+function renderShelf() {
+  const glass = $("#glass");
+  glass.innerHTML = "";
+  for (let r = 0; r < 4; r++) {
+    const row = document.createElement("div");
+    row.className = "shelf-row";
+    for (let c = 0; c < 4; c++) {
+      const idx = r * 4 + c;
+      const key = shelf[idx];
+      const it = ITEMS[key];
+      const div = document.createElement("div");
+      div.className = "slot";
+      div.dataset.idx = idx;
+      const spr = document.createElement("div");
+      spr.className = "slot-spr";
+      spr.appendChild(spriteImg(it.spr, 2));
+      const lab = document.createElement("div");
+      lab.className = "slot-label";
+      lab.textContent = LETTERS[r] + (c + 1);
+      div.appendChild(spr);
+      div.appendChild(lab);
+      div.addEventListener("click", () => select(r, c));
+      row.appendChild(div);
+    }
+    glass.appendChild(row);
+  }
+}
+
+function keypadBtn(r, c) {
+  const b = document.createElement("button");
+  b.className = "key";
+  b.textContent = LETTERS[r] + (c + 1);
+  b.addEventListener("click", () => { sfx.button(); select(r, c); });
+  return b;
+}
+
+function renderKeypad() {
+  const kp = $("#keypad");
+  kp.innerHTML = "";
+  for (let r = 0; r < 4; r++) {
+    for (let c = 0; c < 4; c++) kp.appendChild(keypadBtn(r, c));
+  }
+}
+
+function updateLED() {
+  const led = $("#led");
+  if (vending) { led.textContent = "vending... enjoy."; return; }
+  let main = "vend something.";
+  if (selection) {
+    const it = ITEMS[shelf[selection.r * 4 + selection.c]];
+    main = LETTERS[selection.r] + (selection.c + 1) + " " + it.name + " " + fmt(it.price);
+  }
+  led.textContent = "credit " + fmt(credit) + " | " + main;
+}
+
+function highlightSel() {
+  document.querySelectorAll(".slot").forEach(s => s.classList.remove("sel"));
+  document.querySelectorAll(".key").forEach(k => k.classList.remove("selkey"));
+  if (!selection) return;
+  const idx = selection.r * 4 + selection.c;
+  const slot = document.querySelector(`.slot[data-idx="${idx}"]`);
+  if (slot) slot.classList.add("sel");
+  const kp = document.querySelectorAll(".key");
+  const k = kp[selection.r * 4 + selection.c];
+  if (k) k.classList.add("selkey");
+}
+
+function select(r, c) {
+  if (vending) return;
+  const it = ITEMS[shelf[r * 4 + c]];
+  selection = { r, c };
+  highlightSel();
+  sfx.select();
+  updateLED();
+  if (credit >= it.price) vend();
+}
+
+function vend() {
+  if (!selection || vending) return;
+  const { r, c } = selection;
+  const idx = r * 4 + c;
+  const key = shelf[idx];
+  const it = ITEMS[key];
+  vending = true;
+  credit = Math.round((credit - it.price) * 100) / 100;
+  updateLED();
+  sfx.vend();
+  sfx.item(it.sound);
+
+  const slotEl = document.querySelector(`.slot[data-idx="${idx}"]`);
+  const srcRect = slotEl.querySelector(".slot-spr").getBoundingClientRect();
+  const trayRect = $("#tray").getBoundingClientRect();
+
+  const clone = spriteImg(it.spr, 3);
+  clone.className = "falling";
+  clone.style.left = srcRect.left + "px";
+  clone.style.top = srcRect.top + "px";
+  clone.style.width = "48px";
+  clone.style.height = "48px";
+  document.body.appendChild(clone);
+
+  const dx = (trayRect.left + trayRect.width / 2 - 24) - srcRect.left;
+  const dy = (trayRect.top + trayRect.height / 2 - 20) - srcRect.top;
+  requestAnimationFrame(() => {
+    clone.style.transform = "translate(" + dx + "px," + dy + "px) rotate(9deg)";
+  });
+
+  setTimeout(() => {
+    clone.remove();
+    addToTray(key);
+    vending = false;
+    selection = null;
+    highlightSel();
+    updateLED();
+  }, 620);
+}
+
+function addToTray(key) {
+  const it = ITEMS[key];
+  const tray = $("#tray");
+  const d = document.createElement("div");
+  d.className = "tray-item";
+  const spr = document.createElement("div");
+  spr.className = "tray-spr";
+  spr.appendChild(spriteImg(it.spr, 2));
+  const nm = document.createElement("div");
+  nm.className = "tray-name";
+  nm.textContent = it.name;
+  d.appendChild(spr);
+  d.appendChild(nm);
+  d.addEventListener("click", () => openModal(key));
+  tray.appendChild(d);
+  while (tray.children.length > 4) tray.removeChild(tray.firstChild);
+  toast("dispensed: " + it.name);
+}
+
+function freebie() {
+  if (vending) return;
+  const key = POOL[Math.floor(Math.random() * POOL.length)];
+  const it = ITEMS[key];
+  sfx.web();
+  sfx.vend();
+  sfx.item(it.sound);
+  const wrap = $("#spiderWrap");
+  const srcRect = wrap.getBoundingClientRect();
+  const trayRect = $("#tray").getBoundingClientRect();
+  const clone = spriteImg(it.spr, 3);
+  clone.className = "falling";
+  clone.style.left = (srcRect.left + 30) + "px";
+  clone.style.top = (srcRect.top + 30) + "px";
+  clone.style.width = "48px";
+  clone.style.height = "48px";
+  document.body.appendChild(clone);
+  const dx = (trayRect.left + trayRect.width / 2 - 24) - (srcRect.left + 30);
+  const dy = (trayRect.top + trayRect.height / 2 - 20) - (srcRect.top + 30);
+  requestAnimationFrame(() => {
+    clone.style.transform = "translate(" + dx + "px," + dy + "px) rotate(-9deg)";
+  });
+  setTimeout(() => {
+    clone.remove();
+    addToTray(key);
+  }, 620);
+  $("#led").textContent = "spider says here you go.";
+}
+
+function grabZine() {
+  sfx.vend();
+  sfx.item("zine");
+  toast("the machine hands you a zine.");
+  setTimeout(() => openModal("zine"), 360);
+}
+
+function openModal(key) {
+  const it = ITEMS[key];
+  const mSpr = $("#modalSpr");
+  const mTitle = $("#modalTitle");
+  const mBody = $("#modalBody");
+  const mAct = $("#modalActions");
+  mSpr.innerHTML = "";
+  mSpr.appendChild(spriteImg(it.spr, 4));
+  mTitle.textContent = it.title || it.name;
+  mAct.innerHTML = "";
+
+  if (it.kind === "music") {
+    const note = document.createElement("div");
+    note.className = "note";
+    note.textContent = "click play — it plays in real time. no refunds if it's too loud.";
+    mBody.innerHTML = "";
+    mBody.appendChild(note);
+    const play = document.createElement("button");
+    play.className = "mbtn play";
+    play.textContent = "play";
+    play.addEventListener("click", () => {
+      const state = playTrack(it.sound, it.track);
+      play.textContent = state ? "stop" : "play";
+    });
+    const close = document.createElement("button");
+    close.className = "mbtn close";
+    close.textContent = "close";
+    close.addEventListener("click", closeModal);
+    mAct.appendChild(play);
+    mAct.appendChild(close);
+  } else if (it.kind === "guide") {
+    const g = document.createElement("div");
+    g.className = "guide";
+    g.textContent = it.body;
+    mBody.innerHTML = "";
+    mBody.appendChild(g);
+    if (it.note) {
+      const n = document.createElement("div");
+      n.className = "note";
+      n.textContent = it.note;
+      mBody.appendChild(n);
+    }
+    if (it.link) {
+      const read = document.createElement("a");
+      read.className = "mbtn wide zine";
+      read.href = it.link;
+      read.target = "_blank";
+      read.rel = "noopener";
+      read.textContent = (it.linkLabel || "read it") + " →";
+      mAct.appendChild(read);
+    }
+    const dl = document.createElement("button");
+    dl.className = "mbtn dl";
+    dl.textContent = "download .txt";
+    dl.addEventListener("click", () => {
+      const blob = new Blob([it.title + "\n\n" + it.body], { type: "text/plain" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = it.spr + "-guide.txt";
+      a.click();
+      setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+      toast("guide downloaded.");
+    });
+    const close = document.createElement("button");
+    close.className = "mbtn close";
+    close.textContent = "close";
+    close.addEventListener("click", closeModal);
+    mAct.appendChild(dl);
+    mAct.appendChild(close);
+  } else {
+    const p = document.createElement("p");
+    p.textContent = it.msg;
+    mBody.innerHTML = "";
+    mBody.appendChild(p);
+    const close = document.createElement("button");
+    close.className = "mbtn close";
+    close.textContent = "close";
+    close.addEventListener("click", closeModal);
+    mAct.appendChild(close);
+  }
+  $("#modal").classList.add("open");
+}
+function closeModal() {
+  $("#modal").classList.remove("open");
+  Object.keys(players).forEach(k => {
+    if (players[k].on) {
+      players[k].el.pause();
+      players[k].el.currentTime = 0;
+      players[k].on = false;
+    }
+  });
+}
+
+const players = {};
+function playTrack(key, url) {
+  if (!players[key]) {
+    const el = new Audio(url);
+    el.preload = "auto";
+    players[key] = { el, on: false };
+  }
+  const p = players[key];
+  if (p.on) {
+    p.el.pause();
+    p.el.currentTime = 0;
+    p.on = false;
+    return false;
+  }
+  Object.keys(players).forEach(k => {
+    if (k !== key && players[k].on) {
+      players[k].el.pause();
+      players[k].el.currentTime = 0;
+      players[k].on = false;
+    }
+  });
+  p.el.play().catch(() => {});
+  p.on = true;
+  return true;
+}
+
+let toastTimer;
+function toast(msg) {
+  const t = $("#toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove("show"), 2200);
+}
+
+function initSpider() {
+  const wrap = $("#spiderWrap");
+  const spiderScale = window.innerWidth < 560 ? 3 : 4;
+  wrap.querySelector(".spider").appendChild(spriteImg("spider", spiderScale));
+  let down = false;
+  function drop() {
+    down = true;
+    wrap.classList.add("down");
+    sfx.web();
+    setTimeout(() => {
+      down = false;
+      wrap.classList.remove("down");
+      sfx.web();
+      schedule();
+    }, 3000 + Math.random() * 3000);
+  }
+  function schedule() {
+    setTimeout(drop, 8000 + Math.random() * 12000);
+  }
+  wrap.querySelector(".spider").addEventListener("click", () => {
+    if (down) {
+      sfx.button();
+      freebie();
+      wrap.classList.remove("down");
+      down = false;
+      setTimeout(schedule, 6000 + Math.random() * 8000);
+    } else {
+      const s = wrap.querySelector(".spider");
+      s.classList.remove("wiggle");
+      void s.offsetWidth;
+      s.classList.add("wiggle");
+      toast("the spider's not home yet. they're shy.");
+    }
+  });
+  schedule();
+}
+
+function initMenu() {
+  const menu = $("#menu");
+  const head = $("#menuHead");
+  const left0 = window.innerWidth - menu.offsetWidth - 16;
+  menu.style.left = left0 + "px";
+  menu.style.top = "16px";
+  let drag = null;
+  let moved = false;
+  const grip = head.querySelector(".grip");
+  const paintGrip = () => { grip.textContent = menu.classList.contains("closed") ? ":::tap" : ":::drag"; };
+  if (window.innerWidth <= 940) menu.classList.add("closed");
+  paintGrip();
+  head.addEventListener("pointerdown", e => {
+    drag = { sx: e.clientX, sy: e.clientY, lx: menu.offsetLeft, ly: menu.offsetTop };
+    moved = false;
+    head.setPointerCapture(e.pointerId);
+  });
+  head.addEventListener("pointermove", e => {
+    if (!drag) return;
+    const dx = e.clientX - drag.sx;
+    const dy = e.clientY - drag.sy;
+    if (Math.abs(dx) + Math.abs(dy) > 8) moved = true;
+    const nx = Math.max(0, Math.min(window.innerWidth - menu.offsetWidth, drag.lx + dx));
+    const ny = Math.max(0, Math.min(window.innerHeight - menu.offsetHeight, drag.ly + dy));
+    menu.style.left = nx + "px";
+    menu.style.top = ny + "px";
+  });
+  head.addEventListener("pointerup", () => {
+    const dragged = moved;
+    drag = null;
+    if (!dragged) {
+      menu.classList.toggle("closed");
+      paintGrip();
+      sfx.button();
+    }
+  });
+  head.addEventListener("pointercancel", () => { drag = null; });
+
+  $("#newsBtn").addEventListener("click", () => {
+    $("#newsBox").classList.toggle("open");
+  });
+  $("#joinBtn").addEventListener("click", () => {
+    const em = $("#emailInput").value.trim();
+    if (!em) { toast("need an email, friend."); return; }
+    $("#emailInput").value = "";
+    $("#newsBox").classList.remove("open");
+    toast("you're in. welcome.");
+  });
+  $("#contactLink").href = "mailto:" + CONFIG.email;
+  $("#cafeLink").href = CONFIG.cafeUrl;
+  if ($("#donateLink")) $("#donateLink").href = CONFIG.donateUrl;
+  if ($("#donateBtn")) $("#donateBtn").href = CONFIG.donateUrl;
+  if ($("#zineLink")) $("#zineLink").href = CONFIG.zineUrl;
+  if ($("#zineBill")) $("#zineBill").href = CONFIG.zineUrl;
+  $("#copyLink").href = CONFIG.cafeUrl;
+  $("#copyLink").textContent = CONFIG.copyright;
+  $("#yearEl").textContent = new Date().getFullYear();
+
+  const muteLabel = $("#muteLabel");
+  const paintMute = () => { muteLabel.textContent = sfxMuted ? "chimes: off" : "chimes: on"; };
+  paintMute();
+  $("#muteBtn").addEventListener("click", () => {
+    sfxMuted = !sfxMuted;
+    try { localStorage.setItem("vendi.muted", sfxMuted ? "1" : "0"); } catch (e) {}
+    paintMute();
+    if (!sfxMuted) sfx.select();
+    toast(sfxMuted ? "the machine goes quiet." : "sound's back.");
+  });
+}
+
+function fit() {
+  const m = $("#machine");
+  const wrap = $("#machineWrap");
+  const stage = document.querySelector(".stage");
+  const cs = getComputedStyle(stage);
+  const gap = parseFloat(cs.rowGap);
+  const gapTotal = isNaN(gap) ? 0 : gap * Math.max(0, stage.children.length - 1);
+  let extras = 0;
+  Array.prototype.forEach.call(stage.children, el => {
+    if (el === wrap || getComputedStyle(el).position === "absolute") return;
+    extras += el.offsetHeight;
+  });
+  const overhead = Math.max(
+    60,
+    (parseFloat(cs.paddingTop) || 0) + (parseFloat(cs.paddingBottom) || 0) +
+    gapTotal + extras
+  );
+
+  const fluid = () => {
+    m.style.transform = "none";
+    wrap.style.width = "";
+    wrap.style.height = "";
+  };
+
+  if (window.innerWidth <= 620) { fluid(); return; }
+
+  const scale = Math.min(
+    1,
+    (window.innerWidth - 24) / m.offsetWidth,
+    (window.innerHeight - overhead - 24) / m.offsetHeight
+  );
+  if (scale < 0.6) { fluid(); return; }
+
+  m.style.transform = "scale(" + scale + ")";
+  wrap.style.width = Math.round(m.offsetWidth * scale) + "px";
+  wrap.style.height = Math.round(m.offsetHeight * scale) + "px";
+}
+
+document.querySelectorAll(".coin").forEach(b => {
+  b.addEventListener("click", () => {
+    const amt = parseFloat(b.dataset.amt);
+    sfx.coin();
+    if (isNaN(amt)) {
+      if (b.id === "returnBtn") {
+        if (credit <= 0) { sfx.error(); toast("nothing to return."); return; }
+        sfx.return();
+        toast("returned " + fmt(credit));
+        credit = 0;
+        updateLED();
+      } else if (b.id === "restockBtn") {
+        sfx.restock();
+        stock();
+        renderShelf();
+        selection = null;
+        highlightSel();
+        updateLED();
+        toast("restocked. fresh-ish.");
+      }
+      return;
+    }
+    credit = Math.round((credit + amt) * 100) / 100;
+    updateLED();
+    if (selection) {
+      const it = ITEMS[shelf[selection.r * 4 + selection.c]];
+      if (credit >= it.price) vend();
+    }
+  });
+});
+
+$("#modal").addEventListener("click", e => { if (e.target === $("#modal")) closeModal(); });
+$("#modalClose").addEventListener("click", closeModal);
+
+window.addEventListener("resize", () => {
+  fit();
+  const menu = $("#menu");
+  const ml = parseInt(menu.style.left) || 0;
+  const mt = parseInt(menu.style.top) || 0;
+  menu.style.left = Math.max(0, Math.min(window.innerWidth - menu.offsetWidth, ml)) + "px";
+  menu.style.top = Math.max(0, Math.min(window.innerHeight - menu.offsetHeight, mt)) + "px";
+});
+const sign = $("#sign");
+if (sign) {
+  sign.addEventListener("click", grabZine);
+  sign.addEventListener("keydown", e => {
+    if (e.key === "Enter" || e.key === " ") { e.preventDefault(); grabZine(); }
+  });
+}
+
+stock();
+renderShelf();
+renderKeypad();
+updateLED();
+initSpider();
+initMenu();
+fit();
+document.fonts.ready.then(fit);
+</script>
+
+<script src="https://storage.ko-fi.com/cdn/scripts/overlay-widget.js"></script>
+<script>
+kofiWidgetOverlay.draw("cafedreamr", {
+  "type": "floating-chat",
+  "floating-chat.donateButton.text": "support me",
+  "floating-chat.donateButton.background-color": "#ccff00",
+  "floating-chat.donateButton.text-color": "#0b0b0e"
+});
+</script>
+</body>
+</html>
