@@ -1,0 +1,892 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0d001a">
+<title>make it real &middot; cafedreamr</title>
+<meta name="description" content="Make it real, piece by piece. Every dish on the menu is a real drawing waiting to be made &mdash; named for the character who wears it. Pick the one that pulled you in.">
+<meta property="og:title" content="make it real &middot; cafedreamr">
+<meta property="og:description" content="Every dish on the menu is a real drawing waiting to be made. Fund the one that pulled you in.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://user.uploads.dev/file/c9b2b6aecf4e03e1aaf4b25ea176cf07.jpg">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%230d001a'/%3E%3Ccircle cx='8' cy='8' r='5.4' fill='none' stroke='%239d71e4' stroke-width='1.1' stroke-dasharray='1.6 2'/%3E%3Ccircle cx='8' cy='8' r='2.6' fill='none' stroke='%23c0a6ff' stroke-width='1'/%3E%3Ccircle cx='8' cy='8' r='1' fill='%23ccff00'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Klee+One:wght@400;600&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Vampiro+One&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   the menu — cafedreamr
+   the funding page. ko-fi can only carry ONE goal at a time,
+   so the goal lives there and the *menu* lives here: every
+   piece is its own little fund, named for the character who
+   wears it, all of it funnelling into the same ko-fi.
+
+   EDIT SURFACE (all in the script block at the bottom of the page):
+     KOFI    — your ko-fi page (one line, used by every button)
+     HOME    — the terminal
+     PEOPLE  — the cast: accent colour + hue per character
+     PIECES  — the menu itself: name / blurb / price / raised / orb
+     GOAL    — the goal headline + the note that gets copied
+   `raised` is hand-maintained: bump it when a piece gets funded.
+   ============================================================ */
+:root{
+  --plum:#0d001a; --plum2:#1a002e; --plum3:#12001f;
+  --ink:#0b0b0e; --ink2:#141419; --ink3:#1b1b22;
+  --lime:#ccff00; --pink:#ff2d95; --cyan:#00e5ff;
+  --violet:#bf40bf; --violet2:#ee82ee; --purple:#9d71e4;
+  --purple2:#c0a6ff; --grape:#5b1a96;
+  --corn:#6495ed; --mint:#98fb98;
+  --cream:#e9e6de; --lav:#fff0f5; --dim:#8b83a0;
+  --line:rgba(255,255,255,.10);
+  --pline:rgba(157,113,228,.32);
+  --mono:'Space Mono', ui-monospace, monospace;
+  --disp:'Bebas Neue', impact, sans-serif;
+  --logo:'Vampiro One', cursive;
+  --body:'Klee One', system-ui, sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--plum); color:var(--lav); font-family:var(--body);
+  text-align:left; min-height:100vh; overflow-x:hidden;
+  -webkit-tap-highlight-color:transparent;
+}
+[hidden]{display:none!important}
+
+/* ---------------- background ---------------- */
+.bg{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;
+  background:
+    radial-gradient(1100px 720px at 50% -14%, rgba(157,113,228,.22), transparent 62%),
+    radial-gradient(820px 640px at 84% 108%, rgba(255,45,149,.11), transparent 62%),
+    radial-gradient(760px 620px at 8% 92%, rgba(0,229,255,.09), transparent 62%),
+    linear-gradient(180deg,#170029 0%, var(--plum) 48%, #07000f 100%)}
+#stars{position:absolute;inset:0;width:100%;height:100%;display:block;opacity:.8}
+.floor{position:absolute;left:-25%;right:-25%;bottom:-4%;height:46%;
+  background:
+    repeating-linear-gradient(90deg, rgba(157,113,228,.20) 0 1px, transparent 1px 6%),
+    repeating-linear-gradient(0deg, rgba(157,113,228,.20) 0 1px, transparent 1px 32px);
+  transform:perspective(360px) rotateX(73deg); transform-origin:50% 100%;
+  -webkit-mask-image:linear-gradient(180deg,transparent, #000 62%);
+  mask-image:linear-gradient(180deg,transparent, #000 62%); opacity:.6;
+  animation:floor 7s linear infinite}
+@keyframes floor{to{background-position:0 32px, 0 32px}}
+.band{position:absolute;left:0;right:0;height:190px;top:-200px;
+  background:linear-gradient(180deg,transparent, rgba(192,166,255,.07), transparent);
+  animation:band 11s linear infinite}
+@keyframes band{to{top:100%}}
+.vign{position:absolute;inset:0;background:
+  radial-gradient(150% 120% at 50% 42%, transparent 34%, rgba(4,0,10,.78) 100%)}
+.scan{position:absolute;inset:0;opacity:.3;
+  background:repeating-linear-gradient(to bottom, rgba(255,255,255,.035) 0 1px, transparent 1px 3px)}
+.grain{position:absolute;inset:0;opacity:.5;mix-blend-mode:overlay;
+  background-image:radial-gradient(rgba(255,255,255,.06) 1px, transparent 1px);
+  background-size:3px 3px}
+
+.stage{position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:22px 16px 40px}
+
+/* ---------------- marquee ---------------- */
+.marquee{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;
+  border:1px solid var(--pline);border-radius:16px 16px 6px 6px;
+  background:linear-gradient(180deg,rgba(157,113,228,.14),rgba(157,113,228,.03));
+  padding:13px 16px;position:relative;overflow:hidden}
+.marquee:before{content:"";position:absolute;left:0;right:0;top:0;height:2px;
+  background:linear-gradient(90deg,var(--purple),var(--cyan),var(--pink));opacity:.85}
+.marquee:after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.5;
+  background:repeating-linear-gradient(90deg, rgba(157,113,228,.10) 0 1px, transparent 1px 26px)}
+.mtitle{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;min-width:0;position:relative;z-index:1}
+.brand{font-family:var(--logo);font-size:28px;letter-spacing:.05em;color:var(--purple2);
+  white-space:nowrap;line-height:1.1;
+  text-shadow:0 0 12px rgba(157,113,228,.75), 0 0 38px rgba(157,113,228,.3),
+              2px 0 0 rgba(255,45,149,.4), -2px 0 0 rgba(0,229,255,.32);
+  animation:flick 9s ease-in-out infinite}
+@keyframes flick{0%,93%,100%{opacity:1}94%{opacity:.66}95.5%{opacity:.95}97%{opacity:.8}}
+.tag{font-family:var(--mono);font-size:9px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--dim);border:1px solid var(--line);border-radius:999px;padding:4px 9px;white-space:nowrap}
+.led{width:8px;height:8px;border-radius:50%;background:var(--violet2);
+  box-shadow:0 0 12px var(--violet2);animation:blip 2.2s ease-in-out infinite;align-self:center}
+@keyframes blip{0%,100%{opacity:1}50%{opacity:.2}}
+.mact{display:flex;gap:8px;position:relative;z-index:1;flex-wrap:wrap}
+.back{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--lav);text-decoration:none;border:1px solid var(--pline);border-radius:999px;
+  padding:8px 12px;white-space:nowrap;transition:.18s;background:rgba(13,0,26,.5);display:inline-block}
+.back:hover,.back:focus-visible{border-color:var(--purple2);color:var(--purple2);
+  box-shadow:0 0 16px rgba(192,166,255,.3);outline:none}
+.back.hot{border-color:rgba(204,255,0,.45);color:var(--lime)}
+.back.hot:hover,.back.hot:focus-visible{border-color:var(--lime);color:var(--lime);
+  box-shadow:0 0 18px rgba(204,255,0,.28)}
+
+/* ---------------- hud ---------------- */
+.hud{margin-top:11px;display:flex;align-items:center;justify-content:space-between;gap:12px;
+  flex-wrap:wrap;border:1px solid var(--line);border-radius:9px;padding:8px 12px;
+  background:linear-gradient(180deg,rgba(18,0,31,.9),rgba(11,0,20,.75))}
+.boot{font-family:var(--mono);font-size:10px;letter-spacing:.06em;color:var(--mint);min-width:0;
+  display:flex;align-items:center;gap:7px;flex:1 1 260px}
+.boot .pr{color:var(--pink)}
+.boot #bootTxt{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cur{display:inline-block;width:6px;height:11px;background:var(--mint);vertical-align:-1px;
+  animation:blink 1s steps(1) infinite;flex:0 0 auto}
+@keyframes blink{50%{opacity:0}}
+.meters{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.meter{font-family:var(--mono);font-size:8.5px;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--dim);border:1px solid var(--line);border-radius:999px;padding:5px 10px;white-space:nowrap}
+.meter b{color:var(--purple2);font-weight:700}
+.meter.fund b{color:var(--lime)}
+.meter.wip b{color:var(--pink)}
+
+/* ---------------- board ---------------- */
+.board{position:relative;margin-top:12px;border:1px solid var(--pline);border-radius:12px;
+  padding:11px;overflow:hidden;
+  background:linear-gradient(180deg,rgba(157,113,228,.07),rgba(11,0,20,.55));
+  box-shadow:inset 0 0 70px rgba(0,0,0,.55), 0 0 30px rgba(157,113,228,.10)}
+.boardbar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;
+  font-family:var(--mono);font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);
+  padding:0 3px 9px}
+.boardbar b{color:var(--purple2);font-weight:700}
+.boardbar .sd{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--lime);
+  box-shadow:0 0 8px var(--lime);margin:0 2px -1px 3px;animation:blip 1.8s ease-in-out infinite}
+.sweep{position:absolute;left:-10%;right:-10%;height:150px;top:-160px;pointer-events:none;z-index:6;
+  background:linear-gradient(180deg,transparent, rgba(192,166,255,.075), transparent);
+  animation:band 8.5s linear infinite}
+.brk{position:absolute;width:14px;height:14px;pointer-events:none;z-index:7;opacity:.6}
+.brk:before,.brk:after{content:"";position:absolute;background:var(--purple)}
+.brk:before{width:100%;height:1px} .brk:after{height:100%;width:1px}
+.brk.tl{top:5px;left:5px} .brk.tr{top:5px;right:5px;transform:scaleX(-1)}
+.brk.bl{bottom:5px;left:5px;transform:scaleY(-1)} .brk.br{bottom:5px;right:5px;transform:scale(-1)}
+
+/* ---------------- the goal ---------------- */
+.goalgrid{display:grid;grid-template-columns:1.15fr .85fr;gap:14px;align-items:start;
+  position:relative;z-index:2}
+.gleft{min-width:0}
+.kick{font-family:var(--mono);font-size:8.5px;letter-spacing:.24em;text-transform:uppercase;
+  color:var(--dim);margin:0 0 7px}
+.gtitle{font-family:var(--disp);font-size:clamp(32px,6vw,58px);letter-spacing:.05em;
+  line-height:.95;margin:0 0 4px;color:var(--lav);
+  text-shadow:0 0 26px rgba(157,113,228,.55)}
+.gtitle em{font-style:normal;color:var(--purple2)}
+.gsub{font-family:var(--mono);font-size:9px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--pink);margin:0 0 13px}
+.lede{margin:0 0 15px;font-size:14px;line-height:1.72;color:#cdc4e0;max-width:56ch}
+.lede b{color:var(--lav);font-weight:600}
+.gbar{position:relative;height:16px;border-radius:999px;overflow:hidden;
+  border:1px solid rgba(157,113,228,.45);background:rgba(11,0,20,.8)}
+.gbar i{display:block;height:100%;width:0;border-radius:999px;
+  background:linear-gradient(90deg,var(--grape),var(--violet),var(--purple2));
+  box-shadow:0 0 18px rgba(192,166,255,.5);transition:width 1.1s cubic-bezier(.22,.9,.25,1)}
+.gbar span{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--mono);
+  font-size:8px;letter-spacing:.22em;text-transform:uppercase;color:var(--lav);
+  text-shadow:0 1px 5px #000}
+.gnums{display:flex;gap:14px;flex-wrap:wrap;margin-top:9px;font-family:var(--mono);font-size:9px;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+.gnums b{color:var(--lav);font-weight:700;font-size:12px;letter-spacing:.06em}
+.gnums .here b{color:var(--lime)}
+.gacts{display:flex;gap:9px;flex-wrap:wrap;margin-top:14px}
+.chip{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--lav);background:rgba(157,113,228,.10);border:1px solid rgba(157,113,228,.55);
+  border-radius:999px;padding:10px 15px;cursor:pointer;transition:.16s;text-decoration:none;
+  display:inline-flex;align-items:center;gap:7px;line-height:1.2}
+.chip:hover,.chip:focus-visible{border-color:var(--lime);color:var(--lime);
+  box-shadow:0 0 16px rgba(204,255,0,.22);outline:none}
+.chip.big{border-color:rgba(204,255,0,.6);color:var(--lime);background:rgba(204,255,0,.07);
+  padding:12px 18px;font-size:10.5px}
+.chip.big:hover,.chip.big:focus-visible{background:rgba(204,255,0,.14);
+  box-shadow:0 0 26px rgba(204,255,0,.3)}
+.chip.ok{border-color:var(--lime);color:var(--lime);background:rgba(204,255,0,.14)}
+
+/* ---------------- the fund map ---------------- */
+.gright{min-width:0}
+.mapwrap{position:relative;border:1px solid var(--line);border-radius:11px;overflow:hidden;
+  background:
+    radial-gradient(120% 90% at 50% 6%, rgba(157,113,228,.16), transparent 64%),
+    linear-gradient(180deg,#150029,#0a0013)}
+.mapwrap svg{display:block;width:100%;height:auto}
+#fundmap .sdot{fill:#fff0f5}
+#fundmap .seg{fill:none;stroke:rgba(192,166,255,.42);stroke-width:.9;stroke-dasharray:2 5;
+  animation:flow 2.6s linear infinite}
+@keyframes flow{to{stroke-dashoffset:-14}}
+#fundmap .orb{cursor:pointer}
+#fundmap .orb .halo{fill:var(--oc);opacity:.11;transition:.2s}
+#fundmap .orb:hover .halo{opacity:.22}
+#fundmap .orb .ring{fill:none;stroke:var(--oc);stroke-opacity:.34;stroke-width:.8;stroke-dasharray:2 4}
+#fundmap .orb .arc{fill:none;stroke:var(--oc);stroke-width:2.4;stroke-linecap:round;
+  transition:stroke-dashoffset .9s cubic-bezier(.22,.9,.25,1)}
+#fundmap .orb .disc{fill:#0d001a;stroke:var(--oc);stroke-opacity:.75;stroke-width:.9}
+#fundmap .orb .core{fill:var(--oc)}
+#fundmap .orb.done .disc{fill:rgba(204,255,0,.16)}
+#fundmap .orb.done .core{fill:var(--lime)}
+#fundmap .orb.done .ring{stroke:var(--lime);stroke-opacity:.4}
+#fundmap .orb .olbl{fill:#fff0f5;font-family:var(--mono);font-size:8px;text-anchor:middle;
+  letter-spacing:.12em;text-transform:uppercase;opacity:.72}
+#fundmap .orb:hover .olbl{fill:var(--oc);opacity:1}
+.mapcap{font-family:var(--mono);font-size:8px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--dim);padding:8px 10px 2px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.mapcap b{color:var(--purple2);font-weight:700}
+.leg{display:flex;gap:12px;flex-wrap:wrap;padding:0 10px 10px;font-family:var(--mono);font-size:8px;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+.leg i{display:inline-block;width:8px;height:8px;border-radius:50%;border:1px solid var(--dim);
+  margin:0 4px -1px 0}
+.leg .o i{border-color:var(--purple2)}
+.leg .w i{border-color:var(--pink);background:rgba(255,45,149,.35)}
+.leg .f i{border-color:var(--lime);background:rgba(204,255,0,.4)}
+
+/* ---------------- the menu ---------------- */
+.menu{display:grid;grid-template-columns:repeat(auto-fill,minmax(292px,1fr));gap:12px;
+  position:relative;z-index:2}
+.piece{position:relative;display:flex;flex-direction:column;overflow:hidden;
+  border:1px solid rgba(157,113,228,.32);
+  border-color:color-mix(in srgb, var(--accent,#c0a6ff) 40%, transparent);
+  border-radius:12px;background:linear-gradient(180deg,#160027,#0b0016);
+  transition:transform .2s ease, border-color .2s ease, box-shadow .2s ease}
+.piece:hover{transform:translateY(-3px);
+  border-color:var(--accent,#c0a6ff);
+  box-shadow:0 18px 40px -20px #000, 0 0 26px -8px var(--accent,#c0a6ff)}
+.piece.lit{border-color:var(--lime);box-shadow:0 0 0 1px rgba(204,255,0,.35), 0 0 34px -8px var(--lime)}
+.part{position:relative;aspect-ratio:16/7;overflow:hidden;border-bottom:1px solid rgba(255,255,255,.07);
+  background:
+    radial-gradient(115% 130% at 32% 16%, hsl(var(--h,285) 88% 58% / .38), transparent 62%),
+    conic-gradient(from 215deg at 50% 55%, hsl(var(--h,285) 68% 25%), hsl(calc(var(--h,285) + 26) 78% 11%), hsl(var(--h,285) 66% 23%)),
+    linear-gradient(180deg,#180029,#0a0013)}
+.part .sig{position:absolute;inset:0;width:100%;height:100%;display:block;color:var(--accent,#c0a6ff)}
+.part .sig .rot,.part .sig .rot2{transform-box:fill-box;transform-origin:center}
+.part .sig .rot{animation:spinA 30s linear infinite}
+.part .sig .rot2{animation:spinB 21s linear infinite}
+@keyframes spinA{to{transform:rotate(360deg)}}
+@keyframes spinB{to{transform:rotate(-360deg)}}
+.part .sig .ring{fill:none;stroke:currentColor;stroke-opacity:.42;stroke-width:1;stroke-dasharray:2 4}
+.part .sig .p1{fill:currentColor;fill-opacity:.13;stroke:currentColor;stroke-opacity:.95;stroke-width:1.4}
+.part .sig .p2{fill:none;stroke:currentColor;stroke-opacity:.65;stroke-width:1.05}
+.part .sig line{stroke:currentColor;stroke-opacity:.5;stroke-width:.95}
+.part .sig .halo{fill:none;stroke:currentColor;stroke-opacity:.45;stroke-width:.8}
+.part .sig .core{fill:currentColor}
+.part .shot{position:absolute;inset:0;z-index:2;width:100%;height:100%;object-fit:cover;display:block;
+  opacity:0;transition:opacity .5s ease;filter:saturate(1.05) contrast(1.04) brightness(.94)}
+.part .shot.on{opacity:1}
+.part .tint{position:absolute;inset:0;z-index:3;pointer-events:none;
+  background:linear-gradient(180deg, rgba(26,0,46,.14), rgba(11,0,20,.62))}
+.part .scanl{position:absolute;inset:0;z-index:4;pointer-events:none;opacity:.3;
+  background:linear-gradient(180deg, rgba(11,0,20,.72), transparent 44%),
+             repeating-linear-gradient(to bottom, rgba(0,0,0,.4) 0 1px, transparent 1px 3px)}
+.pnum{position:absolute;top:6px;left:8px;z-index:5;font-family:var(--mono);font-size:9px;
+  letter-spacing:.1em;color:rgba(255,240,245,.72);text-shadow:0 1px 4px #12001f,0 0 6px #12001f}
+.pwhen{position:absolute;top:6px;right:8px;z-index:5;font-family:var(--mono);font-size:8px;
+  letter-spacing:.16em;text-transform:uppercase;color:rgba(255,240,245,.72);line-height:1.5;
+  border:1px solid rgba(255,255,255,.16);border-radius:999px;padding:3px 9px;
+  background:rgba(11,0,20,.5);white-space:nowrap}
+.pmark{position:absolute;bottom:7px;left:8px;z-index:5;font-family:var(--mono);font-size:8.5px;
+  letter-spacing:.18em;text-transform:uppercase}
+.pmark.done{color:var(--lime)} .pmark.wip{color:var(--pink)} .pmark.open{color:var(--purple2)}
+.pbody{padding:12px 13px 13px;display:flex;flex-direction:column;flex:1;gap:9px}
+.pwho{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.pwho b{font-family:var(--disp);font-size:19px;letter-spacing:.12em;line-height:1;
+  color:var(--accent,#c0a6ff)}
+.pwho em{font-family:var(--mono);font-size:8px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--dim);font-style:normal}
+.pname{margin:0;font-family:var(--body);font-weight:600;font-size:16.5px;line-height:1.25;color:var(--lav)}
+.pname a{color:inherit;text-decoration:none;border-bottom:1px dotted rgba(255,240,245,.28)}
+.pname a:hover{color:var(--purple2);border-color:var(--purple2)}
+.pblurb{margin:0;font-size:12.5px;line-height:1.6;color:#cfc6e2;flex:1}
+.pbar{position:relative;height:8px;border-radius:999px;overflow:hidden;
+  background:rgba(11,0,20,.85);border:1px solid rgba(255,255,255,.09)}
+.pbar i{display:block;height:100%;border-radius:999px;width:0;
+  background:linear-gradient(90deg,var(--accent,#c0a6ff),rgba(255,255,255,.72));
+  transition:width .9s cubic-bezier(.22,.9,.25,1)}
+.prow{display:flex;align-items:baseline;gap:14px;row-gap:6px;flex-wrap:wrap;font-family:var(--mono);
+  font-size:9px;letter-spacing:.13em;text-transform:uppercase;color:var(--dim)}
+.pprice{font-size:15px;letter-spacing:.04em;color:var(--lav);font-weight:700}
+.prow .pstat.done{color:var(--lime)} .prow .pstat.wip{color:var(--pink)}
+.pacts{display:flex;gap:8px;flex-wrap:wrap;align-items:stretch;margin-top:2px}
+.pacts .chip{padding:9px 13px;font-size:9px;flex:1 1 auto;justify-content:center;white-space:nowrap}
+.mini{font-family:var(--mono);font-size:8.5px;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--dim);background:transparent;border:1px solid var(--line);border-radius:999px;
+  padding:9px 12px;cursor:pointer;transition:.16s;flex:0 0 auto;white-space:nowrap;line-height:1.3}
+.mini:hover,.mini:focus-visible{color:var(--pink);border-color:rgba(255,45,149,.5);outline:none}
+.mini.ok{color:var(--lime);border-color:rgba(204,255,0,.55)}
+
+/* ---------------- how it works ---------------- */
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:11px;position:relative;z-index:2}
+.step{border:1px solid var(--line);border-radius:10px;padding:11px 12px;
+  background:linear-gradient(180deg,rgba(157,113,228,.07),rgba(11,0,20,.5))}
+.step b{display:block;font-family:var(--mono);font-size:8px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--pink);margin-bottom:6px}
+.step p{margin:0;font-size:12.5px;line-height:1.6;color:#d6cde8}
+
+/* ---------------- footer ---------------- */
+.foot{margin-top:16px;font-family:var(--mono);font-size:9px;letter-spacing:.15em;
+  text-transform:uppercase;color:var(--dim);text-align:center;opacity:.85;line-height:2}
+.foot em{color:var(--pink);font-style:normal}
+.foot a{color:var(--lav);text-decoration:none;border-bottom:1px solid var(--line)}
+.foot a:hover{color:var(--purple2);border-color:var(--purple2)}
+
+/* ---------------- responsive ---------------- */
+@media (max-width:980px){
+  .goalgrid{grid-template-columns:1fr}
+}
+@media (max-width:640px){
+  .stage{padding:15px 11px 32px}
+  .brand{font-size:24px}
+  .marquee{padding:11px 12px}
+  .tag{font-size:8px;padding:3px 8px}
+  .hud{gap:8px}
+  .boot{font-size:9px;flex:1 1 100%}
+  .menu{grid-template-columns:1fr;gap:10px}
+  .gtitle{font-size:clamp(30px,10vw,44px)}
+  .lede{font-size:13px}
+  .gnums{gap:11px;font-size:8.5px}
+  .gnums b{font-size:11px}
+}
+@media (max-width:400px){
+  .brand{font-size:21px;letter-spacing:.03em}
+  .pwho b{font-size:17px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important;transition-duration:.01ms!important}
+}
+</style>
+</head>
+<body>
+
+<div class="bg">
+  <canvas id="stars"></canvas>
+  <div class="floor"></div>
+  <div class="band"></div>
+  <div class="vign"></div>
+  <div class="scan"></div>
+  <div class="grain"></div>
+</div>
+
+<main class="stage">
+
+  <header class="marquee">
+    <div class="mtitle">
+      <span class="brand">the menu</span>
+      <span class="tag">make it real &middot; order sheet 01</span>
+      <span class="led"></span>
+    </div>
+    <div class="mact">
+      <a class="back hot" data-kofi href="https://ko-fi.com/cafedreamr" target="_blank" rel="noopener">the ko-fi &rarr;</a>
+      <a class="back" data-home href="https://www.cafedreamr.art/">&larr; the terminal</a>
+    </div>
+  </header>
+
+  <div class="hud">
+    <div class="boot"><span class="pr">&gt;</span><span id="bootTxt"></span><i class="cur"></i></div>
+    <div class="meters">
+      <span class="meter fund">the fund <b id="mFund">&mdash;</b></span>
+      <span class="meter">pieces <b id="mPieces">&mdash;</b></span>
+      <span class="meter wip">on the easel <b id="mWip">&mdash;</b></span>
+    </div>
+  </div>
+
+  <section class="board">
+    <span class="brk tl"></span><span class="brk tr"></span>
+    <span class="brk bl"></span><span class="brk br"></span>
+    <div class="boardbar">
+      <span>the goal <b id="goalName">&mdash;</b></span>
+      <span>target <b id="goalTarget">&mdash;</b></span>
+      <span>signal<i class="sd"></i><b>collecting</b></span>
+    </div>
+    <div class="sweep"></div>
+
+    <div class="goalgrid">
+      <div class="gleft">
+        <p class="kick">what you're funding</p>
+        <h1 class="gtitle">a menu of <em>small</em> drawings</h1>
+        <p class="gsub" id="gsub">&mdash;</p>
+        <p class="lede" id="lede"></p>
+
+        <div class="gbar"><i id="gfill"></i><span id="gpct">&nbsp;</span></div>
+        <div class="gnums">
+          <span>raised <b id="nRaised">&mdash;</b></span>
+          <span>of <b id="nTarget">&mdash;</b></span>
+          <span class="here"><b id="nPct">&mdash;</b> there</span>
+          <span>pieces <b id="nDone">&mdash;</b></span>
+        </div>
+
+        <div class="gacts">
+          <a class="chip big" id="fundAll" data-kofi href="https://ko-fi.com/cafedreamr" target="_blank" rel="noopener">fund the whole fund &rarr;</a>
+          <button class="chip" id="copyGoal" type="button">copy the goal note</button>
+        </div>
+      </div>
+
+      <div class="gright">
+        <div class="mapwrap">
+          <svg id="fundmap" viewBox="0 0 420 336" role="img"
+               aria-label="the fund map: one orb per piece, filled as it gets funded"></svg>
+        </div>
+        <div class="mapcap">
+          <span>the day &middot; <b>one orb per piece</b></span>
+          <span>click an orb</span>
+        </div>
+        <div class="leg">
+          <span class="o"><i></i>open</span>
+          <span class="w"><i></i>in progress</span>
+          <span class="f"><i></i>funded</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="board">
+    <span class="brk tl"></span><span class="brk tr"></span>
+    <span class="brk bl"></span><span class="brk br"></span>
+    <div class="boardbar">
+      <span>the menu <b id="menuCount">&mdash;</b></span>
+      <span>prices in <b>usd</b></span>
+      <span>drawn by hand</span>
+    </div>
+    <div class="sweep"></div>
+    <div class="menu" id="menu"></div>
+  </section>
+
+  <section class="board">
+    <span class="brk tl"></span><span class="brk tr"></span>
+    <span class="brk bl"></span><span class="brk br"></span>
+    <div class="boardbar">
+      <span>how it works</span>
+      <span>no obligation until we agree</span>
+      <span>the light is always on</span>
+    </div>
+    <div class="steps">
+      <div class="step"><b>01 &middot; tell me</b><p>message me with the piece you want, or just the feeling you're after. a screenshot, a playlist, one word &mdash; all fine.</p></div>
+      <div class="step"><b>02 &middot; i quote it</b><p>i reply with a price and a rough timeline, usually within a couple of days. nothing is paid until we've agreed on something.</p></div>
+      <div class="step"><b>03 &middot; i sketch</b><p>i share the early stages so we're both sure it's heading where you want it before it goes any further.</p></div>
+      <div class="step"><b>04 &middot; it's yours</b><p>finished, sent to you, and your name goes in the back of the zine. the piece stays your story.</p></div>
+    </div>
+  </section>
+
+  <div class="foot">
+    one drink at a time &middot; <em>the light is always on</em><br>
+    &copy; cafedreamr &middot; <a data-home href="https://www.cafedreamr.art/">the terminal</a> &middot;
+    <a href="https://www.cafedreamr.art/PLAY/">the long day</a> &middot;
+    <a href="https://www.cafedreamr.art/LORE/MAP.html">the realm map</a> &middot;
+    <a data-kofi href="https://ko-fi.com/cafedreamr" target="_blank" rel="noopener">ko-fi</a>
+  </div>
+</main>
+
+<script>
+(function(){
+  "use strict";
+
+  /* =============================================================== */
+  /*                       EDIT SURFACE                              */
+  /* =============================================================== */
+
+  var KOFI = "https://ko-fi.com/cafedreamr";   /* <- your ko-fi page      */
+  var HOME = "https://www.cafedreamr.art/";    /* <- the terminal         */
+  var STORE_NAME = "cafedreamr";
+
+  /* the goal, as it reads on ko-fi (the note button copies the body) */
+  var GOAL = {
+    name: "miki's zine \u00b7 the art fund",
+    note: "what you're funding: one piece from the menu, drawn by hand and made for the character who wears it.\u000A\u000Aevery piece has a name, a price and its own little bar. pick your person, send me the name of the piece, and i'll draw it \u2014 and put your name in the back of the zine.\u000A\u000Aevery tip, commission and membership goes to the art, whichever piece pulled you in. \u2014 the keeper"
+  };
+
+  /* the cast — accent colour + hue for the card art. hues are the
+     same five hours the game's orb map uses, so the two pages rhyme. */
+  var PEOPLE = {
+    star:  { label:"star",     place:"the counter",       hour:"dawn 06:40",      accent:"#c39dfb", h:264 },
+    milo:  { label:"milo",     place:"the garden",        hour:"morning 07:25",   accent:"#f96ce6", h:307 },
+    miki:  { label:"miki",     place:"the planning room", hour:"midday 12:10",    accent:"#e66cf9", h:292 },
+    hans:  { label:"hans",     place:"the stacks",        hour:"afternoon 15:30", accent:"#c16cf9", h:276 },
+    pearl: { label:"pearl",    place:"the shop floor",    hour:"evening 19:05",   accent:"#9b6cf9", h:260 },
+    cafe:  { label:"the caf\u00e9", place:"everywhere",    hour:"all day",         accent:"#c0a6ff", h:232 }
+  };
+
+  /* the menu itself. `orb` is where the piece sits on the fund map
+     (viewBox 0 0 420 336), roughly in the order of the day.
+     `raised` is hand-maintained — bump it when a piece gets funded.
+     `art` is optional: drop a picture into images/ and it fades in
+     over the generated sigil; a missing file is simply ignored. */
+  var PIECES = [
+    { id:"star-lavender-coat", who:"star", name:"the lavender coat",
+      blurb:"the coat star wears on the dawn shift \u2014 sewn from the first light, worn soft at the cuffs. the first thing anyone sees behind the counter.",
+      price:90, raised:35, art:"images/star-lavender-coat.png", orb:{x:48,y:252} },
+
+    { id:"star-recipe-card", who:"star", name:"the recipe card",
+      blurb:"the lavender spiced latte in star's own hand \u2014 two pumps, three taps, one warm band. the card lives in the till.",
+      price:60, raised:60, art:"images/star-recipe-card.png", orb:{x:110,y:184} },
+
+    { id:"milo-garden", who:"milo", name:"the garden at seven",
+      blurb:"milo's garden in the morning \u2014 the watering can, the quiet, the verse he reads twice before he says anything.",
+      price:95, raised:0, art:"images/milo-garden.png", orb:{x:172,y:136} },
+
+    { id:"miki-headphones", who:"miki", name:"the cans",
+      blurb:"the headphones miki mixes on. one ear off, always, so she hears you come in before she sees you.",
+      price:80, raised:80, art:"images/miki-headphones.png", orb:{x:234,y:114} },
+
+    { id:"miki-zine-cover", who:"miki", name:"the zine cover",
+      blurb:"the cover of miki's zine \u2014 the one image that has to be exactly right before any of the others get made.",
+      price:120, raised:25, art:"images/miki-zine-cover.png", orb:{x:296,y:132} },
+
+    { id:"hans-monocle", who:"hans", name:"the monocle & its chain",
+      blurb:"hans' monocle and the chain that keeps it \u2014 the thing miki rings him on at midday, mid-examination.",
+      price:70, raised:20, art:"images/hans-monocle.png", orb:{x:352,y:178} },
+
+    { id:"pearl-pearls", who:"pearl", name:"the pearls",
+      blurb:"the strand pearl handles on the shop floor at closing \u2014 one bead at a time, all the way round, before she turns the lights down.",
+      price:85, raised:0, art:"images/pearl-pearls.png", orb:{x:392,y:242} },
+
+    { id:"cafe-counter", who:"cafe", name:"the counter, empty",
+      blurb:"the counter itself at dawn, wiped clean, before the first order \u2014 the room the whole day happens in.",
+      price:110, raised:0, art:"images/cafe-counter.png", orb:{x:220,y:262} }
+  ];
+
+  /* =============================================================== */
+  /*                          HELPERS                                */
+  /* =============================================================== */
+
+  function esc(s){
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];
+    });
+  }
+  function money(n){ return "$" + Math.round(n).toLocaleString("en-US"); }
+  function sum(a, f){ return a.reduce(function(t, x){ return t + f(x); }, 0); }
+  function pctOf(p){ return Math.max(0, Math.min(1, p.price ? p.raised / p.price : 0)); }
+  function stateOf(p){ var r = pctOf(p); return r >= 1 ? "done" : (r > 0 ? "wip" : "open"); }
+  function whoOf(p){ return PEOPLE[p.who] || {}; }
+  function priceOf(p){ return p.price; }
+  function raisedOf(p){ return Math.min(p.raised, p.price); }
+
+  var TOTAL   = sum(PIECES, priceOf);
+  var RAISED  = sum(PIECES, raisedOf);
+  var DONE    = PIECES.filter(function(p){ return stateOf(p) === "done"; }).length;
+  var PCT     = TOTAL ? RAISED / TOTAL : 0;
+
+  /* ---- generated sigil art: a unique glyph per piece ---- */
+  function poly(n, r, rot){
+    var pts = [];
+    for(var k=0;k<n;k++){
+      var a = (Math.PI*2*k/n) + (rot*Math.PI/180) - Math.PI/2;
+      pts.push((50 + r*Math.cos(a)).toFixed(2) + "," + (50 + r*Math.sin(a)).toFixed(2));
+    }
+    return pts.join(" ");
+  }
+  function sigil(seed){
+    var s = Math.abs(Math.floor(seed)) || 0;
+    var rot = (s*37) % 360;
+    var n1  = 3 + (s % 6);
+    var n2  = 3 + ((s*5 + 2) % 7);
+    var r1  = 28 + (s % 3) * 2.6;
+    var r2  = 14 + (s % 4) * 3.4;
+    var ticks = "";
+    for(var k=0;k<4;k++){
+      var a = (Math.PI*2*k/4) + (rot*Math.PI/180);
+      ticks += '<line x1="' + (50 + 37*Math.cos(a)).toFixed(1) + '" y1="' + (50 + 37*Math.sin(a)).toFixed(1) +
+               '" x2="' + (50 + 45*Math.cos(a)).toFixed(1) + '" y2="' + (50 + 45*Math.sin(a)).toFixed(1) + '"/>';
+    }
+    return '<svg class="sig" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">'
+      + '<g transform="translate(50 50) scale(.78) translate(-50 -50)">'
+      +   '<g class="rot"><circle class="ring" cx="50" cy="50" r="45"/>'
+      +     '<polygon class="p1" points="' + poly(n1, r1, rot) + '"/></g>'
+      +   '<g class="rot2"><polygon class="p2" points="' + poly(n2, r2, rot*1.7) + '"/>' + ticks + '</g>'
+      +   '<circle class="halo" cx="50" cy="50" r="7.5"/>'
+      +   '<circle class="core" cx="50" cy="50" r="3.2"/>'
+      + '</g>'
+      + '</svg>';
+  }
+  function seedOf(str){
+    var h = 7;
+    for(var i=0;i<String(str).length;i++) h = (h*31 + String(str).charCodeAt(i)) % 100000;
+    return h;
+  }
+
+  /* =============================================================== */
+  /*                     THE HEADLINE NUMBERS                        */
+  /* =============================================================== */
+
+  function paintGoal(){
+    var pctTxt = Math.round(PCT*100) + "%";
+    document.getElementById("goalName").textContent = GOAL.name;
+    document.getElementById("goalTarget").textContent = money(TOTAL);
+    document.getElementById("gsub").textContent = "one goal at a time \u00b7 " + PIECES.length + " pieces \u00b7 " + DONE + " done";
+    document.getElementById("lede").innerHTML =
+      "everyone is pulled in by something different. <b>a coat.</b> <b>a pair of cans.</b> <b>a strand of pearls.</b> "
+      + "so the fund isn't one vague pot \u2014 it's a menu. every piece is a real drawing that doesn't exist yet, "
+      + "named for the character who wears it, with its own price and its own little bar. order the one that pulled "
+      + "you in, or fund the whole thing and take the set.";
+    document.getElementById("gfill").style.width = (PCT*100).toFixed(1) + "%";
+    document.getElementById("gpct").textContent = pctTxt + " funded";
+    document.getElementById("nRaised").textContent = money(RAISED);
+    document.getElementById("nTarget").textContent = money(TOTAL);
+    document.getElementById("nPct").textContent = pctTxt;
+    document.getElementById("nDone").textContent = DONE + "/" + PIECES.length;
+    document.getElementById("mFund").textContent = money(RAISED) + " / " + money(TOTAL);
+    document.getElementById("mPieces").textContent = PIECES.length;
+    document.getElementById("mWip").textContent = PIECES.filter(function(p){ return stateOf(p) === "wip"; }).length;
+    document.getElementById("menuCount").textContent = PIECES.length + " pieces";
+    document.title = "make it real \u00b7 " + money(RAISED) + " of " + money(TOTAL) + " \u00b7 " + STORE_NAME;
+  }
+
+  /* =============================================================== */
+  /*                        THE FUND MAP                             */
+  /* =============================================================== */
+
+  function buildMap(){
+    var svg = document.getElementById("fundmap");
+    if(!svg) return;
+
+    /* a deterministic sprinkle of stars so the map is stable */
+    var seed = 987654321;
+    function rnd(){ seed = (seed * 1103515245 + 12345) & 0x7fffffff; return seed / 0x7fffffff; }
+    var dots = "";
+    for(var i=0;i<50;i++){
+      dots += '<circle class="sdot" cx="'+(rnd()*420).toFixed(1)+'" cy="'+(rnd()*336).toFixed(1)
+            + '" r="'+(0.5 + rnd()*1.15).toFixed(2)+'" style="opacity:'+(0.10 + rnd()*0.42).toFixed(2)+'"/>';
+    }
+
+    /* two dotted horizons for depth */
+    var horizon = '<path class="hor" d="M-10 340 Q 210 322 430 340" fill="none" stroke="rgba(157,113,228,.15)" stroke-width=".8" stroke-dasharray="1.5 6"/>';
+
+    /* connectors between consecutive orbs */
+    var segs = "";
+    for(var j=1;j<PIECES.length;j++){
+      var a = PIECES[j-1].orb, b = PIECES[j].orb;
+      segs += '<path class="seg" d="M'+a.x+' '+a.y+' L'+b.x+' '+b.y+'"/>';
+    }
+
+    /* the orbs */
+    var orbs = "";
+    PIECES.forEach(function(p, i){
+      var pe = whoOf(p);
+      var cx = p.orb.x, cy = p.orb.y;
+      var prog = pctOf(p);
+      var C = 2*Math.PI*15;
+      var off = (C * (1 - prog)).toFixed(1);
+      var st = stateOf(p);
+      orbs += '<g class="orb '+st+'" data-id="'+esc(p.id)+'" style="--oc:'+(pe.accent||"#c0a6ff")+'">'
+        + '<title>'+esc(pe.label+" \u00b7 "+p.name+" \u2014 "+money(p.raised)+" of "+money(p.price))+'</title>'
+        + '<circle class="halo" cx="'+cx+'" cy="'+cy+'" r="22"/>'
+        + '<circle class="ring" cx="'+cx+'" cy="'+cy+'" r="15"/>'
+        + '<circle class="arc" cx="'+cx+'" cy="'+cy+'" r="15" transform="rotate(-90 '+cx+' '+cy+')"'
+        +   ' stroke-dasharray="'+C.toFixed(1)+'" stroke-dashoffset="'+C.toFixed(1)+'"/>'
+        + '<circle class="disc" cx="'+cx+'" cy="'+cy+'" r="9.5"/>'
+        + '<circle class="core" cx="'+cx+'" cy="'+cy+'" r="3.2"/>'
+        + '<text class="olbl" x="'+cx+'" y="'+(cy+31)+'">'+esc(pe.label)+'</text>'
+        + '</g>';
+    });
+
+    svg.innerHTML = '<g>'+dots+'</g>' + horizon + '<g>'+segs+'</g><g>'+orbs+'</g>';
+
+    /* let the arcs draw in after paint */
+    setTimeout(function(){
+      var arcs = svg.querySelectorAll(".arc");
+      for(var k=0;k<arcs.length;k++){
+        var g = arcs[k].parentNode, id = g.getAttribute("data-id");
+        var p = PIECES.filter(function(x){ return x.id === id; })[0];
+        if(p) arcs[k].setAttribute("stroke-dashoffset", (C_OF(p)).toFixed(1));
+      }
+    }, 90);
+
+    svg.addEventListener("click", function(e){
+      var g = e.target.closest ? e.target.closest(".orb") : null;
+      if(!g) return;
+      var card = document.querySelector('.piece[data-id="'+g.getAttribute("data-id")+'"]');
+      if(card){
+        card.scrollIntoView({ behavior:"smooth", block:"center" });
+        card.classList.add("lit");
+        setTimeout(function(){ card.classList.remove("lit"); }, 2000);
+      }
+    });
+  }
+  function C_OF(p){ var C = 2*Math.PI*15; return C * (1 - pctOf(p)); }
+
+  /* =============================================================== */
+  /*                         THE MENU                                */
+  /* =============================================================== */
+
+  function noteFor(p){
+    var pe = whoOf(p);
+    return "i'd like to fund: " + p.name + " (" + (pe.label||"") + ") \u2014 from the menu \u00b7 cafedreamr.art/MENU";
+  }
+
+  function pieceHTML(p, i){
+    var pe = whoOf(p);
+    var st = stateOf(p);
+    var prog = pctOf(p);
+    var gap = Math.max(0, p.price - p.raised);
+    var stlab = st === "done" ? "\u2713 funded" : (st === "wip" ? "in progress" : "open");
+    var mark  = st === "done" ? "\u2713 on the wall" : (st === "wip" ? "on the easel" : "waiting");
+    return ''
+      + '<article class="piece" data-id="'+esc(p.id)+'" style="--accent:'+(pe.accent||"#c0a6ff")+';--h:'+(pe.h||285)+'">'
+      +   '<div class="part">'
+      +     sigil(seedOf(p.id))
+      +     (p.art ? '<img class="shot" src="'+esc(p.art)+'" alt="" aria-hidden="true" loading="lazy">' : '')
+      +     '<span class="tint"></span><span class="scanl"></span>'
+      +     '<span class="pnum">'+String(i+1).padStart(2,"0")+' / '+String(PIECES.length).padStart(2,"0")+'</span>'
+      +     '<span class="pwhen">'+esc(pe.hour||"")+'</span>'
+      +     '<span class="pmark '+st+'">'+esc(mark)+'</span>'
+      +   '</div>'
+      +   '<div class="pbody">'
+      +     '<div class="pwho"><b>'+esc(pe.label||"")+'</b><em>'+esc(pe.place||"")+'</em></div>'
+      +     '<h3 class="pname"><a href="#'+esc(p.id)+'">'+esc(p.name)+'</a></h3>'
+      +     '<p class="pblurb">'+esc(p.blurb)+'</p>'
+      +     '<div class="pbar"><i data-w="'+(prog*100).toFixed(1)+'"></i></div>'
+      +     '<div class="prow">'
+      +       '<span class="pprice">'+money(p.price)+'</span>'
+      +       '<span class="pstat '+st+'">'+esc(stlab)+'</span>'
+      +       '<span>'+(gap > 0 ? money(gap)+" to go" : "complete")+'</span>'
+      +       '<span>'+Math.round(prog*100)+'%</span>'
+      +     '</div>'
+      +     '<div class="pacts">'
+      +       '<a class="chip" data-kofi href="'+esc(KOFI)+'" target="_blank" rel="noopener">order this piece &rarr;</a>'
+      +       '<button class="mini copybtn" type="button" data-note="'+esc(noteFor(p))+'">copy note</button>'
+      +     '</div>'
+      +   '</div>'
+      + '</article>';
+  }
+
+  function buildMenu(){
+    var wrap = document.getElementById("menu");
+    wrap.innerHTML = PIECES.map(pieceHTML).join("");
+
+    /* fade real art over the sigils when it exists */
+    var shots = wrap.querySelectorAll(".shot");
+    for(var i=0;i<shots.length;i++){
+      (function(img){
+        img.addEventListener("load", function(){ img.classList.add("on"); });
+        img.addEventListener("error", function(){ img.remove(); });
+        if(img.complete && img.naturalWidth) img.classList.add("on");
+      })(shots[i]);
+    }
+
+    /* animate the little bars after paint */
+    setTimeout(function(){
+      var bars = wrap.querySelectorAll(".pbar i");
+      for(var k=0;k<bars.length;k++) bars[k].style.width = bars[k].getAttribute("data-w") + "%";
+    }, 120);
+
+    wrap.addEventListener("click", function(e){
+      var b = e.target.closest ? e.target.closest(".copybtn") : null;
+      if(!b) return;
+      copyText(b.getAttribute("data-note"), b, "copied \u2713");
+    });
+  }
+
+  /* =============================================================== */
+  /*                          CLIPBOARD                              */
+  /* =============================================================== */
+
+  function copyText(text, btn, okLabel){
+    function flash(){
+      if(!btn) return;
+      var was = btn.textContent;
+      btn.textContent = okLabel || "copied";
+      btn.classList.add("ok");
+      setTimeout(function(){ btn.textContent = was; btn.classList.remove("ok"); }, 1800);
+    }
+    function fallback(){
+      try{
+        var ta = document.createElement("textarea");
+        ta.value = text; ta.setAttribute("readonly","");
+        ta.style.position = "fixed"; ta.style.left = "-4000px";
+        document.body.appendChild(ta); ta.select();
+        document.execCommand("copy");
+        document.body.removeChild(ta);
+        flash();
+      }catch(e){ /* nothing else to try */ }
+    }
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(flash, fallback);
+    } else fallback();
+  }
+
+  /* =============================================================== */
+  /*                           THE EDGES                             */
+  /* =============================================================== */
+
+  function wire(){
+    var ko = document.querySelectorAll("[data-kofi]");
+    for(var i=0;i<ko.length;i++) ko[i].setAttribute("href", KOFI);
+    var hm = document.querySelectorAll("[data-home]");
+    for(var j=0;j<hm.length;j++) hm[j].setAttribute("href", HOME);
+
+    var cg = document.getElementById("copyGoal");
+    if(cg) cg.addEventListener("click", function(){
+      copyText(GOAL.note + "\u000A\u000A" + KOFI, cg, "note copied \u2713");
+    });
+  }
+
+  /* =============================================================== */
+  /*                        BOOT SEQUENCE                            */
+  /* =============================================================== */
+
+  (function boot(){
+    var el = document.getElementById("bootTxt");
+    if(!el) return;
+    var narrow = window.innerWidth < 620;
+    var msg = narrow
+      ? ("menu loaded \u00b7 " + PIECES.length + " pieces \u00b7 " + Math.round(PCT*100) + "% funded")
+      : ("menu loaded \u00b7 " + PIECES.length + " pieces on the sheet \u00b7 " + money(RAISED) + " of " + money(TOTAL) + " \u00b7 " + Math.round(PCT*100) + "% funded");
+    var n = 0;
+    (function step(){
+      el.textContent = msg.slice(0, n++);
+      if(n <= msg.length) setTimeout(step, 22 + (n % 6) * 10);
+    })();
+  })();
+
+  /* =============================================================== */
+  /*                          STARFIELD                              */
+  /* =============================================================== */
+
+  (function stars(){
+    var c = document.getElementById("stars");
+    if(!c) return;
+    var x = c.getContext("2d");
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var w = 0, h = 0, list = [];
+    function build(){
+      w = c.width  = Math.floor(innerWidth  * dpr);
+      h = c.height = Math.floor(innerHeight * dpr);
+      list = [];
+      var n = Math.min(200, Math.round(innerWidth * innerHeight / 8500));
+      for(var i=0;i<n;i++){
+        list.push({ x:Math.random()*w, y:Math.random()*h,
+          r:(Math.random()*1.25 + 0.35) * dpr, a:Math.random()*0.6 + 0.2,
+          s:Math.random()*0.16 + 0.02, p:Math.random()*Math.PI*2 });
+      }
+    }
+    function tick(){
+      x.clearRect(0,0,w,h);
+      for(var i=0;i<list.length;i++){
+        var s = list[i];
+        s.p += 0.012;
+        x.globalAlpha = s.a * (0.62 + 0.38*Math.sin(s.p));
+        x.fillStyle = i % 13 === 0 ? "#ff2d95" : (i % 7 === 0 ? "#c0a6ff" : (i % 5 === 0 ? "#00e5ff" : "#fff0f5"));
+        x.beginPath(); x.arc(s.x, s.y, s.r, 0, 6.284); x.fill();
+        s.y += s.s * dpr;
+        if(s.y > h + 2){ s.y = -2; s.x = Math.random()*w; }
+      }
+      x.globalAlpha = 1;
+      requestAnimationFrame(tick);
+    }
+    build();
+    addEventListener("resize", build, { passive:true });
+    requestAnimationFrame(tick);
+  })();
+
+  /* =============================================================== */
+  /*                            GO                                   */
+  /* =============================================================== */
+
+  paintGoal();
+  buildMap();
+  buildMenu();
+  wire();
+
+  /* deep links: MENU/#miki-zine-cover lights that piece up */
+  (function deepLink(){
+    var id = (location.hash || "").replace(/^#/, "");
+    if(!id) return;
+    var card = document.querySelector('.piece[data-id="'+id.replace(/"/g,"")+'"]');
+    if(!card) return;
+    setTimeout(function(){
+      card.scrollIntoView({ behavior:"smooth", block:"center" });
+      card.classList.add("lit");
+    }, 320);
+  })();
+})();
+</script>
+</body>
+</html>
