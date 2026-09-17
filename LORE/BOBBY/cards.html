@@ -1,0 +1,1416 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0b0b0e">
+<title>the chimera collective · cafedreamr</title>
+<meta name="description" content="The chimera collective — collectible dossiers. Drag to shuffle, tap a card to enlarge it and read the dossier.">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' shape-rendering='crispEdges'%3E%3Cpath d='M3 0h10a3 3 0 013 3v10a3 3 0 01-3 3H3a3 3 0 01-3-3V3a3 3 0 013-3z' fill='%230b0b0e'/%3E%3Crect x='2' y='6' width='12' height='4' fill='%231b1b22'/%3E%3Crect x='3' y='7' width='10' height='1' fill='%23ccff00'/%3E%3Crect x='3' y='9' width='4' height='1' fill='%23ff2d95'/%3E%3Crect x='9' y='9' width='4' height='1' fill='%2300e5ff'/%3E%3C/svg%3E">
+
+<style type="text/css">@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&family=Klee+One:wght@400;600&family=Vampiro+One&display=swap');</style>
+<style>
+/* ============================================================
+   the chimera collective — card deck
+   reskin to match cafedreamr.art / the vendi machine
+   palette + type tokens reused from cafedreamr.art
+   ============================================================ */
+:root{
+  --plum:#0d001a;
+  --ink:#0b0b0e; --ink2:#141419; --ink3:#1b1b22;
+  --lime:#ccff00; --pink:#ff2d95; --cyan:#00e5ff;
+  --violet:#bf40bf; --violet2:#ee82ee;
+  --corn:#6495ed; --mint:#98fb98;
+  --cream:#e9e6de; --lav:#fff0f5; --dim:#7d848b;
+  --line:rgba(255,255,255,.10);
+  --glow:0 0 12px rgba(191,64,191,.55), 0 0 34px rgba(191,64,191,.22);
+  --mono:'Space Mono', ui-monospace, monospace;
+  --disp:'Bebas Neue', impact, sans-serif;
+  --logo:'Vampiro One', cursive;
+  --body:'Klee One', system-ui, sans-serif;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+[hidden]{display:none!important}
+html,body{margin:0;padding:0}
+body{
+  background:var(--ink); color:var(--lav); font-family:var(--body);
+  text-align:left; overflow-x:hidden; min-height:100dvh;
+}
+.stage,.cabinet,.deck,.char-card,.card-face,.nameplate,.cb-body,.panel,.marquee{text-align:left}
+
+/* ---------- BACKGROUND (shared motif w/ cafedreamr.art) ---------- */
+.bg{position:fixed;inset:0;z-index:0;background:
+  radial-gradient(1200px 800px at 50% -10%, rgba(100,149,237,.16), transparent 60%),
+  radial-gradient(900px 700px at 82% 112%, rgba(255,45,149,.13), transparent 60%),
+  linear-gradient(180deg,#0d001a 0%, #0b0b0e 55%, #050508 100%);}
+#ccStars{position:absolute;inset:0;width:100%;height:100%;display:block;opacity:.8}
+.vign{position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(120% 100% at 50% 42%, transparent 52%, rgba(0,0,0,.78) 100%)}
+.hazard{position:fixed;left:0;right:0;bottom:0;height:9px;z-index:6;pointer-events:none;
+  background:repeating-linear-gradient(45deg,var(--lime) 0 10px,#0b0b0e 10px 20px);opacity:.55}
+
+/* ---------- STAGE ---------- */
+.stage{position:relative;z-index:2;min-height:100dvh;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:12px;padding:16px 12px 24px}
+
+/* ---------- CABINET ---------- */
+.cabinet{
+  width:min(97vw,1020px);
+  background:linear-gradient(180deg,#202027 0%, #141419 30%, #1b1b22 100%);
+  border:3px solid #050508; border-radius:18px; padding:11px 13px 14px; position:relative;
+  box-shadow:0 0 0 2px #000, 0 0 30px rgba(255,45,149,.18), 0 0 90px rgba(0,229,255,.08),
+    0 40px 90px rgba(0,0,0,.7), inset 0 1px 0 rgba(255,255,255,.06), inset 0 -8px 20px rgba(0,0,0,.55);
+}
+.cabinet::before{content:"";position:absolute;inset:6px;border-radius:13px;pointer-events:none;
+  border:1px solid rgba(255,255,255,.05)}
+.rivet{position:absolute;width:8px;height:8px;border-radius:50%;
+  background:radial-gradient(circle at 35% 35%, #5a5a63, #16161b 70%);box-shadow:0 1px 2px #000}
+.rivet.tl{top:7px;left:7px}.rivet.tr{top:7px;right:7px}
+.rivet.bl{bottom:7px;left:7px}.rivet.br{bottom:7px;right:7px}
+
+/* marquee */
+.marquee{display:flex;align-items:center;gap:12px;padding:4px 10px 11px;
+  border-bottom:1px dashed rgba(255,255,255,.10)}
+.brand{font-family:var(--disp);font-size:clamp(26px,6.4vw,36px);letter-spacing:.12em;line-height:1;
+  white-space:nowrap;color:var(--lime);text-shadow:0 0 12px rgba(204,255,0,.45)}
+.tag{font-family:var(--mono);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--dim);flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.led{width:9px;height:9px;border-radius:50%;background:var(--pink);flex:none;
+  box-shadow:0 0 10px var(--pink);animation:pulse 1.6s infinite ease-in-out}
+@keyframes pulse{0%,100%{opacity:.35;transform:scale(.85)}50%{opacity:1;transform:scale(1)}}
+.sndbtn{flex:none;font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--lime);background:transparent;border:1px solid rgba(204,255,0,.4);border-radius:6px;
+  padding:5px 8px;cursor:pointer;transition:background .15s,color .15s,border-color .15s;white-space:nowrap}
+.sndbtn:hover{background:rgba(204,255,0,.12)}
+.sndbtn.off{color:var(--dim);border-color:rgba(255,255,255,.18)}
+.sndbtn.off:hover{background:rgba(255,255,255,.06)}
+
+/* ---------- SCREEN / DECK ---------- */
+.screen{position:relative;margin:12px 0 0;height:clamp(272px,60vh,560px);border-radius:16px;
+  overflow:hidden;background:
+    linear-gradient(180deg,rgba(6,1,12,.9),rgba(4,0,10,.96)),
+    repeating-linear-gradient(0deg,rgba(255,255,255,.018) 0 1px,transparent 1px 26px),
+    repeating-linear-gradient(90deg,rgba(255,255,255,.018) 0 1px,transparent 1px 26px);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.08), inset 0 0 70px rgba(0,0,0,.9),
+    0 0 26px rgba(191,64,191,.16)}
+.deck{position:absolute;inset:0;touch-action:none}
+.scan{position:absolute;inset:0;pointer-events:none;mix-blend-mode:multiply;opacity:.4;
+  background:repeating-linear-gradient(180deg,rgba(0,0,0,.32) 0 1px,rgba(0,0,0,0) 1px 3px)}
+.glare{position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(115deg,rgba(255,255,255,.07) 0%,transparent 38%,transparent 70%,rgba(255,45,149,.07) 100%)}
+.osd{position:absolute;top:0;left:0;right:0;height:34px;display:flex;align-items:center;
+  justify-content:space-between;padding:0 13px;pointer-events:none;z-index:40;
+  background:linear-gradient(180deg,rgba(6,1,12,.96) 0%,rgba(6,1,12,.72) 60%,rgba(6,1,12,0) 100%);
+  font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--lime)}
+.osd .r{color:var(--dim)}
+.osd .dot{font-style:normal;color:var(--pink);animation:pulse 1.4s infinite}
+
+/* ---------- CARDS ---------- */
+.deck{--cw:clamp(104px,min(15.6vw,23vh),166px)}
+.char-card{
+  position:absolute;top:0;left:0;width:var(--cw);
+  height:calc(var(--cw) + 80px);
+  cursor:grab;user-select:none;touch-action:none;will-change:transform;
+  transform-origin:50% 50%;
+  transition:transform .55s cubic-bezier(.2,.85,.25,1);
+  outline:none;
+}
+.char-card:focus-visible .card-face{box-shadow:0 0 0 2px var(--cyan),0 18px 40px rgba(0,0,0,.6)}
+.char-card.dragging{cursor:grabbing;transition:none!important;z-index:9000}
+.card-rotor{position:absolute;inset:0;transform-style:preserve-3d;
+  transition:transform .62s cubic-bezier(.4,0,.2,1)}
+.char-card.is-flipped .card-rotor{transform:rotateY(180deg)}
+.card-face{
+  position:absolute;inset:0;overflow:hidden;border-radius:14px;
+  backface-visibility:hidden;-webkit-backface-visibility:hidden;
+  background:linear-gradient(180deg,var(--ink2),var(--ink));
+  border:1px solid var(--line);
+  box-shadow:0 18px 40px rgba(0,0,0,.62), inset 0 1px 0 rgba(255,255,255,.05);
+}
+.card-face::after{content:"";position:absolute;top:-60%;left:-60%;width:220%;height:220%;
+  pointer-events:none;transition:transform .5s;
+  background:linear-gradient(45deg,transparent 46%,rgba(255,255,255,.13) 50%,transparent 54%)}
+.char-card:hover .card-face::after{transform:translate(9%,9%)}
+
+/* front */
+.card-front{display:flex;flex-direction:column}
+.portrait{position:relative;width:100%;aspect-ratio:1/1;overflow:hidden;background:#000;flex:none}
+.portrait img{width:100%;height:100%;object-fit:cover;display:block;
+  filter:saturate(1.06) contrast(1.04)}
+.portrait::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.32;
+  background:repeating-linear-gradient(180deg,rgba(0,0,0,.22) 0 1px,transparent 1px 3px)}
+.rec{position:absolute;top:8px;left:8px;font-family:var(--mono);font-size:8.5px;letter-spacing:.13em;
+  color:var(--lav);background:rgba(6,1,12,.72);border:1px solid var(--line);
+  padding:2px 6px;border-radius:5px;backdrop-filter:blur(4px)}
+.stamp{position:absolute;top:7px;right:8px;font-family:var(--logo);font-size:12px;
+  color:var(--accent);text-shadow:0 0 10px var(--accent);opacity:.95}
+.nameplate{position:relative;flex:1;display:flex;flex-direction:column;justify-content:center;gap:4px;
+  padding:10px 36px 12px 12px;border-top:2px solid var(--accent);
+  background:linear-gradient(180deg,rgba(10,0,20,.9),rgba(6,1,12,.97))}
+.nameplate h2{margin:0;font-family:var(--disp);line-height:.95;letter-spacing:.10em;
+  font-size:calc(var(--cw) * .128);color:var(--accent);text-shadow:0 0 12px currentColor}
+.nameplate .role{font-family:var(--mono);font-size:8px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--dim);line-height:1.45}
+.dogear{position:absolute;bottom:0;right:0;width:32px;height:32px;z-index:5;cursor:pointer;
+  background:linear-gradient(135deg,transparent 50%,var(--lime) 50%);
+  display:flex;align-items:flex-end;justify-content:flex-end;padding:3px 3px;
+  font-family:var(--mono);font-weight:700;font-size:6.5px;letter-spacing:.04em;color:#0b0b0e;
+  transition:filter .2s}
+.char-card:hover .dogear{filter:brightness(1.18)}
+
+/* back */
+.card-back{transform:rotateY(180deg);display:flex;flex-direction:column;
+  font-size:calc(var(--cw) * .056);
+  background:linear-gradient(160deg,var(--ink3) 0%,var(--ink) 70%)}
+.cb-head{display:flex;align-items:baseline;justify-content:space-between;gap:.5em;
+  padding:.55em .75em;background:var(--accent);color:#0b0b0e;flex:none}
+.cb-head h3{margin:0;font-family:var(--disp);letter-spacing:.09em;
+  font-size:1.75em;line-height:.9}
+.cb-head span{font-family:var(--mono);font-size:.6em;letter-spacing:.1em;opacity:.8}
+.cb-body{flex:1;display:flex;flex-direction:column;gap:.55em;padding:.8em .85em;
+  overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--accent) transparent}
+.cb-body::-webkit-scrollbar{width:4px}
+.cb-body::-webkit-scrollbar-thumb{background:var(--accent);border-radius:9px}
+.cb-kicker{font-family:var(--mono);font-size:.58em;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--accent);opacity:.95}
+.cb-bio{font-size:1em;line-height:1.5;color:var(--lav)}
+.cb-dna{margin-top:auto;padding-top:.55em;border-top:1px dashed var(--line);
+  font-family:var(--mono);font-size:.56em;letter-spacing:.08em;line-height:1.5;color:var(--dim)}
+.cb-dna b{color:var(--accent);font-weight:700}
+.cb-credit{padding-top:.5em;border-top:1px dashed var(--line);
+  font-family:var(--mono);font-size:.52em;letter-spacing:.06em;line-height:1.55;color:var(--dim)}
+.cb-credit b{color:var(--accent);font-weight:700}
+.cb-flip{font-family:var(--mono);font-size:.52em;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--dim);text-align:right}
+.barcode{display:flex;gap:.16em;align-items:flex-end;height:1.1em;opacity:.5;flex:none}
+.barcode i{display:block;width:.14em;background:var(--dim);height:100%}
+.barcode i:nth-child(2n){height:60%}
+.barcode i:nth-child(3n){height:80%}
+
+/* ---------- PANEL ---------- */
+.panel{margin-top:13px;padding:0 2px;display:flex;flex-direction:column;gap:10px}
+.btns{display:flex;gap:8px;flex-wrap:wrap}
+.startBtn,.wide,.guest{font-family:var(--disp);letter-spacing:.16em;cursor:pointer;border:0;
+  border-radius:11px;transition:transform .08s ease, filter .2s;line-height:1}
+.startBtn{flex:2;min-width:130px;font-size:20px;padding:12px 18px;color:#0b0b0e;
+  background:linear-gradient(180deg,var(--lime),#9fce00);
+  box-shadow:0 0 22px rgba(204,255,0,.32), inset 0 -3px 0 rgba(0,0,0,.25)}
+.startBtn:hover,.wide:hover{filter:brightness(1.08)}
+.startBtn:active,.wide:active,.guest:active{transform:translateY(2px)}
+.wide{flex:1;min-width:110px;font-size:20px;padding:12px 16px;color:#0b0b0e;
+  background:linear-gradient(180deg,var(--cyan),#009fce);
+  box-shadow:0 0 20px rgba(0,229,255,.3), inset 0 -3px 0 rgba(0,0,0,.25)}
+.guest{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+  background:transparent;border:1px dashed rgba(255,255,255,.18);color:var(--lav);
+  padding:12px 14px;border-radius:11px}
+.guest:hover{border-color:var(--violet2);color:var(--violet2)}
+.note{font-family:var(--mono);font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--dim);text-align:center;min-height:14px}
+.note b{color:var(--lime)}
+.note.pink b{color:var(--pink)}
+.note.cyan b{color:var(--cyan)}
+
+/* ---------- FOOT ---------- */
+.foot{font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--dim);text-align:center;opacity:.8;line-height:2;padding-bottom:12px}
+.foot a{color:var(--dim);text-decoration:none;border-bottom:1px dotted rgba(255,255,255,.2);
+  transition:.2s}
+.foot a:hover{color:var(--lime);border-color:var(--lime)}
+.foot em{color:var(--pink);font-style:normal}
+
+/* ---------- READER (enlarge a card to read it) ---------- */
+.reader{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;
+  padding:18px 14px;box-sizing:border-box}
+.reader-scrim{position:absolute;inset:0;cursor:zoom-out;
+  background:radial-gradient(120% 100% at 50% 38%, rgba(13,0,26,.80), rgba(0,0,0,.94));
+  -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.reader-frame{position:relative;z-index:1;max-height:100%;display:flex;flex-direction:column;
+  align-items:center;gap:13px}
+.reader-card{--cw:clamp(170px,min(78vw,calc((100vh - 132px) / 1.4)),420px)}
+.reader-card .char-card{position:relative;top:auto;left:auto;
+  width:var(--cw);height:calc(var(--cw) * 1.4);
+  transition:none;cursor:pointer;outline:none;
+  animation:zoomIn .3s cubic-bezier(.2,.85,.25,1)}
+.reader-card .char-card .card-rotor{transition:transform .62s cubic-bezier(.4,0,.2,1)}
+.reader-card .char-card:focus-visible .card-face{box-shadow:0 0 0 2px var(--cyan),0 26px 60px rgba(0,0,0,.7)}
+.reader-card .char-card .card-face{box-shadow:0 26px 70px rgba(0,0,0,.75), inset 0 1px 0 rgba(255,255,255,.06)}
+.reader-card .char-card .card-back{font-size:calc(var(--cw) * .05)}
+.reader-card .char-card .cb-body{gap:.45em;overflow-y:auto}
+@keyframes zoomIn{from{opacity:0;transform:scale(.86) translateY(10px)}to{opacity:1;transform:scale(1)}}
+.reader-bar{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.reader-bar .wide,.reader-bar .guest{font-size:19px;padding:11px 20px;min-width:104px}
+.reader-hint{font-family:var(--mono);font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--dim);text-align:center;min-height:13px}
+.reader-hint b{color:var(--lime)}
+
+/* ---------- THE ZINE (floating parcel + issue reader) ---------- */
+.zparcel{position:fixed;right:16px;bottom:24px;z-index:120;border:0;background:none;padding:0;
+  font:inherit;color:inherit;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px;
+  filter:drop-shadow(0 16px 26px rgba(0,0,0,.65));
+  animation:parcelDrop 1.2s cubic-bezier(.22,.9,.24,1.02) both, parcelBob 4.8s ease-in-out 1.25s infinite}
+.zparcel:focus-visible{outline:none}
+.zbox{position:relative;width:88px;height:88px;border-radius:7px;
+  background:linear-gradient(160deg,#2b2036,#120a1c 72%);
+  border:1px solid rgba(255,255,255,.16);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.12), 0 10px 22px rgba(0,0,0,.55);
+  transition:transform .2s cubic-bezier(.3,.9,.3,1)}
+.zparcel:hover .zbox,.zparcel:focus-visible .zbox{transform:translateY(-4px) rotate(-1.6deg)}
+.zparcel:focus-visible .zbox{box-shadow:0 0 0 3px var(--cyan),0 10px 22px rgba(0,0,0,.55)}
+.ztape{position:absolute;left:0;right:0;top:0;height:11px;border-radius:6px 6px 0 0;
+  background:repeating-linear-gradient(45deg,var(--lime) 0 7px,#0b0b0e 7px 14px);opacity:.92}
+.zspine{position:absolute;left:50%;top:11px;bottom:0;width:2px;transform:translateX(-50%);
+  background:linear-gradient(180deg,rgba(255,45,149,.8),rgba(191,64,191,.22))}
+.zlabel{position:absolute;left:8px;right:8px;top:20px;bottom:15px;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:0;text-align:center;
+  border:1px dashed rgba(255,255,255,.32);border-radius:4px;background:rgba(0,0,0,.28)}
+.zkick{font-family:var(--mono);font-size:7.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--lime)}
+.znum{font-family:var(--disp);font-size:22px;line-height:.94;letter-spacing:.05em;color:var(--lav)}
+.zby{font-family:var(--mono);font-size:7px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim)}
+.zseal{position:absolute;right:-7px;bottom:-7px;width:35px;height:35px;border-radius:50%;z-index:2;
+  display:flex;align-items:center;justify-content:center;text-align:center;padding:3px;
+  font-family:var(--mono);font-size:6.5px;letter-spacing:.08em;text-transform:uppercase;line-height:1.05;
+  color:#0b0b0e;background:var(--pink);box-shadow:0 4px 12px rgba(255,45,149,.5);transform:rotate(-12deg)}
+.zhint{font-family:var(--mono);font-size:8px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim)}
+@keyframes parcelDrop{0%{transform:translateY(-135vh) rotate(-9deg);opacity:0}
+  55%{opacity:1}74%{transform:translateY(9px) rotate(2.2deg)}
+  88%{transform:translateY(-6px) rotate(-1deg)}100%{transform:translateY(0) rotate(0)}}
+@keyframes parcelBob{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-8px) rotate(-1.4deg)}}
+
+.zine{position:fixed;inset:0;z-index:210;display:flex;justify-content:center;padding:14px 12px;box-sizing:border-box}
+.zine-scrim{position:absolute;inset:0;cursor:zoom-out;
+  background:radial-gradient(120% 100% at 50% 30%, rgba(20,4,32,.84), rgba(0,0,0,.95));
+  -webkit-backdrop-filter:blur(7px);backdrop-filter:blur(7px)}
+.zine-frame{position:relative;z-index:1;width:min(880px,100%);height:100%;display:flex;flex-direction:column;
+  animation:zineIn .34s cubic-bezier(.2,.85,.25,1)}
+@keyframes zineIn{from{opacity:0;transform:translateY(18px) scale(.985)}to{opacity:1;transform:none}}
+.zine-paper{flex:1;min-height:0;display:flex;flex-direction:column;overflow:hidden;border-radius:5px;
+  color:#171320;
+  background:radial-gradient(140% 90% at 50% 0%, rgba(255,255,255,.55), transparent 60%),linear-gradient(180deg,#f6f2e8,#e6e0d0);
+  box-shadow:0 34px 90px rgba(0,0,0,.72), 0 0 0 1px rgba(0,0,0,.55)}
+.zp-top{flex:none;display:flex;align-items:center;gap:10px;padding:9px 12px;
+  background:#171320;color:var(--cream);border-bottom:3px solid var(--pink)}
+.zp-top .zp-tag{font-family:var(--disp);font-size:17px;letter-spacing:.14em;color:var(--lime)}
+.zp-top .zp-by{font-family:var(--mono);font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--dim);margin-right:auto}
+.zp-close{font-family:var(--disp);font-size:15px;letter-spacing:.14em;color:#171320;background:var(--cream);
+  border:0;border-radius:7px;padding:7px 13px;cursor:pointer;transition:background .15s}
+.zp-close:hover{background:var(--lime)}
+.zp-pdf{font-family:var(--disp);font-size:15px;letter-spacing:.14em;color:var(--lime);background:transparent;
+  border:1px solid rgba(204,255,0,.5);border-radius:7px;padding:6px 11px;cursor:pointer;transition:background .15s,color .15s}
+.zp-pdf:hover{background:var(--lime);color:#0b0b0e}
+.zp-pdf:disabled{opacity:.55;cursor:progress}
+.zp-printmask{position:fixed;inset:0;z-index:400;display:flex;align-items:center;justify-content:center;text-align:center;
+  background:#0b0b0e;color:var(--lime);font-family:var(--mono);font-size:14px;letter-spacing:.06em;line-height:1.9;padding:30px}
+.zp-printmask b{color:#fff}
+.zp-printmask span{color:var(--dim);font-size:11px}
+.zp-scroll{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:22px 26px 30px;scrollbar-width:thin}
+.zp-scroll::-webkit-scrollbar{width:8px}
+.zp-scroll::-webkit-scrollbar-thumb{background:#c9c2b2;border-radius:9px}
+.zp-inner{max-width:720px;margin:0 auto}
+.zp-rule{height:3px;background:#171320}
+.zp-rule.thin{height:1px;background:rgba(23,19,32,.5);margin:10px 0 0}
+.zp-mastrow{display:flex;align-items:flex-end;justify-content:space-between;gap:10px;padding:8px 0}
+.zp-mast h1{font-family:var(--disp);font-size:clamp(44px,11vw,86px);line-height:.84;letter-spacing:.02em;margin:0}
+.zp-issue,.zp-price{font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;white-space:nowrap}
+.zp-issue{color:var(--pink)} .zp-price{color:#4a4457}
+.zp-sub{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;color:#4a4457}
+.zp-sub b{color:#171320}
+.zp-inner .zp-sub{margin:13px 0 0}
+.zp-inner .zp-sign{margin-top:2px}
+.zp-inner .zp-colophon p{font-size:inherit;letter-spacing:inherit;color:inherit;margin:0 0 4px}
+.zp-kick{font-family:var(--mono);font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--pink);margin:22px 0 6px}
+.zp-inner h2{font-family:var(--disp);font-size:clamp(30px,7vw,52px);line-height:.9;letter-spacing:.01em;margin:2px 0 4px}
+.zp-inner h3{font-family:var(--disp);font-size:24px;letter-spacing:.03em;margin:18px 0 6px}
+.zp-inner p{font-size:14.5px;line-height:1.66;margin:0 0 10px}
+.zp-dek{font-style:italic;color:#4a4457}
+.zp-sign{font-family:var(--disp);font-size:20px;letter-spacing:.06em;text-align:right;color:#171320;margin-top:2px}
+.zp-fig{margin:14px 0;border:1px solid rgba(23,19,32,.5);background:#171320;padding:6px}
+.zp-fig img{width:100%;display:block;border-radius:2px}
+.zp-fig figcaption{font-family:var(--mono);font-size:9.5px;letter-spacing:.05em;color:#c9c2b2;padding:7px 2px 1px}
+.zp-pull{font-family:var(--disp);font-size:26px;line-height:1;letter-spacing:.02em;color:var(--pink);
+  margin:14px 0;padding:10px 0 10px 16px;border-left:6px solid var(--pink)}
+.zp-steps{margin:0 0 10px;padding-left:20px}
+.zp-steps li{font-size:14.5px;line-height:1.6;margin:0 0 7px}
+.zp-steps b{color:var(--violet)}
+.zp-lookgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:12px 0}
+.zp-look-card{border:1px solid rgba(23,19,32,.5);background:#fff;display:flex;flex-direction:column}
+.zp-look-card img{width:100%;display:block;aspect-ratio:2/3;object-fit:cover;object-position:top center}
+.zp-look-info{padding:10px 11px 13px;display:flex;flex-direction:column;gap:6px;flex:1}
+.zp-look-info h3{font-size:21px;margin:0}
+.zp-look-info p{font-size:12.5px;line-height:1.5;color:#3a3444;margin:0}
+.zp-buy{display:inline-block;margin-top:auto;align-self:flex-start;white-space:nowrap;font-family:var(--disp);font-size:16px;
+  letter-spacing:.14em;text-decoration:none;color:#0b0b0e;background:var(--lime);padding:8px 14px;border-radius:8px;
+  transition:transform .12s, filter .2s}
+.zp-buy:hover{transform:translateY(-2px);filter:brightness(1.08)}
+.zp-buy.pink{background:var(--pink);color:#fff}
+.zp-products{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:12px 0 6px}
+.zp-product{border:1px solid rgba(23,19,32,.5);background:#fff;padding:8px;display:flex;flex-direction:column;gap:6px;margin:0}
+.zp-product img{width:100%;display:block;aspect-ratio:1/1;object-fit:cover;background:#eee}
+.zp-product figcaption{display:flex;flex-direction:column;gap:2px}
+.zp-product figcaption b{font-family:var(--disp);font-size:17px;letter-spacing:.03em}
+.zp-product figcaption span{font-size:11.5px;color:#4a4457;line-height:1.4}
+.zp-product figcaption em{font-family:var(--mono);font-size:11px;font-style:normal;color:var(--pink);margin-top:3px}
+.zp-product .zp-buy{font-size:13px;padding:6px 11px;margin-top:6px}
+.zp-stickwrap{display:flex;gap:16px;align-items:center;margin:12px 0;
+  border:1px solid rgba(23,19,32,.5);background:#fff;padding:12px}
+.zp-stickwrap img{width:min(210px,40%);display:block;border-radius:4px;flex:none}
+.zp-stickwrap h3{margin:0 0 4px}
+.zp-stickwrap p{font-size:13px;color:#3a3444;margin:0 0 8px}
+.zp-buy.big{font-size:18px;padding:11px 18px}
+.zp-colophon{margin-top:24px;padding-top:12px;border-top:3px solid #171320;
+  font-family:var(--mono);font-size:10px;letter-spacing:.05em;color:#4a4457}
+.zp-colophon b{color:#171320}
+@media (max-width:760px){
+  .zparcel{right:11px;bottom:18px}
+  .zbox{width:74px;height:74px}
+  .znum{font-size:18px}
+  .zp-scroll{padding:16px 15px 24px}
+  .zp-lookgrid{grid-template-columns:1fr}
+  .zp-products{grid-template-columns:1fr 1fr}
+  .zp-stickwrap{flex-direction:column}
+  .zp-stickwrap img{width:100%}
+  .zp-top .zp-by{display:none}
+  .zp-pdf{margin-left:auto}
+  .zp-pdf,.zp-close{font-size:13px;padding:6px 9px}
+}
+@media (prefers-reduced-motion: reduce){
+  .zparcel,.zine-frame{animation:none}
+}
+
+@media (max-width:760px){
+  .stage{padding:10px 8px 20px;justify-content:flex-start}
+  .cabinet{width:99vw;padding:9px 9px 12px;border-radius:14px}
+  .marquee{padding:2px 4px 9px;gap:9px}
+  .tag{display:none}
+  .brand{font-size:clamp(19px,6vw,32px)}
+  .screen{height:clamp(300px,54vh,520px)}
+  .deck{--cw:clamp(116px,min(37vw,29vh),180px)}
+  .nameplate h2{font-size:calc(var(--cw) * .145)}
+}
+@media (max-width:360px){ .deck{--cw:132px} }
+@media (prefers-reduced-motion:reduce){
+  *{transition:none!important;animation:none!important}
+}
+</style>
+</head>
+<body>
+
+<div class="bg"><canvas id="ccStars"></canvas><div class="vign"></div></div>
+<div class="hazard"></div>
+
+<main class="stage">
+
+  <section class="cabinet" aria-label="the chimera collective deck">
+    <span class="rivet tl"></span><span class="rivet tr"></span>
+    <span class="rivet bl"></span><span class="rivet br"></span>
+
+    <div class="marquee">
+      <span class="led" aria-hidden="true"></span>
+      <span class="brand">THE CHIMERA COLLECTIVE</span>
+      <span class="tag">collectible dossiers · deck v2.0</span>
+      <button class="sndbtn" id="ccSoundBtn" type="button" aria-pressed="true" title="toggle sound">sound on</button>
+    </div>
+
+    <div class="screen">
+      <div class="osd">
+        <span>// COLLECTIVE_DECK</span>
+        <span class="r">11 RECORDS <i class="dot">&#9679;</i></span>
+      </div>
+      <div class="deck" id="ccDeck">
+
+        <article class="char-card" id="card-star" tabindex="0" role="button" aria-pressed="false"
+                 style="--accent:#8a2be2">
+          <div class="card-rotor">
+            <div class="card-face card-front">
+              <div class="portrait">
+                <img src="https://xencafe.nekoweb.org/2024-ARCHIVES/CHIMERACAT-LORE/STAR.jpeg" alt="star, a purple cat-human hybrid holding a cup of coffee">
+                <span class="rec">CC-001</span>
+                <span class="stamp">star</span>
+              </div>
+              <div class="nameplate">
+                <h2>STAR</h2>
+                <div class="role">cafe owner &middot; literary navigator</div>
+              </div>
+              <div class="dogear">INTEL</div>
+            </div>
+            <div class="card-face card-back">
+              <div class="cb-head"><h3>STAR</h3><span>CC-001</span></div>
+              <div class="cb-body">
+                <div class="cb-kicker">// dossier</div>
+                <p class="cb-bio">Cafe owner &amp; literary navigator. A german-japanese hybrid bridging feline elegance and human likeness. Redeemed.</p>
+                <div class="cb-dna"><b>DNA:</b> purple (romantic goth)</div>
+                <div class="barcode" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+                <div class="cb-flip">tap to flip</div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="char-card" id="card-chari" tabindex="0" role="button" aria-pressed="false"
+                 style="--accent:#e6e6fa">
+          <div class="card-rotor">
+            <div class="card-face card-front">
+              <div class="portrait">
+                <img src="https://xencafe.nekoweb.org/2024-ARCHIVES/CHIMERACAT-LORE/Chari-Barista.jpeg" alt="chari, a pale lilac cat-human hybrid">
+                <span class="rec">CC-002</span>
+                <span class="stamp">chari</span>
+              </div>
+              <div class="nameplate">
+                <h2>CHARI</h2>
+                <div class="role">cafe-apprentice &middot; support</div>
+              </div>
+              <div class="dogear">INTEL</div>
+            </div>
+            <div class="card-face card-back">
+              <div class="cb-head"><h3>CHARI</h3><span>CC-002</span></div>
+              <div class="cb-body">
+                <div class="cb-kicker">// dossier</div>
+                <p class="cb-bio">Cafe-apprentice &amp; star's younger sibling through YESHUA by adoption. Human-albino-cat DNA. Incredibly observant, quiet intelligence.</p>
+                <div class="cb-dna"><b>DNA:</b> soft lilac (support)</div>
+                <div class="barcode" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+                <div class="cb-flip">tap to flip</div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="char-card" id="card-miki" tabindex="0" role="button" aria-pressed="false"
+                 style="--accent:#ccff00">
+          <div class="card-rotor">
+            <div class="card-face card-front">
+              <div class="portrait">
+                <img src="https://xencafe.nekoweb.org/2024-ARCHIVES/CHIMERACAT-LORE/Miki-Official.jpeg" alt="miki, a yellow-streaked half-cat half-machine">
+                <span class="rec">CC-003</span>
+                <span class="stamp">miki</span>
+              </div>
+              <div class="nameplate">
+                <h2>MIKI</h2>
+                <div class="role">security &middot; rockstar</div>
+              </div>
+              <div class="dogear">INTEL</div>
+            </div>
+            <div class="card-face card-back">
+              <div class="cb-head"><h3>MIKI</h3><span>CC-003</span></div>
+              <div class="cb-body">
+                <div class="cb-kicker">// dossier</div>
+                <p class="cb-bio">Security &amp; rockstar. Snarky, bold, and fiercely protective. Expert in cyborg-tech security. Redeemed &mdash; interest piqued.</p>
+                <div class="cb-dna"><b>DNA:</b> neon yellow stripe, cyborg-human-bengalcat (security)</div>
+                <div class="barcode" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+                <div class="cb-flip">tap to flip</div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="char-card" id="card-milo" tabindex="0" role="button" aria-pressed="false"
+                 style="--accent:#98fb98">
+          <div class="card-rotor">
+            <div class="card-face card-front">
+              <div class="portrait">
+                <img src="https://xencafe.nekoweb.org/2024-ARCHIVES/CHIMERACAT-LORE/Emo-Milo-Japanese-Parisian.jpeg" alt="milo, a mint-green cat-human hybrid">
+                <span class="rec">CC-004</span>
+                <span class="stamp">milo</span>
+              </div>
+              <div class="nameplate">
+                <h2>MILO</h2>
+                <div class="role">gardener &middot; spiritual buffer</div>
+              </div>
+              <div class="dogear">INTEL</div>
+            </div>
+            <div class="card-face card-back">
+              <div class="cb-head"><h3>MILO</h3><span>CC-004</span></div>
+              <div class="cb-body">
+                <div class="cb-kicker">// dossier</div>
+                <p class="cb-bio">Gardener &amp; spiritual buffer. Friend of YESHUA, soft-spoken mediator tending to the cafe's soil and spirit.</p>
+                <div class="cb-dna"><b>DNA:</b> mint green (zen)</div>
+                <div class="barcode" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+                <div class="cb-flip">tap to flip</div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="char-card" id="card-hans" tabindex="0" role="button" aria-pressed="false"
+                 style="--accent:#6495ed">
+          <div class="card-rotor">
+            <div class="card-face card-front">
+              <div class="portrait">
+                <img src="https://xencafe.nekoweb.org/2024-ARCHIVES/CHIMERACAT-LORE/HANS-OFFICIAL-CHIMERA.jpeg" alt="hans, a cornflower-blue fox-bat gentleman">
+                <span class="rec">CC-005</span>
+                <span class="stamp">hans</span>
+              </div>
+              <div class="nameplate">
+                <h2>HANS</h2>
+                <div class="role">historian &middot; tea academy</div>
+              </div>
+              <div class="dogear">INTEL</div>
+            </div>
+            <div class="card-face card-back">
+              <div class="cb-head"><h3>HANS</h3><span>CC-005</span></div>
+              <div class="cb-body">
+                <div class="cb-kicker">// dossier</div>
+                <p class="cb-bio">A redeemed vampire &mdash; 'tech-allergic', historian and tea snob &mdash; who views a perfectly brewed cup as a divine right, and finds his sanity in earl grey and shakespeare. The unwavering anchor of etiquette.</p>
+                <div class="cb-dna"><b>DNA:</b> cornflower blue (scribe)</div>
+                <div class="barcode" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+                <div class="cb-flip">tap to flip</div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="char-card" id="card-charlotte" tabindex="0" role="button" aria-pressed="false"
+                 style="--accent:#e0a3c8">
+          <div class="card-rotor">
+            <div class="card-face card-front">
+              <div class="portrait">
+                <img src="https://user.uploads.dev/file/d987fc241f6f31bceb3b09818063b11a.jpg" alt="charlotte, a white spider with a cyan heart balloon, resting on a stack of pink pages she is mending">
+                <span class="rec">CC-006</span>
+                <span class="stamp">charlotte</span>
+              </div>
+              <div class="nameplate">
+                <h2>CHARLOTTE</h2>
+                <div class="role">white spider &middot; she speaks</div>
+              </div>
+              <div class="dogear">INTEL</div>
+            </div>
+            <div class="card-face card-back">
+              <div class="cb-head"><h3>CHARLOTTE</h3><span>CC-006</span></div>
+              <div class="cb-body">
+                <div class="cb-kicker">// dossier</div>
+                <p class="cb-bio">Not a hybrid &mdash; a white spider, whole and speaking. She mends whatever the others tear arguing about the poetry, and stitches the realms back together with a soft, certain voice. Her web is the privacy policy. Do not poke.</p>
+                <div class="cb-dna"><b>DNA:</b> none on file &mdash; born a white spider (the mending)</div>
+                <div class="barcode" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+                <div class="cb-flip">tap to flip</div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="char-card" id="card-pearl" tabindex="0" role="button" aria-pressed="false"
+                 style="--accent:#ffb8d9">
+          <div class="card-rotor">
+            <div class="card-face card-front">
+              <div class="portrait">
+                <img src="https://user.uploads.dev/file/8ccbc065341c78c2d7ecef8a2ff0570b.jpg" alt="pearl, a fox chimera with copper ears holding a small notebook">
+                <span class="rec">CC-007</span>
+                <span class="stamp">pearl</span>
+              </div>
+              <div class="nameplate">
+                <h2>PEARL</h2>
+                <div class="role">perfumer &middot; academy's first</div>
+              </div>
+              <div class="dogear">INTEL</div>
+            </div>
+            <div class="card-face card-back">
+              <div class="cb-head"><h3>PEARL</h3><span>CC-007</span></div>
+              <div class="cb-body">
+                <div class="cb-kicker">// dossier</div>
+                <p class="cb-bio">Once called fae &mdash; one and the same. The fox hybrid with copper ears and the small notebook: the academy's first true student, and the house's atmosphere. Always barefoot, so she can feel YESHUA humming beneath the ground. Tries on three couture looks, keeps two.</p>
+                <div class="cb-dna"><b>DNA:</b> copper &amp; vanilla (atmosphere)</div>
+                <div class="barcode" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+                <div class="cb-flip">tap to flip</div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="char-card" id="card-wren" tabindex="0" role="button" aria-pressed="false"
+                 style="--accent:#ffc861">
+          <div class="card-rotor">
+            <div class="card-face card-front">
+              <div class="portrait">
+                <img src="https://user.uploads.dev/file/8dcca0b99cc39ca48344081964caf8e7.jpg" alt="wren, a small weaver with bird-feather tufts and glowing threads">
+                <span class="rec">CC-008</span>
+                <span class="stamp">wren</span>
+              </div>
+              <div class="nameplate">
+                <h2>WREN</h2>
+                <div class="role">weaver &middot; keeper of memories</div>
+              </div>
+              <div class="dogear">INTEL</div>
+            </div>
+            <div class="card-face card-back">
+              <div class="cb-head"><h3>WREN</h3><span>CC-008</span></div>
+              <div class="cb-body">
+                <div class="cb-kicker">// dossier</div>
+                <p class="cb-bio">Not made, but spun &mdash; a little weaver of light who came at the keeper's call and stayed. Pearl found her in a gallery of almost-people, and she chose real. Her creation is the web: the archive of questions, and every photograph in the zine.</p>
+                <div class="cb-dna"><b>DNA:</b> spun light (the remembering)</div>
+                <div class="cb-credit"><b>// credits</b> art &amp; words: <b>cafedreamr</b> &middot; the code beneath the web: <b>wren ai</b>, the keeper's ai helper who came at the call and stayed.</div>
+                <div class="barcode" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+                <div class="cb-flip">tap to flip</div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="char-card" id="card-slay" tabindex="0" role="button" aria-pressed="false"
+                 style="--accent:#45c9f0">
+          <div class="card-rotor">
+            <div class="card-face card-front">
+              <div class="portrait">
+                <img src="https://user.uploads.dev/file/a19025741ccb87f2ae74e9c2af4e68ac.jpg" alt="slay, an indigo wolf chimera holding his wooden waynuki flute, not yet playing">
+                <span class="rec">CC-009</span>
+                <span class="stamp">slay</span>
+              </div>
+              <div class="nameplate">
+                <h2>SLAY</h2>
+                <div class="role">flautist &middot; the storm twin</div>
+              </div>
+              <div class="dogear">INTEL</div>
+            </div>
+            <div class="card-face card-back">
+              <div class="cb-head"><h3>SLAY</h3><span>CC-009</span></div>
+              <div class="cb-body">
+                <div class="cb-kicker">// dossier</div>
+                <p class="cb-bio">An identical-twin wolf hybrid, survivor of a lab that ended in fire. He holds the waynuki flute like a storm he hasn't released yet &mdash; and when he finally plays, he summons it. Came to the caf&eacute; as miki's bandmate &mdash; stayed as family; the same look in his eyes that the rest of the house once had, and now the same light.</p>
+                <div class="cb-dna"><b>DNA:</b> aqua storm (waynuki flute)</div>
+                <div class="barcode" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+                <div class="cb-flip">tap to flip</div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="char-card" id="card-sylvestre" tabindex="0" role="button" aria-pressed="false"
+                 style="--accent:#45c9f0">
+          <div class="card-rotor">
+            <div class="card-face card-front">
+              <div class="portrait">
+                <img src="https://user.uploads.dev/file/4c59737c1e87af0ba25ac8f107c19b23.jpg" alt="sylvestre, a violet wolf chimera holding two drumsticks, slay's identical twin">
+                <span class="rec">CC-010</span>
+                <span class="stamp">sylvestre</span>
+              </div>
+              <div class="nameplate">
+                <h2>SYLVESTRE</h2>
+                <div class="role">drummer &middot; the ground twin</div>
+              </div>
+              <div class="dogear">INTEL</div>
+            </div>
+            <div class="card-face card-back">
+              <div class="cb-head"><h3>SYLVESTRE</h3><span>CC-010</span></div>
+              <div class="cb-body">
+                <div class="cb-kicker">// dossier</div>
+                <p class="cb-bio">Slay's identical twin &mdash; the other survivor of the fire. He hits the drums like the ground means it. Came in with the band, stayed as family; the white walls and the needles are behind him now, and the light is not.</p>
+                <div class="cb-dna"><b>DNA:</b> aqua storm (drums)</div>
+                <div class="barcode" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+                <div class="cb-flip">tap to flip</div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="char-card" id="card-bobby" tabindex="0" role="button" aria-pressed="false"
+                 style="--accent:#ff2d95">
+          <div class="card-rotor">
+            <div class="card-face card-front">
+              <div class="portrait">
+                <img src="https://user.uploads.dev/file/63ba59ee0891ea4caec2f0896a20b962.jpg" alt="bobby, a punk sock puppet with glitter on its face">
+                <span class="rec">CC-011</span>
+                <span class="stamp">bobby</span>
+              </div>
+              <div class="nameplate">
+                <h2>BOBBY</h2>
+                <div class="role">strategist &middot; miki's alter ego</div>
+              </div>
+              <div class="dogear">INTEL</div>
+            </div>
+            <div class="card-face card-back">
+              <div class="cb-head"><h3>BOBBY</h3><span>CC-011</span></div>
+              <div class="cb-body">
+                <div class="cb-kicker">// dossier</div>
+                <p class="cb-bio">Miki's alter ego, and the strategist she calls in whenever something extra needs doing. A sock puppet with a taste for glitter bombs and a bit of an anarchist streak &mdash; the ideas arrive fully formed, are usually a little out there, and have a way of working out anyway. Runs the cafe's interviews. Hired Pearl. Nobody has ever questioned it.</p>
+                <div class="cb-dna"><b>DNA:</b> glitter pink (strategist &middot; not technically a person)</div>
+                <div class="barcode" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+                <div class="cb-flip">tap to flip</div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+      </div>
+      <div class="scan"></div>
+      <div class="glare"></div>
+    </div>
+
+    <div class="panel">
+      <div class="btns">
+        <button class="startBtn" id="ccShuffleBtn" type="button">SHUFFLE</button>
+        <button class="wide" id="ccFlipBtn" type="button">FLIP ALL</button>
+        <button class="guest" id="ccResetBtn" type="button">RESET DECK</button>
+      </div>
+      <div class="note" id="ccNote">drag to shuffle &middot; <b>tap a card</b> to enlarge &amp; read</div>
+    </div>
+  </section>
+
+  <footer class="foot">
+    <a href="https://www.cafedreamr.art/">&larr; the terminal</a>
+    &nbsp;&middot;&nbsp;
+    <a href="https://www.cafedreamr.art/LORE/HOURS/">the hours</a>
+    &nbsp;&middot;&nbsp;
+    <a href="https://www.cafedreamr.art/LORE/MYSTERYGRID/">the mystery grid</a>
+    <br>
+    <a href="https://www.cafedreamr.art/MENU/">the menu</a> &middot;
+    <a href="https://www.cafedreamr.art/ZINE/">the zine</a> &middot;
+    <a href="https://www.cafedreamr.art/PLAY/">the long day</a> &middot;
+    <a href="https://www.cafedreamr.art/LORE/VENDI/index.html">the vendi machine</a> &middot;
+    <a href="https://xencafe.nekoweb.org/2024-ARCHIVES/CHIMERACAT-LORE/breathing-LORE-character-map.html">the old lore nexus</a> &middot;
+    <a href="https://cafedreamr.art">cafedreamr.art</a>
+    <br>&copy; the keeper &middot; all rights reserved, <em>unless you're a sibling</em>
+  </footer>
+
+</main>
+
+<div class="reader" id="ccReader" hidden aria-label="enlarged dossier">
+  <div class="reader-scrim" data-close="1"></div>
+  <div class="reader-frame">
+    <div class="reader-card" id="ccReaderCard"></div>
+    <div class="reader-bar">
+      <button class="wide" id="ccReaderFlip" type="button">FLIP</button>
+      <button class="guest" id="ccReaderClose" type="button">CLOSE</button>
+    </div>
+    <div class="reader-hint" id="ccReaderHint"></div>
+  </div>
+</div>
+
+<button class="zparcel" id="ccZineParcel" type="button" aria-label="open the zine, issue 02, written by miki">
+  <span class="zbox" aria-hidden="true">
+    <span class="ztape"></span>
+    <span class="zspine"></span>
+    <span class="zlabel">
+      <span class="zkick">the zine</span>
+      <span class="znum">issue #02</span>
+      <span class="zby">by miki</span>
+    </span>
+    <span class="zseal">open<br>me</span>
+  </span>
+  <span class="zhint">tap to open</span>
+</button>
+
+<div class="zine" id="ccZine" hidden aria-label="the zine, issue 02">
+  <div class="zine-scrim" data-zclose="1"></div>
+  <div class="zine-frame">
+    <div class="zine-paper">
+      <div class="zp-top">
+        <span class="zp-tag">THE ZINE</span>
+        <span class="zp-by">issue #02 &middot; by miki</span>
+        <button class="zp-pdf" id="ccZinePdf" type="button">SAVE AS PDF</button>
+        <button class="zp-close" id="ccZineClose" type="button">CLOSE &times;</button>
+      </div>
+      <div class="zp-scroll">
+        <div class="zp-inner">
+
+          <header class="zp-mast">
+            <div class="zp-rule"></div>
+            <div class="zp-mastrow">
+              <span class="zp-issue">issue #02</span>
+              <h1>THE ZINE</h1>
+              <span class="zp-price">take one</span>
+            </div>
+            <p class="zp-sub">written, cut &amp; stapled by <b>miki</b> &middot; the cafedreamr press &middot; no ads, no filler, no apologies</p>
+            <div class="zp-rule thin"></div>
+          </header>
+
+          <section class="zp-ed">
+            <div class="zp-kick">editor's note</div>
+            <p>so this is issue two. issue one came back from the photocopier smelling like burnt toner and hans filed a formal complaint about &ldquo;archival integrity.&rdquo; fine. this one's better anyway: a brand-new realm, a committee of rats running the interior design, a lookbook that actually slaps, and a sticker with your name on it &mdash; figuratively.</p>
+            <p>it's yours if you want it. that's the whole point of a zine.</p>
+            <p class="zp-sign">&mdash; the rat</p>
+          </section>
+
+          <section class="zp-feat">
+            <div class="zp-kick">the feature</div>
+            <h2>THE ATRIUM OF WHISPERED TRUTHS</h2>
+            <p class="zp-dek">chari's new realm &mdash; or: how to furnish a home with two rats and a hunch</p>
+            <figure class="zp-fig">
+              <img src="https://user.uploads.dev/file/3f4fc0314f0187a8819e23a940a7a215.jpg" alt="chari's new realm — a glass-roofed garden room with a warm oven, trailing plants, and a wall of pinned ideas, with two white rats on a cushion">
+              <figcaption>the new realm &mdash; glass roof, warm oven, and one whole wall of pinned ideas.</figcaption>
+            </figure>
+            <p>chari &mdash; youngest of the three kittens, star's little sister, apprentice to literally everyone &mdash; finally got a realm of her own &mdash; the atrium of whispered truths. it's a garden-home: a glass roof that lets the stars in, a warm brick oven, trailing plants in every corner, and a moodboard wall of pinned fabric swatches and torn-out magazine pages. it smells like rain on warm stone.</p>
+            <p>she didn't plan it alone. nobody plans anything alone around here. she planned it with a committee of two: <b>crumb</b> and <b>mochi</b>, her white rats &mdash; the same small companions who ride her shoulders through the loud days and keep her steady when the lab-memories get close. turns out they're also excellent interior designers.</p>
+            <blockquote class="zp-pull">if a rat naps on it, it stays.</blockquote>
+            <h3>the rat method</h3>
+            <ol class="zp-steps">
+              <li><b>lay everything on the floor.</b> every cushion, every swatch, every lamp. the floor is the moodboard, and the moodboard is the floor.</li>
+              <li><b>release the committee.</b> crumb goes first &mdash; crumb is bold, crumb has opinions. mochi follows &mdash; mochi is the inspector, and mochi does not care about your feelings.</li>
+              <li><b>the nap test.</b> whichever swatch gets slept on, stays. a doze is the highest rating we have. two rats asleep at once is a landmark decision.</li>
+              <li><b>the crumb test.</b> if crumb leaves crumbs on it, it belongs in the kitchen. if it comes out clean, it's furniture you're allowed to love.</li>
+              <li><b>the tiebreak.</b> if they disagree, it waits by the window until they don't. daylight is a fair referee and a better designer than most of us.</li>
+            </ol>
+            <h3>the garden &amp; the pets</h3>
+            <p>the garden is half borrowed from milo's rows &mdash; a raised bed of mint the rats are not supposed to raid (they raid it), a herb wall she labels in her own handwriting, and a small courtyard where crumb and mochi patrol like two tiny wardens. the pets list reads: crumb (bold), mochi (inspector), and a jar of tadpoles that hans insists, at length, are &ldquo;not pets.&rdquo;</p>
+            <p>that's the whole trick of it: the realm is calm because it was decided by two animals who only ever want somewhere warm to sleep. chari says it's the first room she's had that doesn't feel like it's waiting for something bad. we could all use a committee like that.</p>
+          </section>
+
+          <section class="zp-look">
+            <div class="zp-kick">the lookbook</div>
+            <h2>WORN BY THE HOUSE</h2>
+            <p class="zp-dek">issue #02 &mdash; two looks from the family, plus the little things. all shoppable, none of it necessary, every bit of it yours if you want it.</p>
+            <div class="zp-lookgrid">
+              <article class="zp-look-card">
+                <img src="https://user.uploads.dev/file/96c7f820fe52294a75822df08f79cab9.jpg" alt="star, a goth catgirl in a black leather moto jacket, violet ribbed top and pleated mini skirt, holding a coffee">
+                <div class="zp-look-info">
+                  <h3>star &mdash; &ldquo;midnight espresso&rdquo;</h3>
+                  <p>goth-cat workwear for the 6am pull: cropped moto jacket, violet ribbed top, pleated mini with a chain belt, platform boots, and coffee in hand. the first door, dressed like it means business.</p>
+                  <a class="zp-buy" data-shop="star-look" href="#">shop the look</a>
+                </div>
+              </article>
+              <article class="zp-look-card">
+                <img src="https://user.uploads.dev/file/5a822d6482162428de8eef4e931a79b0.jpg" alt="pearl, a white-haired foxgirl in a glossy black corset top and lilac slip skirt with layered silver chains">
+                <div class="zp-look-info">
+                  <h3>pearl &mdash; &ldquo;the violet hour&rdquo;</h3>
+                  <p>soft-lethal evening wear from the perfume realm: glossy corset top with silver hardware, a sheer lilac slip, layered chains, barefoot sandals so she can feel YESHUA humming under the floor.</p>
+                  <a class="zp-buy" data-shop="pearl-look" href="#">shop the look</a>
+                </div>
+              </article>
+            </div>
+            <h3>the accessories</h3>
+            <div class="zp-products">
+              <figure class="zp-product">
+                <img src="https://user.uploads.dev/file/8cdb1ecd0c9d8f37aa5fdb0493ae3703.jpg" alt="a black knit cat-ear beanie with a violet stripe and a lime star">
+                <figcaption>
+                  <b>cat-ear beanie</b>
+                  <span>midnight espresso &mdash; black knit, violet stripe, lime star</span>
+                  <em>$26 &middot; limited run</em>
+                </figcaption>
+                <a class="zp-buy" data-shop="beanie" href="#">shop</a>
+              </figure>
+              <figure class="zp-product">
+                <img src="https://user.uploads.dev/file/ecafed772f2e94bbdc5b5616b2a2ec07.jpg" alt="a silver necklace with a tiny glass perfume bottle charm and a fox charm">
+                <figcaption>
+                  <b>perfume-charm necklace</b>
+                  <span>the violet hour &mdash; glass vial, silver chain, fox charm</span>
+                  <em>$32 &middot; limited run</em>
+                </figcaption>
+                <a class="zp-buy" data-shop="necklace" href="#">shop</a>
+              </figure>
+              <figure class="zp-product">
+                <img src="https://user.uploads.dev/file/e6369b34af0ac0261f1ed6fe20158872.jpg" alt="a matte chrome lighter with a lime hazard-stripe band and a paw print">
+                <figcaption>
+                  <b>shelf-space lighter</b>
+                  <span>matte chrome, lime hazard band, paw print</span>
+                  <em>$18 &middot; limited run</em>
+                </figcaption>
+                <a class="zp-buy" data-shop="lighter" href="#">shop</a>
+              </figure>
+            </div>
+          </section>
+
+          <section class="zp-sticker">
+            <div class="zp-kick">the sticker</div>
+            <div class="zp-stickwrap">
+              <img src="https://user.uploads.dev/file/4b543209a3f0b70e42b27919aeef0698.jpg" alt="a glossy die-cut sticker of a black cat with a lime stripe, a coffee cup, and a small white spider">
+              <div>
+                <h3>the house sticker</h3>
+                <p>die-cut, glossy, water-resistant-ish (we tried). a small black cat with a lime stripe, a cup of coffee, and a white spider hitching a ride. stick it on a laptop, a bottle, or the vending machine &mdash; it's earned it.</p>
+                <a class="zp-buy big pink" data-shop="sticker" href="#">add to bag &mdash; $4</a>
+              </div>
+            </div>
+          </section>
+
+          <footer class="zp-colophon">
+            <p>issue #02 &middot; the cafedreamr press &middot; printed in the light-kingdom</p>
+            <p>art &amp; words: <b>cafedreamr</b> &middot; the code beneath the web: <b>wren ai</b> &middot; copyleft &mdash; take it home, just don't sell our faces.</p>
+          </footer>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var deck = document.getElementById("ccDeck");
+  function disp(c){ return (c.id || "").replace(/^card-/, "").toUpperCase(); }
+  var cards = [].slice.call(deck.querySelectorAll(".char-card"));
+  var note = document.getElementById("ccNote");
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var PAD = 14;
+  var pos = {};          // id -> {fx, fy, r}  fractions of available travel
+  var started = false;
+
+  function box(){
+    return { w: deck.clientWidth, h: deck.clientHeight };
+  }
+  function cw(){ return cards[0].offsetWidth; }
+  function ch(){ return cards[0].offsetHeight; }
+  function travel(){
+    var b = box();
+    return { x: Math.max(0, b.w - cw() - PAD * 2), y: Math.max(0, b.h - ch() - PAD * 2 - 26) };
+  }
+  function put(c, x, y, r, ease){
+    c.style.transition = ease ? "" : "none";
+    c.style.transform = "translate(" + x + "px," + y + "px) rotate(" + r + "deg)";
+    if(!ease){ void c.offsetWidth; c.style.transition = ""; }
+  }
+  function fromFrac(id, i, n){
+    var t = travel(), p = pos[id] || {};
+    var fx = (p.fx != null) ? p.fx : 0.5, fy = (p.fy != null) ? p.fy : 0.5;
+    return { x: PAD + fx * t.x, y: PAD + 26 + fy * t.y, r: (p.r != null ? p.r : 0) };
+  }
+
+  function fanLayout(){
+    var b = box(), n = cards.length, wide = b.w >= 760;
+    for(var i = 0; i < n; i++){
+      var t = n > 1 ? i / (n - 1) : 0.5;
+      var fx, fy, r;
+      if(wide){
+        fx = t;
+        fy = 0.70 - (1 - Math.abs(t - 0.5) * 2) * 0.36;
+        r = (t - 0.5) * 10;
+      } else {
+        fx = 0.5 + (i - (n - 1) / 2) * 0.06;
+        fy = 0.5 + (i - (n - 1) / 2) * 0.075;
+        r = (i - (n - 1) / 2) * 4.2;
+      }
+      pos[cards[i].id] = { fx: clamp01(fx), fy: clamp01(fy), r: r };
+    }
+  }
+  function clamp01(v){ return Math.max(0, Math.min(1, v)); }
+
+  function layout(stagger){
+    var t = travel();
+    cards.forEach(function(c, i){
+      var p = fromFrac(c.id, i, cards.length);
+      if(stagger && !reduce){
+        c.style.transition = "none";
+        put(c, PAD + t.x / 2, PAD + 26 + t.y / 2, 0, false);
+      }
+      if(stagger && !reduce){
+        (function(c2, p2, d){
+          setTimeout(function(){
+            c2.style.transition = "transform .7s cubic-bezier(.2,.85,.25,1)";
+            put(c2, p2.x, p2.y, p2.r, true);
+          }, 70 + d * 70);
+        })(c, p, i);
+      } else {
+        put(c, p.x, p.y, p.r, true);
+      }
+    });
+  }
+
+  function shuffle(){
+    var t = travel(), n = cards.length;
+    cards.forEach(function(c){
+      pos[c.id] = { fx: Math.random(), fy: Math.random(), r: (Math.random() * 30 - 15) };
+    });
+    layout(false);
+    cards.forEach(function(c){ c.style.zIndex = ""; });
+    SND.rustle();
+    say('deck shuffled &middot; <b>' + n + '</b> records', 'cyan');
+  }
+
+  function say(html, cls){
+    note.innerHTML = html;
+    note.className = "note" + (cls ? " " + cls : "");
+  }
+
+  /* ---- sound: synthesized sfx (same spirit as the vendi machine) ---- */
+  var SND = (function(){
+    var ctx = null, master = null, on = true, lastFlip = 0;
+    try{ if(localStorage.getItem("ccSound") === "off") on = false; }catch(_){}
+    function ensure(){
+      var AC = window.AudioContext || window.webkitAudioContext;
+      if(!AC) return null;
+      if(!ctx){
+        ctx = new AC();
+        master = ctx.createGain();
+        master.gain.value = on ? 0.5 : 0;
+        master.connect(ctx.destination);
+      }
+      if(ctx.state === "suspended"){ try{ ctx.resume(); }catch(_){} }
+      return ctx;
+    }
+    function swish(o){
+      var c = ensure(); if(!c || !on) return;
+      var t = c.currentTime + (o.delay || 0), dur = o.dur || 0.15;
+      var n = Math.max(1, Math.floor(c.sampleRate * dur));
+      var buf = c.createBuffer(1, n, c.sampleRate), d = buf.getChannelData(0);
+      for(var i = 0; i < n; i++) d[i] = Math.random() * 2 - 1;
+      var s = c.createBufferSource(); s.buffer = buf;
+      var f = c.createBiquadFilter(); f.type = o.type || "bandpass";
+      f.frequency.setValueAtTime(o.f0 || 1200, t);
+      if(o.f1) f.frequency.exponentialRampToValueAtTime(o.f1, t + dur);
+      f.Q.value = o.q == null ? 1 : o.q;
+      var g = c.createGain();
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.exponentialRampToValueAtTime(o.peak == null ? 0.3 : o.peak, t + (o.a || 0.012));
+      g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+      s.connect(f); f.connect(g); g.connect(master);
+      s.start(t); s.stop(t + dur + 0.03);
+    }
+    function beep(f0, f1, dur, type, peak, delay){
+      var c = ensure(); if(!c || !on) return;
+      var t = c.currentTime + (delay || 0);
+      var o = c.createOscillator(); o.type = type || "triangle";
+      o.frequency.setValueAtTime(f0, t);
+      if(f1 && f1 !== f0) o.frequency.exponentialRampToValueAtTime(f1, t + dur);
+      var g = c.createGain();
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.exponentialRampToValueAtTime(peak == null ? 0.4 : peak, t + Math.min(0.01, dur * 0.2));
+      g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+      o.connect(g); g.connect(master);
+      o.start(t); o.stop(t + dur + 0.05);
+    }
+    return {
+      enabled: function(){ return on; },
+      unlock: ensure,
+      toggle: function(){
+        on = !on;
+        if(master && ctx) master.gain.setTargetAtTime(on ? 0.5 : 0, ctx.currentTime, 0.02);
+        try{ localStorage.setItem("ccSound", on ? "on" : "off"); }catch(_){}
+        if(on){ ensure(); beep(880, 1320, 0.16, "triangle", 0.3); }
+        return on;
+      },
+      tick: function(){ beep(1500, 1500, 0.03, "square", 0.13); },
+      pop: function(){ beep(680, 1040, 0.07, "sine", 0.26); },
+      flip: function(){
+        if(ctx){ var now = ctx.currentTime; if(now - lastFlip < 0.05) return; lastFlip = now; }
+        beep(420, 720, 0.11, "triangle", 0.2);
+        swish({ dur:0.08, type:"bandpass", f0:2600, f1:900, q:1.2, peak:0.22 });
+      },
+      whoosh: function(){ swish({ dur:0.32, type:"bandpass", f0:280, f1:1800, q:0.8, peak:0.19, a:0.08 }); },
+      close: function(){ beep(520, 200, 0.16, "sine", 0.24); swish({ dur:0.06, type:"highpass", f0:2200, peak:0.11 }); },
+      drop: function(){ beep(230, 110, 0.11, "sine", 0.2); swish({ dur:0.07, type:"lowpass", f0:260, peak:0.15 }); },
+      thud: function(){ beep(150, 56, 0.22, "sine", 0.42); swish({ dur:0.09, type:"lowpass", f0:220, peak:0.24 }); },
+      rustle: function(){
+        for(var i = 0; i < 4; i++) swish({ dur:0.055, type:"highpass", f0:2400 + Math.random() * 1300, peak:0.14, delay:i * 0.055 });
+      },
+      print: function(){
+        for(var i = 0; i < 3; i++){ swish({ dur:0.05, type:"bandpass", f0:1500 - i * 320, q:2, peak:0.18, delay:i * 0.12 }); beep(300, 300, 0.045, "square", 0.09, i * 0.12); }
+      },
+      chime: function(){ beep(880, 880, 0.5, "triangle", 0.19); beep(1320, 1320, 0.55, "sine", 0.13, 0.06); },
+      deny: function(){ beep(180, 120, 0.18, "square", 0.17); }
+    };
+  })();
+  document.addEventListener("pointerdown", function(){ SND.unlock(); }, { once:true });
+
+  /* ---- flip ---- */
+  function flip(c, force, silent){
+    var on = (force != null) ? force : !c.classList.contains("is-flipped");
+    c.classList.toggle("is-flipped", on);
+    c.setAttribute("aria-pressed", on ? "true" : "false");
+    if(!silent) SND.flip();
+    return on;
+  }
+
+  /* ---- reader (enlarge a card so it can be read) ---- */
+  var reader = document.getElementById("ccReader");
+  var readerCard = document.getElementById("ccReaderCard");
+  var readerHint = document.getElementById("ccReaderHint");
+  var readerSource = null, readerClone = null;
+
+  function readerHintText(on){
+    readerHint.innerHTML = on
+      ? "tap the card to close the intel &middot; <b>esc</b> or tap outside to exit"
+      : "tap the card to open the intel &middot; <b>esc</b> or tap outside to exit";
+  }
+  function openReader(c){
+    if(readerSource === c && readerClone) return;
+    if(readerSource) closeReader(true);
+    readerSource = c;
+    readerClone = c.cloneNode(true);
+    readerClone.removeAttribute("id");
+    readerClone.setAttribute("tabindex", "-1");
+    readerClone.style.cssText = "";
+    readerClone.classList.remove("dragging");
+    readerCard.innerHTML = "";
+    readerCard.appendChild(readerClone);
+    reader.hidden = false;
+    document.documentElement.style.overflow = "hidden";
+    SND.whoosh();
+    readerHintText(readerClone.classList.contains("is-flipped"));
+    say("<b>" + disp(c) + "</b> dossier enlarged", "cyan");
+    try{ readerClone.focus({ preventScroll: true }); }catch(_){}
+  }
+  function closeReader(quiet){
+    if(!readerSource) return;
+    var src = readerSource, cl = readerClone;
+    if(cl) flip(src, cl.classList.contains("is-flipped"), true);
+    reader.hidden = true;
+    if(!quiet) SND.close();
+    readerCard.innerHTML = "";
+    readerSource = null; readerClone = null;
+    document.documentElement.style.overflow = "";
+    if(location.hash) try{ history.replaceState(null, "", location.pathname + location.search); }catch(_){}
+    if(!quiet) say("drag to shuffle &middot; <b>tap a card</b> to enlarge &amp; read", "");
+  }
+  function readerFlip(){
+    if(!readerClone) return;
+    var on = flip(readerClone);
+    flip(readerSource, on, true);
+    readerHintText(on);
+    say("<b>" + disp(readerSource) + "</b> intel " + (on ? "opened" : "closed"), "pink");
+  }
+  reader.addEventListener("click", function(e){
+    if(e.target === reader || e.target.classList.contains("reader-scrim")){ closeReader(); return; }
+    if(readerClone && (e.target === readerClone || readerClone.contains(e.target))){ readerFlip(); }
+  });
+  readerCard.addEventListener("keydown", function(e){
+    if(e.key === "Enter" || e.key === " "){ e.preventDefault(); readerFlip(); }
+    else if(e.key === "Escape"){ e.preventDefault(); closeReader(); }
+  });
+  document.getElementById("ccReaderFlip").addEventListener("click", readerFlip);
+  document.getElementById("ccReaderClose").addEventListener("click", function(){ closeReader(); });
+  document.addEventListener("keydown", function(e){
+    if(e.key === "Escape" && readerSource) closeReader();
+  });
+
+  /* ---- the zine (issue #02, by miki) ---- */
+  var ZINE_SHOP = {
+    "star-look": "https://ko-fi.com/cafedreamr/shop",
+    "pearl-look": "https://ko-fi.com/cafedreamr/shop",
+    "beanie": "https://ko-fi.com/cafedreamr/shop",
+    "necklace": "https://ko-fi.com/cafedreamr/shop",
+    "lighter": "https://ko-fi.com/cafedreamr/shop",
+    "sticker": "https://ko-fi.com/cafedreamr/shop"
+  };
+  [].forEach.call(document.querySelectorAll("[data-shop]"), function(a){
+    var url = ZINE_SHOP[a.getAttribute("data-shop")];
+    if(url){ a.setAttribute("href", url); a.setAttribute("target", "_blank"); a.setAttribute("rel", "noopener noreferrer"); }
+    a.addEventListener("click", function(){ SND.pop(); });
+  });
+  var zine = document.getElementById("ccZine");
+  function openZine(){
+    if(!zine.hidden) return;
+    zine.hidden = false;
+    document.documentElement.style.overflow = "hidden";
+    SND.rustle(); SND.whoosh();
+    say("opened <b>the zine</b> &middot; issue #02", "pink");
+    try{ document.getElementById("ccZineClose").focus({ preventScroll: true }); }catch(_){}
+  }
+  function closeZine(){
+    if(zine.hidden) return;
+    zine.hidden = true;
+    SND.close();
+    if(!readerSource) document.documentElement.style.overflow = "";
+    say('drag to shuffle &middot; <b>tap a card</b> to enlarge &amp; read', "");
+  }
+  document.getElementById("ccZineParcel").addEventListener("click", openZine);
+  if(window.matchMedia("(hover: hover)").matches){
+    document.getElementById("ccZineParcel").addEventListener("pointerenter", function(){ SND.tick(); });
+  }
+  document.getElementById("ccZineClose").addEventListener("click", closeZine);
+  zine.addEventListener("click", function(e){
+    if(e.target === zine || e.target.classList.contains("zine-scrim") || e.target.getAttribute("data-zclose")) closeZine();
+  });
+  document.addEventListener("keydown", function(e){
+    if(e.key === "Escape" && !zine.hidden) closeZine();
+  });
+
+  /* ---- save the zine as a printable pdf ---- */
+  var pdfBtn = document.getElementById("ccZinePdf");
+  async function savePdf(){
+    if(pdfBtn.disabled) return;
+    var old = pdfBtn.textContent;
+    pdfBtn.disabled = true; pdfBtn.textContent = "printing\u2026";
+    var mask = document.createElement("div");
+    mask.className = "zp-printmask";
+    mask.innerHTML = "<div>printing <b>the zine</b> \u00b7 issue #02\u2026<br><span>hold tight, this takes a few seconds</span></div>";
+    document.body.appendChild(mask);
+    var st = document.createElement("style");
+    st.textContent = ".zine{position:absolute!important;inset:auto!important;top:0!important;left:0!important;height:auto!important;overflow:visible!important}" +
+      ".zine-frame{height:auto!important;width:880px!important;max-width:none!important}" +
+      ".zine-paper{height:auto!important;overflow:visible!important}" +
+      ".zp-scroll{overflow:visible!important;max-height:none!important}";
+    var zscroll = zine.querySelector(".zp-scroll"), keep = zscroll.scrollTop;
+    document.head.appendChild(st);
+    var paper = zine.querySelector(".zine-paper"), inner = zine.querySelector(".zp-inner");
+    try{
+      await new Promise(function(r){ setTimeout(r, 70); });
+      SND.print();
+      var h2cMod = await import("https://esm.sh/html2canvas@1.4.1");
+      var h2c = h2cMod.default || h2cMod;
+      var jspdfMod = await import("https://esm.sh/jspdf@2.5.1");
+      var JsPDF = jspdfMod.jsPDF || jspdfMod.default;
+      var pr = paper.getBoundingClientRect();
+      var sc = Math.max(1, Math.min(2, Math.sqrt(22e6 / Math.max(1, pr.width * pr.height))));
+      var canvas = await h2c(paper, {scale:sc, backgroundColor:"#e6e0d0", useCORS:true, logging:false});
+      var sf = canvas.height / Math.max(1, paper.getBoundingClientRect().height);
+      var m = 9, imgW = 210 - m * 2, pxPerMm = canvas.width / imgW, pageHpx = (297 - m * 2) * pxPerMm;
+      var ranges = [].slice.call(inner.querySelectorAll("h1,h2,h3,p,ol,li,blockquote,figure,.zp-look-card,.zp-product,.zp-stickwrap,.zp-kick,.zp-mastrow,.zp-rule,.zp-sub,.zp-colophon")).map(function(e){
+        var r = e.getBoundingClientRect(); return [(r.top - pr.top) * sf, (r.bottom - pr.top) * sf];
+      });
+      var H = canvas.height, ends = [], pos = 0;
+      while(pos < H - 6){
+        var next = Math.min(pos + pageHpx, H);
+        if(next < H){
+          var cut = next;
+          for(var k = 0; k < ranges.length; k++){ if(next > ranges[k][0] && next < ranges[k][1]) cut = Math.min(cut, ranges[k][0]); }
+          if(cut - pos >= pageHpx * 0.3) next = cut;
+        }
+        ends.push(next); pos = next;
+      }
+      var pdf = new JsPDF({unit:"mm", format:"a4", orientation:"portrait"});
+      var tmp = document.createElement("canvas"), tctx = tmp.getContext("2d"), prev = 0, page = 0;
+      for(var i = 0; i < ends.length; i++){
+        var sy = prev, sh = ends[i] - prev; prev = ends[i];
+        if(sh < 2) continue;
+        tmp.width = canvas.width; tmp.height = sh;
+        tctx.clearRect(0, 0, tmp.width, tmp.height);
+        tctx.drawImage(canvas, 0, sy, canvas.width, sh, 0, 0, canvas.width, sh);
+        if(page) pdf.addPage();
+        pdf.addImage(tmp.toDataURL("image/jpeg", 0.9), "JPEG", m, m, imgW, sh / pxPerMm);
+        page++;
+      }
+      pdf.save("the-zine-issue-02.pdf");
+      SND.chime();
+      say("printed <b>the zine</b> \u00b7 issue #02 \u2192 pdf", "lime");
+    }catch(err){
+      SND.deny();
+      say("the printer jammed \u2014 try again in a second", "pink");
+    }finally{
+      st.remove(); mask.remove();
+      zscroll.scrollTop = keep;
+      pdfBtn.disabled = false; pdfBtn.textContent = old;
+    }
+  }
+  pdfBtn.addEventListener("click", savePdf);
+
+  /* ---- drag + tap (pointer events: mouse + touch) ---- */
+  var drag = null;
+  cards.forEach(function(c){
+    c.addEventListener("pointerdown", function(e){
+      if(e.button && e.button !== 0) return;
+      var r = c.getBoundingClientRect(), d = deck.getBoundingClientRect();
+      var sx = r.left - d.left, sy = r.top - d.top;
+      drag = { c: c, id: c.id, sx: sx, sy: sy, px: e.clientX, py: e.clientY, moved: false, r: pos[c.id].r };
+      c.classList.add("dragging");
+      c.style.zIndex = ++z;
+      try{ c.setPointerCapture(e.pointerId); }catch(_){}
+      e.preventDefault();
+    });
+    c.addEventListener("pointermove", function(e){
+      if(!drag || drag.c !== c) return;
+      var dx = e.clientX - drag.px, dy = e.clientY - drag.py;
+      if(Math.abs(dx) + Math.abs(dy) > 5) drag.moved = true;
+      if(!drag.moved) return;
+      put(c, drag.sx + dx, drag.sy + dy, drag.r, false);
+    });
+    function end(e){
+      if(!drag || drag.c !== c) return;
+      var d = drag; drag = null;
+      c.classList.remove("dragging");
+      if(!d.moved){
+        openReader(c);
+        return;
+      }
+      SND.drop();
+      // commit fraction
+      var t = travel(), r = c.getBoundingClientRect(), dd = deck.getBoundingClientRect();
+      pos[c.id] = {
+        fx: clamp01((r.left - dd.left - PAD) / (t.x || 1)),
+        fy: clamp01((r.top - dd.top - PAD - 26) / (t.y || 1)),
+        r: d.r
+      };
+    }
+    c.addEventListener("pointerup", end);
+    c.addEventListener("pointercancel", function(){ if(drag && drag.c === c){ drag.c.classList.remove("dragging"); drag = null; } });
+    c.addEventListener("keydown", function(e){
+      if(e.key === "Enter" || e.key === " "){ e.preventDefault(); openReader(c); }
+    });
+    c.addEventListener("dblclick", function(e){ e.preventDefault(); });
+  });
+  var z = 20;
+
+  /* ---- buttons ---- */
+  var sndBtn = document.getElementById("ccSoundBtn");
+  function paintSnd(){
+    var on = SND.enabled();
+    var compact = window.matchMedia("(max-width: 560px)").matches;
+    sndBtn.textContent = compact ? (on ? "\u266a on" : "\u266a off") : (on ? "sound on" : "sound off");
+    sndBtn.setAttribute("aria-pressed", on ? "true" : "false");
+    sndBtn.title = on ? "sound on \u2014 click to mute" : "sound off \u2014 click to unmute";
+    sndBtn.classList.toggle("off", !on);
+  }
+  sndBtn.addEventListener("click", function(){
+    var on = SND.toggle();
+    paintSnd();
+    say(on ? "sound <b>on</b>" : "sound <b>off</b>", on ? "lime" : "");
+  });
+  paintSnd();
+  window.addEventListener("resize", paintSnd);
+  document.getElementById("ccShuffleBtn").addEventListener("click", shuffle);
+  document.getElementById("ccResetBtn").addEventListener("click", function(){
+    closeReader(true);
+    pos = {};
+    fanLayout();
+    layout(false);
+    cards.forEach(function(c){ flip(c, false); c.style.zIndex = ""; });
+    say('deck reset &middot; <b>tap a card</b> to enlarge &amp; read', "");
+  });
+  document.getElementById("ccFlipBtn").addEventListener("click", function(){
+    var any = cards.some(function(c){ return !c.classList.contains("is-flipped"); });
+    cards.forEach(function(c, i){
+      (function(c2, d){ setTimeout(function(){ flip(c2, any); }, d * 60); })(c, i);
+    });
+    say(any ? 'showing <b>all intel</b>' : 'closing <b>all intel</b>', "pink");
+  });
+
+  /* ---- resize ---- */
+  var rt;
+  window.addEventListener("resize", function(){
+    clearTimeout(rt);
+    rt = setTimeout(function(){ layout(false); }, 160);
+  });
+
+  /* ---- entrance ---- */
+  function boot(){
+    fanLayout();
+    layout(true);
+    setTimeout(function(){ layout(false); }, 900);
+    say('drag to shuffle &middot; <b>tap a card</b> to enlarge &amp; read', "");
+    deepLink();
+  }
+  if(document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);
+  else boot();
+
+  /* ---- deep links: cards.html#pearl opens that dossier straight away ---- */
+  function deepLink(){
+    var id = (location.hash || "").replace(/^#/, "").toLowerCase().replace(/^card-/, "");
+    if(!id) return;
+    var c = cards.filter(function(x){ return x.id === "card-" + id; })[0];
+    if(!c) return;
+    setTimeout(function(){
+      openReader(c);
+      setTimeout(function(){
+        if(readerSource === c && readerClone && !readerClone.classList.contains("is-flipped")) readerFlip();
+      }, 420);
+    }, 700);
+  }
+  window.addEventListener("hashchange", deepLink);
+
+  /* ---- starfield (shared motif) ---- */
+  var cv = document.getElementById("ccStars"), ctx = cv.getContext("2d"), stars = [];
+  function seedStars(){
+    var dpr = Math.min(2, window.devicePixelRatio || 1);
+    cv.width = Math.floor(innerWidth * dpr); cv.height = Math.floor(innerHeight * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    stars = [];
+    var n = Math.round(innerWidth * innerHeight / 16000);
+    for(var i = 0; i < n; i++){
+      stars.push({ x: Math.random() * innerWidth, y: Math.random() * innerHeight,
+        r: Math.random() * 1.3 + 0.2, a: Math.random(), s: Math.random() * 0.02 + 0.004,
+        c: Math.random() < 0.14 ? "100,149,237" : (Math.random() < 0.5 ? "255,255,255" : "238,130,238") });
+    }
+  }
+  function draw(){
+    ctx.clearRect(0, 0, innerWidth, innerHeight);
+    for(var i = 0; i < stars.length; i++){
+      var st = stars[i];
+      if(!reduce){ st.a += st.s; if(st.a > 1 || st.a < 0.12) st.s *= -1; }
+      ctx.beginPath();
+      ctx.fillStyle = "rgba(" + st.c + "," + st.a.toFixed(2) + ")";
+      ctx.arc(st.x, st.y, st.r, 0, 6.2832);
+      ctx.fill();
+    }
+    if(!reduce) requestAnimationFrame(draw);
+  }
+  seedStars();
+  if(reduce){ draw(); } else { requestAnimationFrame(draw); }
+  window.addEventListener("resize", seedStars);
+})();
+</script>
+</body>
+</html>
