@@ -1,0 +1,580 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0d001a">
+<title>a class &middot; cafedreamr</title>
+<meta name="description" content="Sit in on a class at cafedreamr &mdash; one of them, a few questions, and a stamp on your card when you finish.">
+<meta property="og:title" content="a class &middot; cafedreamr">
+<meta property="og:description" content="One of them, a few questions, and a stamp on your card when you finish.">
+<meta property="og:type" content="website">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%230d001a'/%3E%3Cpath d='M3 5h8v5a2 2 0 01-2 2H5a2 2 0 01-2-2z' fill='none' stroke='%23e0a3c8' stroke-width='1.1'/%3E%3Cpath d='M11 6.5h1.4a1.3 1.3 0 010 2.6H11' fill='none' stroke='%23e0a3c8' stroke-width='1'/%3E%3Ccircle cx='8' cy='4' r='0.9' fill='%23ccff00'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Klee+One:wght@400;600&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Vampiro+One&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --plum:#0d001a; --ink:#0b0b0e; --ink2:#141419; --ink3:#1b1b22;
+  --lime:#ccff00; --pink:#ff2d95; --cyan:#00e5ff;
+  --violet:#bf40bf; --violet2:#ee82ee; --corn:#6495ed; --mint:#98fb98;
+  --cream:#e9e6de; --lav:#fff0f5; --dim:#7d848b;
+  --line:rgba(255,255,255,.10);
+  --mono:'Space Mono',ui-monospace,monospace;
+  --disp:'Bebas Neue',impact,sans-serif;
+  --logo:'Vampiro One',cursive;
+  --body:'Klee One',system-ui,sans-serif;
+  --a:#e0a3c8;
+}
+body{background:var(--plum);color:var(--lav);font-family:var(--body);text-align:left;
+  min-height:100dvh;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+.bg{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(900px 540px at 50% -10%, color-mix(in srgb,var(--a) 20%,transparent), transparent 62%),
+    radial-gradient(640px 480px at 90% 110%, rgba(0,229,255,.07), transparent 60%),
+    linear-gradient(180deg,#0d001a,#0b0b0e 55%,#0d001a)}
+.bg:after{content:"";position:absolute;inset:0;opacity:.5;
+  background:repeating-linear-gradient(0deg,rgba(255,255,255,.014) 0 1px,transparent 1px 4px)}
+.stage{position:relative;z-index:1;max-width:820px;margin:0 auto;padding:24px 14px 34px;
+  display:flex;flex-direction:column;gap:14px}
+.marquee{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;
+  border-bottom:1px solid var(--line);padding-bottom:10px}
+.brand{display:block;font-family:var(--logo);font-size:26px;letter-spacing:.05em;color:var(--a);
+  text-shadow:0 0 16px color-mix(in srgb,var(--a) 40%,transparent)}
+.tag{display:block;font-family:var(--mono);font-size:9px;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--dim);margin-top:4px}
+.back{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--violet2);text-decoration:none;border-bottom:1px solid transparent;padding-bottom:2px;white-space:nowrap}
+.back:hover{color:var(--lime);border-bottom-color:currentColor}
+.room{position:relative;border:1px solid var(--line);border-radius:16px;overflow:hidden;
+  background:linear-gradient(165deg,rgba(27,0,44,.66),rgba(11,11,14,.86));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.05),0 20px 60px rgba(0,0,0,.5)}
+.room:before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;z-index:2;
+  background:linear-gradient(180deg,var(--lime),var(--a) 55%,var(--cyan));opacity:.85}
+.plate{display:flex;align-items:center;gap:11px;padding:13px 16px 13px 18px;
+  border-bottom:1px solid var(--line);background:linear-gradient(180deg,rgba(255,255,255,.035),transparent)}
+.sigil{width:34px;height:34px;flex:0 0 auto;border-radius:50%;display:grid;place-items:center;
+  font-family:var(--logo);font-size:19px;color:#0b0b0e;background:var(--a);
+  box-shadow:0 0 15px color-mix(in srgb,var(--a) 55%,transparent)}
+.hname{font-family:var(--disp);font-size:21px;letter-spacing:.09em;line-height:1}
+.hnote{margin-left:auto;font-family:var(--mono);font-size:8.5px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--dim);text-align:right}
+.scroll{padding:18px 16px 8px 18px;display:flex;flex-direction:column;gap:14px;
+  min-height:210px;max-height:56vh;overflow-y:auto;scroll-behavior:smooth}
+.line{max-width:92%}
+.line .who{font-family:var(--mono);font-size:8.5px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--a);margin-bottom:4px}
+.line .txt{font-size:15.5px;line-height:1.64;color:var(--lav);white-space:pre-wrap}
+.line.aside .txt{color:var(--dim);font-size:13px;font-style:italic}
+.line.room{align-self:center;max-width:88%;text-align:center}
+.line.room .txt{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)}
+.line.me{align-self:flex-end;max-width:88%;text-align:right}
+.line.me .who{color:var(--dim)}
+.line.me .txt{color:#cfc6dd}
+.line.idle .txt{opacity:.72}
+.caret{display:inline-block;width:7px;height:15px;background:var(--a);vertical-align:-2px;
+  margin-left:2px;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.choices{padding:6px 16px 18px 18px;display:flex;flex-direction:column;gap:8px}
+.ch{display:flex;align-items:flex-start;gap:10px;width:100%;text-align:left;cursor:pointer;
+  font-family:var(--body);font-size:14.5px;line-height:1.45;color:var(--lav);
+  background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:11px;
+  padding:10px 13px;transition:.16s}
+.ch:hover:not(:disabled){border-color:color-mix(in srgb,var(--a) 55%,transparent);
+  background:rgba(255,255,255,.06);transform:translateX(2px)}
+.ch:focus-visible{outline:2px solid var(--a);outline-offset:2px}
+.ch i{font-family:var(--mono);font-size:9.5px;font-style:normal;color:var(--dim);
+  border:1px solid var(--line);border-radius:6px;padding:1px 5px;flex:0 0 auto;margin-top:2px}
+.ch:hover:not(:disabled) i{color:var(--a);border-color:currentColor}
+.ch:disabled{opacity:.55;cursor:not-allowed}
+.ch .lk{display:block;font-family:var(--mono);font-size:8.5px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--dim);margin-top:5px}
+.nameform{display:flex;gap:8px}
+.nameform input{flex:1;min-width:0;background:rgba(0,0,0,.35);border:1px solid var(--line);border-radius:10px;
+  color:var(--lav);font-family:var(--body);font-size:15px;padding:10px 12px}
+.nameform input:focus{outline:none;border-color:var(--a)}
+.nameform button{font-family:var(--mono);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;
+  cursor:pointer;background:var(--a);color:#0b0b0e;border:0;border-radius:10px;padding:0 15px}
+.endcard{margin:2px 0 6px;border:1px dashed color-mix(in srgb,var(--a) 45%,transparent);
+  border-radius:13px;padding:14px 15px;background:rgba(0,0,0,.24)}
+.endcard .ek{font-family:var(--mono);font-size:8.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--a)}
+.endcard .et{font-family:var(--disp);font-size:27px;letter-spacing:.06em;margin:5px 0 3px}
+.endcard .ep{font-family:var(--mono);font-size:11px;letter-spacing:.04em;color:var(--lav)}
+.endcard .eq{font-family:var(--mono);font-size:9.5px;line-height:1.8;color:var(--lime);margin-top:8px}
+.endcard .ea{margin-top:12px;display:flex;flex-wrap:wrap;gap:13px}
+.endcard .ea a{font-family:var(--mono);font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--violet2);text-decoration:none;border-bottom:1px solid transparent;padding-bottom:2px}
+.endcard .ea a:hover{color:var(--lime);border-bottom-color:currentColor}
+.shut{padding:20px 18px;display:flex;flex-direction:column;gap:9px}
+.shut .st{font-family:var(--disp);font-size:25px;letter-spacing:.06em;color:var(--lav)}
+.shut .sd{font-family:var(--mono);font-size:10px;line-height:1.85;letter-spacing:.06em;color:var(--dim)}
+.shut a{color:var(--violet2);text-decoration:none}
+.shut .cd{font-family:var(--mono);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);margin-top:8px}
+.shut .cd b{font-family:var(--disp);font-size:27px;letter-spacing:.06em;color:var(--a);margin-left:7px;vertical-align:-3px}
+.shut .cdnote{font-family:var(--mono);font-size:8.5px;letter-spacing:.15em;text-transform:uppercase;color:var(--dim);opacity:.65}
+.picker{padding:18px;display:flex;flex-direction:column;gap:9px}
+.pk{display:block;text-decoration:none;color:var(--lav);border:1px solid var(--line);border-radius:12px;
+  padding:12px 14px;background:rgba(255,255,255,.02);transition:.16s}
+.pk:hover{border-color:color-mix(in srgb,var(--a) 45%,transparent);background:rgba(255,255,255,.05)}
+.pk .pn{font-family:var(--disp);font-size:19px;letter-spacing:.07em}
+.pk .pd{font-family:var(--mono);font-size:9px;letter-spacing:.13em;text-transform:uppercase;color:var(--dim);margin-top:5px}
+.pk .pst{display:inline-block;margin-top:6px;font-family:var(--mono);font-size:8.5px;letter-spacing:.15em;
+  text-transform:uppercase;color:var(--dim);border:1px solid var(--line);border-radius:999px;padding:2px 8px}
+.pk .pst.on{color:var(--lime);border-color:color-mix(in srgb,var(--lime) 42%,transparent)}
+.foot{font-family:var(--mono);font-size:9px;letter-spacing:.1em;line-height:1.95;color:var(--dim);text-align:center;padding-top:4px}
+.foot a{color:var(--violet2);text-decoration:none}
+.foot a:hover{color:var(--lime)}
+@media (max-width:560px){
+  .brand{font-size:22px} .hnote{display:none} .line{max-width:100%}
+  .scroll{max-height:52vh} .stage{padding:18px 11px 30px}
+}
+@media (prefers-reduced-motion:reduce){
+  .caret{animation:none} .ch{transition:none} .scroll{scroll-behavior:auto}
+}
+</style>
+</head>
+<body>
+<div class="bg" aria-hidden="true"></div>
+
+<main class="stage">
+  <header class="marquee">
+    <div class="mtitle">
+      <span class="brand" id="brand">a class</span>
+      <span class="tag" id="tag">cafedreamr</span>
+    </div>
+    <a class="back" href="https://www.cafedreamr.art/">&larr; the terminal</a>
+  </header>
+
+  <section class="room">
+    <div class="plate">
+      <span class="sigil" id="sigil" aria-hidden="true">c</span>
+      <span class="hname" id="hname">&mdash;</span>
+      <span class="hnote" id="hnote"></span>
+    </div>
+    <div class="scroll" id="scroll" aria-live="polite"></div>
+    <div class="choices" id="choices"></div>
+  </section>
+
+  <div class="foot">
+    <a href="https://www.cafedreamr.art/">the terminal</a> &middot;
+    <a href="https://www.cafedreamr.art/PASSPORT/">your stamp card</a> &middot;
+    <a href="https://www.cafedreamr.art/LORE/MAP.html">the realm map</a> &middot;
+    <a href="https://www.cafedreamr.art/LORE/BOBBY/cards.html">the dossiers</a> &middot;
+    <a href="https://www.cafedreamr.art/LORE/MYSTERYGRID/">the mystery grid</a> &middot;
+    <a href="https://www.cafedreamr.art/LORE/HOURS/">the hours</a> &middot;
+    <a href="https://www.cafedreamr.art/MENU/">the menu</a> &middot;
+    <a href="https://www.cafedreamr.art/ZINE/">the zine</a> &middot;
+    <a href="https://www.cafedreamr.art/PLAY/">the long day</a> &middot;
+    <a href="https://www.cafedreamr.art/LORE/VENDI/index.html">the vendi machine</a><br>
+    &copy; cafedreamr &middot; attendance is kept in this browser
+  </div>
+</main>
+
+<script src="https://www.cafedreamr.art/PASSPORT/cd-passport.js"></script>
+<script src="./classes.js"></script>
+<script>
+/* ============================================================
+   cafedreamr — the class runner                  CLASS/index.html
+   Walks one class from classes.js. Nothing to edit here; write
+   classes instead. Open it as CLASS/?id=<class>
+
+   A class may keep an hour (opens/closes, "HH:MM" local): outside
+   it the runner shows the shut panel with a live countdown, and
+   opens the room by itself when the hour comes.
+   ============================================================ */
+(function () {
+  "use strict";
+
+  var $ = function (id) { return document.getElementById(id); };
+  var params = new URLSearchParams(location.search);
+  var cid = (params.get("id") || params.get("c") || "").trim() || (location.hash || "").replace(/^#/, "").trim();
+  var CLASSES = window.CLASSES || {};
+  var ESC = { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" };
+
+  var REDUCE = false;
+  try { REDUCE = !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches); } catch (e) {}
+
+  var HOUSE_IDLE = [
+    { after: 11000, who: "", say: "somewhere below, a cup is set down." },
+    { after: 26000, who: "", say: "the room waits, unbothered." },
+    { after: 50000, say: "{name}. whenever you are ready." }
+  ];
+
+  var S = null, node = null, timers = [], typer = null, ENDED = false, busy = false, cdTimer = null;
+
+  function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return ESC[c]; }); }
+  function cardName() { return (window.CD && CD.name && CD.name()) || ""; }
+  function sub(t) { return String(t == null ? "" : t).replace(/\{name\}/g, cardName() || "you"); }
+  function has(id) { return !!(window.CD && CD.has && CD.has(id)); }
+  function countOf(p) { return (window.CD && CD.count) ? CD.count(p) : 0; }
+  function questDone(q) {
+    if (!window.CD || !CD.quests) return false;
+    var a = CD.quests() || [];
+    for (var i = 0; i < a.length; i++) if (a[i].id === q) return !!a[i].complete;
+    return false;
+  }
+  function meets(need) {
+    if (!need) return true;
+    if (!window.CD) return false;                      /* no card -> gated things stay shut */
+    if (need.points && CD.points() < need.points) return false;
+    if (need.has && !has(need.has)) return false;
+    if (need.count && countOf(need.count.prefix) < (need.count.n || 1)) return false;
+    if (need.quests) for (var i = 0; i < need.quests.length; i++) if (!questDone(need.quests[i])) return false;
+    return true;
+  }
+
+  /* ---------------- the hour (a class can keep one) ---------------- */
+  function toMin(s) {
+    if (!s) return null;
+    var p = String(s).split(":");
+    var h = parseInt(p[0], 10), m = parseInt(p[1] || "0", 10);
+    if (isNaN(h)) return null;
+    return h * 60 + (isNaN(m) ? 0 : m);
+  }
+  function nowMs() { var d = new Date(); return d.getHours() * 3600000 + d.getMinutes() * 60000 + d.getSeconds() * 1000 + d.getMilliseconds(); }
+  /* a class with no `opens` keeps no hours and is always in session */
+  function classOpen(c) {
+    var o = toMin(c && c.opens), cl = toMin(c && c.closes);
+    if (o == null) return true;
+    var n = nowMs() / 60000;
+    if (cl == null || cl <= o) return n >= o;
+    return n >= o && n < cl;
+  }
+  function sessionOpen() { return classOpen(S); }
+  function msToOpenFor(c) {
+    var o = toMin(c && c.opens);
+    if (o == null) return 0;
+    if (classOpen(c)) return 0;                       /* already in session */
+    var delta = o * 60000 - nowMs();
+    if (delta <= 0) delta += 86400000;
+    return delta;
+  }
+  function msToOpen() { return msToOpenFor(S); }
+  function pad2(n) { return (n < 10 ? "0" : "") + n; }
+  function clockText(ms) {
+    var s = Math.max(0, Math.floor(ms / 1000));
+    var h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), sec = s % 60;
+    return (h ? h + ":" + pad2(m) : String(m)) + ":" + pad2(sec);
+  }
+
+  /* ---------------- the page ---------------- */
+  function theme() {
+    var a = S.accent || "#e0a3c8";
+    document.documentElement.style.setProperty("--a", a);
+    var host = S.host || "the room";
+    $("brand").textContent = S.spoken || S.title || "a class";
+    $("tag").textContent = (S.room ? S.room + " · " : "") + host;
+    $("hname").textContent = host;
+    $("hnote").textContent = S.hostNote || "";
+    $("sigil").textContent = (host.charAt(0) || "c").toLowerCase();
+    document.title = (S.spoken || S.title || "a class") + " · cafedreamr";
+  }
+
+  function scrollDown() {
+    var sc = $("scroll");
+    if (sc) sc.scrollTop = sc.scrollHeight;
+  }
+
+  function finishTyping() {
+    if (typer) { clearInterval(typer.t); typer.el.textContent = typer.text; typer = null; }
+  }
+
+  function typeInto(el, text, done) {
+    finishTyping();
+    if (REDUCE || !text) { el.textContent = text; busy = false; if (done) done(); return; }
+    var i = 0, step = Math.max(9, Math.min(26, 900 / Math.max(1, text.length)));
+    busy = true;
+    el.textContent = "";
+    var caret = document.createElement("i");
+    caret.className = "caret";
+    caret.setAttribute("aria-hidden", "true");
+    el.appendChild(caret);
+    var t = setInterval(function () {
+      i += 1;
+      el.textContent = text.slice(0, i);
+      if (i >= text.length) {
+        clearInterval(t); typer = null; busy = false;
+        el.textContent = text;
+        if (done) done();
+      } else el.appendChild(caret);
+      scrollDown();
+    }, step);
+    typer = { t: t, el: el, text: text };
+  }
+
+  /* kind: say | me | room | aside | idle */
+  function addLine(kind, who, text, done) {
+    var el = document.createElement("div");
+    el.className = "line" + (kind && kind !== "say" ? " " + kind : "");
+    var t = sub(text);
+    if (kind === "room") el.innerHTML = '<div class="txt"></div>';
+    else el.innerHTML = '<div class="who">' + esc(who || "") + "</div><div class=\"txt\"></div>";
+    $("scroll").appendChild(el);
+    scrollDown();
+    if (kind === "aside" || kind === "room") { el.querySelector(".txt").textContent = t; done && done(); return el; }
+    typeInto(el.querySelector(".txt"), t, done);
+    return el;
+  }
+
+  /* ---------------- the timed happenstance ---------------- */
+  function clearIdle() { timers.forEach(clearTimeout); timers = []; }
+  function armIdle() {
+    clearIdle();
+    var tiers = node.idle || S.idle || HOUSE_IDLE;
+    tiers.forEach(function (tier) {
+      timers.push(setTimeout(function () {
+        if (ENDED || !node) return;
+        var who = (tier.who === undefined) ? (S.host || "") : tier.who;
+        addLine(who === "" ? "room" : "idle", who, tier.say);
+      }, Math.max(600, tier.after || 8000)));
+    });
+  }
+
+  /* ---------------- walking the nodes ---------------- */
+  function go(id) {
+    if (!id) return finish();
+    var n = S.nodes[id];
+    if (!n) return finish();
+    node = n;
+    node.__id = id;
+    render();
+  }
+
+  function render() {
+    clearIdle();
+    ENDED = false;
+    $("choices").innerHTML = "";
+    var who = (node.who === undefined) ? (S.host || "") : node.who;
+    var after = function () {
+      if (node.stamp) stampQuiet(node.stamp, node.stampLabel);
+      if (node.end) { ENDED = true; clearIdle(); return finish(); }
+      if (node.askName || (S.nameNode && node.__id === S.nameNode)) return askName();
+      choices();
+    };
+    if (node.say) {
+      addLine(who === "" ? "room" : "say", who, node.say, function () {
+        if (node.aside) addLine("aside", who, node.aside, after); else after();
+      });
+    } else after();
+  }
+
+  function stampQuiet(id, label) {
+    if (!window.CD || !CD.stamp || !id) return;
+    CD.stamp(id.replace(/\{class\}/g, S.id), label ? { label: label, accent: S.accent, quiet: true } : { accent: S.accent, quiet: true });
+  }
+
+  function choices() {
+    var box = $("choices");
+    box.innerHTML = "";
+    var list = node.choices;
+    if (!list && node.next) list = [{ text: node.nextLabel || "\u2026", goto: node.next }];
+    if (!list) { ENDED = true; return finish(); }
+    list.forEach(function (ch, i) {
+      var ok = meets(ch.need);
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "ch";
+      b.disabled = !ok;
+      var inner = esc(sub(ch.text));
+      if (!ok) inner += '<span class="lk">' + esc(sub(ch.lockedNote || "not yet")) + "</span>";
+      b.innerHTML = "<i>" + (i + 1) + "</i><span>" + inner + "</span>";
+      b.addEventListener("click", function () { pick(ch); });
+      box.appendChild(b);
+    });
+    armIdle();
+    scrollDown();
+  }
+
+  function pick(ch) {
+    clearIdle();
+    finishTyping();
+    $("choices").innerHTML = "";
+    if (!ch.silent) addLine("me", cardName() || "you", ch.text);
+    if (ch.stamp) stampQuiet(ch.stamp, ch.stampLabel);
+    go(ch.goto);
+  }
+
+  function askName() {
+    clearIdle();
+    var box = $("choices");
+    box.innerHTML = "";
+    var f = document.createElement("div");
+    f.className = "nameform";
+    f.innerHTML = '<input id="nameInput" maxlength="24" placeholder="your name" autocomplete="off" spellcheck="false"><button id="nameGo" type="button">tell her</button>';
+    box.appendChild(f);
+    var inp = f.querySelector("input"), btn = f.querySelector("button");
+    var send = function () {
+      var v = (inp.value || "").trim().slice(0, 24) || "friend";
+      if (window.CD && CD.name) { CD.name(v); addLine("me", "you", v); }
+      f.remove();
+      go(node.next || "open");
+    };
+    btn.addEventListener("click", send);
+    inp.addEventListener("keydown", function (e) { if (e.key === "Enter") { e.preventDefault(); send(); } });
+    inp.focus();
+    scrollDown();
+  }
+
+  function finish() {
+    clearIdle();
+    finishTyping();
+    var res = null;
+    if (window.CD && CD.stamp) {
+      res = CD.stamp("lesson:" + S.id, { label: (S.spoken || S.title) + " · finished", accent: S.accent });
+    }
+    var extra = [];
+    if (res && res.quests) res.quests.forEach(function (q) { extra.push("quest · " + q.title); });
+    if (res && res.doors) res.doors.forEach(function (d) { extra.push((d.kind === "academy" ? "an academy opens" : "a door opens") + " · " + d.name); });
+    var box = $("choices");
+    box.innerHTML = "";
+    var el = document.createElement("div");
+    el.className = "endcard";
+    el.innerHTML =
+      '<div class="ek">class finished</div>' +
+      '<div class="et">' + esc(S.spoken || S.title) + "</div>" +
+      '<div class="ep">' + (res ? (res.fresh ? "+" + res.points + " on your card" : "already signed · nothing new") : "no card found on this device") + "</div>" +
+      (extra.length ? '<div class="eq">' + extra.map(esc).join("<br>") + "</div>" : "") +
+      '<div class="ea"><a href="https://www.cafedreamr.art/PASSPORT/">your stamp card &rarr;</a>' +
+      '<a href="#" id="againLink">sit through it again</a>' +
+      '<a href="https://www.cafedreamr.art/">the terminal &rarr;</a></div>';
+    box.appendChild(el);
+    el.querySelector("#againLink").addEventListener("click", function (e) { e.preventDefault(); again(); });
+    scrollDown();
+  }
+
+  function again() {
+    ENDED = false;
+    $("scroll").innerHTML = "";
+    $("choices").innerHTML = "";
+    go(S.nameNode && !cardName() ? S.nameNode : (S.start || "open"));
+  }
+
+  /* ---------------- doors ---------------- */
+  function shut() {
+    node = null;
+    var need = S.need || {};
+    var head = (S.shut && S.shut.title) || "the light is off";
+    var line = (S.shut && S.shut.lines) || "";
+    if (!line) {
+      line = "this room has not opened yet.";
+      if (need.points) line = "she is not taking students until you have " + need.points + " stamps.";
+      if (need.count) line = "she wants " + (need.count.n || 1) + " of something you have not found yet.";
+      if (need.has) line = "she wants to see something specific first.";
+      if (need.quests && need.quests.length) line = "she is waiting on: " + need.quests.join(", ") + ".";
+    }
+    $("choices").innerHTML = '<div class="shut"><div class="st">' + esc(head) + '</div>' +
+      '<div class="sd">' + esc(line) + "<br><br>come back when the card says you are ready &mdash; " +
+      '<a href="https://www.cafedreamr.art/PASSPORT/">look at your stamp card</a>.</div></div>';
+  }
+
+  /* ---------------- the hour a class keeps ---------------- */
+  /* outside its hours: the room is dark, and it says exactly when it opens,
+     counting down by the second — then opens itself when the hour comes.
+     hans is precise; the door is too. */
+  function awayForSession() {
+    node = null;
+    if (cdTimer) { clearInterval(cdTimer); cdTimer = null; }
+    var away = S.away || {};
+    var head = away.title || "the room is dark";
+    var line = away.lines || ("this room opens at " + S.opens + ", and not before.");
+    var box = $("choices");
+    box.innerHTML = "";
+    var el = document.createElement("div");
+    el.className = "shut";
+    el.innerHTML = '<div class="st">' + esc(head) + "</div>" +
+      '<div class="sd">' + esc(line) + "</div>" +
+      '<div class="cd">the door opens in<b id="cdK">--:--</b></div>' +
+      (S.opens ? '<div class="cdnote">' + esc(S.opens) + (S.closes ? "\u2013" + esc(S.closes) : "") + " \u00b7 sharp</div>" : "");
+    box.appendChild(el);
+    var k = el.querySelector("#cdK");
+    var paint = function () {
+      var ms = msToOpen();
+      if (k) k.textContent = clockText(ms);
+      if (ms <= 900) { clearInterval(cdTimer); cdTimer = null; wake(); }
+    };
+    cdTimer = setInterval(paint, 1000);
+    paint();
+    scrollDown();
+  }
+
+  /* the hour arrived while the player waited — open up */
+  function wake() {
+    if (!sessionOpen()) { awayForSession(); return; }
+    $("choices").innerHTML = "";
+    if (S.need && window.CD && !meets(S.need)) return shut();
+    enter();
+  }
+
+  function picker() {
+    var box = $("choices");
+    box.innerHTML = "";
+    var keys = Object.keys(CLASSES);
+    if (!keys.length) {
+      box.innerHTML = '<div class="shut"><div class="st">no classes written yet</div>' +
+        '<div class="sd">classes.js is empty. add one and it will show up here.</div></div>';
+      return;
+    }
+    $("brand").textContent = "the classes";
+    $("tag").textContent = "walk into a room · cafedreamr";
+    $("hname").textContent = "the corridor";
+    $("sigil").textContent = "c";
+    var wrap = document.createElement("div");
+    wrap.className = "picker";
+    keys.forEach(function (k) {
+      var c = CLASSES[k];
+      var a = document.createElement("a");
+      a.className = "pk";
+      a.href = "?id=" + encodeURIComponent(k);
+      var st = "";
+      if (c.opens) {
+        var on = classOpen(c);
+        st = '<span class="pst' + (on ? " on" : "") + '">' + (on
+          ? "in session" + (c.closes ? " \u00b7 until " + c.closes : "")
+          : "opens at " + c.opens + " \u00b7 in " + clockText(msToOpenFor(c))) + "</span>";
+      }
+      a.innerHTML = '<div class="pn">' + esc(c.spoken || c.title || k) + "</div>" +
+        '<div class="pd">' + esc(c.host || "") + (c.hostNote ? " · " + esc(c.hostNote) : "") + (c.blurb ? " · " + esc(c.blurb) : "") + "</div>" + st;
+      wrap.appendChild(a);
+    });
+    box.appendChild(wrap);
+  }
+
+  /* ---------------- go ---------------- */
+  function enter() {
+    if (window.CD && CD.stamp) {
+      CD.stamp("attend:" + S.id, { label: (S.spoken || S.title) + " · you sat in", accent: S.accent });
+    }
+    go(S.nameNode && !cardName() ? S.nameNode : (S.start || "open"));
+  }
+
+  function boot() {
+    if (!cid || !CLASSES[cid]) return picker();
+    S = CLASSES[cid];
+    S.id = cid;
+    if (window.CD && CD.boot) { try { CD.boot({ page: "class" }); } catch (e) {} }
+    theme();
+    if (S.opens && !sessionOpen()) return awayForSession();
+    if (S.need && window.CD && !meets(S.need)) return shut();
+    enter();
+  }
+
+  document.addEventListener("keydown", function (e) {
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    var tag = (e.target && e.target.tagName) || "";
+    if (tag === "INPUT" || tag === "TEXTAREA") return;
+    if (/^[1-9]$/.test(e.key)) {
+      var btns = $("choices").querySelectorAll("button.ch");
+      var b = btns[parseInt(e.key, 10) - 1];
+      if (b && !b.disabled) b.click();
+    } else if (e.key === "Enter" && typer) {
+      finishTyping();
+    }
+  });
+
+  boot();
+})();
+</script>
+</body>
+</html>
