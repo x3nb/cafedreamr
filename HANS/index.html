@@ -6,9 +6,9 @@
 <meta name="color-scheme" content="dark">
 <meta name="theme-color" content="#0d001a">
 <title>hans &middot; cafedreamr</title>
-<meta name="description" content="Earl grey, and a class that begins in twenty minutes.">
+<meta name="description" content="Earl grey, and a class that begins at one o'clock, precisely.">
 <meta property="og:title" content="hans &middot; cafedreamr">
-<meta property="og:description" content="Earl grey, and a class that begins in twenty minutes.">
+<meta property="og:description" content="Earl grey, and a class that begins at one o'clock, precisely.">
 <meta property="og:image" content="https://user.uploads.dev/file/3319225749983203c7c8561fac0a5684.jpg">
 <meta property="og:type" content="website">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%230d001a'/%3E%3Cpath d='M3 5h8v5a2 2 0 01-2 2H5a2 2 0 01-2-2z' fill='none' stroke='%236495ed' stroke-width='1.1'/%3E%3Cpath d='M11 6.5h1.4a1.3 1.3 0 010 2.6H11' fill='none' stroke='%236495ed' stroke-width='1'/%3E%3Ccircle cx='8' cy='4' r='0.9' fill='%236495ed'/%3E%3C/svg%3E">
@@ -83,6 +83,8 @@ body{background:var(--plum);color:var(--lav);font-family:var(--body);text-align:
 .count .k{font-size:20px;letter-spacing:.03em;color:var(--a)}
 .count.late .k{display:none}
 .count.late{color:var(--violet2)}
+.count.over .k{display:none}
+.count.over{color:var(--dim)}
 .links{display:flex;flex-wrap:wrap;gap:9px}
 .links a{font-family:var(--mono);font-size:9.5px;letter-spacing:.15em;text-transform:uppercase;text-decoration:none;
   color:var(--lav);border:1px solid color-mix(in srgb,var(--a) 42%,transparent);border-radius:999px;
@@ -131,7 +133,7 @@ body{background:var(--plum);color:var(--lav);font-family:var(--body);text-align:
       <div class="bottom">
         <div class="hint" id="hint" hidden>&#9656; tap to continue</div>
         <div class="count" id="count" hidden>
-          <span id="kLabel">the etiquette class begins in</span><b class="k" id="k">20:00</b>
+          <span id="kLabel">the etiquette class begins in</span><b class="k" id="k">--:--</b>
         </div>
         <div class="links" id="links" hidden></div>
       </div>
@@ -154,9 +156,12 @@ body{background:var(--plum);color:var(--lav);font-family:var(--body);text-align:
 /* ============================================================
    hans &mdash; the tea cup's door                 HANS/index.html
    The player took the tea at the terminal (or came up from
-   miki's), so the cup led here. One written conversation; at
-   the end a twenty-minute clock starts and the class opens.
-   The class itself lives in CLASS/classes.js, key etiquette.
+   miki's), so the cup led here. One written conversation, and
+   then the clock. The etiquette class keeps the academy's hour
+   — one o'clock to three, sharp — and this countdown runs to
+   the very same window the class page keeps. The class itself
+   lives in CLASS/classes.js, key etiquette (opens 13:00,
+   closes 15:00), so the two always agree.
    ============================================================ */
 (function () {
   "use strict";
@@ -170,15 +175,13 @@ body{background:var(--plum);color:var(--lav);font-family:var(--body);text-align:
     { who: "hans", say: "Here. Both hands — not for the rule's sake, the cup is hot. There is a difference, and I will be quizzing you on it." },
     { room: "he looks at his watch. then at it again, as though the second look might disagree with the first." },
     { who: "hans", say: "Ah. Ah, no. The hour has run off with me again. I have a class to begin — the academy does not open itself, whatever Miki will tell you." },
-    { who: "hans", say: "It begins in twenty minutes. That is exactly enough time to arrive, and precisely enough time to be late. The room is written down for you below. Go on — be on time. I notice these things." }
+    { who: "hans", say: "It begins at one o'clock. Not near one — at one. That leaves you enough time to arrive, and precisely enough time to be late. The room is written down for you below. Go on — be on time. I notice these things." }
   ];
 
   var LINKS = [
     { href: "https://www.cafedreamr.art/CLASS/?id=etiquette", text: "go to the class \u2192", main: true },
     { href: "https://www.cafedreamr.art/", text: "back to the terminal \u2192" }
   ];
-
-  var CLASS_MINUTES = 20;
 
   var scene = document.getElementById("scene"),
       whoEl = document.getElementById("who"),
@@ -194,17 +197,31 @@ body{background:var(--plum);color:var(--lav);font-family:var(--body);text-align:
   var REDUCE = false;
   try { REDUCE = !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches); } catch (e) {}
 
-  /* the clock starts the moment the page does — the class is not waiting */
-  var remain = CLASS_MINUTES * 60;
+  /* the class keeps the academy's hour — one to three, sharp. the countdown
+     runs to the same window the class page keeps, so hans can never send you
+     to a room that is dark. */
+  var OPEN_H = 13, OPEN_M = 0, CLOSE_H = 15, CLOSE_M = 0;
+  var OPEN = (OPEN_H * 60 + OPEN_M) * 60000, CLOSE = (CLOSE_H * 60 + CLOSE_M) * 60000;
+  function nowMs() {
+    var d = new Date();
+    return d.getHours() * 3600000 + d.getMinutes() * 60000 + d.getSeconds() * 1000 + d.getMilliseconds();
+  }
   function pad(n) { return (n < 10 ? "0" : "") + n; }
   function tick() {
-    if (remain <= 0) {
-      countEl.classList.add("late");
+    var n = nowMs();
+    if (n < OPEN) {
+      countEl.classList.remove("late", "over");
+      kLabel.textContent = "the etiquette class begins in";
+      var s = Math.floor((OPEN - n) / 1000);
+      var h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), sec = s % 60;
+      kEl.textContent = (h ? h + ":" + pad(m) : String(m)) + ":" + pad(sec);
+    } else if (n < CLOSE) {
+      countEl.classList.add("late"); countEl.classList.remove("over");
       kLabel.textContent = "the bell has gone. come in quietly — he will pretend you were early.";
-      return;
+    } else {
+      countEl.classList.remove("late"); countEl.classList.add("over");
+      kLabel.textContent = "the class is done for today. he teaches again at one o'clock — precisely.";
     }
-    kEl.textContent = pad(Math.floor(remain / 60)) + ":" + pad(remain % 60);
-    remain--;
     setTimeout(tick, 1000);
   }
   tick();
