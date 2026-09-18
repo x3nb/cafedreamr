@@ -918,6 +918,9 @@ body{
   </div>
 </div>
 
+<script src="/PASSPORT/cd-passport.js"></script>
+<script>window.CD && CD.boot({page:"cards"});</script>
+
 <script>
 (function(){
   "use strict";
@@ -1110,6 +1113,7 @@ body{
     if(readerSource === c && readerClone) return;
     if(readerSource) closeReader(true);
     readerSource = c;
+    if(window.CD) CD.stamp("dossier:" + (c.id || "").replace(/^card-/, ""));
     readerClone = c.cloneNode(true);
     readerClone.removeAttribute("id");
     readerClone.setAttribute("tabindex", "-1");
@@ -1141,6 +1145,7 @@ body{
     var on = flip(readerClone);
     flip(readerSource, on, true);
     readerHintText(on);
+    if(on && window.CD) CD.stamp("intel:" + (readerSource.id || "").replace(/^card-/, ""));
     say("<b>" + disp(readerSource) + "</b> intel " + (on ? "opened" : "closed"), "pink");
   }
   reader.addEventListener("click", function(e){
@@ -1343,7 +1348,7 @@ body{
   document.getElementById("ccFlipBtn").addEventListener("click", function(){
     var any = cards.some(function(c){ return !c.classList.contains("is-flipped"); });
     cards.forEach(function(c, i){
-      (function(c2, d){ setTimeout(function(){ flip(c2, any); }, d * 60); })(c, i);
+      (function(c2, d){ setTimeout(function(){ flip(c2, any); if(any && window.CD) CD.stamp("intel:" + (c2.id || "").replace(/^card-/, "")); }, d * 60); })(c, i);
     });
     say(any ? 'showing <b>all intel</b>' : 'closing <b>all intel</b>', "pink");
   });
