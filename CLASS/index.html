@@ -111,12 +111,18 @@ body{background:var(--plum);color:var(--lav);font-family:var(--body);text-align:
 .shut .st{font-family:var(--disp);font-size:25px;letter-spacing:.06em;color:var(--lav)}
 .shut .sd{font-family:var(--mono);font-size:10px;line-height:1.85;letter-spacing:.06em;color:var(--dim)}
 .shut a{color:var(--violet2);text-decoration:none}
+.shut .cd{font-family:var(--mono);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);margin-top:8px}
+.shut .cd b{font-family:var(--disp);font-size:27px;letter-spacing:.06em;color:var(--a);margin-left:7px;vertical-align:-3px}
+.shut .cdnote{font-family:var(--mono);font-size:8.5px;letter-spacing:.15em;text-transform:uppercase;color:var(--dim);opacity:.65}
 .picker{padding:18px;display:flex;flex-direction:column;gap:9px}
 .pk{display:block;text-decoration:none;color:var(--lav);border:1px solid var(--line);border-radius:12px;
   padding:12px 14px;background:rgba(255,255,255,.02);transition:.16s}
 .pk:hover{border-color:color-mix(in srgb,var(--a) 45%,transparent);background:rgba(255,255,255,.05)}
 .pk .pn{font-family:var(--disp);font-size:19px;letter-spacing:.07em}
 .pk .pd{font-family:var(--mono);font-size:9px;letter-spacing:.13em;text-transform:uppercase;color:var(--dim);margin-top:5px}
+.pk .pst{display:inline-block;margin-top:6px;font-family:var(--mono);font-size:8.5px;letter-spacing:.15em;
+  text-transform:uppercase;color:var(--dim);border:1px solid var(--line);border-radius:999px;padding:2px 8px}
+.pk .pst.on{color:var(--lime);border-color:color-mix(in srgb,var(--lime) 42%,transparent)}
 .foot{font-family:var(--mono);font-size:9px;letter-spacing:.1em;line-height:1.95;color:var(--dim);text-align:center;padding-top:4px}
 .foot a{color:var(--violet2);text-decoration:none}
 .foot a:hover{color:var(--lime)}
@@ -173,6 +179,10 @@ body{background:var(--plum);color:var(--lav);font-family:var(--body);text-align:
    cafedreamr — the class runner                  CLASS/index.html
    Walks one class from classes.js. Nothing to edit here; write
    classes instead. Open it as CLASS/?id=<class>
+
+   A class may keep an hour (opens/closes, "HH:MM" local): outside
+   it the runner shows the shut panel with a live countdown, and
+   opens the room by itself when the hour comes.
    ============================================================ */
 (function () {
   "use strict";
@@ -192,7 +202,7 @@ body{background:var(--plum);color:var(--lav);font-family:var(--body);text-align:
     { after: 50000, say: "{name}. whenever you are ready." }
   ];
 
-  var S = null, node = null, timers = [], typer = null, ENDED = false, busy = false;
+  var S = null, node = null, timers = [], typer = null, ENDED = false, busy = false, cdTimer = null;
 
   function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return ESC[c]; }); }
   function cardName() { return (window.CD && CD.name && CD.name()) || ""; }
@@ -213,6 +223,40 @@ body{background:var(--plum);color:var(--lav);font-family:var(--body);text-align:
     if (need.count && countOf(need.count.prefix) < (need.count.n || 1)) return false;
     if (need.quests) for (var i = 0; i < need.quests.length; i++) if (!questDone(need.quests[i])) return false;
     return true;
+  }
+
+  /* ---------------- the hour (a class can keep one) ---------------- */
+  function toMin(s) {
+    if (!s) return null;
+    var p = String(s).split(":");
+    var h = parseInt(p[0], 10), m = parseInt(p[1] || "0", 10);
+    if (isNaN(h)) return null;
+    return h * 60 + (isNaN(m) ? 0 : m);
+  }
+  function nowMs() { var d = new Date(); return d.getHours() * 3600000 + d.getMinutes() * 60000 + d.getSeconds() * 1000 + d.getMilliseconds(); }
+  /* a class with no `opens` keeps no hours and is always in session */
+  function classOpen(c) {
+    var o = toMin(c && c.opens), cl = toMin(c && c.closes);
+    if (o == null) return true;
+    var n = nowMs() / 60000;
+    if (cl == null || cl <= o) return n >= o;
+    return n >= o && n < cl;
+  }
+  function sessionOpen() { return classOpen(S); }
+  function msToOpenFor(c) {
+    var o = toMin(c && c.opens);
+    if (o == null) return 0;
+    if (classOpen(c)) return 0;                       /* already in session */
+    var delta = o * 60000 - nowMs();
+    if (delta <= 0) delta += 86400000;
+    return delta;
+  }
+  function msToOpen() { return msToOpenFor(S); }
+  function pad2(n) { return (n < 10 ? "0" : "") + n; }
+  function clockText(ms) {
+    var s = Math.max(0, Math.floor(ms / 1000));
+    var h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), sec = s % 60;
+    return (h ? h + ":" + pad2(m) : String(m)) + ":" + pad2(sec);
   }
 
   /* ---------------- the page ---------------- */
@@ -411,14 +455,56 @@ body{background:var(--plum);color:var(--lav);font-family:var(--body);text-align:
   function shut() {
     node = null;
     var need = S.need || {};
-    var line = "this room has not opened yet.";
-    if (need.points) line = "she is not taking students until you have " + need.points + " stamps.";
-    if (need.count) line = "she wants " + (need.count.n || 1) + " of something you have not found yet.";
-    if (need.has) line = "she wants to see something specific first.";
-    if (need.quests && need.quests.length) line = "she is waiting on: " + need.quests.join(", ") + ".";
-    $("choices").innerHTML = '<div class="shut"><div class="st">the light is off</div>' +
+    var head = (S.shut && S.shut.title) || "the light is off";
+    var line = (S.shut && S.shut.lines) || "";
+    if (!line) {
+      line = "this room has not opened yet.";
+      if (need.points) line = "she is not taking students until you have " + need.points + " stamps.";
+      if (need.count) line = "she wants " + (need.count.n || 1) + " of something you have not found yet.";
+      if (need.has) line = "she wants to see something specific first.";
+      if (need.quests && need.quests.length) line = "she is waiting on: " + need.quests.join(", ") + ".";
+    }
+    $("choices").innerHTML = '<div class="shut"><div class="st">' + esc(head) + '</div>' +
       '<div class="sd">' + esc(line) + "<br><br>come back when the card says you are ready &mdash; " +
       '<a href="https://www.cafedreamr.art/PASSPORT/">look at your stamp card</a>.</div></div>';
+  }
+
+  /* ---------------- the hour a class keeps ---------------- */
+  /* outside its hours: the room is dark, and it says exactly when it opens,
+     counting down by the second — then opens itself when the hour comes.
+     hans is precise; the door is too. */
+  function awayForSession() {
+    node = null;
+    if (cdTimer) { clearInterval(cdTimer); cdTimer = null; }
+    var away = S.away || {};
+    var head = away.title || "the room is dark";
+    var line = away.lines || ("this room opens at " + S.opens + ", and not before.");
+    var box = $("choices");
+    box.innerHTML = "";
+    var el = document.createElement("div");
+    el.className = "shut";
+    el.innerHTML = '<div class="st">' + esc(head) + "</div>" +
+      '<div class="sd">' + esc(line) + "</div>" +
+      '<div class="cd">the door opens in<b id="cdK">--:--</b></div>' +
+      (S.opens ? '<div class="cdnote">' + esc(S.opens) + (S.closes ? "\u2013" + esc(S.closes) : "") + " \u00b7 sharp</div>" : "");
+    box.appendChild(el);
+    var k = el.querySelector("#cdK");
+    var paint = function () {
+      var ms = msToOpen();
+      if (k) k.textContent = clockText(ms);
+      if (ms <= 900) { clearInterval(cdTimer); cdTimer = null; wake(); }
+    };
+    cdTimer = setInterval(paint, 1000);
+    paint();
+    scrollDown();
+  }
+
+  /* the hour arrived while the player waited — open up */
+  function wake() {
+    if (!sessionOpen()) { awayForSession(); return; }
+    $("choices").innerHTML = "";
+    if (S.need && window.CD && !meets(S.need)) return shut();
+    enter();
   }
 
   function picker() {
@@ -441,25 +527,37 @@ body{background:var(--plum);color:var(--lav);font-family:var(--body);text-align:
       var a = document.createElement("a");
       a.className = "pk";
       a.href = "?id=" + encodeURIComponent(k);
+      var st = "";
+      if (c.opens) {
+        var on = classOpen(c);
+        st = '<span class="pst' + (on ? " on" : "") + '">' + (on
+          ? "in session" + (c.closes ? " \u00b7 until " + c.closes : "")
+          : "opens at " + c.opens + " \u00b7 in " + clockText(msToOpenFor(c))) + "</span>";
+      }
       a.innerHTML = '<div class="pn">' + esc(c.spoken || c.title || k) + "</div>" +
-        '<div class="pd">' + esc(c.host || "") + (c.hostNote ? " · " + esc(c.hostNote) : "") + (c.blurb ? " · " + esc(c.blurb) : "") + "</div>";
+        '<div class="pd">' + esc(c.host || "") + (c.hostNote ? " · " + esc(c.hostNote) : "") + (c.blurb ? " · " + esc(c.blurb) : "") + "</div>" + st;
       wrap.appendChild(a);
     });
     box.appendChild(wrap);
   }
 
   /* ---------------- go ---------------- */
+  function enter() {
+    if (window.CD && CD.stamp) {
+      CD.stamp("attend:" + S.id, { label: (S.spoken || S.title) + " · you sat in", accent: S.accent });
+    }
+    go(S.nameNode && !cardName() ? S.nameNode : (S.start || "open"));
+  }
+
   function boot() {
     if (!cid || !CLASSES[cid]) return picker();
     S = CLASSES[cid];
     S.id = cid;
     if (window.CD && CD.boot) { try { CD.boot({ page: "class" }); } catch (e) {} }
     theme();
+    if (S.opens && !sessionOpen()) return awayForSession();
     if (S.need && window.CD && !meets(S.need)) return shut();
-    if (window.CD && CD.stamp) {
-      CD.stamp("attend:" + S.id, { label: (S.spoken || S.title) + " · you sat in", accent: S.accent });
-    }
-    go(S.nameNode && !cardName() ? S.nameNode : (S.start || "open"));
+    enter();
   }
 
   document.addEventListener("keydown", function (e) {
