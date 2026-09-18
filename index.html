@@ -1,0 +1,676 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0b0b0e">
+<title>cafedreamr · vendi terminal</title>
+<meta name="description" content="Step into the cafedreamr vending machine. Boot up, meet Star, and find your frequency.">
+<meta property="og:title" content="cafedreamr · vendi terminal">
+<meta property="og:description" content="Boot up, meet Star, and find your frequency.">
+<meta property="og:type" content="website">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' shape-rendering='crispEdges'%3E%3Cpath d='M3 0h10a3 3 0 013 3v10a3 3 0 01-3 3H3a3 3 0 01-3-3V3a3 3 0 013-3z' fill='%230b0b0e'/%3E%3Crect x='4' y='3' width='6' height='1' fill='%23ccff00'/%3E%3Crect x='3' y='4' width='8' height='1' fill='%23ccff00'/%3E%3Crect x='2' y='5' width='3' height='1' fill='%23ccff00'/%3E%3Crect x='5' y='5' width='4' height='1' fill='%23ff2d95'/%3E%3Crect x='9' y='5' width='3' height='1' fill='%23ccff00'/%3E%3Crect x='2' y='6' width='2' height='1' fill='%23ccff00'/%3E%3Crect x='4' y='6' width='2' height='1' fill='%23ff2d95'/%3E%3Crect x='10' y='6' width='2' height='1' fill='%23ccff00'/%3E%3Crect x='2' y='7' width='2' height='1' fill='%23ccff00'/%3E%3Crect x='4' y='7' width='1' height='1' fill='%23ff2d95'/%3E%3Crect x='6' y='7' width='2' height='1' fill='%23ff2d95'/%3E%3Crect x='10' y='7' width='5' height='1' fill='%23ccff00'/%3E%3Crect x='2' y='8' width='2' height='1' fill='%23ccff00'/%3E%3Crect x='4' y='8' width='1' height='1' fill='%23ff2d95'/%3E%3Crect x='6' y='8' width='2' height='1' fill='%23ff2d95'/%3E%3Crect x='10' y='8' width='5' height='1' fill='%23ccff00'/%3E%3Crect x='2' y='9' width='2' height='1' fill='%23ccff00'/%3E%3Crect x='4' y='9' width='2' height='1' fill='%23ff2d95'/%3E%3Crect x='10' y='9' width='2' height='1' fill='%23ccff00'/%3E%3Crect x='2' y='10' width='3' height='1' fill='%23ccff00'/%3E%3Crect x='5' y='10' width='4' height='1' fill='%23ff2d95'/%3E%3Crect x='9' y='10' width='3' height='1' fill='%23ccff00'/%3E%3Crect x='3' y='11' width='8' height='1' fill='%23ccff00'/%3E%3Crect x='4' y='12' width='6' height='1' fill='%23ccff00'/%3E%3C/svg%3E">
+<link rel="alternate icon" type="image/png" sizes="32x32" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABk0lEQVR4AeyXMVICMRSG/2xJcDkAnQewsWXGDo5gT+sJrNTKE9hS6xGwc4bWxgNYyQFkgDa8LLyZnbcbkuxkU7Hjm2eW9/7/e0koKHB6tB5NtS7ftb76o2z6iUqbPEbTky0qgMGgfALMkl7eA2qM3p5KmzzM8ugJFJomVwrPyPxYT+tNO2Dmmb1rdmZuASa1N5n/NRMCqM4lszHbqTEB8KI9f203iIl2FfdbL4C7Nc0nTgCeOtYmts8JEGvctb4B4Jrg9uYN50ICuHRkXQNAFvS99gLw1Awy/H1EW9wNS9jgutDsBQgV6loXDMBTb69fUQ+fMd8FmbkvGIAbUucLQPAO8LnzXeDsOxL7zWgL7gsG4IbU2Qvw/fMAG2zMOyEz33KuC81egFChrnUNAD4vKWh34VzIepeOrGsAyIK+106A0AkkYGyfE0AK97X2AvBEoTkWlADMOrYpXb1ZE4BapROMVVIrC7CIbUtXrxbFbvf/aQyy/za0ntabdgDY7zcvgJoB+ADS3gnSrP1V2uShZkdP4AAAAP//e/7TsgAAAAZJREFUAwAJed+/zTQA9gAAAABJRU5ErkJggg==">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Klee+One:wght@400;600&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Vampiro+One&display=swap" rel="stylesheet">
+</head>
+<body>
+<style>
+:root{
+  --plum:#0d001a;
+  --ink:#0b0b0e;
+  --ink2:#141419;
+  --ink3:#1b1b22;
+  --lime:#ccff00;
+  --pink:#ff2d95;
+  --cyan:#00e5ff;
+  --violet:#bf40bf;
+  --violet2:#ee82ee;
+  --corn:#6495ed;
+  --mint:#98fb98;
+  --lav:#fff0f5;
+  --dim:#7d848b;
+  --line:rgba(255,255,255,.10);
+  --glow:0 0 12px rgba(191,64,191,.55), 0 0 34px rgba(191,64,191,.22);
+  --mono:'Space Mono', ui-monospace, monospace;
+  --disp:'Bebas Neue', impact, sans-serif;
+  --logo:'Vampiro One', cursive;
+  --body:'Klee One', system-ui, sans-serif;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0;padding:0;background:var(--ink);color:var(--lav);font-family:var(--body);text-align:left;overflow-x:hidden}
+body{min-height:100dvh}
+
+.bg{position:fixed;inset:0;z-index:0;background:
+  radial-gradient(1200px 800px at 50% -10%, rgba(100,149,237,.16), transparent 60%),
+  radial-gradient(900px 700px at 80% 110%, rgba(255,45,149,.12), transparent 60%),
+  linear-gradient(180deg,#0d001a 0%, #0b0b0e 55%, #050508 100%);}
+#stars{position:absolute;inset:0;width:100%;height:100%;display:block;opacity:.85}
+.vign{position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(120% 100% at 50% 45%, transparent 55%, rgba(0,0,0,.75) 100%)}
+
+.stage{position:relative;z-index:2;min-height:100dvh;display:flex;flex-direction:column;
+  align-items:center;gap:14px;padding:22px 14px}
+.cabinet{margin-top:auto}
+.foot{margin-bottom:auto}
+
+/* ---------- CABINET ---------- */
+.cabinet{width:min(94vw,452px);background:linear-gradient(180deg,var(--ink2),var(--ink));
+  border:1px solid var(--line);border-radius:24px;padding:14px 14px 16px;position:relative;
+  box-shadow:0 40px 90px rgba(0,0,0,.75), inset 0 1px 0 rgba(255,255,255,.06), 0 0 0 6px rgba(255,255,255,.02);}
+.cabinet:before{content:"";position:absolute;inset:6px;border-radius:18px;pointer-events:none;
+  border:1px solid rgba(255,255,255,.04)}
+
+.marquee{display:flex;align-items:center;gap:13px;padding:4px 8px 10px;border-bottom:1px dashed rgba(255,255,255,.10)}
+.brand{font-family:var(--disp);font-size:30px;letter-spacing:.12em;line-height:1;white-space:nowrap;
+  color:var(--lime);text-shadow:0 0 10px rgba(204,255,0,.45)}
+.tag{font-family:var(--mono);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);flex:1;min-width:0;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.led{width:9px;height:9px;border-radius:50%;background:var(--pink);
+  box-shadow:0 0 10px var(--pink);animation:pulse 1.6s infinite ease-in-out}
+@keyframes pulse{0%,100%{opacity:.35;transform:scale(.85)}50%{opacity:1;transform:scale(1)}}
+
+/* ---------- SCREEN ---------- */
+.screen{position:relative;margin:12px 0 0;aspect-ratio:1/1;border-radius:16px;overflow:hidden;
+  background:#000;box-shadow:inset 0 0 0 1px rgba(255,255,255,.08), inset 0 0 60px rgba(0,0,0,.9), 0 0 26px rgba(191,64,191,.18)}
+.vid{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scale(1.18);
+  filter:saturate(1.12) contrast(1.04)}
+.scan{position:absolute;inset:0;pointer-events:none;
+  background:repeating-linear-gradient(180deg, rgba(0,0,0,.32) 0 1px, rgba(0,0,0,0) 1px 3px);
+  mix-blend-mode:multiply;opacity:.45}
+.glare{position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(115deg, rgba(255,255,255,.10) 0%, transparent 38%, transparent 70%, rgba(255,45,149,.10) 100%)}
+.osd{position:absolute;top:0;left:0;right:0;height:12%;display:flex;align-items:center;justify-content:space-between;
+  padding:0 11px 10px;pointer-events:none;
+  background:linear-gradient(180deg, rgba(6,1,12,.98) 0%, rgba(6,1,12,.92) 52%, rgba(6,1,12,0) 100%);
+  font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--lime)}
+.osd .r{color:var(--dim)}
+.osd .dot{font-style:normal;animation:pulse 1.4s infinite}
+
+/* boot overlay on screen */
+.bootui{position:absolute;left:0;right:0;bottom:0;padding:14px 14px 15px;display:flex;flex-direction:column;
+  justify-content:flex-end;gap:9px;pointer-events:none;
+  background:linear-gradient(180deg, rgba(4,0,10,0) 0%, rgba(4,0,10,0) 44%, rgba(4,0,10,.72) 74%, rgba(4,0,10,.95) 100%)}
+.bootlines{font-family:var(--mono);font-size:11.5px;line-height:1.6;color:var(--mint);padding-top:2px}
+.bootlines .ln{opacity:.95;white-space:nowrap;overflow:hidden}
+.bootlines .ln b{color:var(--cyan);font-weight:700}
+.bootlines .ln em{color:var(--violet2);font-style:normal;text-shadow:var(--glow)}
+.bootlines .cur{display:inline-block;width:7px;background:var(--mint);animation:blink 1s steps(1) infinite;vertical-align:-1px;height:12px}
+@keyframes blink{50%{opacity:0}}
+.bootbar{height:9px;border-radius:999px;background:rgba(255,255,255,.10);overflow:hidden;border:1px solid rgba(255,255,255,.08)}
+.bootbar i{display:block;height:100%;width:0%;border-radius:999px;
+  background:linear-gradient(90deg,var(--violet),var(--cyan));box-shadow:0 0 14px rgba(0,229,255,.55);transition:width .18s linear}
+.bootmeta{display:flex;justify-content:space-between;font-family:var(--mono);font-size:9.5px;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--dim)}
+
+/* dialogue box (greeting) */
+.dialog{position:absolute;left:12px;right:12px;bottom:12px;padding:11px 13px;border-radius:12px;
+  background:rgba(10,0,20,.72);border:1px solid rgba(238,130,238,.35);backdrop-filter:blur(6px);
+  box-shadow:var(--glow);font-size:12.5px;line-height:1.5}
+.dialog .who{font-family:var(--disp);font-size:15px;letter-spacing:.10em;color:var(--violet2);margin-bottom:3px}
+.dialog .txt{color:#fff;min-height:34px}
+.dialog .txt .cur{display:inline-block;width:7px;height:12px;background:var(--lav);vertical-align:-1px;animation:blink 1s steps(1) infinite}
+.dialog.fade{animation:fadein .5s ease both}
+@keyframes fadein{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* ---------- CONTROL PANEL ---------- */
+.panel{margin-top:14px;padding:0 2px}
+.ppanel[hidden]{display:none}
+.ppanel{animation:fadein .35s ease both}
+
+.startwrap{display:flex;flex-direction:column;gap:9px;align-items:center;padding:6px 0 2px}
+.startBtn{font-family:var(--disp);font-size:26px;letter-spacing:.20em;color:#0b0b0e;
+  background:linear-gradient(180deg,var(--lime),#9fce00);border:0;border-radius:12px;padding:12px 26px;
+  width:100%;cursor:pointer;box-shadow:0 0 22px rgba(204,255,0,.35), inset 0 -3px 0 rgba(0,0,0,.25);
+  transition:transform .08s ease, filter .2s}
+.startBtn:hover{filter:brightness(1.08)}
+.startBtn:active{transform:translateY(2px)}
+.note{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);text-align:center}
+
+/* auth */
+.tabs{display:flex;gap:8px;margin-bottom:12px}
+.tab{flex:1;font-family:var(--disp);font-size:17px;letter-spacing:.12em;padding:9px 6px;cursor:pointer;
+  background:transparent;color:var(--dim);border:1px solid var(--line);border-radius:10px;transition:.2s}
+.tab.active{color:var(--lime);border-color:rgba(204,255,0,.45);box-shadow:0 0 14px rgba(204,255,0,.18)}
+.field{display:block;margin-bottom:9px}
+.field span{display:block;font-family:var(--mono);font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);margin-bottom:4px}
+.field input{width:100%;font-family:var(--mono);font-size:13px;color:var(--lav);background:rgba(255,255,255,.05);
+  border:1px solid var(--line);border-radius:9px;padding:10px 11px;outline:none;transition:.2s}
+.field input:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(0,229,255,.12)}
+.wide{width:100%;font-family:var(--disp);font-size:20px;letter-spacing:.16em;padding:11px;border-radius:11px;
+  cursor:pointer;border:0;color:#0b0b0e;background:linear-gradient(180deg,var(--pink),#d1006f);
+  box-shadow:0 0 20px rgba(255,45,149,.30), inset 0 -3px 0 rgba(0,0,0,.25);transition:.12s}
+.wide:hover{filter:brightness(1.06)}.wide:active{transform:translateY(2px)}
+.wide.cy{background:linear-gradient(180deg,var(--cyan),#009fce);box-shadow:0 0 20px rgba(0,229,255,.3), inset 0 -3px 0 rgba(0,0,0,.25);color:#001016}
+.mode{display:flex;align-items:center;gap:7px;font-family:var(--mono);font-size:9px;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--dim);margin:10px 0 2px}
+.mode b{color:var(--lime);font-weight:700}
+.mode b.demo{color:#ffb347}
+.guest{width:100%;margin-top:8px;background:transparent;border:1px dashed rgba(255,255,255,.18);
+  color:var(--lav);font-family:var(--mono);font-size:10.5px;letter-spacing:.10em;text-transform:uppercase;
+  padding:10px;border-radius:10px;cursor:pointer;transition:.2s}
+.guest:hover{border-color:var(--violet2);color:var(--violet2)}
+.err{font-family:var(--mono);font-size:10.5px;color:#ff6b9d;min-height:15px;margin:6px 0 0;line-height:1.5}
+.ok{color:var(--mint)}
+
+/* home nav slots */
+.slots{display:grid;grid-template-columns:1fr;gap:8px}
+.slot{position:relative;display:flex;align-items:center;gap:12px;text-decoration:none;cursor:pointer;
+  background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.015));
+  border:1px solid var(--line);border-radius:12px;padding:11px 13px;color:var(--lav);font-family:var(--body);
+  transition:.18s;overflow:hidden;text-align:left;width:100%}
+.slot .num{font-family:var(--disp);font-size:20px;letter-spacing:.06em;color:var(--dim);min-width:30px;transition:.18s}
+.slot .lbl{flex:1;font-size:13.5px}
+.slot .go{font-family:var(--mono);font-size:14px;color:var(--dim);transition:.18s}
+.slot:hover{border-color:rgba(204,255,0,.45);background:rgba(204,255,0,.05);transform:translateX(2px)}
+.slot:hover .num{color:var(--lime);text-shadow:0 0 10px rgba(204,255,0,.5)}
+.slot:hover .go{color:var(--lime);transform:translateX(3px)}
+.slot:active{transform:translateY(1px) scale(.995)}
+.slot[data-c="pink"]:hover{border-color:rgba(255,45,149,.5);background:rgba(255,45,149,.06)}
+.slot[data-c="pink"]:hover .num,.slot[data-c="pink"]:hover .go{color:var(--pink);text-shadow:0 0 10px rgba(255,45,149,.5)}
+.slot[data-c="cyan"]:hover{border-color:rgba(0,229,255,.5);background:rgba(0,229,255,.06)}
+.slot[data-c="cyan"]:hover .num,.slot[data-c="cyan"]:hover .go{color:var(--cyan);text-shadow:0 0 10px rgba(0,229,255,.5)}
+.slot[data-c="violet"]:hover{border-color:rgba(238,130,238,.5);background:rgba(238,130,238,.06)}
+.slot[data-c="violet"]:hover .num,.slot[data-c="violet"]:hover .go{color:var(--violet2);text-shadow:0 0 10px rgba(238,130,238,.5)}
+.slot.dispensing{animation:dispense .5s ease}
+@keyframes dispense{0%{transform:none}30%{transform:translateX(-3px)}60%{transform:translateX(3px)}100%{transform:none}}
+
+/* the realm, right now — a live line that reads the visitor's clock */
+.realmnow{display:flex;align-items:center;gap:9px;text-decoration:none;margin-bottom:10px;
+  font-family:var(--mono);font-size:9.5px;letter-spacing:.11em;text-transform:uppercase;
+  border:1px solid var(--line);border-radius:10px;padding:9px 11px;color:var(--dim);transition:.18s;
+  background:linear-gradient(180deg,rgba(204,255,0,.035),rgba(0,0,0,0));overflow:hidden}
+.realmnow:hover{border-color:rgba(204,255,0,.4);color:var(--lav);background:rgba(204,255,0,.05)}
+.realmnow .dot{width:6px;height:6px;border-radius:50%;background:var(--lime);flex:0 0 auto;
+  box-shadow:0 0 8px rgba(204,255,0,.85);animation:pulse 2.4s ease-in-out infinite}
+.realmnow .rt{color:var(--violet2)}
+.realmnow .rgo{margin-left:auto;font-size:12px;transition:.18s}
+.realmnow:hover .rgo{color:var(--lime);transform:translateX(3px)}
+.slotcap{font-family:var(--mono);font-size:9px;letter-spacing:.17em;text-transform:uppercase;color:var(--dim);
+  margin:2px 0 7px;display:flex;align-items:center;gap:8px}
+.slotcap::after{content:"";flex:1;height:1px;background:var(--line)}
+.slotcap.after{margin-top:13px}
+.minirow{display:flex;flex-wrap:wrap;gap:6px}
+.mini{flex:1 1 auto;text-align:center;text-decoration:none;font-family:var(--mono);font-size:9.5px;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--dim);border:1px solid var(--line);
+  border-radius:999px;padding:8px 12px;transition:.18s;white-space:nowrap}
+.mini:hover{color:var(--lav);border-color:rgba(255,240,245,.3);background:rgba(255,255,255,.04)}
+
+.whoami{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:11px;
+  font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim)}
+.whoami b{color:var(--violet2);font-weight:700}
+.whoami .acctMini{font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;line-height:1;
+  background:transparent;border:1px solid var(--line);border-radius:999px;padding:5px 11px;color:var(--lav);
+  cursor:pointer;white-space:nowrap;transition:.18s}
+.whoami .acctMini:hover{border-color:var(--violet2);color:var(--violet2);box-shadow:0 0 12px rgba(238,130,238,.28)}
+.whoami .acctMini.signed{border-color:rgba(204,255,0,.38);color:var(--lime)}
+.whoami .acctMini.signed:hover{color:var(--lime);border-color:rgba(204,255,0,.7);box-shadow:0 0 14px rgba(204,255,0,.3)}
+.whoami .acctMini.dispensing{animation:dispense .5s ease}
+.whoami .acctMini:active{transform:translateY(1px)}
+.foot{font-family:var(--mono);font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--dim);
+  text-align:center;opacity:.75;line-height:1.8}
+.foot em{color:var(--pink);font-style:normal}
+.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:9;
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:#0b0b0e;
+  background:var(--lime);padding:9px 15px;border-radius:999px;box-shadow:0 0 22px rgba(204,255,0,.4);
+  opacity:0;pointer-events:none;transition:.3s}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(-4px)}
+@media (max-width:380px){ .brand{font-size:24px;letter-spacing:.10em;text-shadow:0 0 6px rgba(204,255,0,.30)} .slot .lbl{font-size:12.5px}
+  .mini{font-size:9px;padding:7px 9px} .realmnow{font-size:9px;letter-spacing:.08em} }
+@media (max-width:340px){ .brand{font-size:21px} .tag{font-size:8.5px} }
+  /* ---- the stamp card (see PASSPORT/cd-passport.js) ---- */
+  .cdcard{margin:0 0 14px;padding:13px 15px;border:1px solid rgba(255,255,255,.10);border-radius:12px;
+    background:linear-gradient(150deg,rgba(27,0,44,.72),rgba(11,11,14,.8));
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.05);position:relative;overflow:hidden}
+  .cdcard::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;
+    background:linear-gradient(180deg,#ccff00,#00e5ff 55%,#ee82ee)}
+</style>
+
+<div class="bg"><canvas id="stars"></canvas><div class="vign"></div></div>
+
+<main class="stage">
+  <div class="cabinet">
+    <div class="marquee">
+      <span class="brand">CAFE DREAMR</span>
+      <span class="tag">vendi terminal</span>
+      <span class="led"></span>
+    </div>
+
+    <div class="screen">
+      <video id="starVid" class="vid" autoplay muted loop playsinline preload="auto"
+        src="https://xenbohem.github.io/storyboard/movie/starsgreeting/StarSipsCoffeezooms.mp4"></video>
+      <div class="glare"></div>
+      <div class="scan"></div>
+      <div class="osd"><span><i class="dot">&#9679;</i> dream signal <span id="sigState">live</span></span><span class="r">rec &middot; 640&times;640</span></div>
+
+      <div class="bootui" id="bootUI">
+        <div class="bootlines" id="bootLines"></div>
+        <div class="bootbar"><i id="bootBar"></i></div>
+        <div class="bootmeta"><span id="bootStep">booting</span><span id="bootPct">0%</span></div>
+      </div>
+
+      <div class="dialog" id="starDialog" hidden>
+        <div class="who">&#9733; STAR &mdash; host of cafedreamr</div>
+        <div class="txt" id="starTxt"></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <!-- BOOT PANEL -->
+      <div class="ppanel" id="pBoot">
+        <div class="startwrap">
+          <button class="startBtn" id="startBtn" hidden>PRESS START</button>
+          <div class="note" id="bootNote">insert a coin &middot; take a chance</div>
+        </div>
+      </div>
+
+      <!-- AUTH PANEL -->
+      <div class="ppanel" id="pAuth" hidden>
+        <div class="tabs">
+          <button class="tab active" id="tabSignin">SIGN IN</button>
+          <button class="tab" id="tabSignup">CREATE ACCOUNT</button>
+        </div>
+        <form id="authForm" autocomplete="on">
+          <label class="field" id="nameField" hidden><span>Dreamer name</span>
+            <input id="nameInput" type="text" placeholder="what should Star call you?" autocomplete="nickname"></label>
+          <label class="field"><span>Email</span>
+            <input id="emailInput" type="email" placeholder="you@frequency.dream" autocomplete="email" required></label>
+          <label class="field"><span>Password</span>
+            <input id="pwInput" type="password" placeholder="********" autocomplete="current-password" required></label>
+          <button class="wide" id="authSubmit" type="submit">ENTER THE CAFE</button>
+          <p class="err" id="authErr"></p>
+        </form>
+        <div class="mode" id="modeLine">account system: <b id="modeName" class="demo">local demo</b></div>
+        <div class="cdcard" id="cdStampAuth" aria-label="your stamp card"></div>
+        <button class="guest" id="guestBtn">continue as guest &rarr;</button>
+      </div>
+
+      <!-- HOME PANEL -->
+      <div class="ppanel" id="pHome" hidden>
+        <div class="whoami"><span>signed in as <b id="whoName">&mdash;</b></span><button class="acctMini" id="acctBtn" type="button">Sign in</button></div>
+        <a class="realmnow" href="https://www.cafedreamr.art/LORE/HOURS/" target="_blank" rel="noopener noreferrer">
+          <span class="dot"></span><span class="rt" id="realmNowTime">&mdash;</span><span id="realmNowText">the realm, right now</span><span class="rgo">&rarr;</span></a>
+                <div class="cdcard" id="cdStamp" aria-label="your stamp card"></div>
+        <div class="slotcap">the realm</div>
+        <div class="slots" id="slots">
+          <a class="slot" data-c="pink" href="https://www.cafedreamr.art/LORE/BOBBY/cards.html" target="_blank" rel="noopener noreferrer">
+            <span class="num">01</span><span class="lbl">Lore</span><span class="go">&rarr;</span></a>
+          <a class="slot" data-c="lime" href="https://www.cafedreamr.art/LORE/MAP.html" target="_blank" rel="noopener noreferrer">
+            <span class="num">02</span><span class="lbl">Realm Map</span><span class="go">&rarr;</span></a>
+          <a class="slot" data-c="cyan" href="https://www.cafedreamr.art/LORE/MYSTERYGRID/" target="_blank" rel="noopener noreferrer">
+            <span class="num">03</span><span class="lbl">The Mystery Grid</span><span class="go">&rarr;</span></a>
+          <a class="slot" data-c="lime" href="https://www.cafedreamr.art/LORE/HOURS/" target="_blank" rel="noopener noreferrer">
+            <span class="num">04</span><span class="lbl">The Hours</span><span class="go">&rarr;</span></a>
+          <a class="slot" data-c="pink" href="https://www.cafedreamr.art/MENU/" target="_blank" rel="noopener noreferrer">
+            <span class="num">05</span><span class="lbl">Make It Real</span><span class="go">&rarr;</span></a>
+          <a class="slot" data-c="cyan" href="https://www.cafedreamr.art/ZINE/" target="_blank" rel="noopener noreferrer">
+            <span class="num">06</span><span class="lbl">The Zine</span><span class="go">&rarr;</span></a>
+          <a class="slot" data-c="violet" href="https://www.cafedreamr.art/PLAY/" target="_blank" rel="noopener noreferrer">
+            <span class="num">07</span><span class="lbl">Play &middot; The Long Day</span><span class="go">&rarr;</span></a>
+          <a class="slot" data-c="violet" href="https://www.cafedreamr.art/LORE/VENDI/index.html" target="_blank" rel="noopener noreferrer">
+            <span class="num">08</span><span class="lbl">Vendi Machine</span><span class="go">&rarr;</span></a>
+        </div>
+        <div class="slotcap after">outside</div>
+        <div class="minirow">
+          <a class="mini" href="https://www.youtube.com/@cafedreamer" target="_blank" rel="noopener noreferrer">youtube</a>
+          <a class="mini" href="https://x3nb.github.io/observatory/curiosity-dreams-webcursor.html" target="_blank" rel="noopener noreferrer">dream archive</a>
+          <a class="mini" href="https://letterbird.co/mikitv" target="_blank" rel="noopener noreferrer">contact</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="foot">vendi &mdash; a little broken machine &middot; no refunds on feelings<br>&copy; cafedreamr &middot; all rights reserved.</div>
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://www.cafedreamr.art/PASSPORT/cd-passport.js"></script>
+<script>
+(function () {
+  function paint(){ if (window.CD) [].forEach.call(document.querySelectorAll(".cdcard"), function (el) { CD.renderHUD(el); }); }
+  function start(){ if (!window.CD) return; CD.boot({ page: "terminal" }); CD.onChange(paint); paint(); }
+  if (window.CD) start(); else window.addEventListener("load", start);
+})();
+</script>
+<script>
+/* ============================================================
+   cafedreamr — vendi terminal (boot -> account -> home)
+   AUTH: drop your Supabase URL + anon key below to go live.
+   With them empty, the page runs in a device-local DEMO account
+   system so the whole flow works for testing.
+   ============================================================ */
+const SUPABASE_URL = "https://xzhsscjdaffzldnqwpxl.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh6aHNzY2pkYWZmemxkbnF3cHhsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY3NTY0NzcsImV4cCI6MjEwMjMzMjQ3N30.dc7UFaby8qmFue6UNr2QodurIPFGQBtAMz1EmBizt5g";
+
+(function () {
+  "use strict";
+
+  /* ---------- starfield ---------- */
+  const cv = document.getElementById("stars"), ctx = cv.getContext("2d");
+  let W, H, dots = [];
+  function sizeStars() {
+    W = cv.width = innerWidth * devicePixelRatio;
+    H = cv.height = innerHeight * devicePixelRatio;
+    const n = Math.round(Math.min(180, innerWidth / 7));
+    dots = Array.from({ length: n }, () => ({
+      x: Math.random() * W, y: Math.random() * H,
+      r: (Math.random() * 1.3 + 0.3) * devicePixelRatio,
+      s: (Math.random() * 0.25 + 0.05) * devicePixelRatio,
+      h: Math.random() < 0.18 ? "#bf40bf" : (Math.random() < 0.5 ? "#6495ed" : "#fff0f5"),
+      a: Math.random() * 0.6 + 0.2
+    }));
+  }
+  sizeStars(); addEventListener("resize", sizeStars);
+  (function drawStars() {
+    ctx.clearRect(0, 0, W, H);
+    for (const d of dots) {
+      d.y -= d.s; if (d.y < -4) { d.y = H + 4; d.x = Math.random() * W; }
+      ctx.globalAlpha = d.a; ctx.fillStyle = d.h;
+      ctx.beginPath(); ctx.arc(d.x, d.y, d.r, 0, 6.283); ctx.fill();
+    }
+    ctx.globalAlpha = 1; requestAnimationFrame(drawStars);
+  })();
+
+  /* ---------- tiny vending beep ---------- */
+  let actx = null;
+  function beep(freq, dur, type) {
+    try {
+      actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+      const o = actx.createOscillator(), g = actx.createGain();
+      o.type = type || "square"; o.frequency.value = freq || 660;
+      g.gain.setValueAtTime(0.0001, actx.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.045, actx.currentTime + 0.012);
+      g.gain.exponentialRampToValueAtTime(0.0001, actx.currentTime + (dur || 0.09));
+      o.connect(g); g.connect(actx.destination);
+      o.start(); o.stop(actx.currentTime + (dur || 0.09) + 0.02);
+    } catch (e) {}
+  }
+
+  /* ---------- toast ---------- */
+  const toastEl = document.getElementById("toast");
+  let toastT;
+  function toast(msg) {
+    toastEl.textContent = msg; toastEl.classList.add("on");
+    clearTimeout(toastT); toastT = setTimeout(() => toastEl.classList.remove("on"), 2200);
+  }
+
+  /* ---------- typewriter ---------- */
+  function typeInto(el, text, speed) {
+    return new Promise(resolve => {
+      el.textContent = "";
+      const cur = document.createElement("span"); cur.className = "cur"; el.appendChild(cur);
+      let i = 0;
+      (function tick() {
+        if (i >= text.length) { resolve(); return; }
+        cur.insertAdjacentText("beforebegin", text[i++]);
+        setTimeout(tick, speed || 22);
+      })();
+    });
+  }
+
+  /* ---------- screens ---------- */
+  const bootUI = document.getElementById("bootUI");
+  const starDialog = document.getElementById("starDialog");
+  const starTxt = document.getElementById("starTxt");
+  const pBoot = document.getElementById("pBoot"), pAuth = document.getElementById("pAuth"), pHome = document.getElementById("pHome");
+  const startBtn = document.getElementById("startBtn"), bootNote = document.getElementById("bootNote");
+  const bootLines = document.getElementById("bootLines"), bootBar = document.getElementById("bootBar");
+  const bootPct = document.getElementById("bootPct"), bootStep = document.getElementById("bootStep");
+
+  /* ---------- auth backends ---------- */
+  async function sha256(str) {
+    try {
+      const b = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(str));
+      return [...new Uint8Array(b)].map(x => x.toString(16).padStart(2, "0")).join("");
+    } catch (e) {
+      let h = 2166136261;
+      for (let i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 16777619); }
+      return "fnv" + (h >>> 0).toString(16);
+    }
+  }
+  const localBackend = {
+    label: "local demo", demo: true,
+    _users() { try { return JSON.parse(localStorage.getItem("cd_users") || "{}"); } catch (e) { return {}; } },
+    _save(u) { localStorage.setItem("cd_users", JSON.stringify(u)); },
+    _session() { try { return JSON.parse(localStorage.getItem("cd_session") || "null"); } catch (e) { return null; } },
+    async current() { return this._session(); },
+    async signUp(name, email, pw) {
+      const u = this._users(); email = email.toLowerCase();
+      if (u[email]) throw new Error("That email already has a seat at the counter.");
+      u[email] = { name, hash: await sha256(pw) }; this._save(u);
+      const s = { name, email }; localStorage.setItem("cd_session", JSON.stringify(s)); return s;
+    },
+    async signIn(email, pw) {
+      const u = this._users(); email = email.toLowerCase();
+      const rec = u[email];
+      if (!rec || rec.hash !== await sha256(pw)) throw new Error("Wrong email or password, dreamer.");
+      const s = { name: rec.name, email }; localStorage.setItem("cd_session", JSON.stringify(s)); return s;
+    },
+    async signOut() { localStorage.removeItem("cd_session"); }
+  };
+  function friendlyAuthError(msg, kind) {
+    const m = (msg || "").toLowerCase();
+    if (m.includes("invalid login credentials")) return "Wrong email or password, dreamer.";
+    if (m.includes("email not confirmed")) return "Confirm your email first, dreamer \u2014 check your inbox.";
+    if (m.includes("already registered") || m.includes("already been registered")) return "That email already has a seat at the counter.";
+    if (m.includes("rate limit") || m.includes("too many")) return "Easy, dreamer \u2014 too many tries. Give it a moment.";
+    if (m.includes("invalid email") || m.includes("valid email")) return "That email doesn't look quite right.";
+    if (m.includes("least 6") || (m.includes("password") && m.includes("least"))) return "Password needs at least 6 characters.";
+    return msg || "Something jammed the machine. Try again.";
+  }
+  const supabaseBackend = {
+    label: "supabase", demo: false, client: null,
+    ready() {
+      if (!window.supabase) return false;
+      this.client = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      return true;
+    },
+    async current() {
+      const { data } = await this.client.auth.getUser();
+      if (!data || !data.user) return null;
+      const m = data.user.user_metadata || {};
+      return { name: m.name || (data.user.email || "").split("@")[0], email: data.user.email };
+    },
+    async signUp(name, email, pw) {
+      const { data, error } = await this.client.auth.signUp({ email, password: pw, options: { data: { name } } });
+      if (error) throw new Error(friendlyAuthError(error.message, "signup"));
+      if (data.user && !data.session) return { name, email, pending: true };
+      return { name, email };
+    },
+    async signIn(email, pw) {
+      const { data, error } = await this.client.auth.signInWithPassword({ email, password: pw });
+      if (error) throw new Error(friendlyAuthError(error.message, "signin"));
+      const m = (data.user && data.user.user_metadata) || {};
+      return { name: m.name || email.split("@")[0], email };
+    },
+    async signOut() { await this.client.auth.signOut(); }
+  };
+  let backend = localBackend;
+  if (SUPABASE_URL && SUPABASE_ANON_KEY && supabaseBackend.ready()) backend = supabaseBackend;
+  document.getElementById("modeLine").hidden = !backend.demo;
+
+  /* ---------- state ---------- */
+  let user = null;
+  let mode = "signin";
+
+  function showPanel(which) {
+    pBoot.hidden = which !== "boot";
+    pAuth.hidden = which !== "auth";
+    pHome.hidden = which !== "home";
+  }
+
+  /* ---------- stage 1: boot with Star ---------- */
+  const BOOT_LINES = [
+    ["> Searching quiet frequencies", ""],
+    ["> Signal found: ", "SOLITUDE"],
+    ["> Signal found: ", "ARTISTIC ECHO"],
+    ["> Opening ", "CAFEDREAMR", " portal"]
+  ];
+  function bootLineHTML(parts) {
+    let html = "";
+    parts.forEach((p, i) => {
+      if (i === 0) html += p;
+      else if (i === 1) html += "<em>[" + p + "]</em>";
+      else html += p;
+    });
+    return html;
+  }
+  async function runBoot() {
+    bootStep.textContent = "booting";
+    const seq = [0, 14, 30, 58, 78, 100];
+    for (let i = 0; i < BOOT_LINES.length; i++) {
+      const div = document.createElement("div");
+      div.className = "ln"; div.innerHTML = bootLineHTML(BOOT_LINES[i]);
+      bootLines.appendChild(div);
+      beep(520 + i * 90, 0.05, "square");
+      const pct = seq[i + 1] + Math.round(Math.random() * 6);
+      bootBar.style.width = Math.min(100, pct) + "%";
+      bootPct.textContent = Math.min(100, pct) + "%";
+      await new Promise(r => setTimeout(r, 620 + i * 260));
+    }
+    bootBar.style.width = "100%"; bootPct.textContent = "100%";
+    bootStep.textContent = "signal locked";
+    beep(880, 0.10, "triangle"); setTimeout(() => beep(1180, 0.14, "triangle"), 120);
+    await new Promise(r => setTimeout(r, 420));
+    bootNote.textContent = "welcome to the cafe";
+    startBtn.hidden = false;
+    startBtn.focus();
+  }
+
+  /* ---------- stage 2: auth ---------- */
+  function setMode(m) {
+    mode = m;
+    document.getElementById("tabSignin").classList.toggle("active", m === "signin");
+    document.getElementById("tabSignup").classList.toggle("active", m === "signup");
+    document.getElementById("nameField").hidden = m !== "signup";
+    document.getElementById("authSubmit").textContent = m === "signup" ? "CREATE MY SEAT" : "ENTER THE CAFE";
+    document.getElementById("authSubmit").disabled = false;
+    document.getElementById("pwInput").autocomplete = m === "signup" ? "new-password" : "current-password";
+    document.getElementById("authErr").textContent = "";
+  }
+  function showAuth() {
+    showPanel("auth");
+    bootUI.hidden = true;
+    starDialog.hidden = false; starDialog.classList.add("fade");
+    typeInto(starTxt, "I'm Star. Host of CafeDreamr. We've been waiting for a frequency like yours \u2014 shall we see if you fit the dream?");
+    setMode(mode);
+    document.getElementById("modeName").textContent = backend.label;
+    document.getElementById("modeName").classList.toggle("demo", !!backend.demo);
+    document.getElementById("modeLine").hidden = !backend.demo;
+    setTimeout(() => document.getElementById("emailInput").focus(), 400);
+  }
+  async function enterHome(session, quiet) {
+    user = session;
+    pHome.hidden = false; pAuth.hidden = true; pBoot.hidden = true;
+    bootUI.hidden = true;
+    document.getElementById("whoName").textContent = user && user.name ? user.name : "guest";
+    const acctBtn = document.getElementById("acctBtn");
+    acctBtn.textContent = user ? "Sign out" : "Sign in";
+    acctBtn.classList.toggle("signed", !!user);
+    starDialog.hidden = false; starDialog.classList.add("fade");
+    const greet = user
+      ? "Welcome back, " + user.name + ". The kettle knows your name now. Where shall we go?"
+      : "A guest of the dream. No refunds on feelings, traveler \u2014 where shall we go?";
+    if (!quiet) beep(720, 0.08, "triangle");
+    typeInto(starTxt, greet, 20);
+  }
+
+  /* ---------- wiring ---------- */
+  startBtn.addEventListener("click", () => { beep(880, 0.09, "triangle"); showAuth(); });
+  document.getElementById("tabSignin").addEventListener("click", () => { beep(600, 0.04); setMode("signin"); });
+  document.getElementById("tabSignup").addEventListener("click", () => { beep(700, 0.04); setMode("signup"); });
+  document.getElementById("guestBtn").addEventListener("click", () => { beep(500, 0.06); enterHome(null); });
+
+  document.getElementById("authForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const errEl = document.getElementById("authErr");
+    const name = document.getElementById("nameInput").value.trim();
+    const email = document.getElementById("emailInput").value.trim();
+    const pw = document.getElementById("pwInput").value;
+    errEl.className = "err"; errEl.textContent = "";
+    if (mode === "signup" && !name) { errEl.textContent = "Star needs a name to call you."; return; }
+    if (!email || !pw) { errEl.textContent = "Email and password, please."; return; }
+    if (pw.length < 6) { errEl.textContent = "Password needs at least 6 characters."; return; }
+    const btn = document.getElementById("authSubmit");
+    btn.textContent = "BREWING..."; btn.disabled = true;
+    try {
+      const s = mode === "signup" ? await backend.signUp(name, email, pw) : await backend.signIn(email, pw);
+      if (s && s.pending) {
+        errEl.className = "err ok";
+        errEl.textContent = "Check your inbox to confirm your email, then sign in.";
+        return;
+      }
+      await enterHome(s);
+    } catch (err) {
+      errEl.textContent = (err && err.message) || "Something jammed the machine. Try again.";
+      beep(180, 0.16, "sawtooth");
+    } finally {
+      btn.textContent = mode === "signup" ? "CREATE MY SEAT" : "ENTER THE CAFE";
+      btn.disabled = false;
+    }
+  });
+
+  document.getElementById("acctBtn").addEventListener("click", async () => {
+    const btn = document.getElementById("acctBtn");
+    btn.classList.add("dispensing"); setTimeout(() => btn.classList.remove("dispensing"), 520);
+    if (user) {
+      beep(480, 0.12, "square");
+      await backend.signOut();
+      user = null;
+      toast("signed out \u00b7 see you soon");
+      btn.textContent = "Sign in";
+      btn.classList.remove("signed");
+      document.getElementById("whoName").textContent = "guest";
+      setMode("signin"); showAuth();
+    } else {
+      beep(700, 0.07); setMode("signin"); showAuth();
+    }
+  });
+  document.querySelectorAll(".slot[href]").forEach(a => {
+    a.addEventListener("click", () => { beep(820, 0.05, "triangle"); a.classList.add("dispensing"); setTimeout(() => a.classList.remove("dispensing"), 520); });
+  });
+
+  /* ---------- the realm, right now (reads the visitor's clock, not the realm's) ---------- */
+  const HOURS_NOW = [
+    [0,  "deep night &mdash; the twins still have the amps on"],
+    [3,  "the small hours &mdash; the lamps are low and the machines are honest"],
+    [4,  "before dawn &mdash; milo is picking mint in the dark"],
+    [7,  "the cafe is open &mdash; pearl is at the counter"],
+    [12, "high afternoon &mdash; the garden and the academy are both busy"],
+    [16, "the second shift &mdash; the twins are awake and the amps are on"],
+    [17, "the koi hour &mdash; milo and chari at the pond"],
+    [18, "supper &mdash; most of them at the counter"],
+    [19, "star's hour &mdash; the bible is out and the window is hers"],
+    [21, "the long evening &mdash; hans' lamp is on in the archive"]
+  ];
+  function paintRealmNow() {
+    const timeEl = document.getElementById("realmNowTime"), textEl = document.getElementById("realmNowText");
+    if (!timeEl || !textEl) return;
+    const now = new Date(), mins = now.getHours() * 60 + now.getMinutes();
+    let row = HOURS_NOW[0];
+    for (const r of HOURS_NOW) if (mins >= r[0] * 60) row = r;
+    timeEl.textContent = String(now.getHours()).padStart(2, "0") + ":" + String(now.getMinutes()).padStart(2, "0");
+    textEl.innerHTML = row[1];
+  }
+  paintRealmNow();
+  setInterval(paintRealmNow, 60000);
+
+  /* ---------- go ---------- */
+  (async function init() {
+    if (backend !== localBackend && backend.client) {
+      try { user = await backend.current(); } catch (e) { user = null; }
+    } else {
+      user = await backend.current();
+    }
+    await runBoot();
+    if (user) { await enterHome(user, true); }
+  })();
+})();
+</script>
+</body>
+</html>
