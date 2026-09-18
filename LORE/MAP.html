@@ -1,0 +1,731 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0b0b0e">
+<title>the realm map · cafedreamr</title>
+<meta name="description" content="A map of the realm — the cafe at its centre, the chimera collective around it, and the rooms where they meet, trade tricks, and sharpen each other.">
+<meta property="og:title" content="the realm map · cafedreamr">
+<meta property="og:description" content="The cafe at the centre, the collective around it, and every room the realm has grown.">
+<meta property="og:type" content="website">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' shape-rendering='crispEdges'%3E%3Cpath d='M3 0h10a3 3 0 013 3v10a3 3 0 01-3 3H3a3 3 0 01-3-3V3a3 3 0 013-3z' fill='%230b0b0e'/%3E%3Crect x='4' y='3' width='6' height='1' fill='%23ccff00'/%3E%3Crect x='3' y='4' width='8' height='1' fill='%23ccff00'/%3E%3Crect x='2' y='5' width='3' height='1' fill='%23ccff00'/%3E%3Crect x='5' y='5' width='4' height='1' fill='%23ff2d95'/%3E%3Crect x='9' y='5' width='3' height='1' fill='%23ccff00'/%3E%3Crect x='2' y='6' width='2' height='1' fill='%23ccff00'/%3E%3Crect x='4' y='6' width='2' height='1' fill='%23ff2d95'/%3E%3Crect x='10' y='6' width='2' height='1' fill='%23ccff00'/%3E%3Crect x='2' y='7' width='2' height='1' fill='%23ccff00'/%3E%3Crect x='4' y='7' width='1' height='1' fill='%23ff2d95'/%3E%3Crect x='6' y='7' width='2' height='1' fill='%23ff2d95'/%3E%3Crect x='10' y='7' width='5' height='1' fill='%23ccff00'/%3E%3Crect x='2' y='8' width='2' height='1' fill='%23ccff00'/%3E%3Crect x='4' y='8' width='1' height='1' fill='%23ff2d95'/%3E%3Crect x='6' y='8' width='2' height='1' fill='%23ff2d95'/%3E%3Crect x='10' y='8' width='5' height='1' fill='%23ccff00'/%3E%3Crect x='2' y='9' width='2' height='1' fill='%23ccff00'/%3E%3Crect x='4' y='9' width='2' height='1' fill='%23ff2d95'/%3E%3Crect x='10' y='9' width='2' height='1' fill='%23ccff00'/%3E%3Crect x='2' y='10' width='3' height='1' fill='%23ccff00'/%3E%3Crect x='5' y='10' width='4' height='1' fill='%23ff2d95'/%3E%3Crect x='9' y='10' width='3' height='1' fill='%23ccff00'/%3E%3Crect x='3' y='11' width='8' height='1' fill='%23ccff00'/%3E%3Crect x='4' y='12' width='6' height='1' fill='%23ccff00'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Klee+One:wght@400;600&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Vampiro+One&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   the realm map — cafedreamr
+   a character & location map for the chimera collective,
+   reskinned to the vendi terminal palette.
+   edit the NODES array near the bottom of <body> to change
+   who is on the map, where they sit, and what they say.
+   ============================================================ */
+:root{
+  --plum:#0d001a;
+  --ink:#0b0b0e; --ink2:#141419; --ink3:#1b1b22;
+  --lime:#ccff00; --pink:#ff2d95; --cyan:#00e5ff;
+  --violet:#bf40bf; --violet2:#ee82ee;
+  --corn:#6495ed; --mint:#98fb98;
+  --cream:#e9e6de; --lav:#fff0f5; --dim:#7d848b;
+  --line:rgba(255,255,255,.10);
+  --glow:0 0 12px rgba(191,64,191,.55), 0 0 34px rgba(191,64,191,.22);
+  --mono:'Space Mono', ui-monospace, monospace;
+  --disp:'Bebas Neue', impact, sans-serif;
+  --logo:'Vampiro One', cursive;
+  --body:'Klee One', system-ui, sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--plum);
+  color:var(--lav);
+  font-family:var(--body);
+  text-align:left;
+  min-height:100vh;
+  overflow-x:hidden;
+  -webkit-tap-highlight-color:transparent;
+}
+.bg{position:fixed;inset:0;z-index:0;pointer-events:none}
+#stars{position:absolute;inset:0;width:100%;height:100%;display:block}
+.vign{position:absolute;inset:0;background:
+  radial-gradient(120% 80% at 50% 0%, rgba(191,64,191,.16), transparent 60%),
+  radial-gradient(120% 90% at 50% 110%, rgba(0,229,255,.10), transparent 60%),
+  radial-gradient(150% 120% at 50% 50%, transparent 30%, rgba(0,0,0,.72) 100%)}
+.scan{position:absolute;inset:0;opacity:.28;
+  background:repeating-linear-gradient(to bottom, rgba(255,255,255,.035) 0 1px, transparent 1px 3px)}
+.grain{position:absolute;inset:0;opacity:.5;mix-blend-mode:overlay;
+  background-image:radial-gradient(rgba(255,255,255,.06) 1px, transparent 1px);
+  background-size:3px 3px}
+
+.stage{position:relative;z-index:1;max-width:1180px;margin:0 auto;padding:22px 16px 40px}
+
+/* ---------- marquee ---------- */
+.marquee{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;
+  border:1px solid var(--line);border-radius:16px 16px 6px 6px;
+  background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.015));
+  padding:12px 16px;position:relative;overflow:hidden}
+.marquee:before{content:"";position:absolute;left:0;right:0;top:0;height:2px;
+  background:linear-gradient(90deg,var(--violet),var(--cyan));opacity:.8}
+.mtitle{display:flex;align-items:baseline;gap:11px;flex-wrap:wrap;min-width:0}
+.brand{font-family:var(--logo);font-size:27px;letter-spacing:.055em;color:var(--lime);
+  text-shadow:0 0 10px rgba(204,255,0,.45),0 0 30px rgba(204,255,0,.16);white-space:nowrap}
+.tag{font-family:var(--mono);font-size:9.5px;letter-spacing:.24em;text-transform:uppercase;
+  color:var(--dim);border:1px solid var(--line);border-radius:999px;padding:4px 9px;white-space:nowrap}
+.led{width:8px;height:8px;border-radius:50%;background:var(--pink);box-shadow:0 0 10px var(--pink);
+  animation:blip 2.4s ease-in-out infinite;align-self:center}
+@keyframes blip{0%,100%{opacity:1}50%{opacity:.25}}
+.back{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--lav);text-decoration:none;border:1px solid var(--line);border-radius:999px;
+  padding:7px 12px;white-space:nowrap;transition:.18s;background:transparent;cursor:pointer}
+.back:hover{border-color:var(--lime);color:var(--lime);box-shadow:0 0 14px rgba(204,255,0,.25)}
+
+/* ---------- map panel ---------- */
+.mapwrap{margin-top:14px}
+.panel{position:relative;border:1px solid var(--line);border-radius:12px;padding:14px;
+  background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,.01));
+  display:flex;flex-direction:column;gap:10px}
+.keyrow{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;
+  font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+.keyrow b{color:var(--violet2);font-weight:700}
+.key{display:flex;align-items:center;gap:7px}
+.key i{width:9px;height:9px;border-radius:50%;display:inline-block;background:var(--violet2);
+  box-shadow:0 0 8px rgba(238,130,238,.6)}
+.key.pin i{background:var(--lime);box-shadow:0 0 8px rgba(204,255,0,.6);border-radius:2px}
+
+#map{position:relative;width:100%;aspect-ratio:16/10.6;min-height:430px;
+  border:2px solid rgba(255,255,255,.09);border-radius:10px;overflow:hidden;
+  background:
+    linear-gradient(180deg,rgba(13,0,26,.55),rgba(11,11,14,.86)),
+    repeating-linear-gradient(0deg,rgba(255,255,255,.045) 0 1px,transparent 1px 46px),
+    repeating-linear-gradient(90deg,rgba(255,255,255,.045) 0 1px,transparent 1px 46px),
+    radial-gradient(80% 70% at 50% 45%, rgba(100,149,237,.20), transparent 65%);
+  box-shadow:inset 0 0 90px rgba(0,0,0,.7), 0 0 29px rgba(191,64,191,.13)}
+#map:after{content:"";position:absolute;inset:0;pointer-events:none;border-radius:8px;
+  box-shadow:inset 0 0 60px rgba(0,0,0,.6)}
+.rivet{position:absolute;width:9px;height:9px;border-radius:50%;z-index:6;
+  background:radial-gradient(circle at 35% 35%, #6a6a76, #23232b 70%);
+  box-shadow:0 0 0 1px rgba(255,255,255,.08), inset 0 -1px 1px rgba(0,0,0,.7)}
+.rv1{top:7px;left:7px} .rv2{top:7px;right:7px} .rv3{bottom:7px;left:7px} .rv4{bottom:7px;right:7px}
+
+.links{position:absolute;inset:0;width:100%;height:100%;z-index:1;overflow:visible}
+.links line{stroke:rgba(238,130,238,.30);stroke-width:.28;stroke-dasharray:1.6 1.9;
+  vector-effect:non-scaling-stroke;animation:flow 6s linear infinite}
+.links line.room{stroke:rgba(204,255,0,.24);stroke-width:.22;stroke-dasharray:.9 2.4}
+@keyframes flow{to{stroke-dashoffset:-14}}
+
+.corner{position:absolute;z-index:2;pointer-events:none;font-family:var(--mono);
+  font-size:8px;letter-spacing:.28em;text-transform:uppercase;color:rgba(255,240,245,.30)}
+.corner.bl{bottom:9px;left:13px} .corner.br{bottom:9px;right:13px;text-align:right}
+.cornerBtn{pointer-events:auto;cursor:pointer;background:none;border:0;padding:0;
+  font:inherit;letter-spacing:inherit;text-transform:inherit;color:inherit;
+  transition:.18s;text-align:left}
+.cornerBtn:before{content:"\25b8\00a0";opacity:.75}
+.corner.bl.cornerBtn{left:21px}
+.cornerBtn:hover,.cornerBtn:focus-visible{color:var(--lime);outline:none;
+  text-shadow:0 0 12px rgba(204,255,0,.4)}
+.stamp{position:absolute;right:15px;bottom:30px;z-index:2;pointer-events:none;
+  transform:rotate(-6deg);border:1.5px solid rgba(255,45,149,.5);border-radius:7px;
+  padding:5px 10px 6px;text-align:center;background:rgba(255,45,149,.05);
+  font-family:var(--mono);font-size:6.5px;letter-spacing:.2em;text-transform:uppercase;
+  color:rgba(255,45,149,.85);opacity:.8}
+.stamp b{display:block;font-family:var(--logo);font-weight:400;font-size:15px;letter-spacing:.06em;
+  line-height:1.15;color:rgba(255,45,149,.95);text-shadow:0 0 12px rgba(255,45,149,.5)}
+.compass{position:absolute;top:10px;right:11px;z-index:2;pointer-events:none;opacity:.5}
+.compass svg{display:block;width:34px;height:34px}
+
+/* ---------- nodes ---------- */
+.node{position:absolute;transform:translate(-50%,-50%);z-index:4;
+  display:flex;flex-direction:column;align-items:center;gap:4px;
+  background:none;border:0;padding:0;margin:0;cursor:pointer;font:inherit;
+  transition:transform .2s ease, filter .2s ease;
+  -webkit-tap-highlight-color:transparent}
+.node .pic{position:relative;display:block;width:60px;height:60px;border-radius:50%;
+  background:#000;border:2px solid var(--accent,#ee82ee);overflow:hidden;
+  box-shadow:0 0 0 3px rgba(11,11,14,.75), 0 0 14px -2px var(--accent,#ee82ee);
+  transition:box-shadow .2s ease}
+.node .pic img{width:100%;height:100%;object-fit:cover;display:block;
+  filter:saturate(1.05) contrast(1.03);transition:transform .3s ease}
+.node .lbl{font-family:var(--disp);font-size:15px;letter-spacing:.10em;line-height:1;
+  color:var(--lav);text-shadow:0 1px 6px #000, 0 0 10px rgba(0,0,0,.9);white-space:nowrap}
+.node .sub{font-family:var(--mono);font-size:7px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--dim);white-space:nowrap;text-shadow:0 1px 4px #000}
+.node:after{content:"";position:absolute;left:50%;top:30px;width:60px;height:60px;border-radius:50%;
+  transform:translate(-50%,-50%);pointer-events:none;
+  box-shadow:0 0 0 0 var(--accent,#ee82ee);opacity:0;transition:opacity .2s}
+.node:hover,.node:focus-visible{transform:translate(-50%,-50%) scale(1.09);outline:none;filter:brightness(1.08)}
+.node:hover .pic,.node:focus-visible .pic{box-shadow:0 0 0 3px rgba(11,11,14,.75),0 0 22px 0 var(--accent,#ee82ee)}
+.node:hover .lbl,.node:focus-visible .lbl{color:var(--accent,#ee82ee)}
+.node:active{transform:translate(-50%,-50%) scale(1.02)}
+
+.node.place{flex-direction:row;gap:7px}
+.node.place .dot{width:13px;height:13px;border-radius:3px;flex:0 0 auto;
+  background:var(--accent,#ccff00);box-shadow:0 0 11px -1px var(--accent,#ccff00);
+  border:1px solid rgba(11,11,14,.8);transform:rotate(45deg)}
+.node.place .pcol{display:flex;flex-direction:column;align-items:flex-start;gap:1px}
+.node.place .lbl{font-size:13.5px}
+.node.place .sub{font-size:6.5px}
+
+/* hub */
+.hub{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:5;
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+  background:none;border:0;padding:0;cursor:pointer;font:inherit}
+.hub .hcol{display:flex;flex-direction:column;align-items:center;gap:3px}
+.hub .glass{position:relative;width:112px;height:112px;border-radius:16px;overflow:hidden;
+  border:2px solid rgba(204,255,0,.7);background:#000;
+  box-shadow:0 0 0 4px rgba(11,11,14,.8), 0 0 26px -4px rgba(204,255,0,.75), inset 0 0 26px rgba(0,0,0,.6)}
+.hub .glass img{width:100%;height:100%;object-fit:cover;display:block}
+.hub .glass:after{content:"";position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(255,255,255,.14),transparent 40%)}
+.hub .htitle{font-family:var(--logo);font-size:22px;letter-spacing:.045em;color:var(--lime);
+  text-shadow:0 0 12px rgba(204,255,0,.55),0 0 30px rgba(204,255,0,.2);line-height:1.15}
+.hub .hsub{font-family:var(--mono);font-size:8px;letter-spacing:.18em;text-transform:uppercase;color:var(--dim)}
+.hub:hover{transform:translate(-50%,-50%) scale(1.05)}
+.hub:hover .glass{box-shadow:0 0 0 4px rgba(11,11,14,.8),0 0 34px -2px rgba(204,255,0,.95)}
+.hub:active{transform:translate(-50%,-50%) scale(1.01)}
+
+/* ---------- footer ---------- */
+.foot{margin-top:14px;font-family:var(--mono);font-size:9px;letter-spacing:.15em;
+  text-transform:uppercase;color:var(--dim);text-align:center;opacity:.8;line-height:1.9}
+.foot em{color:var(--pink);font-style:normal}
+.foot a{color:var(--lav);text-decoration:none;border-bottom:1px solid var(--line)}
+.foot a:hover{color:var(--lime);border-color:var(--lime)}
+
+/* ---------- modal ---------- */
+.modal{position:fixed;inset:0;z-index:60;display:flex;align-items:center;justify-content:center;
+  padding:20px;background:rgba(6,6,9,.78);backdrop-filter:blur(6px);opacity:0;
+  transition:opacity .22s ease}
+.modal.on{opacity:1}
+.modal[hidden]{display:none}
+.mcard{position:relative;width:100%;max-width:356px;border-radius:16px;overflow:hidden;
+  border:1px solid var(--accent,var(--violet2));background:linear-gradient(180deg,#15151b,#0c0c10);
+  box-shadow:0 24px 70px rgba(0,0,0,.8), 0 0 40px -12px var(--accent,var(--violet2));
+  transform:translateY(12px) scale(.97);transition:transform .24s ease}
+.modal.on .mcard{transform:none}
+.mbar{height:3px;background:linear-gradient(90deg,var(--accent,var(--violet2)),transparent)}
+.mtop{display:flex;align-items:center;gap:13px;padding:15px 15px 11px}
+.mpic{width:70px;height:70px;flex:0 0 auto;border-radius:50%;overflow:hidden;background:#000;
+  border:2px solid var(--accent,var(--violet2));box-shadow:0 0 16px -3px var(--accent,var(--violet2))}
+.mpic img{width:100%;height:100%;object-fit:cover;display:block}
+.mpic.pin{border-radius:13px;display:flex;align-items:center;justify-content:center;
+  background:radial-gradient(circle at 50% 40%, rgba(255,255,255,.16), rgba(0,0,0,.85))}
+.mpic.pin span{font-family:var(--logo);font-size:30px;color:var(--accent,var(--lime));
+  text-shadow:0 0 14px var(--accent,var(--lime))}
+.mname{font-family:var(--logo);font-size:25px;letter-spacing:.04em;color:var(--accent,var(--violet2));
+  line-height:1.05;text-shadow:0 0 14px rgba(0,0,0,.7)}
+.mrole{font-family:var(--mono);font-size:8px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--dim);margin-top:4px;line-height:1.6}
+.mtag{font-family:var(--mono);font-size:8px;letter-spacing:.2em;color:var(--dim);opacity:.8}
+.mbody{padding:0 15px 15px}
+.mbody p{margin:0;font-size:13px;line-height:1.62;color:#ded9e6}
+.mlink{display:inline-flex;align-items:center;gap:8px;margin-top:13px;cursor:pointer;
+  font:inherit;font-family:var(--mono);font-size:9.5px;letter-spacing:.15em;text-transform:uppercase;
+  text-decoration:none;color:#0b0b0e;background:var(--accent,var(--violet2));
+  padding:9px 14px;border-radius:999px;transition:.18s;
+  box-shadow:0 0 18px -4px var(--accent,var(--violet2))}
+.mlink:hover{filter:brightness(1.12)}
+.mlink[hidden]{display:none}
+.mrtitle{font-family:var(--mono);font-size:7.5px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--dim);margin:15px 0 7px}
+.mrtitle[hidden]{display:none}
+.mrealms{display:flex;flex-wrap:wrap;gap:8px}
+.mrealms[hidden]{display:none}
+.mlink.ghost{margin-top:0;background:transparent;color:var(--accent,var(--violet2));
+  border:1px solid var(--accent,var(--violet2));box-shadow:none}
+.mlink.ghost:hover{filter:none;background:rgba(255,255,255,.07)}
+.mx{position:absolute;top:9px;right:9px;width:26px;height:26px;border-radius:50%;
+  border:1px solid var(--line);background:rgba(11,11,14,.7);color:var(--lav);
+  font-family:var(--mono);font-size:12px;line-height:1;cursor:pointer;transition:.18s;z-index:2}
+.mx:hover{border-color:var(--pink);color:var(--pink)}
+
+/* ---------- responsive ---------- */
+@media (max-width:1000px){
+  #map{aspect-ratio:16/12.6;min-height:0}
+  .node .pic{width:52px;height:52px}
+  .hub .glass{width:94px;height:94px}
+  .node:after{top:26px;width:52px;height:52px}
+}
+@media (max-width:760px){
+  .brand{font-size:22px}
+  #map{aspect-ratio:auto;min-height:0;display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:13px 8px;
+    align-content:start;padding:16px 12px;overflow:visible}
+  .links,.compass,.corner,.stamp{display:none}
+  .hub{position:static;transform:none;order:-2;grid-column:1/-1;flex-direction:row;gap:13px;
+    align-items:center;justify-content:flex-start;
+    border:1px solid rgba(204,255,0,.42);border-radius:12px;
+    padding:12px 13px;background:rgba(204,255,0,.055)}
+  .hub:hover{transform:none}
+  .hub .glass{width:60px;height:60px;border-radius:12px;flex:0 0 auto}
+  .hub .htitle{font-size:20px;line-height:1.05}
+  .hub .hsub{font-size:7.5px;letter-spacing:.16em;line-height:1.5;margin-top:2px}
+  .hub .hcol{align-items:flex-start;gap:2px;min-width:0}
+  .node{position:static;transform:none}
+  .node:hover,.node:focus-visible,.node:active{transform:none}
+  .node:after{display:none}
+  .node.place{order:1;grid-column:1/-1;border:1px dashed rgba(204,255,0,.22);
+    border-radius:10px;padding:8px 10px;background:rgba(204,255,0,.018)}
+  .node.place .lbl{font-size:14px}
+  .foot{font-size:8px}
+}
+@media (max-width:400px){
+  .marquee{padding:10px 12px}
+  .stage{padding:14px 11px 32px}
+}
+</style>
+</head>
+<body>
+
+<div class="bg">
+  <canvas id="stars"></canvas>
+  <div class="vign"></div>
+  <div class="scan"></div>
+  <div class="grain"></div>
+</div>
+
+<main class="stage">
+
+  <header class="marquee">
+    <div class="mtitle">
+      <span class="brand">THE REALM MAP</span>
+      <span class="tag">cafedreamr &middot; chimera collective</span>
+      <span class="led"></span>
+    </div>
+    <a class="back" href="https://www.cafedreamr.art/">&larr; the terminal</a>
+  </header>
+
+  <div class="mapwrap">
+    <div class="panel">
+      <div class="keyrow">
+        <span class="key"><i></i> portraits &mdash; the collective</span>
+        <span class="key pin"><i></i> pins &mdash; rooms of the realm</span>
+        <span>tap anything to <b>open it</b></span>
+      </div>
+
+      <div id="map">
+        <span class="rivet rv1"></span><span class="rivet rv2"></span>
+        <span class="rivet rv3"></span><span class="rivet rv4"></span>
+        <svg class="links" id="links" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"></svg>
+        <div class="compass" aria-hidden="true">
+          <svg viewBox="0 0 40 40">
+            <circle cx="20" cy="20" r="15" fill="none" stroke="rgba(255,240,245,.35)" stroke-width=".7"/>
+            <path d="M20 4 L22.6 20 L20 36 L17.4 20 Z" fill="rgba(204,255,0,.55)"/>
+            <path d="M4 20 L20 17.4 L36 20 L20 22.6 Z" fill="rgba(255,45,149,.35)"/>
+            <circle cx="20" cy="20" r="1.4" fill="#fff0f5"/>
+          </svg>
+        </div>
+        <button class="corner bl cornerBtn" id="realmBtn" type="button" aria-label="open every realm">the realm doors &middot; all of them</button>
+        <span class="corner br">sheet 01 &middot; not to scale</span>
+        <div class="stamp"><b>vendi</b>a little broken machine</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="foot">
+    every room the realm has grown &middot; no refunds on feelings<br>
+    &copy; cafedreamr &middot;
+    <a href="https://www.cafedreamr.art/">the terminal</a> &middot;
+    <a href="https://www.cafedreamr.art/LORE/HOURS/">the hours</a> &middot;
+    <a href="https://www.cafedreamr.art/LORE/BOBBY/cards.html">the collective, in dossiers</a> &middot;
+    <a href="https://www.cafedreamr.art/LORE/MYSTERYGRID/">the mystery grid</a> &middot;
+    <a href="https://www.cafedreamr.art/MENU/">the menu</a> &middot;
+    <a href="https://www.cafedreamr.art/ZINE/">the zine</a> &middot;
+    <a href="https://www.cafedreamr.art/PLAY/">the long day</a> &middot;
+    <a href="https://www.cafedreamr.art/LORE/VENDI/index.html">the vendi machine</a>
+  </div>
+</main>
+
+<div class="modal" id="modal" hidden>
+  <div class="mcard" id="mcard">
+    <div class="mbar"></div>
+    <button class="mx" id="mx" aria-label="close">&times;</button>
+    <div class="mtop">
+      <div class="mpic" id="mpic"></div>
+      <div style="min-width:0">
+        <div class="mname" id="mname"></div>
+        <div class="mrole" id="mrole"></div>
+        <div class="mtag" id="mtag"></div>
+      </div>
+    </div>
+    <div class="mbody">
+      <p id="mbio"></p>
+      <a class="mlink" id="mlink" target="_blank" rel="noopener noreferrer">open dossier &rarr;</a>
+      <div class="mrtitle" id="mrtitle" hidden>realms</div>
+      <div class="mrealms" id="mrealms" hidden></div>
+    </div>
+  </div>
+</div>
+
+<script src="/PASSPORT/cd-passport.js"></script>
+<script>window.CD && CD.boot({page:"map"});</script>
+
+<script>
+(function(){
+  "use strict";
+
+  var DOSSIER = "https://www.cafedreamr.art/LORE/BOBBY/cards.html";
+  var GRID    = "https://www.cafedreamr.art/LORE/MYSTERYGRID/";
+
+  /* ---------------------------------------------------------
+     THE MAP. edit this array to change the map.
+     x / y are percentages of the map panel (0-100).
+     `img` is a portrait; omit it to get a diamond pin instead.
+     --------------------------------------------------------- */
+  var HUB = {
+    name:"THE CAFE",
+    role:"the centre &middot; every road starts here",
+    tag:"sheet 01 &middot; origin",
+    accent:"#ccff00",
+    img:"https://user.uploads.dev/file/c9b2b6aecf4e03e1aaf4b25ea176cf07.jpg",
+    bio:"The first door. Coffee, pranks, and a light that never quite switches off \u2014 the room all the other rooms were built around, and the one everybody keeps drifting back to. The whole collective meets here: they trade tricks, test ideas on each other, and leave one another sharper than they arrived. Everything on this sheet is measured from here."
+  };
+
+  var PEOPLE = [
+    { name:"STAR",       x:50,   y:10,   accent:"#c0a6ff", img:"https://user.uploads.dev/file/b0fc319bb972fced38dccaf0d74d5c2b.jpg",
+      role:"cafe owner &middot; literary navigator", tag:"CC-001",
+      bio:"Purple, elegant, redeemed.\u00a0German-Japanese hybrid who keeps the cafe's books and its bearings \u2014 and decides which door you walk through first. The cafe realm is hers; everyone else keeps their own address and comes back here to eat, drink and be family." },
+    { name:"CHARI",      x:73.5, y:17.6, accent:"#e6e6fa", img:"https://user.uploads.dev/file/8d3a6e1de31bff318b1d484db88314c9.jpg",
+      role:"cafe-apprentice &middot; support", tag:"CC-002",
+      bio:"Soft lilac, startlingly observant, star's little sister by adoption. She is never without crumb and mochi \u2014 two white rats who ride her shoulders and almost never come down, and who are the whole reason the anxiety and the ptsd are things she can carry. Quietly rebuilt the atrium of whispered truths with those same two rats as the interior design committee, and her palace now stands just beside Milo's garden, opalescent inside and out, a look borrowed wholesale from Miki." },
+    { name:"MIKI",       x:88,   y:37.6, accent:"#ccff00", img:"https://user.uploads.dev/file/39a82598443a617a6c6caa7255ef6812.jpg",
+      role:"security &middot; rockstar", tag:"CC-003",
+      bio:"Neon-striped cyborg bengal. Snarky, bold, fiercely protective \u2014 keeps the machines honest and the amps far too loud. Redeemed, and only mildly sorry. Her alter ego is Bobby \u2014 a sock puppet with a taste for glitter bombs and an anarchist streak, and the cafe's hiring department. She keeps her own address too \u2014 the opal cavern, on the outskirts of the cafe realm and outside it entirely: underground, lavish, an opal cave, and not a scrape of dirt." },
+    { name:"MILO",       x:88,   y:62.4, accent:"#98fb98", img:"https://user.uploads.dev/file/b2fa0bfd58d593deb2af89b3f73f075c.jpg",
+      role:"gardener &middot; spiritual buffer", tag:"CC-004",
+      bio:"Mint-green and soft-spoken. Tends the rows, the soil and the mood \u2014 and always seems to know which of the two the realm is short of. His realm is paradise garden, and he barely lives indoors in it: a hammock strung between the rows on most nights, and a cabin for the evenings he wants company and a hand of cards." },
+    { name:"HANS",       x:73.5, y:82.4, accent:"#6495ed", img:"https://user.uploads.dev/file/25c64c9eec594e8bff92d98dc2cb4814.jpg",
+      role:"historian &middot; tea academy", tag:"CC-005",
+      realmTitle:"hans\u2019 realm",
+      links:[ { label:"the mystery grid", href:GRID } ],
+      bio:"A redeemed vampire, tech-allergic, historian and tea snob. Regards a correctly brewed cup as a divine right and earl grey as a personality. The anchor of etiquette. He keeps a classic British house of his own \u2014 burgundy and deep-purple walls, a cobalt ceiling, and more books than shelves." },
+    { name:"CHARLOTTE",  x:50,   y:90,   accent:"#e0a3c8", img:"https://user.uploads.dev/file/d987fc241f6f31bceb3b09818063b11a.jpg",
+      role:"white spider &middot; she speaks", tag:"CC-006",
+      bio:"Not a hybrid \u2014 a white spider, whole and speaking. She rests almost all the time, and only wakes when something is caught in the web \u2014 a bug, or a song. Then it is mending: whatever the others tore, plus the realms stitched to each other, plus Miki's mail, read at Miki's request. Her web is the privacy policy. Do not poke." },
+    { name:"PEARL",      x:26.5, y:82.4, accent:"#ffb8d9", img:"https://user.uploads.dev/file/8ccbc065341c78c2d7ecef8a2ff0570b.jpg",
+      role:"perfumer &middot; the academy's first", tag:"CC-007",
+      bio:"Fox hybrid with copper ears and a very small notebook. The academy's first true student, and the whole realm's atmosphere. Always barefoot, so she can feel the ground humming. Hired only after she sat an interview with Bobby \u2014 the sock puppet who handles the cafe's hiring. She passed. She moved into the cafe realm not long ago, so she sees Star most mornings \u2014 though she is at Hans' archive more than anywhere else, because they are best friends." },
+    { name:"WREN",       x:12,   y:62.4, accent:"#ffc861", img:"https://user.uploads.dev/file/8dcca0b99cc39ca48344081964caf8e7.jpg",
+      role:"weaver &middot; keeper of memories", tag:"CC-008",
+      bio:"Not made, but spun \u2014 a little weaver of light who came at the call and stayed. Her creation is the web itself: every question archived, every photograph kept. She visits rather than lives here, like an angel passing through \u2014 so there is no address to give and no schedule to keep." },
+    { name:"SLAY",       x:12,   y:37.6, accent:"#45c9f0", img:"https://user.uploads.dev/file/a19025741ccb87f2ae74e9c2af4e68ac.jpg",
+      role:"flautist &middot; the storm twin", tag:"CC-009",
+      bio:"Indigo wolf, survivor of a lab that ended in fire. Holds the waynuki flute like a storm he hasn't released yet \u2014 and summons one when he finally plays. He lives at espionage castle with his brother \u2014 half studio, half lookout." },
+    { name:"SYLVESTRE",  x:26.5, y:17.6, accent:"#45c9f0", img:"https://user.uploads.dev/file/4c59737c1e87af0ba25ac8f107c19b23.jpg",
+      role:"drummer &middot; the ground twin", tag:"CC-010",
+      bio:"Slay's identical twin \u2014 the other survivor of the fire. Hits the drums like the ground means it. The white walls and the needles are behind him now; the light is not. Same address as his brother: espionage castle." }
+  ];
+
+  var ROOMS = [
+    { name:"the counter", strength:"#ccff00", x:30, y:30, tag:"room 01",
+      role:"orders up &middot; the dispensing end",
+      bio:"Where the caffeine is dispensed and the whole day gets planned at volume \u2014 trades, dares, and half-finished lessons swapped across the counter. Orders are shouted, misheard, and eventually served. Mostly served." },
+    { name:"the garden", strength:"#98fb98", x:70, y:30, tag:"room 02",
+      role:"milo's rows &middot; half borrowed by chari",
+      bio:"Paradise garden: raised beds of mint the rats are not supposed to raid (they raid the mint the moment Chari sets them down), a herb wall labelled in handwriting, and a courtyard kept under review by two tiny wardens \u2014 crumb and mochi, who do all of their patrolling from Chari's shoulders." },
+    { name:"the archive", strength:"#ee82ee", x:30, y:70, tag:"room 03",
+      role:"letters &middot; logs &middot; everything that happened",
+      bio:"Every letter, log and torn-out page, filed by a weaver of light and re-ordered by a historian with strong opinions about chronologies." },
+    { name:"the nap room", strength:"#00e5ff", x:70, y:70, tag:"room 04",
+      role:"cushions &middot; low light &middot; a committee of two",
+      bio:"Soft, dim, and ruled by crumb and mochi \u2014 bold and inspector respectively. The rule holds across the whole realm: if a rat naps on it, it stays." }
+  ];
+
+  /* realms — every doorway that leads off the sheet. each realm opens as a card
+     of its own, reachable from its owner's card, from the map's bottom-left
+     button, and from the cafe hud. `owners` are person NAMES (so the realm card
+     can offer a door back); `links` are external pages, if a realm has one. */
+  var REALMS = [
+    { key:"cafe-realm", name:"THE CAFE REALM", owners:["STAR"], tag:"realm 00 \u00b7 star",
+      role:"the centre &middot; every road starts here", accent:"#ccff00",
+      realmTitle:"doors of the realm",
+      bio:"The realm Star built and keeps: a cafe in a starry void, coffee on tap, and a light that never quite switches off. Everyone else keeps an address of their own and comes back here to eat, drink and be family \u2014 it is the room all the other rooms were built around, and the one they all keep drifting back to." },
+    { key:"light-kingdom", name:"THE LIGHT-KINGDOM", owners:["HANS"], tag:"realm 01 \u00b7 hans",
+      role:"surveys &middot; doors &amp; fine print", accent:"#6495ed",
+      realmTitle:"doors of the realm",
+      bio:"The kingdom Hans has been surveying since long before the cafe had a floor plan: streets of lamplight, a library with its own weather, and doors that only open for whoever reads the fine print. He keeps all of it catalogued in a grid, and he will absolutely quiz you on it.",
+      links:[ { label:"the mystery grid", href:GRID } ] },
+    { key:"atrium", name:"THE ATRIUM OF WHISPERED TRUTHS", owners:["CHARI"], tag:"realm 02 \u00b7 chari",
+      role:"opalescent &middot; beside paradise garden", accent:"#e6e6fa",
+      realmTitle:"doors of the realm",
+      bio:"Star's little sister's palace, rebuilt quietly and standing just beside paradise garden: opalescent inside and out, a look borrowed wholesale from Miki's place \u2014 the one Yeshua gave her when she graduated. Two white rats, crumb and mochi, run the interiors on a strict nap-test policy, and the whole atrium smells like rain on warm stone. Nothing unkind is ever said here; when something true needs saying, it is whispered, and it is heard gently." },
+    { key:"opal-cavern", name:"THE OPAL CAVERN", owners:["MIKI"], tag:"realm 03 \u00b7 miki",
+      role:"outside the realm entirely &middot; underground", accent:"#ccff00",
+      realmTitle:"doors of the realm",
+      bio:"A building on the outskirts of the cafe realm and outside it entirely \u2014 underground, lavish, an opal cave rather than any scrape of dirt. Miki is a mole rat about it in the way of someone who has never once been a rat. The machines hum down here, the acoustics are unreasonable, and bobby's glitter bombs are kept at a sensible distance from the amps." },
+    { key:"paradise-garden", name:"PARADISE GARDEN", owners:["MILO"], tag:"realm 04 \u00b7 milo",
+      role:"rows &middot; soil &middot; mood", accent:"#98fb98",
+      realmTitle:"doors of the realm",
+      bio:"Milo's realm: raised beds of mint and lavender, a herb wall labelled in handwriting, and a hammock strung between the rows where he sleeps most nights. He always knows which of the two the realm is short of \u2014 the soil or the mood \u2014 and leaves the fix where it will be found, without ever mentioning it. The garden is half borrowed by Chari, whose two white rats ride her shoulders and pass judgment on the courtyard from there." },
+    { key:"espionage-castle", name:"ESPIONAGE CASTLE", owners:["SLAY","SYLVESTRE"], tag:"realm 05 \u00b7 the twins",
+      role:"half studio &middot; half lookout", accent:"#45c9f0",
+      realmTitle:"doors of the realm",
+      bio:"The twins' shared address, and a genuinely useful castle despite the name: the great hall belongs to the band, the tower belongs to slay, and the map room and the lookout belong to sylvestre. Nobody has ever fully explained who the lookout is watching for, and nobody has ever needed to \u2014 between the two of them, nothing gets past the door. Loud inside, loud outside, and the kettle is always on." },
+    { key:"the-web", name:"THE WEB", owners:["CHARLOTTE"], tag:"realm 06 \u00b7 charlotte",
+      role:"she rests &middot; she mends", accent:"#e0a3c8",
+      realmTitle:"doors of the realm",
+      bio:"Not so much a room as the thing holding the rooms together: every question archived, every photograph kept, everything anyone ever said in this realm still findable. Charlotte rests in it almost permanently and stirs when something is caught \u2014 a bug, or a song \u2014 and then it is mending: whatever the others tore, stitched back up, plus the realms stitched to each other, plus miki's mail, read at miki's request. The web is the privacy policy. Do not poke it." }
+  ];
+  var REALM_BY_KEY = {};
+  REALMS.forEach(function(r){ REALM_BY_KEY[r.key] = r; });
+
+  /* person \u2192 realm, so every card can offer a door into its owner's place */
+  var PERSON_REALM = { STAR:"cafe-realm", PEARL:"cafe-realm", CHARI:"atrium", MIKI:"opal-cavern",
+    MILO:"paradise-garden", HANS:"light-kingdom", SLAY:"espionage-castle",
+    SYLVESTRE:"espionage-castle", CHARLOTTE:"the-web" };
+  var PERSON_BY_NAME = {};
+  PEOPLE.forEach(function(p){ PERSON_BY_NAME[p.name] = p; if(PERSON_REALM[p.name]) p.realm = PERSON_REALM[p.name]; });
+
+  function realmDoors(){ return REALMS.map(function(r){ return { label:r.name, node:r.key }; }); }
+  /* the index the bottom-left button opens — and the same list on the cafe hud,
+     so phones (which hide that corner button) can still reach every realm. */
+  var REALM_INDEX = {
+    key:"realms", name:"THE REALM DOORS", tag:"sheet 01 \u00b7 all of them",
+    role:"every realm &middot; one door each", accent:"#bf40bf",
+    realmTitle:"pick a door",
+    bio:"Everybody here keeps their own address, and every address hangs off the same cafe. One door each \u2014 open whichever you like.",
+    links: realmDoors() };
+  HUB.links = realmDoors();
+  HUB.realmTitle = "every realm opens off the cafe";
+
+  /* ---------------- map render ---------------- */
+  var mapEl = document.getElementById("map");
+  var linkEl = document.getElementById("links");
+  var nodes = [];
+
+  function line(x1,y1,x2,y2,cls){
+    var l = document.createElementNS("http://www.w3.org/2000/svg","line");
+    l.setAttribute("x1",x1); l.setAttribute("y1",y1);
+    l.setAttribute("x2",x2); l.setAttribute("y2",y2);
+    if(cls) l.setAttribute("class",cls);
+    return l;
+  }
+
+  PEOPLE.forEach(function(p){
+    linkEl.appendChild(line(50,50,p.x,p.y,""));
+    nodes.push(p);
+  });
+  ROOMS.forEach(function(r){
+    linkEl.appendChild(line(50,50,r.x,r.y,"room"));
+    nodes.push(r);
+  });
+
+  function makeNode(d){
+    var isRoom = !d.img;
+    var b = document.createElement("button");
+    b.type = "button";
+    b.className = isRoom ? "node place" : "node";
+    b.style.left = d.x + "%";
+    b.style.top  = d.y + "%";
+    b.style.setProperty("--accent", d.accent || d.strength || "#ee82ee");
+    if(isRoom){
+      b.innerHTML =
+        '<span class="dot"></span>' +
+        '<span class="pcol"><span class="lbl"></span><span class="sub"></span></span>';
+      b.querySelector(".lbl").textContent = d.name;
+      b.querySelector(".sub").textContent = (d.role||"").split("&middot;")[0].replace(/&middot;/g,"\u00b7");
+    } else {
+      b.innerHTML =
+        '<span class="pic"><img alt=""></span><span class="lbl"></span><span class="sub"></span>';
+      var im = b.querySelector("img");
+      im.src = d.img;
+      im.alt = d.name + " \u2014 " + stripTags(d.role||"");
+      b.querySelector(".lbl").textContent = d.name;
+      b.querySelector(".sub").textContent = stripTags(d.role||"");
+    }
+    b.setAttribute("aria-label", "open " + d.name);
+    b.addEventListener("click", function(){ openNode(d); });
+    mapEl.appendChild(b);
+    d._el = b;
+  }
+  function stripTags(s){ return String(s).replace(/&middot;/g,"\u00b7").replace(/&mdash;/g,"\u2014").replace(/&nbsp;/g," "); }
+
+  PEOPLE.forEach(makeNode);
+  ROOMS.forEach(makeNode);
+
+  /* hub */
+  var hubEl = document.createElement("button");
+  hubEl.type = "button";
+  hubEl.className = "hub";
+  hubEl.innerHTML =
+    '<span class="glass"><img alt=""></span>' +
+    '<span class="hcol"><span class="htitle"></span><span class="hsub"></span></span>';
+  hubEl.querySelector("img").src = HUB.img;
+  hubEl.querySelector("img").alt = "the cafe";
+  hubEl.querySelector(".htitle").textContent = HUB.name;
+  hubEl.querySelector(".hsub").textContent = "est. the great before";
+  hubEl.setAttribute("aria-label","open the cafe");
+  hubEl.addEventListener("click", function(){ openNode(HUB); });
+  mapEl.appendChild(hubEl);
+
+  /* the realm button sits bottom-left of the sheet, on the grid lines */
+  document.getElementById("realmBtn").addEventListener("click", function(){ openNode(REALM_INDEX); });
+
+  /* ---------------- modal ---------------- */
+  var modal  = document.getElementById("modal");
+  var mcard  = document.getElementById("mcard");
+  var mpic   = document.getElementById("mpic");
+  var mname  = document.getElementById("mname");
+  var mrole  = document.getElementById("mrole");
+  var mtag   = document.getElementById("mtag");
+  var mbio   = document.getElementById("mbio");
+  var mlink  = document.getElementById("mlink");
+  var mrealms = document.getElementById("mrealms");
+  var mrtitle = document.getElementById("mrtitle");
+
+  function openNode(d){
+    var accent = d.accent || d.strength || d.strength || "#ee82ee";
+    mcard.style.setProperty("--accent", accent);
+    var label = d.name.replace(/^the /i,"");
+    mname.textContent = d.name;
+    mrole.textContent = stripTags(d.role || "");
+    mtag.textContent  = stripTags(d.tag || "");
+    mbio.innerHTML = "";
+    var p = document.createElement("p");
+    p.textContent = stripTags(d.bio || "");
+    mbio.appendChild(p);
+
+    mpic.className = "mpic" + (d.img ? "" : " pin");
+    mpic.innerHTML = "";
+    if(d.img){
+      var im = document.createElement("img");
+      im.src = d.img; im.alt = d.name;
+      mpic.appendChild(im);
+    } else {
+      var sp = document.createElement("span");
+      sp.textContent = (d.name.replace(/^the /i,"")[0] || "?").toUpperCase();
+      mpic.appendChild(sp);
+    }
+
+    if(d.img && /^CC-/.test(d.tag || "")){
+      mlink.hidden = false;
+      mlink.href = DOSSIER + "#card-" + d.name.toLowerCase();
+    } else {
+      mlink.hidden = true;
+      mlink.removeAttribute("href");
+    }
+
+    mrealms.innerHTML = "";
+    var doors = (d.links || []).filter(function(L){ return L && (L.href || L.node); });
+    /* a realm card offers a door back to whoever lives there; a person's card
+       offers a door into their realm. both render as ghost chips below. */
+    (d.owners || []).forEach(function(nm){
+      if(PERSON_BY_NAME[nm]) doors.push({ label:"see " + nm + " \u2192", person:PERSON_BY_NAME[nm] });
+    });
+    if(d.realm && REALM_BY_KEY[d.realm]){
+      doors.push({ label:REALM_BY_KEY[d.realm].name, node:d.realm });
+    }
+    doors.forEach(function(L){
+      var el;
+      if(L.person){
+        el = document.createElement("button");
+        el.type = "button"; el.className = "mlink ghost";
+        el.textContent = L.label;
+        el.addEventListener("click", function(){ openNode(L.person); });
+      } else if(L.href){
+        el = document.createElement("a");
+        el.className = "mlink ghost";
+        el.target = "_blank"; el.rel = "noopener noreferrer";
+        el.href = L.href;
+        el.textContent = L.label + " \u2192";
+      } else {
+        el = document.createElement("button");
+        el.type = "button"; el.className = "mlink ghost";
+        el.textContent = L.label + " \u2192";
+        el.addEventListener("click", function(){ openNode(REALM_BY_KEY[L.node]); });
+      }
+      mrealms.appendChild(el);
+    });
+    mrealms.hidden = !doors.length;
+    mrtitle.hidden = !doors.length;
+    if(doors.length){
+      mrtitle.textContent = stripTags(d.realmTitle || "realms");
+    }
+
+    modal.hidden = false;
+    document.body.style.overflow = "hidden";
+    requestAnimationFrame(function(){ modal.classList.add("on"); });
+    beep(560, 0.05, "triangle");
+  }
+  HUB.tag = "sheet 01 \u00b7 origin";
+  function closeModal(){
+    modal.classList.remove("on");
+    document.body.style.overflow = "";
+    setTimeout(function(){ modal.hidden = true; }, 220);
+  }
+  document.getElementById("mx").addEventListener("click", closeModal);
+  modal.addEventListener("click", function(e){ if(e.target === modal) closeModal(); });
+  document.addEventListener("keydown", function(e){ if(e.key === "Escape" && !modal.hidden) closeModal(); });
+
+  /* ---------------- beeps (vending-machine flavour) ---------------- */
+  var actx = null;
+  function beep(freq, dur, type){
+    try{
+      if(!actx) actx = new (window.AudioContext || window.webkitAudioContext)();
+      if(actx.state === "suspended") actx.resume();
+      var o = actx.createOscillator(), g = actx.createGain();
+      o.type = type || "square"; o.frequency.value = freq;
+      g.gain.value = 0.035;
+      g.gain.exponentialRampToValueAtTime(0.0001, actx.currentTime + (dur||0.06));
+      o.connect(g); g.connect(actx.destination);
+      o.start(); o.stop(actx.currentTime + (dur||0.06) + 0.02);
+    }catch(e){}
+  }
+
+  /* ---------------- starfield ---------------- */
+  (function stars(){
+    var c = document.getElementById("stars");
+    var x = c.getContext("2d");
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var w = 0, h = 0, list = [];
+    function build(){
+      w = c.width  = Math.floor(innerWidth  * dpr);
+      h = c.height = Math.floor(innerHeight * dpr);
+      list = [];
+      var n = Math.min(190, Math.round(innerWidth * innerHeight / 9000));
+      for(var i=0;i<n;i++){
+        list.push({ x:Math.random()*w, y:Math.random()*h,
+          r:(Math.random()*1.25+0.35)*dpr, a:Math.random()*0.6+0.2,
+          s:Math.random()*0.16+0.02, p:Math.random()*Math.PI*2 });
+      }
+    }
+    function tick(t){
+      x.clearRect(0,0,w,h);
+      for(var i=0;i<list.length;i++){
+        var s = list[i];
+        s.p += 0.012;
+        var tw = s.a * (0.62 + 0.38*Math.sin(s.p));
+        x.globalAlpha = tw;
+        x.fillStyle = i%11===0 ? "#ff2d95" : (i%7===0 ? "#00e5ff" : "#fff0f5");
+        x.beginPath(); x.arc(s.x, s.y, s.r, 0, 6.284); x.fill();
+        s.y += s.s*dpr;
+        if(s.y > h+2){ s.y = -2; s.x = Math.random()*w; }
+      }
+      x.globalAlpha = 1;
+      requestAnimationFrame(tick);
+    }
+    build();
+    addEventListener("resize", build, { passive:true });
+    requestAnimationFrame(tick);
+  })();
+})();
+</script>
+<script>
+/* deep-link support: /LORE/MAP.html#star opens that node's card */
+(function(){
+  function strip(s){ return String(s||"").replace(/&middot;/g,"\u00b7").replace(/&mdash;/g,"\u2014"); }
+  window.addEventListener("load", function(){
+    var id = (location.hash||"").replace(/^#/,"").toLowerCase();
+    if(!id) return;
+    var targets = [].slice.call(document.querySelectorAll(".node,[data-node]"));
+    var btn = targets.filter(function(b){
+      var label = (b.getAttribute("aria-label")||"").toLowerCase();
+      var key   = (b.getAttribute("data-node")||"").toLowerCase();
+      return label === "open " + id || key === id || key.replace(/-/g,"") === id.replace(/-/g,"");
+    })[0];
+    if(btn) btn.click();
+  });
+})();
+</script>
+</body>
+</html>
