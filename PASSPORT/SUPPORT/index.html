@@ -1,0 +1,708 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0d001a">
+<title>support &middot; cafedreamr</title>
+<meta name="description" content="Our mission: that everyone who plays here should feel lighter than when they arrived. A place to unload heavy thoughts &mdash; why we built it, what the chimeras are really saying, and exactly what it costs to hold the realm open for everyone.">
+<meta property="og:title" content="support &middot; cafedreamr">
+<meta property="og:description" content="Leave lighter than you arrived. Our mission, the light we're keeping, and the honest numbers behind holding these rooms open for everyone.">
+<meta property="og:image" content="https://user.uploads.dev/file/7f01e5b2c2743ecad349e95084d6d421.jpg">
+<meta property="og:type" content="website">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%230d001a'/%3E%3Ccircle cx='8' cy='11.2' r='3' fill='%23ffd76a' opacity='.55'/%3E%3Ccircle cx='8' cy='11.2' r='1.3' fill='%23fff3c4'/%3E%3Cellipse cx='4.4' cy='7' rx='3.6' ry='1.7' fill='%23e8f4ff' opacity='.5' transform='rotate(40 8 9)'/%3E%3Cellipse cx='11.6' cy='7' rx='3.6' ry='1.7' fill='%23e8f4ff' opacity='.5' transform='rotate(-40 8 9)'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Klee+One:wght@400;600&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Vampiro+One&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   support — cafedreamr/SUPPORT/index.html
+   the mission page, the light page, and the honest bill.
+
+   EDIT SURFACE — everything that is a number, an address or a
+   word we might want to change lives in the SUPPORT object at the
+   bottom of this file (KOFI · HOME · MENU · GOAL · NOW · WEEKEND ·
+   PEOPLE · MATCH). the tables are written out in the markup so the
+   page reads with javascript off; the script only sums them (adding
+   up whatever is marked data-v) and prints the totals, so a total
+   can never drift from its rows.
+
+   tone law: no negative energy, no grudge, nobody measured and found
+   lacking — the whole point of the page is the opposite. the chimeras
+   are the argument, not the wound. yeshua is the light.
+   ============================================================ */
+:root{
+  --plum:#0d001a; --plum2:#1a002e; --plum3:#12001f;
+  --ink:#0b0b0e; --ink2:#141419; --ink3:#1b1b22;
+  --lime:#ccff00; --pink:#ff2d95; --cyan:#00e5ff;
+  --violet:#bf40bf; --violet2:#ee82ee; --purple:#9d71e4;
+  --purple2:#c0a6ff; --grape:#5b1a96;
+  --corn:#6495ed; --mint:#98fb98;
+  --cream:#e9e6de; --lav:#fff0f5; --dim:#a99fc4;
+  --gold:#ffd76a; --gold2:#fff3c4;
+  --line:rgba(255,255,255,.10);
+  --pline:rgba(157,113,228,.32);
+  --mono:'Space Mono', ui-monospace, monospace;
+  --disp:'Bebas Neue', impact, sans-serif;
+  --logo:'Vampiro One', cursive;
+  --body:'Klee One', system-ui, sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--plum); color:var(--lav); font-family:var(--body);
+  text-align:left; min-height:100vh; overflow-x:hidden;
+  -webkit-tap-highlight-color:transparent; -webkit-font-smoothing:antialiased;
+}
+[hidden]{display:none!important}
+a{color:inherit}
+
+/* ---------------- background ---------------- */
+.bg{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;
+  background:
+    radial-gradient(900px 640px at 50% -10%, rgba(255,215,106,.13), transparent 62%),
+    radial-gradient(820px 600px at 88% 12%, rgba(157,113,228,.20), transparent 64%),
+    radial-gradient(760px 620px at 6% 66%, rgba(0,229,255,.075), transparent 62%),
+    radial-gradient(700px 560px at 92% 96%, rgba(255,45,149,.10), transparent 62%),
+    linear-gradient(180deg,#150024 0%, var(--plum) 46%, #07000f 100%)}
+.bg .stars{position:absolute;inset:0;opacity:.55;
+  background-image:
+    radial-gradient(1.4px 1.4px at 12% 18%, rgba(255,255,255,.9), transparent),
+    radial-gradient(1.2px 1.2px at 74% 9%,  rgba(255,243,196,.85), transparent),
+    radial-gradient(1.6px 1.6px at 38% 41%, rgba(255,255,255,.7), transparent),
+    radial-gradient(1.1px 1.1px at 86% 55%, rgba(192,166,255,.8), transparent),
+    radial-gradient(1.3px 1.3px at 22% 76%, rgba(255,255,255,.65), transparent),
+    radial-gradient(1.2px 1.2px at 61% 88%, rgba(255,215,106,.7), transparent),
+    radial-gradient(1.1px 1.1px at 8% 52%,  rgba(255,255,255,.5), transparent),
+    radial-gradient(1.5px 1.5px at 93% 24%, rgba(255,255,255,.55), transparent);
+  animation:twinkle 7s ease-in-out infinite}
+@keyframes twinkle{0%,100%{opacity:.5}50%{opacity:.75}}
+.bg .glow{position:absolute;left:50%;top:52%;width:min(74vw,760px);aspect-ratio:1;
+  transform:translate(-50%,-50%);border-radius:50%;opacity:.5;
+  background:radial-gradient(circle, rgba(255,215,106,.13) 0%, rgba(255,196,84,.05) 42%, transparent 72%)}
+.bg .grain{position:absolute;inset:0;opacity:.5;mix-blend-mode:overlay;
+  background-image:radial-gradient(rgba(255,255,255,.055) 1px, transparent 1px);
+  background-size:3px 3px}
+.bg .scan{position:absolute;inset:0;opacity:.28;
+  background:repeating-linear-gradient(to bottom, rgba(255,255,255,.03) 0 1px, transparent 1px 3px)}
+.bg .floor{position:absolute;left:-25%;right:-25%;bottom:-6%;height:38%;
+  background:
+    repeating-linear-gradient(90deg, rgba(157,113,228,.16) 0 1px, transparent 1px 7%),
+    repeating-linear-gradient(0deg, rgba(157,113,228,.16) 0 1px, transparent 1px 34px);
+  transform:perspective(340px) rotateX(74deg); transform-origin:50% 100%;
+  -webkit-mask-image:linear-gradient(180deg,transparent,#000 64%);
+  mask-image:linear-gradient(180deg,transparent,#000 64%);opacity:.5}
+
+/* ---------------- shell ---------------- */
+.stage{position:relative;z-index:1;max-width:880px;margin:0 auto;padding:22px 16px 44px}
+
+.marquee{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;flex-wrap:wrap;
+  border:1px solid var(--pline);border-radius:16px 16px 6px 6px;
+  background:linear-gradient(180deg,rgba(157,113,228,.14),rgba(157,113,228,.03));
+  padding:13px 16px;position:relative;overflow:hidden}
+.marquee:before{content:"";position:absolute;left:0;right:0;top:0;height:2px;
+  background:linear-gradient(90deg,var(--gold),var(--purple),var(--cyan),var(--pink));opacity:.9}
+.mtitle{display:flex;align-items:baseline;gap:11px;flex-wrap:wrap;min-width:0;position:relative;z-index:1}
+.brand{font-family:var(--logo);font-size:28px;letter-spacing:.05em;color:var(--gold2);
+  white-space:nowrap;line-height:1.1;
+  text-shadow:0 0 12px rgba(255,215,106,.7), 0 0 40px rgba(255,196,84,.28), 2px 0 0 rgba(255,45,149,.35), -2px 0 0 rgba(0,229,255,.3)}
+.tag{font-family:var(--mono);font-size:9px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--dim);border:1px solid var(--line);border-radius:999px;padding:4px 9px;white-space:nowrap}
+.mact{display:flex;gap:8px;position:relative;z-index:1;flex-wrap:wrap}
+.pill{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--lav);text-decoration:none;border:1px solid var(--pline);border-radius:999px;
+  padding:8px 12px;white-space:nowrap;transition:.18s;background:rgba(13,0,26,.5);display:inline-block}
+.pill:hover,.pill:focus-visible{border-color:var(--purple2);color:var(--purple2);
+  box-shadow:0 0 16px rgba(192,166,255,.3);outline:none}
+.pill.hot{border-color:rgba(255,215,106,.55);color:var(--gold2);background:rgba(255,215,106,.07)}
+.pill.hot:hover,.pill.hot:focus-visible{border-color:var(--gold);color:#fff;
+  box-shadow:0 0 18px rgba(255,215,106,.34)}
+
+/* ---------------- hero ---------------- */
+.hero{position:relative;margin-top:26px;text-align:left}
+.kick{font-family:var(--mono);font-size:8.5px;letter-spacing:.26em;text-transform:uppercase;
+  color:var(--gold);margin:0 0 10px;display:flex;align-items:center;gap:9px}
+.kick:before{content:"";width:26px;height:1px;background:var(--gold);opacity:.6;flex:0 0 auto}
+.htitle{font-family:var(--disp);font-size:clamp(38px,8.4vw,76px);letter-spacing:.04em;line-height:.92;
+  margin:0 0 10px;color:var(--lav);text-shadow:0 0 34px rgba(255,215,106,.32)}
+.htitle em{font-style:normal;color:var(--gold2);text-shadow:0 0 30px rgba(255,215,106,.7)}
+.hsub{font-family:var(--mono);font-size:9.5px;letter-spacing:.19em;text-transform:uppercase;
+  color:var(--pink);margin:0 0 18px}
+.lede{font-size:15px;line-height:1.82;color:#ddd6e8;max-width:66ch;margin:0 0 14px}
+.lede b{color:var(--lav);font-weight:600}
+.lede i{color:var(--gold2);font-style:italic}
+.lede:last-of-type{margin-bottom:0}
+
+/* ---------------- verse ---------------- */
+.verse{margin:20px 0;padding:15px 17px;border-radius:11px;position:relative;
+  border:1px solid rgba(255,215,106,.24);
+  background:linear-gradient(180deg,rgba(255,215,106,.055),rgba(11,0,20,.5))}
+.verse:before{content:"\201C";position:absolute;left:9px;top:2px;font-size:44px;line-height:1;
+  color:rgba(255,215,106,.3);font-family:var(--disp)}
+.verse blockquote{margin:0;padding-left:24px;font-size:14.5px;line-height:1.78;color:var(--gold2);
+  font-style:italic}
+.verse figcaption{margin-top:9px;padding-left:24px;font-family:var(--mono);font-size:8.5px;
+  letter-spacing:.2em;text-transform:uppercase;color:var(--dim)}
+
+/* ---------------- sections ---------------- */
+.sec{margin-top:44px;position:relative}
+.snum{font-family:var(--mono);font-size:8.5px;letter-spacing:.26em;text-transform:uppercase;
+  color:var(--purple2);margin:0 0 7px;display:flex;align-items:center;gap:9px}
+.snum:before{content:"";width:18px;height:1px;background:var(--purple2);opacity:.55;flex:0 0 auto}
+.stitle{font-family:var(--disp);font-size:clamp(26px,5.2vw,42px);letter-spacing:.045em;line-height:1;
+  margin:0 0 6px;color:var(--lav)}
+.ssub{font-family:var(--mono);font-size:9px;letter-spacing:.17em;text-transform:uppercase;
+  color:var(--dim);margin:0 0 17px}
+.body p{font-size:15px;line-height:1.85;color:#d6cfe2;max-width:68ch;margin:0 0 14px}
+.body p:last-child{margin-bottom:0}
+.body b{color:var(--lav);font-weight:600}
+.body .warm{color:var(--gold2)}
+.body .light{color:#fff}
+.body em{color:var(--violet2);font-style:italic}
+ul.tick{list-style:none;margin:0 0 16px;padding:0;display:flex;flex-direction:column;gap:9px}
+ul.tick li{position:relative;padding-left:23px;font-size:14.5px;line-height:1.75;color:#d6cfe2;max-width:66ch}
+ul.tick li:before{content:"";position:absolute;left:2px;top:.62em;width:7px;height:7px;border-radius:50%;
+  background:var(--gold);box-shadow:0 0 10px rgba(255,215,106,.8)}
+
+/* the firefly ornament */
+.ffwrap{margin:24px 0 6px;display:flex;align-items:center;gap:20px;flex-wrap:wrap;
+  border:1px solid var(--line);border-radius:13px;padding:16px 18px;
+  background:linear-gradient(180deg,rgba(255,215,106,.05),rgba(11,0,20,.45))}
+.ffwrap p{margin:0;font-size:14.5px;line-height:1.8;color:#d6cfe2;flex:1 1 300px;max-width:60ch}
+.ff{width:104px;height:104px;flex:0 0 auto;overflow:visible}
+.ff .wl,.ff .wr{transform-box:view-box;transform-origin:16px 12.9px}
+.ff .wl{animation:ffl 1.15s ease-in-out infinite}
+.ff .wr{animation:ffr 1.15s ease-in-out infinite}
+.ff .ffhalo{animation:ffg 2.7s ease-in-out infinite}
+@keyframes ffl{0%,100%{transform:rotate(42deg)}50%{transform:rotate(53deg)}}
+@keyframes ffr{0%,100%{transform:rotate(-42deg)}50%{transform:rotate(-53deg)}}
+@keyframes ffg{0%,100%{opacity:.5;transform:scale(.94)}44%{opacity:1;transform:scale(1.14)}70%{opacity:.62;transform:scale(1)}}
+
+/* ---------------- costs ---------------- */
+.panel{margin-top:16px;border:1px solid var(--pline);border-radius:13px;overflow:hidden;
+  background:linear-gradient(180deg,rgba(157,113,228,.08),rgba(11,0,20,.62));
+  box-shadow:inset 0 0 60px rgba(0,0,0,.5)}
+.phead{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;
+  padding:12px 15px;border-bottom:1px solid var(--line);
+  background:linear-gradient(180deg,rgba(157,113,228,.14),transparent)}
+.phead h3{margin:0;font-family:var(--disp);font-size:21px;letter-spacing:.06em;color:var(--lav)}
+.phead .sub{font-family:var(--mono);font-size:8.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim)}
+.scalenote{font-family:var(--mono);font-size:9px;letter-spacing:.11em;line-height:1.9;
+  text-transform:uppercase;color:var(--purple2);padding:10px 15px 2px;margin:0}
+.crow{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;
+  padding:10px 15px;border-top:1px solid rgba(255,255,255,.055)}
+.crow:first-of-type{border-top:none}
+.cl{min-width:0}
+.cl b{display:block;font-size:14px;font-weight:600;color:var(--lav);line-height:1.45}
+.cl i{display:block;font-style:normal;font-size:12.5px;line-height:1.6;color:var(--dim);margin-top:2px}
+.cv{font-family:var(--mono);font-size:12.5px;font-weight:700;color:var(--gold2);
+  white-space:nowrap;padding-top:2px}
+.ctot{display:flex;align-items:baseline;justify-content:space-between;gap:14px;
+  padding:12px 15px;border-top:1px solid var(--pline);
+  background:linear-gradient(180deg,rgba(255,215,106,.05),transparent)}
+.ctot span{font-family:var(--mono);font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim)}
+.ctot b{font-family:var(--mono);font-size:19px;letter-spacing:.02em;color:var(--gold);font-weight:700}
+.ctot.here b{color:var(--lime)}
+.grand{margin-top:20px;border:1px solid rgba(255,215,106,.4);border-radius:13px;padding:16px 17px;
+  background:linear-gradient(180deg,rgba(255,215,106,.08),rgba(11,0,20,.55))}
+.grand .k{font-family:var(--mono);font-size:8.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);margin:0 0 7px}
+.grand .n{font-family:var(--disp);font-size:clamp(30px,7vw,52px);letter-spacing:.04em;line-height:1;
+  color:var(--gold2);margin:0 0 6px;text-shadow:0 0 30px rgba(255,215,106,.45)}
+.grand p{margin:0;font-size:14px;line-height:1.78;color:#d6cfe2;max-width:62ch}
+.fine{margin-top:14px;font-family:var(--mono);font-size:9.5px;letter-spacing:.05em;line-height:2;
+  color:var(--dim);max-width:70ch}
+.fine b{color:var(--lav);font-weight:700}
+
+/* ---------------- gift ---------------- */
+.gift{margin-top:22px;border:1px solid rgba(255,215,106,.45);border-radius:16px;padding:22px 20px;
+  position:relative;overflow:hidden;text-align:center;
+  background:
+    radial-gradient(560px 300px at 50% -20%, rgba(255,215,106,.16), transparent 70%),
+    linear-gradient(180deg,rgba(255,215,106,.07),rgba(11,0,20,.6))}
+.gift:before{content:"";position:absolute;left:0;right:0;top:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:.85}
+.gift h3{margin:0 0 6px;font-family:var(--disp);font-size:clamp(24px,5vw,36px);letter-spacing:.05em;color:var(--gold2)}
+.gift p{margin:0 auto 18px;font-size:14.5px;line-height:1.8;color:#ddd6e8;max-width:58ch}
+.giftbtn{display:inline-flex;align-items:center;justify-content:center;gap:11px;
+  font-family:var(--mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;font-weight:700;
+  color:#1a0030;text-decoration:none;border-radius:999px;padding:15px 26px;
+  background:linear-gradient(180deg,var(--gold2),var(--gold));border:1px solid rgba(255,255,255,.4);
+  box-shadow:0 0 30px rgba(255,215,106,.4), 0 10px 30px rgba(0,0,0,.45);transition:.18s}
+.giftbtn:hover,.giftbtn:focus-visible{transform:translateY(-1px);
+  box-shadow:0 0 44px rgba(255,215,106,.62), 0 12px 34px rgba(0,0,0,.5);outline:none}
+.giftbtn .hb{font-size:15px;line-height:1}
+.gsmall{margin-top:13px!important;font-family:var(--mono);font-size:8.5px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--dim)!important}
+.gsat{margin-top:16px;font-size:14px;line-height:1.82;color:#d6cfe2;max-width:62ch;text-align:left;
+  border-top:1px dashed var(--line);padding-top:15px}
+.gsat b{color:var(--gold2)}
+
+/* what a gift becomes */
+.match{margin-top:16px;display:grid;grid-template-columns:repeat(auto-fill,minmax(238px,1fr));gap:10px}
+.mcard{border:1px solid var(--line);border-radius:11px;padding:12px 13px;
+  background:linear-gradient(180deg,rgba(157,113,228,.07),rgba(11,0,20,.5))}
+.mcard b{display:block;font-family:var(--mono);font-size:15px;letter-spacing:.02em;
+  color:var(--lime);margin-bottom:5px;font-weight:700}
+.mcard span{display:block;font-size:13px;line-height:1.65;color:#cfc8dd}
+.mcard.big{border-color:rgba(255,215,106,.42);background:linear-gradient(180deg,rgba(255,215,106,.08),rgba(11,0,20,.5))}
+.mcard.big b{color:var(--gold2)}
+
+/* ---------------- footer ---------------- */
+.foot{margin-top:46px;padding-top:18px;border-top:1px solid var(--line);
+  font-family:var(--mono);font-size:9px;letter-spacing:.1em;line-height:2.1;color:var(--dim);text-align:center}
+.foot a{color:var(--purple2);text-decoration:none}
+.foot a:hover{color:var(--gold)}
+.foot .bless{display:block;margin-top:14px;font-size:9px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--gold);opacity:.85}
+
+/* the floating support pill */
+.floaty{position:fixed;right:16px;bottom:16px;z-index:40;
+  font-family:var(--mono);font-size:9.5px;letter-spacing:.15em;text-transform:uppercase;font-weight:700;
+  color:#1a0030;text-decoration:none;border-radius:999px;padding:12px 17px;
+  background:linear-gradient(180deg,var(--gold2),var(--gold));border:1px solid rgba(255,255,255,.4);
+  box-shadow:0 0 24px rgba(255,215,106,.4), 0 8px 24px rgba(0,0,0,.5);
+  opacity:0;transform:translateY(14px);pointer-events:none;transition:.28s}
+.floaty.on{opacity:1;transform:none;pointer-events:auto}
+.floaty:hover{box-shadow:0 0 34px rgba(255,215,106,.6), 0 10px 28px rgba(0,0,0,.5)}
+
+/* ---------------- responsive ---------------- */
+@media (max-width:720px){
+  .stage{padding:16px 13px 36px}
+  .brand{font-size:23px}
+  .lede,.body p,ul.tick li,.gift p,.ffwrap p{font-size:14px}
+  .sec{margin-top:36px}
+  .ff{width:78px;height:78px}
+  .giftbtn{width:100%;padding:14px 18px;font-size:11px}
+  .match{grid-template-columns:1fr}
+  .floaty{right:12px;bottom:12px;padding:11px 15px}
+}
+@media (prefers-reduced-motion:reduce){
+  .bg .stars{animation:none}
+  .ff .wl,.ff .wr,.ff .ffhalo{animation:none!important}
+  .floaty{transition:none}
+}
+</style>
+</head>
+<body>
+
+<div class="bg" aria-hidden="true">
+  <div class="glow"></div><div class="stars"></div><div class="floor"></div>
+  <div class="scan"></div><div class="grain"></div>
+</div>
+
+<main class="stage">
+
+  <header class="marquee">
+    <div class="mtitle">
+      <span class="brand">support</span>
+      <span class="tag">cafedreamr &middot; the light we keep</span>
+    </div>
+    <nav class="mact" aria-label="elsewhere">
+      <a class="pill" href="https://www.cafedreamr.art/">&larr; the terminal</a>
+      <a class="pill" href="https://www.cafedreamr.art/MENU/">the menu</a>
+      <a class="pill hot" id="kofiTop" href="https://ko-fi.com/cafedreamr" target="_blank" rel="noopener noreferrer">&#9829; gift a coffee</a>
+    </nav>
+  </header>
+
+  <!-- ============ our mission ============ -->
+  <section class="hero">
+    <p class="kick">our mission</p>
+    <h1 class="htitle">leave <em>lighter</em><br>than you arrived</h1>
+    <p class="hsub">a place to unload heavy thoughts</p>
+
+    <p class="lede">Every part of this realm &mdash; the counter, the rooms, the music, the small glowing machines &mdash; is built for exactly one reason. That everyone who plays here should feel <b>lighter</b> when they leave than when they walked in. Not distracted. Not entertained until they forget. Lighter: the way you feel when you finally set something heavy down, and someone kind takes it from you and says <i>i&rsquo;ve got it from here</i>.</p>
+    <p class="lede">That is the whole mission. Everything else on this site is in service to it.</p>
+
+    <figure class="verse">
+      <blockquote>Come unto me, all ye that labour and are heavy laden, and I will give you rest. Take my yoke upon you, and learn of me; for I am meek and lowly in heart: and ye shall find rest unto your souls. For my yoke is easy, and my burden is light.</blockquote>
+      <figcaption>Matthew 11:28&ndash;30</figcaption>
+    </figure>
+  </section>
+
+  <!-- ============ 01 the intention ============ -->
+  <section class="sec" id="intention">
+    <p class="snum">01 &middot; the intention</p>
+    <h2 class="stitle">why we&rsquo;re allowed to promise that</h2>
+    <p class="ssub">we didn&rsquo;t invent this idea &mdash; we&rsquo;re following it</p>
+
+    <div class="body">
+      <p>We want to be clear about where the idea came from, because it isn&rsquo;t ours.</p>
+      <p><b>Yeshua &mdash; Jesus Christ &mdash; said plainly what he wanted for everyone on earth:</b> to feel light, and not to carry the burdens of daily life around in their heart. To feel <span class="warm">joy</span> and not dissatisfaction. Not on a good day. Every day. For everybody &mdash; no exceptions, no entrance requirements, nobody standing at the door being measured first.</p>
+      <p>So when this realm says <em>come in and put it down</em>, we aren&rsquo;t being poetic. We&rsquo;re repeating him. The cafe is a small, warm room built in the shape of that promise &mdash; and if it ever stops feeling like that, then something here has gone wrong and we want you to tell us.</p>
+      <p>Everything you find in this place is aimed at that: the music you can leave running, the rooms you can wander without being asked a single question, the characters who are simply <b>glad you came</b>. You are never required to perform, to be interesting, to be fine.</p>
+    </div>
+
+    <figure class="verse">
+      <blockquote>Peace I leave with you, my peace I give unto you: not as the world giveth, give I unto you. Let not your heart be troubled, neither let it be afraid.</blockquote>
+      <figcaption>John 14:27</figcaption>
+    </figure>
+
+    <figure class="verse">
+      <blockquote>Casting all your care upon him; for he careth for you.</blockquote>
+      <figcaption>1 Peter 5:7</figcaption>
+    </figure>
+
+    <figure class="verse">
+      <blockquote>He healeth the broken in heart, and bindeth up their wounds.</blockquote>
+      <figcaption>Psalm 147:3</figcaption>
+    </figure>
+  </section>
+
+  <!-- ============ 02 the chimeras ============ -->
+  <section class="sec" id="chimeras">
+    <p class="snum">02 &middot; what the chimeras are saying</p>
+    <h2 class="stitle">nobody here is a defect</h2>
+    <p class="ssub">the hybrid animals, the ears, the tails &mdash; and the truth they stand in for</p>
+
+    <div class="body">
+      <p>In this story there are <b>chimeras</b>: hybrid animals who were made into humans &mdash; some with animal ears, some with tails, some with both. The world that made them called them experiments. It looked at them, measured them against something, and quietly decided they had come out wrong.</p>
+      <p>They are not decoration. They are the <span class="warm">argument</span>.</p>
+      <p>Because this is what the chimeras are standing in for, and it is true for every single person reading this page:</p>
+      <ul class="tick">
+        <li><b>No human being on earth is perfect.</b> Not one. The polished ones, the calm ones, the ones who look like they got it right &mdash; they have their own trials, and they carry them the same way you carry yours.</li>
+        <li><b>Everyone goes through trials.</b> It does not matter what any of us has been through, how heavy the year was, or how much of it we are still carrying around. Nobody is exempt, and nobody is being graded on how well they hid it.</li>
+        <li><b>No matter what we look like, and no matter what we feel like</b> &mdash; on a good morning or a bad one &mdash; it does not change the way Yeshua sees us. Not by a single degree. Man looks at the outward appearance; the Lord looks at the heart.</li>
+      </ul>
+      <p>The world will spend your whole life trying to convince you that you are defective &mdash; that something is missing, that you were assembled wrong, that you are a copy of a copy of a copy. That voice is loud and it is everywhere and it is <b>wrong</b>.</p>
+      <p><span class="warm">Yeshua says: you are my jewel.</span> Not a stone among stones. Not a spare part. Precious diamonds &mdash; worth more to him than anything ever dug out of the ground, and he says it the way a person speaks about something they would never, ever sell.</p>
+    </div>
+
+    <figure class="verse">
+      <blockquote>And they shall be mine, saith the LORD of hosts, in that day when I make up my jewels; and I will spare them, as a man spareth his own son that serveth him.</blockquote>
+      <figcaption>Malachi 3:17</figcaption>
+    </figure>
+
+    <figure class="verse">
+      <blockquote>For the LORD seeth not as man seeth; for man looketh on the outward appearance, but the LORD looketh on the heart.</blockquote>
+      <figcaption>1 Samuel 16:7</figcaption>
+    </figure>
+
+    <div class="body">
+      <p>And then comes the part that changes everything.</p>
+      <p>When he dwells inside a person, he makes them <b>new</b>. Not improved. Not patched. Not tolerated while they work on themselves. <span class="light">New.</span> If there was darkness in you, it is not there any more &mdash; it is finished, it is gone, it is not the thing he is looking at when he looks at you. God does not see a dim little creature who still needs a lot of work. He sees <span class="warm">his own precious light</span>.</p>
+      <p>Like the lightning bug. A tiny, ordinary creature that carries its own lamp &mdash; and goes on glowing. In a field, on a warm night, when everything around it has gone grey, it does not argue with the dark. It just glows, because that is what it was made to do.</p>
+      <p>That is you. That is the whole design.</p>
+    </div>
+
+    <div class="ffwrap">
+      <svg class="ff" viewBox="0 0 32 32" role="img" aria-label="a firefly, carrying its own small light">
+        <defs>
+          <linearGradient id="ffw" x1="1" y1="0" x2="0" y2="0">
+            <stop offset="0" stop-color="#fffdf4" stop-opacity=".8"/>
+            <stop offset=".34" stop-color="#cdf0ff" stop-opacity=".55"/>
+            <stop offset=".68" stop-color="#ffd6f4" stop-opacity=".45"/>
+            <stop offset="1" stop-color="#dcc9ff" stop-opacity=".3"/>
+          </linearGradient>
+          <radialGradient id="ffc">
+            <stop offset="0" stop-color="#fff8da" stop-opacity=".95"/>
+            <stop offset=".45" stop-color="#ffefb2" stop-opacity=".5"/>
+            <stop offset="1" stop-color="#ffdf90" stop-opacity="0"/>
+          </radialGradient>
+          <radialGradient id="ffh">
+            <stop offset="0" stop-color="#ffe7a0" stop-opacity=".5"/>
+            <stop offset=".32" stop-color="#ffd272" stop-opacity=".2"/>
+            <stop offset=".74" stop-color="#ffc254" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+        <circle class="ffhalo" cx="16" cy="17" r="15" fill="url(#ffh)"/>
+        <ellipse class="wl" cx="10.75" cy="12.9" rx="5" ry="3.4" fill="url(#ffw)" stroke="rgba(255,250,238,.7)" stroke-width=".45" transform="rotate(42 16 12.9)"/>
+        <ellipse class="wr" cx="21.25" cy="12.9" rx="5" ry="3.4" fill="url(#ffw)" stroke="rgba(255,250,238,.7)" stroke-width=".45" transform="rotate(-42 16 12.9)"/>
+        <path fill="#322745" d="M16 11.4 C18.6 12.6 19.0 15.4 18.5 17.8 C18.2 19.7 17.6 21.2 16.4 22.3 C16.15 22.55 15.85 22.55 15.6 22.3 C14.4 21.2 13.8 19.7 13.5 17.8 C13.0 15.4 13.4 12.6 16 11.4 Z"/>
+        <path fill="none" stroke="rgba(255,246,212,.8)" stroke-width=".68" stroke-linecap="round" d="M15.2 10.4 C13.9 9.2 12.5 8.2 11.1 7.7"/>
+        <path fill="none" stroke="rgba(255,246,212,.8)" stroke-width=".68" stroke-linecap="round" d="M16.8 10.4 C18.1 9.2 19.5 8.2 20.9 7.7"/>
+        <circle fill="#322745" cx="16" cy="11.2" r="1.6"/>
+        <circle cx="16" cy="18.6" r="2.2" fill="url(#ffc)"/>
+      </svg>
+      <p>This is the firefly that follows your cursor around the realm. It is here for a reason: it is the smallest, plainest picture we have of what Yeshua does with a person who lets him in. You do not have to be big. You do not have to be bright on your own. You only have to be <b>his</b> &mdash; and then the light is not something you have to manufacture, because it is living in you.</p>
+    </div>
+
+    <figure class="verse">
+      <blockquote>Therefore if any man be in Christ, he is a new creature: old things are passed away; behold, all things are become new.</blockquote>
+      <figcaption>2 Corinthians 5:17</figcaption>
+    </figure>
+
+    <figure class="verse">
+      <blockquote>Ye are the light of the world. A city that is set on an hill cannot be hid.</blockquote>
+      <figcaption>Matthew 5:14</figcaption>
+    </figure>
+  </section>
+
+  <!-- ============ 03 free ============ -->
+  <section class="sec" id="free">
+    <p class="snum">03 &middot; no longer liable</p>
+    <h2 class="stitle">the account is closed</h2>
+    <p class="ssub">not suspended &middot; not on probation &middot; closed</p>
+
+    <div class="body">
+      <p><b>We are not guilty.</b></p>
+      <p>Jesus Christ died in our place. Not as an example, not as a gesture, not as a general statement about being nicer to each other &mdash; <span class="warm">in our place</span>, the way one person stands in for another when the fine has to be paid and the one who owes it cannot possibly pay it. He paid it. It is paid.</p>
+      <p>And when we are baptised, we surrender our old life to God, so that Yeshua can take our place. Buried with him; raised with him; walking in newness of life. The old account is not suspended and we are not on probation pending good behaviour. The old account is <b>closed</b>, and the new one is not ours to keep in order &mdash; it is his.</p>
+      <p>So: we are no longer liable. No longer judged. <span class="light">Free in Yeshua</span> &mdash; free the way a person is free who has walked out of a courtroom with nothing left owing, and no file with their name on it.</p>
+      <p>Now we live in him, and in his kingdom &mdash; which he shares with utter love and devotion to those who love him. Not as servants kept at a polite distance in the hallway. As <b>family at the table</b>, with a plate already set out.</p>
+    </div>
+
+    <figure class="verse">
+      <blockquote>There is therefore now no condemnation to them which are in Christ Jesus, who walk not after the flesh, but after the Spirit.</blockquote>
+      <figcaption>Romans 8:1</figcaption>
+    </figure>
+
+    <figure class="verse">
+      <blockquote>I am crucified with Christ: nevertheless I live; yet not I, but Christ liveth in me: and the life which I now live in the flesh I live by the faith of the Son of God, who loved me, and gave himself for me.</blockquote>
+      <figcaption>Galatians 2:20</figcaption>
+    </figure>
+
+    <figure class="verse">
+      <blockquote>As far as the east is from the west, so far hath he removed our transgressions from us.</blockquote>
+      <figcaption>Psalm 103:12</figcaption>
+    </figure>
+
+    <figure class="verse">
+      <blockquote>If the Son therefore shall make you free, ye shall be free indeed.</blockquote>
+      <figcaption>John 8:36</figcaption>
+    </figure>
+  </section>
+
+  <!-- ============ 04 authority ============ -->
+  <section class="sec" id="authority">
+    <p class="snum">04 &middot; what he left behind</p>
+    <h2 class="stitle">he handed us his authority</h2>
+    <p class="ssub">so speak into the air &mdash; he is listening</p>
+
+    <div class="body">
+      <p>And when he left the earth, he did not leave us empty-handed. He left us <b>his authority</b>. We inherited it. That is not a metaphor and it is not a small thing &mdash; it is the reason a person who has nothing can still stand up and change the shape of their day.</p>
+      <p>So now we <span class="warm">speak things into the air</span>, and he hears us. He creates the things we ask for &mdash; or he helps us, quietly, in ways we only notice afterwards &mdash; and where there was a wall there is suddenly a <b>new door of opportunity</b> waiting, already open, that we would have sworn was not there last week.</p>
+      <p>He makes all things new. Nothing is impossible for us with Jesus Christ leading the way. Not because we are impressive &mdash; because <em>he</em> is, and he has decided to take us with him.</p>
+    </div>
+
+    <figure class="verse">
+      <blockquote>And Jesus came and spake unto them, saying, All power is given unto me in heaven and in earth. Go ye therefore&hellip;</blockquote>
+      <figcaption>Matthew 28:18&ndash;19</figcaption>
+    </figure>
+
+    <figure class="verse">
+      <blockquote>Verily, verily, I say unto you, He that believeth on me, the works that I do shall he do also; and greater works than these shall he do; because I go unto my Father.</blockquote>
+      <figcaption>John 14:12</figcaption>
+    </figure>
+
+    <figure class="verse">
+      <blockquote>For verily I say unto you, That whosoever shall say unto this mountain, Be thou removed, and be thou cast into the sea; and shall not doubt in his heart, but shall believe that those things which he saith shall come to pass; he shall have whatsoever he saith.</blockquote>
+      <figcaption>Mark 11:23</figcaption>
+    </figure>
+
+    <figure class="verse">
+      <blockquote>But Jesus beheld them, and said unto them, With men this is impossible; but with God all things are possible.</blockquote>
+      <figcaption>Matthew 19:26</figcaption>
+    </figure>
+  </section>
+
+  <!-- ============ 05 the bill ============ -->
+  <section class="sec" id="costs">
+    <p class="snum">05 &middot; the honest part</p>
+    <h2 class="stitle">what it costs to keep the light on</h2>
+    <p class="ssub">no markup &middot; no invented numbers &middot; here is the actual bill</p>
+
+    <div class="body">
+      <p>The realm is small enough right now to run <b>almost free</b>. That is the honest truth, and we are not going to dress it up to make the ask look bigger than it is.</p>
+      <p>But we don&rsquo;t want it to stay small. We want these rooms to hold as many members and visitors as possible &mdash; a whole weekend&rsquo;s worth of people, all arriving at once, nobody turned away &mdash; <b>without the doors jamming, without the music cutting out, and without anyone losing what they were in the middle of</b>.</p>
+      <p>We want this to be your favourite place to chill out and lounge: somewhere you can learn cool new things about yourself, and about how to respect and love each other. It turns out that is a modest dream with a very un-modest electricity bill. So here it is, line by line.</p>
+    </div>
+
+    <div class="panel">
+      <div class="phead">
+        <h3>keeping the lights on today</h3>
+        <span class="sub">monthly &middot; what the realm already costs</span>
+      </div>
+      <div class="crow"><div class="cl"><b>the domain &middot; cafedreamr.art</b><i>renewed once a year &mdash; $30 a year, worked out monthly</i></div><div class="cv" data-v="2.5">$2.50</div></div>
+      <div class="crow"><div class="cl"><b>static hosting + CDN</b><i>the pages themselves, served fast and cached close to wherever you are</i></div><div class="cv" data-v="8">$8</div></div>
+      <div class="crow"><div class="cl"><b>asset storage</b><i>the art, the music, the saved rooms &mdash; about 40&nbsp;GB and always growing</i></div><div class="cv" data-v="3">$3</div></div>
+      <div class="crow"><div class="cl"><b>letters (email)</b><i>replies from the counter, sign-in links, notices that actually arrive</i></div><div class="cv" data-v="6">$6</div></div>
+      <div class="crow"><div class="cl"><b>backups + uptime watch</b><i>so a bad night is never a lost night, and we hear about a crash before you do</i></div><div class="cv" data-v="7">$7</div></div>
+      <div class="crow"><div class="cl"><b>software</b><i>fonts, design and audio tools &mdash; the things the realm is drawn and written with</i></div><div class="cv" data-v="22">$22</div></div>
+      <div class="ctot"><span>today, all together</span><b data-total="today">$48.50</b></div>
+    </div>
+
+    <div class="panel">
+      <div class="phead">
+        <h3>the weekend we&rsquo;re building for</h3>
+        <span class="sub">monthly &middot; at full size, on a busy weekend</span>
+      </div>
+      <p class="scalenote">the target: about 50,000 visits across a weekend &middot; up to 4,000 people in the rooms at the same time &middot; roughly 6&nbsp;TB of pages, art and music served in a month</p>
+      <div class="crow"><div class="cl"><b>app servers &mdash; four, autoscaling</b><i>the cafe doors. they wake up on friday night and go back to sleep on monday morning, so we don&rsquo;t pay for a full house on a tuesday</i></div><div class="cv" data-v="96">$96</div></div>
+      <div class="crow"><div class="cl"><b>database + replicas</b><i>every stamp, note, room and save &mdash; with a live spare copy already on its feet if one falls</i></div><div class="cv" data-v="60">$60</div></div>
+      <div class="crow"><div class="cl"><b>the realtime lounge</b><i>the people who are here right now: presence, chat, shared rooms, all kept in step</i></div><div class="cv" data-v="40">$40</div></div>
+      <div class="crow"><div class="cl"><b>object storage &mdash; 2&nbsp;TB</b><i>art, music, photographs and saved rooms, kept safe and served on demand</i></div><div class="cv" data-v="24">$24</div></div>
+      <div class="crow"><div class="cl"><b>bandwidth &amp; CDN &mdash; ~6&nbsp;TB</b><i>the line that breaks first when we&rsquo;re short. a busy saturday, paid for honestly instead of rationed</i></div><div class="cv" data-v="60">$60</div></div>
+      <div class="crow"><div class="cl"><b>search + feeds</b><i>so you can find a room, a note, or a person again a week later</i></div><div class="cv" data-v="25">$25</div></div>
+      <div class="crow"><div class="cl"><b>letters (transactional email)</b><i>welcome letters, password resets, notices &mdash; delivered reliably instead of landing in spam</i></div><div class="cv" data-v="15">$15</div></div>
+      <div class="crow"><div class="cl"><b>image + audio processing</b><i>every upload resized, every song transcoded once on our side instead of on your poor phone</i></div><div class="cv" data-v="30">$30</div></div>
+      <div class="crow"><div class="cl"><b>backups, snapshots, disaster recovery</b><i>so that a broken update costs us an hour and not the whole archive</i></div><div class="cv" data-v="18">$18</div></div>
+      <div class="crow"><div class="cl"><b>monitoring, logging, uptime</b><i>watching the rooms from outside, all night, so nobody has to be awake for it</i></div><div class="cv" data-v="25">$25</div></div>
+      <div class="crow"><div class="cl"><b>moderation + abuse protection</b><i>keeping the room kind without a person watching every single second &mdash; so it stays safe to say you&rsquo;re having a hard week</i></div><div class="cv" data-v="30">$30</div></div>
+      <div class="ctot"><span>the roof and the electricity</span><b data-total="weekend">$423</b></div>
+    </div>
+
+    <div class="panel">
+      <div class="phead">
+        <h3>and the people</h3>
+        <span class="sub">monthly &middot; the real number, honestly</span>
+      </div>
+      <p class="scalenote">servers don&rsquo;t answer the mail at 2am. people do &mdash; and we would rather pay people than pretend it runs itself</p>
+      <div class="crow"><div class="cl"><b>two community hosts</b><i>about 12 hours each a week at $20 an hour &mdash; the ones who answer the mail, greet the new people, sit with whoever is having the worst night, and keep the room kind</i></div><div class="cv" data-v="2080">$2,080</div></div>
+      <div class="crow"><div class="cl"><b>a part-time developer</b><i>about 20 hours a week at $25 an hour &mdash; fixing things, building the next room, keeping the doors open</i></div><div class="cv" data-v="2000">$2,000</div></div>
+      <div class="crow"><div class="cl"><b>the crafter &mdash; fashion + accessories</b><i>materials plus $28 an hour, making the clothing and the little things real. every piece is priced at what it actually costs to make &mdash; see the menu</i></div><div class="cv" data-v="650">$650</div></div>
+      <div class="crow"><div class="cl"><b>artwork</b><i>the cards, the zine, the packaging &mdash; paid for, because art is work and someone made it</i></div><div class="cv" data-v="400">$400</div></div>
+      <div class="crow"><div class="cl"><b>postage, packing, samples</b><i>mailers, tissue, tape, labels, and the prototypes that don&rsquo;t make it</i></div><div class="cv" data-v="180">$180</div></div>
+      <div class="crow"><div class="cl"><b>the boring, necessary legal</b><i>terms, privacy, a DMCA agent, and being a proper little entity instead of a person&rsquo;s name in a text file</i></div><div class="cv" data-v="85">$85</div></div>
+      <div class="ctot"><span>the people</span><b data-total="people">$5,395</b></div>
+    </div>
+
+    <div class="grand">
+      <p class="k">the whole realm, at that size</p>
+      <p class="n" data-total="all">$5,866.50</p>
+      <p>That is the full, unfiltered number &mdash; the roof, the electricity and the people, all at once. It is a lot, and we would rather show it to you than quietly round it off.</p>
+    </div>
+
+    <p class="fine">
+      <b>this month&rsquo;s goal is not the whole number.</b> The next step is the roof and the electricity plus <b>one</b> community host &mdash; enough that the realm stays up through a busy weekend and that a real person is there to answer you. That lands at about <b>$1,500 a month</b>, and that is what the ko-fi goal is set to.<br><br>
+      <b>how the money arrives:</b> ko-fi takes a 5% service fee on shop sales and commissions; card processors take about 2.9% + 30&cent; a transaction, and a card issued outside the US adds about 1.5%. We do not add a cent on top of our own costs to cover it &mdash; the fees simply come out of the gift, which is why a small gift doesn&rsquo;t stretch quite as far as it looks.<br><br>
+      <b>what we promise:</b> no markup on anything we make, and no number on this page that we invented to look good. Where a figure is an estimate (a busy weekend is a guess, and a friendly one) we say so. When a real bill comes in and differs, we change the number on this page and tell you why.<br><br>
+      <b>and what we don&rsquo;t do:</b> no paywalls, no locked rooms, no &ldquo;premium&rdquo; version of feeling better. The realm is free and will stay free. Nobody&rsquo;s ability to be here, or to be cared about, will ever depend on whether they could give anything.
+    </p>
+  </section>
+
+  <!-- ============ 06 the gift ============ -->
+  <section class="sec" id="gift">
+    <p class="snum">06 &middot; if you&rsquo;d like to help</p>
+    <h2 class="stitle">put a coin in the tin</h2>
+    <p class="ssub">entirely up to you &mdash; and completely unrelated to whether you belong here</p>
+
+    <div class="gift">
+      <h3>gift a coffee</h3>
+      <p>If this place has already made a day of yours lighter, and you have something to spare, you can drop a gift in the tin through ko-fi. Any amount. One-off or monthly, whichever suits your life. It goes into the one fund that holds the realm up.</p>
+      <a class="giftbtn" id="kofiMain" href="https://ko-fi.com/cafedreamr" target="_blank" rel="noopener noreferrer">
+        <span class="hb">&#9829;</span> gift a coffee on ko-fi <span aria-hidden="true">&rarr;</span>
+      </a>
+      <p class="gsmall">opens ko-fi in a new tab &middot; no account needed</p>
+      <p class="gsat"><b>And if money isn&rsquo;t yours to give right now &mdash; genuinely, that is fine, and we mean it.</b> You have already given us the better thing by being here at all. Come in. Sit down. Bring a friend who needs a quieter corner of the internet. Say something kind to a stranger this week. That is not a consolation prize and it is not a polite way of saying &ldquo;go away&rdquo; &mdash; it is the point of the whole realm, and it was never once going to be measured in money.</p>
+    </div>
+
+    <h3 class="ssub" style="margin-top:26px;color:var(--gold);letter-spacing:.22em">what a gift becomes</h3>
+    <div class="match">
+      <div class="mcard"><b>$5</b><span>a week of the domain, or one actual coffee for whoever is answering the counter at two in the morning.</span></div>
+      <div class="mcard"><b>$12</b><span>a month of keeping every piece of art and music safe, with a spare copy.</span></div>
+      <div class="mcard"><b>$25</b><span>a month of search and feeds &mdash; so nobody wanders off and stays lost.</span></div>
+      <div class="mcard"><b>$60</b><span>one line of the weekend: the bandwidth that carries an entire busy saturday.</span></div>
+      <div class="mcard"><b>$150</b><span>a whole weekend of the realm staying up while everyone arrives at once.</span></div>
+      <div class="mcard"><b>$400</b><span>a month of the doors, the database and the lounge, all standing together.</span></div>
+      <div class="mcard"><b>$1,040</b><span>a fortnight of a community host&rsquo;s hours &mdash; a real person, answering real people.</span></div>
+      <div class="mcard big"><b>$1,500</b><span>a whole month of the next step: the realm held open at size, with someone kind on duty. this is the goal.</span></div>
+    </div>
+
+    <div class="body" style="margin-top:22px">
+      <p>Every gift &mdash; a tip, a membership, a commission from <a href="https://www.cafedreamr.art/MENU/" style="color:var(--gold2)">the menu</a> &mdash; goes into the same fund. Ko-fi can only carry one goal at a time, so the goal lives there and the details live here, and both of them point the same way: keeping a soft, safe, generous place on the internet open for as many people as want to come in.</p>
+      <p>Thank you. Not for the money &mdash; for caring about the kind of place this is. <span class="warm">Shalom.</span></p>
+    </div>
+  </section>
+
+  <footer class="foot">
+    <a href="https://www.cafedreamr.art/">the terminal</a> &middot;
+    <a href="https://www.cafedreamr.art/LORE/MAP.html">the realm map</a> &middot;
+    <a href="https://www.cafedreamr.art/LORE/MYSTERYGRID/">the mystery grid</a> &middot;
+    <a href="https://www.cafedreamr.art/LORE/HOURS/">the hours</a> &middot;
+    <a href="https://www.cafedreamr.art/LORE/BOBBY/cards.html">the dossiers</a> &middot;
+    <a href="https://www.cafedreamr.art/MENU/">the menu &middot; make it real</a> &middot;
+    <a href="https://www.cafedreamr.art/ZINE/">the zine</a> &middot;
+    <a href="https://www.cafedreamr.art/PLAY/">the long day</a> &middot;
+    <a href="https://www.cafedreamr.art/LORE/VENDI/index.html">the vendi machine</a> &middot;
+    <a href="https://www.cafedreamr.art/PASSPORT/">your stamp card</a><br>
+    <a href="https://ko-fi.com/cafedreamr" target="_blank" rel="noopener noreferrer">ko-fi.com/cafedreamr</a> &middot;
+    &copy; cafedreamr &middot; made with a great deal of love and one very small lamp
+    <span class="bless">be the light. you already are.</span>
+  </footer>
+</main>
+
+<a class="floaty" id="kofiFloat" href="https://ko-fi.com/cafedreamr" target="_blank" rel="noopener noreferrer">&#9829; gift a coffee</a>
+
+<script src="https://www.cafedreamr.art/PASSPORT/cd-passport.js"></script>
+<script>window.CD && CD.boot({page:"support"});</script>
+<script>
+/* ============================================================
+   support — the numbers, and nothing but the numbers
+   ------------------------------------------------------------
+   The tables above are written out in the markup on purpose, so
+   the page reads with javascript switched off. This script does
+   two small things and then stops:
+     1. it adds up every row marked data-v and prints the totals,
+        so a total can never drift away from the rows above it;
+     2. it shows the floating ko-fi pill once you've scrolled past
+        the mission, so the way to give is never far away but also
+        never the first thing you see.
+   To change an address or a figure: edit the SUPPORT object. To
+   change a line item, edit the row in the markup (its data-v is
+   the honest number, and the total will follow).
+   ============================================================ */
+(function () {
+  "use strict";
+
+  var SUPPORT = {
+    KOFI: "https://ko-fi.com/cafedreamr",
+    HOME: "https://www.cafedreamr.art/",
+    MENU: "https://www.cafedreamr.art/MENU/"
+  };
+
+  function money(n) {
+    var v = Math.round(n * 100) / 100;
+    var whole = Math.floor(v);
+    var cents = Math.round((v - whole) * 100);
+    var s = whole.toLocaleString("en-US");
+    return "$" + (cents ? s + "." + (cents < 10 ? "0" : "") + cents : s);
+  }
+  function sumRows(panelIndex) {
+    var panels = document.querySelectorAll(".panel");
+    var p = panels[panelIndex];
+    if (!p) return 0;
+    var t = 0;
+    p.querySelectorAll(".crow .cv[data-v]").forEach(function (el) { t += parseFloat(el.getAttribute("data-v")) || 0; });
+    return t;
+  }
+  function paint() {
+    var today = sumRows(0), weekend = sumRows(1), people = sumRows(2);
+    var all = today + weekend + people;
+    var map = { today: today, weekend: weekend, people: people, all: all };
+    document.querySelectorAll("[data-total]").forEach(function (el) {
+      var k = el.getAttribute("data-total");
+      if (Object.prototype.hasOwnProperty.call(map, k)) el.textContent = money(map[k]);
+    });
+  }
+  paint();
+
+  /* the floating pill: after the hero, and never on top of the ko-fi panel itself */
+  var floaty = document.getElementById("kofiFloat");
+  var hero = document.querySelector(".hero");
+  var gift = document.getElementById("gift");
+  function onScroll() {
+    if (!floaty) return;
+    var past = false, overGift = false;
+    if (hero) {
+      var r = hero.getBoundingClientRect();
+      past = r.bottom < 60;
+    } else {
+      past = (window.scrollY || window.pageYOffset || 0) > 520;
+    }
+    if (gift) {
+      var g = gift.getBoundingClientRect();
+      overGift = g.top < window.innerHeight && g.bottom > 0;
+    }
+    floaty.classList.toggle("on", past && !overGift);
+  }
+  /* poll rather than lean on scroll alone: it also fires on resize, on a
+     restored scroll position, and in the rare stuck-preview case. */
+  onScroll();
+  window.addEventListener("scroll", onScroll, { passive: true });
+  window.addEventListener("resize", onScroll);
+  setInterval(onScroll, 600);
+})();
+</script>
+</body>
+</html>
