@@ -1,0 +1,559 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>miki's zine · issue no. 1 · the violet web café</title>
+<meta name="description" content="issue no. 1 of miki's zine — the violet web café. why the web is a safe place (and why i'm right), an interview with miki, the prankster's corner, the spider who mends, recipes, classifieds and the fine print.">
+<meta property="og:title" content="miki's zine · issue no. 1 · the violet web café">
+<meta property="og:description" content="the thoughts of a chimera who refuses to be somebody's footnote · 16 pages · free, take one.">
+<meta property="og:image" content="https://user.uploads.dev/file/c89526fd80b552f9fd97ccbac7f2b1d6.png">
+<meta property="og:type" content="article">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rubik+Mono+One&family=Special+Elite&family=Shadows+Into+Light&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   issue no. 1 — ZINE/01/index.html
+   the web reading edition of miki's first zine, "the violet web
+   café". its own idiom: typewriter body (Special Elite), marker
+   notes (Shadows Into Light), chunky mono heads (Rubik Mono One) —
+   the same three the photocopied print edition is set in — inside
+   the press's black paper frame. "print edition" flips the page to
+   the white-paper, black-ink original you can photocopy.
+   ============================================================ */
+:root{
+  --paper:#050505; --ink:#fff; --dim:#c2c2c2; --dim2:#8b8b8b;
+  --line:rgba(255,255,255,.22);
+  --pink:#ff2d95; --cyan:#00e5ff; --stripe:var(--pink);
+  --disp:"Rubik Mono One","Arial Black",sans-serif;
+  --grot:"Rubik Mono One","Arial Black",sans-serif;
+  --type:"Special Elite","Courier New",monospace;
+  --hand:"Shadows Into Light","Segoe Script",cursive;
+  --mono:"Space Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);text-align:left;font-family:var(--type);
+  font-size:14px;line-height:1.7;-webkit-font-smoothing:antialiased;min-height:100vh;overflow-x:hidden}
+body.light{--paper:#f2efe7; --ink:#0b0b0b; --dim:#3c3c3c; --dim2:#6d6d6d; --line:rgba(0,0,0,.3)}
+a{color:inherit}
+.grain,.scan{position:fixed;inset:0;pointer-events:none;z-index:90}
+.grain{opacity:.5;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='160' height='160' filter='url(%23n)' opacity='.55'/></svg>")}
+.scan{opacity:.2;background:repeating-linear-gradient(to bottom, rgba(0,0,0,.5) 0 1px, transparent 1px 3px)}
+body.light .grain{opacity:.26;mix-blend-mode:multiply}
+body.light .scan{opacity:.07}
+
+/* ---------------- chrome ---------------- */
+.chrome{position:relative;z-index:60}
+.cbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:11px 16px;
+  border-bottom:1px solid var(--line);font-size:9.5px;letter-spacing:.22em;
+  text-transform:uppercase;color:var(--dim);font-family:var(--mono)}
+.cbar b{color:var(--ink)}
+.cdot{width:7px;height:7px;background:var(--stripe);border-radius:50%;flex:0 0 auto;
+  box-shadow:0 0 8px var(--stripe);animation:blip 1.6s steps(2,end) infinite}
+@keyframes blip{50%{opacity:.15}}
+.cbrand{font-family:var(--grot);letter-spacing:.02em;color:var(--ink);font-size:11.5px;text-transform:none}
+.csep{opacity:.4}.cspacer{flex:1 1 auto}
+.clink{text-decoration:none;border-bottom:1px solid var(--line);padding-bottom:1px;color:var(--ink)}
+.clink:hover{background:var(--ink);color:var(--paper)}
+.ticker{position:relative;z-index:55;overflow:hidden;white-space:nowrap;
+  background:var(--ink);color:var(--paper);border-bottom:1px solid var(--line)}
+.ticker .in{display:inline-block;padding:6px 0;font-family:var(--grot);font-size:10.5px;
+  letter-spacing:.06em;text-transform:uppercase;animation:slide 30s linear infinite}
+.ticker .in span{padding:0 14px}.ticker .in i{font-style:normal;opacity:.45;padding:0 2px}
+@keyframes slide{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* ---------------- layout ---------------- */
+.wrap{position:relative;z-index:40;max-width:900px;margin:0 auto;padding:24px 16px 56px}
+.ctlrow{display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap;border:2px solid var(--ink);
+  padding:10px 13px;margin-bottom:22px;font-family:var(--mono)}
+.ctl{display:flex;flex-direction:column;gap:6px}
+.lab{font-size:9px;letter-spacing:.26em;text-transform:uppercase;color:var(--dim2)}
+.seg{display:flex;gap:6px;flex-wrap:wrap}
+.seg button{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;
+  background:transparent;color:var(--ink);border:1px solid var(--line);padding:5px 9px;cursor:pointer}
+.seg button:hover{border-color:var(--ink)}
+.seg button.on{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.acts{display:flex;gap:8px;flex-wrap:wrap;margin-left:auto}
+.acts button{font-family:var(--grot);font-size:10px;letter-spacing:.06em;text-transform:uppercase;
+  background:transparent;color:var(--ink);border:2px solid var(--ink);padding:8px 12px;cursor:pointer}
+.acts button:hover{background:var(--ink);color:var(--paper)}
+.acts button.key{background:var(--stripe);border-color:var(--stripe);color:#0a0a0a}
+
+.sheet{position:relative;border:2px solid var(--ink);padding:20px 22px 26px;overflow:hidden;isolation:isolate}
+
+/* ---------------- the cover ---------------- */
+.coverline{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:baseline;
+  font-family:var(--mono);font-size:9px;letter-spacing:.24em;text-transform:uppercase;color:var(--dim2)}
+.coverline b{color:var(--ink)}
+.stamp{display:inline-block;font-family:var(--grot);font-size:10px;letter-spacing:.08em;
+  border:2px solid var(--ink);padding:3px 7px;transform:rotate(-3deg);text-transform:uppercase;white-space:nowrap}
+.stamp.pink{border-color:var(--stripe);color:var(--stripe)}
+h1.title{margin:10px 0 0;font-family:var(--disp);font-weight:400;font-size:clamp(46px,11vw,104px);
+  line-height:.88;letter-spacing:-.02em;text-transform:uppercase}
+h1.title .ch{display:inline-block;transform:translate(var(--dx,0),var(--dy,0)) rotate(var(--rot,0deg)) scaleY(var(--sy,1));
+  text-shadow:3px 0 var(--stripe), -2.5px 0 var(--cyan)}
+h1.title .ch.cut{clip-path:inset(var(--c1,0) 0 var(--c2,0) 0)}
+.issue-sub{margin:6px 0 0;font-family:var(--mono);font-size:10px;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--dim)}
+.coverart{margin:18px 0 0;border:2px solid var(--ink);position:relative;overflow:hidden;isolation:isolate;
+  background:#fff}
+.coverart img{display:block;width:100%;height:auto}
+body:not(.light) .coverart img{filter:grayscale(1) contrast(1.14)}
+.coverart .halftone{position:absolute;inset:0;pointer-events:none;opacity:.32;
+  background-image:radial-gradient(rgba(0,0,0,.85) 30%, transparent 33%);
+  background-size:3px 3px;mix-blend-mode:multiply}
+.tagline{margin:12px 0 0;font-family:var(--hand);font-size:20px;line-height:1.4;text-align:center}
+.margin-note{font-family:var(--hand);font-size:17px;line-height:1.4;color:var(--dim);margin:12px 0 0;
+  transform:rotate(-1.4deg)}
+
+/* ---------------- the interior ---------------- */
+.folio{display:flex;align-items:baseline;gap:10px;margin:36px 0 10px;
+  font-family:var(--mono);font-size:9px;letter-spacing:.26em;text-transform:uppercase;color:var(--dim2)}
+.folio b{color:var(--ink);font-family:var(--grot);font-size:11px;letter-spacing:.06em}
+.folio .rule{flex:1 1 auto;height:1px;background:var(--line)}
+h2.head{margin:0 0 12px;font-family:var(--disp);font-weight:400;font-size:clamp(19px,3.4vw,30px);
+  line-height:1.1;text-transform:uppercase;letter-spacing:-.01em;
+  border-bottom:3px solid var(--ink);padding-bottom:6px}
+h2.head.hand{font-family:var(--hand);font-size:clamp(24px,4.4vw,34px);text-transform:none;
+  border-bottom:none;letter-spacing:0}
+.sheet p{margin:0 0 12px;font-size:14px;line-height:1.78}
+.sheet a{color:var(--ink);border-bottom:1px solid var(--line);text-decoration:none}
+.sheet a:hover{background:var(--ink);color:var(--paper)}
+.sheet b{font-weight:400;background:var(--ink);color:var(--paper);padding:0 4px}
+.hand{font-family:var(--hand)}
+.rules{border:2px solid var(--ink);padding:12px 13px;margin:0 0 14px;font-size:13px;line-height:1.75}
+.rules p{margin:0 0 4px;font-size:13px}
+.rules p:last-child{margin-bottom:0}
+.toc{list-style:none;margin:0;padding:0;font-family:var(--hand);font-size:20px;line-height:2.05}
+.toc li{display:flex;align-items:baseline;gap:8px}
+.toc .dots{flex:1 1 auto;border-bottom:1px dotted var(--dim2);transform:translateY(-4px)}
+.toc li:nth-child(odd){transform:rotate(1.1deg)}
+.toc li:nth-child(even){transform:rotate(-1.3deg)}
+.qa{font-size:13.5px;line-height:1.75}
+.qa p{margin:0 0 10px}
+.joke{margin:0 0 9px;font-size:13.5px}
+.joke b{background:none;color:var(--ink);padding:0;text-decoration:underline;text-underline-offset:3px}
+.ad{margin:0;text-align:center}
+.ad .adtitle{font-family:var(--disp);font-size:clamp(34px,8vw,64px);line-height:.9;text-transform:uppercase;margin:0}
+.plate{margin:14px auto;border:2px solid var(--ink);display:block;position:relative;overflow:hidden;background:#fff}
+.plate img{display:block;width:100%;height:auto}
+body:not(.light) .plate img{filter:grayscale(1) contrast(1.14)}
+.anthem{text-align:center}
+.anthem audio{width:100%;max-width:420px;margin:10px auto 0;display:block}
+body:not(.light) .anthem audio{filter:invert(1) hue-rotate(180deg)}
+.qr{width:150px;height:150px;border:2px solid var(--ink);background:#fff}
+.tracks{text-align:left;font-size:12.5px;line-height:1.9}
+.classifieds p{margin:0 0 10px}
+.classifieds b{background:none;color:var(--ink);padding:0}
+.fineprint{text-align:center;font-size:13px;line-height:1.8}
+.fineprint .stamp{transform:none}
+.editions{display:flex;gap:9px;flex-wrap:wrap;margin:14px 0 0}
+.ebtn{font-family:var(--grot);font-size:10px;letter-spacing:.06em;text-transform:uppercase;
+  text-decoration:none;border:2px solid var(--ink);padding:10px 13px;color:var(--ink);display:inline-block}
+.ebtn:hover{background:var(--ink);color:var(--paper)}
+.ebtn.hot{background:var(--stripe);border-color:var(--stripe);color:#0a0a0a}
+.ebtn.hot:hover{background:#fff;border-color:#fff}
+.colophon{margin-top:24px;border-top:2px solid var(--ink);padding-top:12px;
+  font-family:var(--mono);font-size:10px;letter-spacing:.1em;line-height:2;color:var(--dim);text-transform:uppercase}
+.colophon b{background:none;color:var(--ink);padding:0}
+
+/* ---------------- the press note ---------------- */
+.pressnote{margin-top:26px;border:2px solid var(--stripe);padding:16px 17px;font-family:var(--mono)}
+.pressnote .k{font-size:8.5px;letter-spacing:.26em;text-transform:uppercase;color:var(--stripe);margin:0 0 7px}
+.pressnote p{margin:0 0 12px;font-size:12px;line-height:1.7;color:var(--dim);max-width:70ch}
+.pressnote p b{background:none;color:var(--ink);padding:0}
+.btns{display:flex;gap:9px;flex-wrap:wrap}
+.btn{font-family:var(--grot);font-size:10px;letter-spacing:.06em;text-transform:uppercase;
+  text-decoration:none;border:2px solid var(--ink);padding:10px 13px;color:var(--ink)}
+.btn:hover{background:var(--ink);color:var(--paper)}
+.btn.hot{background:var(--stripe);border-color:var(--stripe);color:#0a0a0a}
+.btn.hot:hover{background:#fff;border-color:#fff}
+
+.foot{margin-top:34px;border-top:1px solid var(--line);padding:15px 0 0;font-family:var(--mono);
+  font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);
+  display:flex;flex-wrap:wrap;gap:8px 10px;justify-content:space-between;align-items:center}
+.foot a{text-decoration:none;border-bottom:1px solid var(--line);color:var(--ink);padding-bottom:1px}
+.foot a:hover{background:var(--ink);color:var(--paper)}
+@media print{
+  @page{size:letter;margin:12mm}
+  body{background:#fff;color:#000}
+  .grain,.scan,.chrome,.ticker,.ctlrow,.pressnote,.foot,.editions{display:none!important}
+  .wrap{padding:0;max-width:none}.sheet{border:0;padding:0}
+  body b{background:none;color:#000;padding:0}
+}
+@media (prefers-reduced-motion:reduce){ .ticker .in,.cdot{animation:none!important} }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+<div class="scan" aria-hidden="true"></div>
+
+<header class="chrome">
+  <div class="cbar">
+    <span class="cdot"></span>
+    <span class="cbrand">miki's zine</span>
+    <span class="csep">/</span>
+    <span>issue no. <b>1</b></span>
+    <span class="csep">/</span>
+    <span>the violet web caf&eacute; &middot; 16 pp &middot; free, take one</span>
+    <span class="cspacer"></span>
+    <a class="clink" href="https://www.cafedreamr.art/ZINE/">&larr; the rack</a>
+    <a class="clink" href="https://www.cafedreamr.art/MENU/">the menu &rarr;</a>
+    <a class="clink" href="https://www.cafedreamr.art/">the terminal &rarr;</a>
+  </div>
+</header>
+
+<div class="ticker" aria-hidden="true"><span class="in" id="tick"></span></div>
+
+<main class="wrap">
+
+  <div class="ctlrow chrome">
+    <div class="ctl">
+      <span class="lab">edition</span>
+      <div class="seg" id="segEd">
+        <button type="button" data-ed="screen" class="on">screen</button>
+        <button type="button" data-ed="print">print edition</button>
+      </div>
+    </div>
+    <div class="ctl">
+      <span class="lab">jitter</span>
+      <div class="seg" id="segChop">
+        <button type="button" data-chop="0">straight</button>
+        <button type="button" data-chop="1" class="on">misprinted</button>
+      </div>
+    </div>
+    <div class="acts">
+      <button type="button" class="key" id="printBtn">print this issue</button>
+    </div>
+  </div>
+
+  <article class="sheet" id="sheet">
+
+    <!-- ============================== the cover -->
+    <div class="coverline">
+      <span>the zine &middot; issue no. <b>1</b></span>
+      <span>the keeper of the violet web</span>
+      <span class="stamp pink">free &middot; take one</span>
+    </div>
+    <h1 class="title" data-split>THE ZINE</h1>
+    <p class="issue-sub">issue 01 &middot; the violet web caf&eacute; &middot; 16 pages &middot; black ink on white</p>
+
+    <div class="coverart">
+      <img src="https://user.uploads.dev/file/c89526fd80b552f9fd97ccbac7f2b1d6.png" alt="miki, drawn in ink">
+      <span class="halftone" aria-hidden="true"></span>
+    </div>
+
+    <p class="tagline">the thoughts of a chimera who refuses<br>to be somebody&rsquo;s footnote</p>
+    <p class="margin-note">&ldquo;printed on absolution &amp; a dream&rdquo; &mdash; and do not lick the ink.</p>
+
+    <div class="editions" id="editions">
+      <a class="ebtn hot" id="printEdLink" href="https://xencafe.nekoweb.org/2026-MIK-ZINE/MIKIMAIL/ZINE_ISSUES/issue-no1.html" target="_blank" rel="noopener noreferrer">read / print the print edition &nearr;</a>
+      <a class="ebtn" id="officialLink" href="#" hidden target="_blank" rel="noopener noreferrer">the official flip book &nearr;</a>
+      <a class="ebtn" id="holoLink" href="#" hidden target="_blank" rel="noopener noreferrer">the hologram edition &nearr;</a>
+    </div>
+    <p class="margin-note" id="edNote" hidden>both flip books turn like a magazine &mdash; the official one also runs the tea exam, and hands out a certificate if you pass it.</p>
+
+    <!-- ============================== p02 editorial -->
+    <div class="folio"><b>p. 02</b><span class="rule"></span><span>editorial</span></div>
+    <h2 class="head">why the web is a safe place (and why i&rsquo;m right)</h2>
+    <p>welcome to issue 01. you are holding the thoughts of a chimera who refuses to be somebody&rsquo;s footnote &mdash; which is me. i own this zine, the puns, and half the pranks in this building. the other half are chari&rsquo;s. she&rsquo;s learning.</p>
+    <p>the web here is safe because the light is always on. that&rsquo;s the whole argument. it&rsquo;s not a metaphor, check the ceiling.</p>
+    <p>inside this issue: an interview with me (i interviewed myself, who else would do it right), an ad for a model who has already decided violet is this season, a spider who mends, a free song you can listen to with your phone, recipes from the tea committee, and a field guide to the fourth shelf. <b>it bites. it&rsquo;s a joke. it doesn&rsquo;t bite. probably.</b></p>
+    <p class="hand" style="font-size:19px"> &mdash; miki, who is watching. affectionately.</p>
+
+    <!-- ============================== p03 contents -->
+    <div class="folio"><b>p. 03</b><span class="rule"></span><span>contents</span></div>
+    <h2 class="head hand">what&rsquo;s inside</h2>
+    <ul class="toc">
+      <li><span>editorial &mdash; why i&rsquo;m right</span><span class="dots"></span><span>2</span></li>
+      <li><span>interview: miki, as herself</span><span class="dots"></span><span>4</span></li>
+      <li><span>the mail that runs on a dream</span><span class="dots"></span><span>5</span></li>
+      <li><span>an ad for the future (pearl)</span><span class="dots"></span><span>6</span></li>
+      <li><span>the prankster&rsquo;s corner</span><span class="dots"></span><span>7</span></li>
+      <li><span>knock knock, ethically</span><span class="dots"></span><span>8</span></li>
+      <li><span>the spider who mends</span><span class="dots"></span><span>9</span></li>
+      <li><span>free listen: the anthem</span><span class="dots"></span><span>10</span></li>
+      <li><span>recipes from the caf&eacute;</span><span class="dots"></span><span>11</span></li>
+      <li><span>classifieds</span><span class="dots"></span><span>13</span></li>
+      <li><span>field guide: the fourth shelf</span><span class="dots"></span><span>14</span></li>
+      <li><span>mail call</span><span class="dots"></span><span>15</span></li>
+      <li><span>the fine print</span><span class="dots"></span><span>16</span></li>
+    </ul>
+    <p class="margin-note">drawn in the dark, numbered in order, trust nothing past page 12.</p>
+
+    <!-- ============================== p04 interview -->
+    <div class="folio"><b>p. 04</b><span class="rule"></span><span>the feature</span></div>
+    <h2 class="head">miki, as herself</h2>
+    <div class="qa">
+      <p><b>Q: what are you, exactly?</b> half cat, half machine, all opinion. the light here keeps the batteries full and the pride intact.</p>
+      <p><b>Q: the zine sells itself?</b> the zine is a self-publishing operation run by me and supported by the goodwill of one (1) spider. the tea committee provides the tea, the garden provides the mint, i provide the attitude.</p>
+      <p><b>Q: what does mikimail actually do?</b> the future of mail. right now it&rsquo;s a waitlist and a drawer. the drawer is real. don&rsquo;t ask about the drawer.</p>
+      <p><b>Q: best prank?</b> i once replaced all of hans&rsquo;s files with alphabetical apology notes. he alphabetized the apology notes. i respected him for it.</p>
+      <p><b>Q: the fourth shelf?</b> it bites. it&rsquo;s a joke. it doesn&rsquo;t bite. probably.</p>
+      <p><b>Q: why do you keep saying the spider is the privacy policy?</b> because she is. she reads everything and tells no one. the safest reader in the building.</p>
+      <p><b>Q: any advice for the reader?</b> three sugars. no questions. the void asked for none.</p>
+    </div>
+
+    <!-- ============================== p05 mikimail -->
+    <div class="folio"><b>p. 05</b><span class="rule"></span><span>mikimail</span></div>
+    <h2 class="head">the mail that runs on absolution and a dream</h2>
+    <p>issue 01 is sponsored by the future. that future is <b>mikimail</b> &mdash; the email that runs on absolution and a dream, from the caf&eacute; at the seam.</p>
+    <p>it isn&rsquo;t open yet. it&rsquo;s being assembled out of absolution, a dream, and the goodwill of one (1) spider. but the waitlist is open now, and it&rsquo;s taking names.</p>
+    <p>join it, and when the real mailbox opens, <b>exactly one (1) carrier pigeon</b> finds you. your name goes on the founding members screen, in order of trust. you will be, at that moment, very high.</p>
+    <p class="hand" style="font-size:19px">the drawer stays closed until then.<br>do not ask about the drawer.</p>
+    <div class="rules">
+      <p>waitlist: <b>buttondown.com/mikimail</b></p>
+      <p>perks: one (1) pigeon &middot; first access &middot; a founding-members screen with your name on it &middot; miki will read your first draft personally.</p>
+    </div>
+
+    <!-- ============================== p06 the pearl ad -->
+    <div class="folio"><b>p. 06</b><span class="rule"></span><span>advertisement</span></div>
+    <div class="ad">
+      <span class="stamp">ad</span>
+      <p class="adtitle">PEARL</p>
+      <p class="issue-sub">models &middot; visions &middot; this season&rsquo;s everything</p>
+      <div class="plate" style="width:62%">
+        <img src="https://user.uploads.dev/file/06f11f5792344c698b9a9eabf6226d7b.png" alt="pearl, drawn in ink">
+      </div>
+      <p class="hand" style="font-size:21px;margin:0">violet is this season&rsquo;s everything.<br>i decided.</p>
+      <p style="margin-top:8px">tried on three constellations today.<br>keeping two.</p>
+      <p class="issue-sub" style="margin-top:10px">featured full-force in <b>issue 02: the pearl issue</b></p>
+    </div>
+
+    <!-- ============================== p07 jokes -->
+    <div class="folio"><b>p. 07</b><span class="rule"></span><span>the prankster&rsquo;s corner</span></div>
+    <h2 class="head">the prankster&rsquo;s corner</h2>
+    <p class="joke">i tried to catch some fog earlier. <b>i mist.</b></p>
+    <p class="joke">why do cats make good djs? <b>they know how to drop the bass. and the vase.</b></p>
+    <p class="joke">what do you call a fake noodle? <b>an impasta.</b></p>
+    <p class="joke">why was the tea sad? <b>the kettle couldn&rsquo;t commit.</b></p>
+    <p class="joke">what do you call a moth that talks too much? <b>a chat-erpillar.</b></p>
+    <p class="joke">i told my cat a pun. <b>she said it was pawful.</b></p>
+    <p class="joke">what&rsquo;s the web&rsquo;s favorite song? <b>somebody that i used to know &mdash; it remembers everything.</b></p>
+    <p class="joke">why don&rsquo;t vampires like the caf&eacute;? <b>too bright. literally. check the ceiling.</b></p>
+    <p class="joke">why did the orange stop? <b>it ran out of juice.</b></p>
+    <p class="joke">a spider, a cat, and a robot walk into a caf&eacute;. the barista says: <b>&ldquo;this again?&rdquo;</b></p>
+    <p class="margin-note">one prank a day keeps the boredom away. (already did today&rsquo;s)</p>
+
+    <!-- ============================== p08 knock knock -->
+    <div class="folio"><b>p. 08</b><span class="rule"></span><span>the ritual</span></div>
+    <h2 class="head">knock knock, ethically</h2>
+    <p>the knock knock is a ritual, not a suggestion. here is the sanctioned method, field-tested on siblings.</p>
+    <div class="rules">
+      <p><b>you:</b> knock knock.<br><b>sibling:</b> who&rsquo;s there?<br><b>you:</b> [a word].<br><b>sibling:</b> [word] who?<br><b>you:</b> the punchline. deliver it deadpan. do not smile. smiling is forfeit.</p>
+    </div>
+    <p>afterward, accept the reaction with dignity. the sibling may throw a cushion. this is part of the ritual.</p>
+    <h2 class="head" style="margin-top:20px">how to prank your sibling, ethically</h2>
+    <p>1. pranks must be reversible. ctrl+z exists. use it.</p>
+    <p>2. nobody gets wet, cold, hungry, or late. nobody&rsquo;s tea is confiscated.</p>
+    <p>3. if the target laughs within the hour, you win. if they laugh and then plan revenge, you win more.</p>
+    <p>4. the spider must not be poked. the web mends enough holes already.</p>
+    <p>5. when caught, confess in writing. the zine prints confessions on page 14, under &ldquo;evidence.&rdquo;</p>
+
+    <!-- ============================== p09 spider -->
+    <div class="folio"><b>p. 09</b><span class="rule"></span><span>the spider who mends</span></div>
+    <h2 class="head">the spider who mends</h2>
+    <div class="plate" style="width:78%">
+      <img src="https://user.uploads.dev/file/101a29d604f512213ff189cb493ffb3f.png" alt="a spider and its web, drawn in ink">
+    </div>
+    <p class="hand" style="font-size:22px;text-align:center;margin:10px 0 6px">mended 2 threads, ate 1 moth,<br>zero regrets.</p>
+    <p style="text-align:center;font-size:13px;margin:0">she keeps the web in line, patches every pun-hole,<br>and is the entire privacy policy.<br><br>do not poke the web.</p>
+
+    <!-- ============================== p10 the anthem -->
+    <div class="folio"><b>p. 10</b><span class="rule"></span><span>free listen</span></div>
+    <h2 class="head">free listen: the anthem</h2>
+    <div class="anthem">
+      <p style="margin:0">&ldquo;absolution and a dream&rdquo; &mdash; <b>the anthem</b>, with vocals.</p>
+      <p style="font-size:12px">scan the square. the pigeon delivers.</p>
+      <img class="qr" src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&amp;data=https%3A%2F%2Fuser.uploads.dev%2Ffile%2Ff42622ebdd75ef50547bad2ba0965880.mp3" alt="qr code to the anthem">
+      <audio controls preload="none" src="https://user.uploads.dev/file/f42622ebdd75ef50547bad2ba0965880.mp3"></audio>
+      <div class="rules tracks" style="text-align:left;max-width:420px;margin:14px auto 0">
+        <p style="margin:0 0 4px">the whole mixtape, side a:</p>
+        <p style="margin:0">&middot; absolution and a dream &mdash; 2:07 &middot; the anthem</p>
+        <p style="margin:0">&middot; the drawer &mdash; 2:08 &middot; chiptune (contains a smaller drawer)</p>
+        <p style="margin:0">&middot; the light is always on &mdash; 2:52 &middot; for the violet hour</p>
+      </div>
+    </div>
+
+    <!-- ============================== p11 recipes -->
+    <div class="folio"><b>p. 11</b><span class="rule"></span><span>recipes from the caf&eacute;</span></div>
+    <h2 class="head">recipes from the caf&eacute;</h2>
+    <p><b>star&rsquo;s three-sugar tea</b> (the official beverage of the violet web)</p>
+    <p>ingredients: one (1) pot, tea of choice, three sugars, zero questions, the void asks for none.</p>
+    <p>method: brew the tea properly, as if it matters, because it does. add exactly three sugars &mdash; no more, no less, no negotiation. pour with intent. serve with the saucer (the saucer is not a hat).</p>
+    <p class="hand" style="font-size:18px">star says the tea is ready and she means it this time.</p>
+    <p><b>miki&rsquo;s addition:</b> if anyone calls the tea &ldquo;evidence,&rdquo; it&rsquo;s because they owe the tea committee an apology note. hans has a stack. you may have one (1).</p>
+
+    <!-- ============================== p12 recipes cont -->
+    <div class="folio"><b>p. 12</b><span class="rule"></span><span>recipes cont.</span></div>
+    <h2 class="head">recipes cont: chari&rsquo;s mooncake</h2>
+    <p>ingredients: one (1) mooncake, patience, a watering can (optional, it won&rsquo;t help).</p>
+    <p>method: the mooncake is not a pet. chari named it anyway. it has a schedule now. water it daily; it will do nothing; you will remain invested. this is the recipe.</p>
+    <p><b>warning:</b> the mooncake has layers. do not ask how many. the last person who asked is still counting.</p>
+    <h2 class="head" style="margin-top:20px">milo&rsquo;s garden note</h2>
+    <p>the mint says hello. it does. i hear it. plant three tea seeds anywhere, and they&rsquo;ll have a meeting. the moths are on their best behavior this season. someone apologized to a violet this morning. progress.</p>
+    <p class="hand" style="font-size:18px">if it grows, it belongs to the garden.<br>the garden is generous, but it keeps records.</p>
+
+    <!-- ============================== p13 classifieds -->
+    <div class="folio"><b>p. 13</b><span class="rule"></span><span>classifieds</span></div>
+    <h2 class="head">classifieds &mdash; free to a good home</h2>
+    <div class="classifieds">
+      <p><b>one (1) slightly guilty conscience.</b> barely used. comes with a list of apologies, alphabetized by hans. inquire at the counter.</p>
+      <p><b>one (1) drawer.</b> contains one (1) smaller drawer. this continues. do not ask about the drawer.</p>
+      <p><b>one (1) carrier pigeon.</b> currently booked. will find you the moment the real mailbox opens. waitlist first.</p>
+      <p><b>the fourth shelf.</b> bites. it&rsquo;s a joke. it doesn&rsquo;t bite. probably. low maintenance, high drama.</p>
+      <p><b>one (1) jar of fireflies.</b> self-regulating. the light is always on, but they&rsquo;re trying.</p>
+      <p><b>a slightly guilty spider.</b> she ate one (1) moth and says zero regrets. we&rsquo;re watching her.</p>
+      <p><b>a toaster.</b> wanted for the mail department. responsibilities: hold dreams, stay cool under pressure. apply within.</p>
+    </div>
+    <p class="margin-note">no refunds. no returns. the drawer is the policy.</p>
+
+    <!-- ============================== p14 field guide -->
+    <div class="folio"><b>p. 14</b><span class="rule"></span><span>field guide</span></div>
+    <h2 class="head">field guide: the fourth shelf</h2>
+    <p>the fourth shelf of the archive is a recurring source of local legend. this guide clarifies everything.</p>
+    <p><b>fact:</b> the fourth shelf bites. <b>fact:</b> it&rsquo;s a joke. <b>fact:</b> it doesn&rsquo;t bite. probably.</p>
+    <p>proper conduct when the shelf has been bitten (or not):</p>
+    <p>1. do not apologize to the shelf. it is a shelf. (if you must, apologize to the book you startled.)</p>
+    <p>2. report the bite to hans. he will alphabetize the report.</p>
+    <p>3. if the shelf bites and then apologizes, that is not the shelf. that is chari, who is learning.</p>
+    <p>4. never reorganize the fourth shelf. last sibling to try is still finding their pen.</p>
+    <p class="hand" style="font-size:18px">it&rsquo;s a joke.<br>probably.</p>
+
+    <!-- ============================== p15 mail call -->
+    <div class="folio"><b>p. 15</b><span class="rule"></span><span>mail call</span></div>
+    <h2 class="head">mail call &mdash; write to the future</h2>
+    <p>this issue has a mailbox attached to it. <b>mikimail</b> isn&rsquo;t open yet, but the future is, and it&rsquo;s taking names.</p>
+    <p>send us your letters, your puns, your recipes, your confessions. your very first draft will be read by <b>miki, personally</b>. she has opinions. you&rsquo;ve been warned.</p>
+    <p>join the waitlist and you&rsquo;re first in line for:</p>
+    <div class="rules">
+      <p>&middot; exactly one (1) carrier pigeon</p>
+      <p>&middot; first access to the real mailbox</p>
+      <p>&middot; your name on the founding members screen, in order of trust</p>
+    </div>
+    <p class="hand" style="font-size:20px">buttondown.com/mikimail</p>
+    <p style="font-size:12px">zero spam. exactly one (1) pigeon. you can leave whenever &mdash; the drawer stays open, but the door does too.</p>
+
+    <!-- ============================== p16 the fine print -->
+    <div class="folio"><b>p. 16</b><span class="rule"></span><span>the fine print</span></div>
+    <div class="fineprint">
+      <span class="stamp">the fine print</span>
+      <p style="margin-top:14px">&copy; the keeper of the violet web &middot; all rights reserved,<br>unless you&rsquo;re a sibling</p>
+      <p>the music is composed fresh, no artists borrowed.<br>the poems are public-domain romantics, loved carefully.<br>the fonts are free and fairly earned.</p>
+      <p>this zine is fiction.<br>no squirrels were harmed.<br>the spider is a metaphor (mostly).</p>
+      <p>set in rubik mono one, special elite &amp; shadows into light,<br>printed on absolution &amp; a dream.</p>
+    </div>
+    <p class="hand" style="font-size:20px;text-align:center;margin-top:18px">issue 02: the pearl issue &mdash;<br>coming soon. violet will be there.</p>
+
+    <p class="colophon">laid out in the light by <b>wren</b>, at miki&rsquo;s request. she supervised. i kept every note.<br>
+      issue no. 1 &middot; the cafedreamr press &middot; 16 pages &middot; free &middot; nothing past page 12 is true.</p>
+  </article>
+
+  <section class="pressnote">
+    <p class="k">the press</p>
+    <p><b>Every issue of miki's zine is free, and always will be.</b> It is made to be photocopied &mdash; one copy, assembled, then copied &mdash; and if you want to keep the rack full, the same fund that holds the realm open pays the printer.</p>
+    <div class="btns">
+      <a class="btn hot" href="https://ko-fi.com/cafedreamr" target="_blank" rel="noopener noreferrer">&#9829; gift a coffee on ko-fi</a>
+      <a class="btn" href="https://www.cafedreamr.art/SUPPORT/">support the realm &rarr;</a>
+      <a class="btn" href="https://www.cafedreamr.art/ZINE/">&larr; back to the rack</a>
+    </div>
+  </section>
+
+  <footer class="foot chrome">
+    <span>miki's zine &middot; issue no. 1 &middot; the violet web caf&eacute;</span>
+    <span><a href="https://www.cafedreamr.art/">the terminal</a> &middot; <a href="https://www.cafedreamr.art/ZINE/">the rack</a> &middot; <a href="https://www.cafedreamr.art/LORE/MAP.html">the realm map</a> &middot; <a href="https://www.cafedreamr.art/LORE/HOURS/">the hours</a> &middot; <a href="https://www.cafedreamr.art/LORE/BOBBY/cards.html">the dossiers</a> &middot; <a href="https://www.cafedreamr.art/LORE/MYSTERYGRID/">the mystery grid</a> &middot; <a href="https://www.cafedreamr.art/MENU/">the menu</a> &middot; <a href="https://www.cafedreamr.art/PLAY/">the long day</a> &middot; <a href="https://www.cafedreamr.art/LORE/VENDI/index.html">the vendi machine</a> &middot; <a href="https://www.cafedreamr.art/SUPPORT/">support the realm</a> &middot; <a href="https://ko-fi.com/cafedreamr" target="_blank" rel="noopener noreferrer">ko-fi</a></span>
+  </footer>
+</main>
+
+<script src="https://www.cafedreamr.art/PASSPORT/cd-passport.js"></script>
+<script>window.CD && CD.boot({page:"zine"});</script>
+
+<script>
+(function(){
+  "use strict";
+  /* the other editions of issue 01. the print edition is live; the two flip
+     books are the official edition (the one with the tea exam) and the
+     hologram edition. paste a url into either constant and its button shows. */
+  var OFFICIAL = "https://www.cafedreamr.art/MIKI/Issue1-vintageofficial.html";
+  var HOLO = "https://www.cafedreamr.art/MIKI/ZINE/ISSUE1-HOLO.html";
+
+  function $(s, r){ return (r || document).querySelector(s); }
+  function $$(s, r){ return Array.prototype.slice.call((r || document).querySelectorAll(s)); }
+  function rnd(a, b){ return a + Math.random() * (b - a); }
+  var TICKER = ["issue no. 1 \u2014 the violet web caf\u00e9",
+                "the thoughts of a chimera who refuses to be somebody's footnote",
+                "miki, as herself \u00b7 the prankster's corner \u00b7 the spider who mends",
+                "free listen: the anthem \u00b7 with vocals",
+                "16 pages \u00b7 black ink on white \u00b7 made to photocopy",
+                "do not lick the ink"];
+
+  function splitType(el){
+    if (el.getAttribute("data-split-done")) return;
+    var text = el.textContent; el.textContent = "";
+    for (var i = 0; i < text.length; i++){
+      var s = document.createElement("span");
+      s.className = "ch" + (text[i] === " " ? " sp" : "");
+      s.textContent = text[i] === " " ? "\u00a0" : text[i];
+      el.appendChild(s);
+    }
+    el.setAttribute("data-split-done", "1");
+  }
+  function chop(scope){
+    $$("[data-split]", scope || document).forEach(function(el){
+      var size = parseFloat(getComputedStyle(el).fontSize) || 40;
+      $$(".ch", el).forEach(function(s){
+        if (s.classList.contains("sp")) { s.removeAttribute("style"); s.classList.remove("cut"); return; }
+        var loose = Math.random() < .13;
+        s.style.setProperty("--dx", (loose ? rnd(-1,1) * size * .03  : rnd(-1,1) * size * .008).toFixed(2) + "px");
+        s.style.setProperty("--dy", (loose ? rnd(-1,1) * size * .05  : rnd(-1,1) * size * .012).toFixed(2) + "px");
+        s.style.setProperty("--rot", (loose ? rnd(-2.2,2.2) : rnd(-.5,.5)).toFixed(2) + "deg");
+        s.style.setProperty("--sy", (loose ? rnd(.92,1.1) : rnd(.98,1.02)).toFixed(3));
+        var cut = Math.random() < .09;
+        s.classList.toggle("cut", cut);
+        if (cut){
+          s.style.setProperty("--c1", rnd(4,24).toFixed(1) + "%");
+          s.style.setProperty("--c2", rnd(4,22).toFixed(1) + "%");
+        }
+      });
+    });
+  }
+  function wireSeg(id, fn){
+    var seg = $("#" + id); if (!seg) return;
+    seg.addEventListener("click", function(e){
+      var b = e.target.closest("button"); if (!b) return;
+      $$("button", seg).forEach(function(x){ x.classList.toggle("on", x === b); });
+      fn(b.dataset);
+    });
+  }
+  function buildTicker(){
+    var one = TICKER.map(function(t){ return "<span>" + t + "</span><i>&#10022;</i>"; }).join("");
+    $("#tick").innerHTML = one + one;
+  }
+  function boot(){
+    buildTicker();
+    $$("[data-split]").forEach(splitType);
+    chop();
+
+    if (OFFICIAL){
+      var o = $("#officialLink");
+      o.href = OFFICIAL; o.hidden = false;
+      var n = $("#edNote"); if (n) n.hidden = false;
+    }
+    if (HOLO){
+      var h = $("#holoLink");
+      h.href = HOLO; h.hidden = false;
+    }
+    wireSeg("segEd", function(d){ document.body.classList.toggle("light", d.ed === "print"); });
+    wireSeg("segChop", function(d){ chop(); });
+    $("#printBtn").addEventListener("click", function(){ window.print(); });
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);
+  else boot();
+})();
+</script>
+</body>
+</html>
