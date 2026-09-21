@@ -1,0 +1,786 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>miki's zine · issue no. 2 · the atrium of whispered truths</title>
+<meta name="description" content="issue no. 2 of miki's zine — chari's realm and the castle of opal yeshua built in it, the rats' building minutes, candy apples made of light, the ink plate of miki and the twins, a page out of the editor's journal, the verse kept for the issue, plus the lookbook, the pattern book (a hologram-stripe haircut, a long grey-and-black watch scarf, a newsboy cap, a victorian-80s print scarf, a chevron dress, a hot pink beret, lace gloves) and the shop: shirts, a notebook and a sheet of stickers, printed to order.">
+<meta property="og:title" content="miki's zine · issue no. 2">
+<meta property="og:description" content="the atrium of whispered truths · the opal castle · candy apples made of light · three faces, no dignity · worn by the house · the pattern book · printed for you: the shop.">
+<meta property="og:image" content="https://user.uploads.dev/file/3f4fc0314f0187a8819e23a940a7a215.jpg">
+<meta property="og:type" content="article">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo+Black&family=Shadows+Into+Light&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   issue no. 2 — ZINE/02/index.html
+   the inside pages of miki's zine, issue two: the atrium of
+   whispered truths. the plates are greyscale by default (the
+   press prints in ink); "colour plates" is the centre spread.
+   ============================================================ */
+:root{
+  --paper:#050505; --ink:#fff; --dim:#c6c6c6; --dim2:#8b8b8b;
+  --line:rgba(255,255,255,.22);
+  --pink:#ff2d95; --cyan:#00e5ff; --stripe:var(--pink);
+  --disp:"Anton","Arial Narrow",Impact,sans-serif;
+  --grot:"Archivo Black","Arial Black",sans-serif;
+  --mono:"Space Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  --hand:"Shadows Into Light","Segoe Script",cursive;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);text-align:left;font-family:var(--mono);
+  font-size:13px;line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh;overflow-x:hidden}
+body.paper-ink{--paper:#efece3;--ink:#0a0a0a;--dim:#4a4a4a;--dim2:#7a7a7a;--line:rgba(0,0,0,.28)}
+a{color:inherit}
+.grain,.scan{position:fixed;inset:0;pointer-events:none;z-index:90}
+.grain{opacity:.5;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='160' height='160' filter='url(%23n)' opacity='.55'/></svg>")}
+.scan{opacity:.2;background:repeating-linear-gradient(to bottom, rgba(0,0,0,.5) 0 1px, transparent 1px 3px)}
+body.paper-ink .grain{opacity:.3;mix-blend-mode:multiply}
+body.paper-ink .scan{opacity:.1}
+
+/* ---------------- chrome ---------------- */
+.chrome{position:relative;z-index:60}
+.cbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:11px 16px;
+  border-bottom:1px solid var(--line);font-size:9.5px;letter-spacing:.22em;
+  text-transform:uppercase;color:var(--dim)}
+.cbar b{color:var(--ink)}
+.cdot{width:7px;height:7px;background:var(--stripe);border-radius:50%;flex:0 0 auto;
+  box-shadow:0 0 8px var(--stripe);animation:blip 1.6s steps(2,end) infinite}
+@keyframes blip{50%{opacity:.15}}
+.cbrand{font-family:var(--grot);letter-spacing:.04em;color:var(--ink);font-size:12px;text-transform:none}
+.csep{opacity:.4}.cspacer{flex:1 1 auto}
+.clink{text-decoration:none;border-bottom:1px solid var(--line);padding-bottom:1px;color:var(--ink)}
+.clink:hover{background:var(--ink);color:var(--paper)}
+.ticker{position:relative;z-index:55;overflow:hidden;white-space:nowrap;
+  background:var(--ink);color:var(--paper);border-bottom:1px solid var(--line)}
+.ticker .in{display:inline-block;padding:6px 0;font-family:var(--grot);font-size:11px;
+  letter-spacing:.1em;text-transform:uppercase;animation:slide 30s linear infinite}
+.ticker .in span{padding:0 14px}.ticker .in i{font-style:normal;opacity:.45;padding:0 2px}
+@keyframes slide{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* ---------------- the sheet ---------------- */
+.wrap{position:relative;z-index:40;max-width:900px;margin:0 auto;padding:24px 16px 56px}
+.ctlrow{display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap;border:2px solid var(--ink);
+  padding:10px 13px;margin-bottom:22px}
+.ctl{display:flex;flex-direction:column;gap:6px}
+.lab{font-size:9px;letter-spacing:.26em;text-transform:uppercase;color:var(--dim2)}
+.seg{display:flex;gap:6px;flex-wrap:wrap}
+.seg button{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;
+  background:transparent;color:var(--ink);border:1px solid var(--line);padding:5px 9px;cursor:pointer}
+.seg button:hover{border-color:var(--ink)}
+.seg button.on{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.acts{display:flex;gap:8px;flex-wrap:wrap;margin-left:auto}
+.acts button{font-family:var(--grot);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+  background:transparent;color:var(--ink);border:2px solid var(--ink);padding:8px 12px;cursor:pointer}
+.acts button:hover{background:var(--ink);color:var(--paper)}
+.acts button.key{background:var(--stripe);border-color:var(--stripe);color:#0a0a0a}
+
+.sheet{position:relative;border:2px solid var(--ink);padding:20px 22px 24px;overflow:hidden;isolation:isolate}
+.ghost{position:absolute;right:-8px;top:-30px;font-family:var(--disp);font-size:clamp(110px,20vw,220px);
+  line-height:.8;color:transparent;-webkit-text-stroke:2.5px var(--ink);opacity:.13;
+  pointer-events:none;z-index:0;user-select:none}
+.masthead{position:relative;z-index:1;border-bottom:2px solid var(--ink);padding-bottom:12px;margin-bottom:18px}
+.mrow{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:baseline;
+  font-size:9px;letter-spacing:.24em;text-transform:uppercase;color:var(--dim2)}
+.mrow b{color:var(--ink)}
+.mast{margin:8px 0 4px;font-family:var(--disp);font-size:clamp(40px,9vw,88px);line-height:.84;
+  letter-spacing:-.02em;text-transform:uppercase}
+.mast .ml{display:block;white-space:nowrap}
+.mast .ml.w2{padding-left:clamp(24px,6vw,66px)}
+.mast .ch{display:inline-block;transform:translate(var(--dx,0),var(--dy,0)) rotate(var(--rot,0deg)) scaleY(var(--sy,1));
+  text-shadow:2.5px 0 var(--stripe), -2px 0 var(--cyan)}
+.mast .ch.cut{clip-path:inset(var(--c1,0) 0 var(--c2,0) 0)}
+.msub{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);line-height:1.9}
+.msub b{color:var(--ink)}
+
+/* ---------------- editorial type ---------------- */
+.kick{display:inline-block;font-size:9px;letter-spacing:.28em;text-transform:uppercase;
+  color:var(--paper);background:var(--ink);padding:4px 8px;margin:26px 0 12px}
+.kick.pink{background:var(--stripe);color:#0a0a0a}
+h2.fh{margin:0 0 8px;font-family:var(--disp);font-size:clamp(30px,6.4vw,58px);line-height:.9;
+  letter-spacing:-.01em;text-transform:uppercase}
+.dek{margin:0 0 16px;font-size:13px;color:var(--dim);font-style:italic}
+.sheet p{margin:0 0 14px;font-size:13.5px;line-height:1.88;color:#f4f4f4}
+.sheet p b{color:var(--ink)}
+.sheet p em{color:var(--ink);font-style:italic}
+.sheet a{color:var(--ink);border-bottom:1px solid var(--line);text-decoration:none}
+.sheet a:hover{background:var(--ink);color:var(--paper)}
+.ednote{border-left:3px solid var(--stripe);padding:2px 0 2px 14px;margin:0 0 6px}
+.sign{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--dim);margin:0}
+.pull{margin:20px 0;padding:14px 0;border-top:2px solid var(--ink);border-bottom:2px solid var(--ink);
+  font-family:var(--grot);font-size:clamp(19px,3.6vw,30px);line-height:1.15;text-transform:uppercase;letter-spacing:-.01em}
+.pull:before{content:"\201C";color:var(--stripe)}
+
+figure.fig{margin:20px 0;border:2px solid var(--ink);overflow:hidden;position:relative;isolation:isolate}
+figure.fig img{display:block;width:100%;height:auto;filter:contrast(1.16) brightness(1.02)}
+body.ink figure.fig img{filter:grayscale(1) contrast(1.26) brightness(1.02)}
+figure.fig .halftone{position:absolute;inset:0;pointer-events:none;opacity:.34;
+  background-image:radial-gradient(rgba(0,0,0,.85) 30%, transparent 33%);
+  background-size:3px 3px;mix-blend-mode:multiply}
+figure.fig figcaption{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);
+  padding:8px 11px;border-top:2px solid var(--ink)}
+
+ol.steps{list-style:none;margin:0 0 18px;padding:0;counter-reset:s}
+ol.steps li{position:relative;padding:12px 0 12px 46px;border-top:1px solid var(--line);font-size:13px;line-height:1.8}
+ol.steps li:before{counter-increment:s;content:counter(s,decimal-leading-zero);position:absolute;left:0;top:11px;
+  font-family:var(--disp);font-size:20px;color:var(--dim2)}
+ol.steps li b{color:var(--ink)}
+
+/* ---------------- the lookbook ---------------- */
+.looks{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media (max-width:680px){ .looks{grid-template-columns:1fr} }
+.look{border:2px solid var(--ink);display:flex;flex-direction:column}
+.look .im{position:relative;border-bottom:2px solid var(--ink);overflow:hidden;isolation:isolate}
+.look img{display:block;width:100%;height:auto;filter:contrast(1.14)}
+body.ink .look img{filter:grayscale(1) contrast(1.24)}
+.look .im .halftone{position:absolute;inset:0;pointer-events:none;opacity:.3;
+  background-image:radial-gradient(rgba(0,0,0,.85) 30%, transparent 33%);
+  background-size:3px 3px;mix-blend-mode:multiply}
+.look .tx{padding:12px 13px;display:flex;flex-direction:column;flex:1 1 auto}
+.look h3{margin:0 0 6px;font-family:var(--grot);font-size:14px;line-height:1.2;text-transform:uppercase}
+.look p{margin:0 0 12px;font-size:12px;line-height:1.7;color:var(--dim)}
+.look .buy{margin-top:auto;align-self:flex-start;font-family:var(--grot);font-size:10px;letter-spacing:.1em;
+  text-transform:uppercase;text-decoration:none;border:2px solid var(--ink);padding:8px 11px;color:var(--ink)}
+.look .buy:hover{background:var(--ink);color:var(--paper)}
+.shelf{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px}
+@media (max-width:680px){ .shelf{grid-template-columns:1fr} }
+.shelf figure{margin:0;border:2px solid var(--ink);display:flex;flex-direction:column}
+.shelf img{display:block;width:100%;height:150px;object-fit:cover;border-bottom:2px solid var(--ink);
+  filter:contrast(1.14)}
+body.ink .shelf img{filter:grayscale(1) contrast(1.24)}
+.shelf figcaption{padding:9px 10px;font-size:10.5px;line-height:1.55;color:var(--dim)}
+.shelf figcaption b{display:block;font-family:var(--grot);font-size:11.5px;text-transform:uppercase;
+  color:var(--ink);letter-spacing:.03em;margin-bottom:3px}
+.shelf figcaption em{display:block;font-style:normal;color:var(--ink);margin-top:4px;letter-spacing:.1em}
+
+/* ---------------- the pattern book ---------------- */
+.wardrobe{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px}
+@media (max-width:820px){ .wardrobe{grid-template-columns:1fr 1fr} }
+@media (max-width:560px){ .wardrobe{grid-template-columns:1fr} }
+.wcard{margin:0;border:2px solid var(--ink);border-top:6px solid var(--wc,var(--ink));
+  display:flex;flex-direction:column}
+.wcard .im{position:relative;overflow:hidden;isolation:isolate;border-bottom:2px solid var(--ink)}
+.wcard img{display:block;width:100%;height:195px;object-fit:cover;filter:contrast(1.14)}
+body.ink .wcard img{filter:grayscale(1) contrast(1.24)}
+.wcard .im .halftone{position:absolute;inset:0;pointer-events:none;opacity:.3;
+  background-image:radial-gradient(rgba(0,0,0,.85) 30%, transparent 33%);
+  background-size:3px 3px;mix-blend-mode:multiply}
+.wcard .tx{padding:10px 11px;display:flex;flex-direction:column;flex:1 1 auto}
+.wcard h3{margin:0 0 6px;font-family:var(--grot);font-size:12px;line-height:1.25;text-transform:uppercase}
+.wcard p{margin:0 0 10px;font-size:11px;line-height:1.65;color:var(--dim)}
+.wcard .wt{margin-top:auto;padding-top:8px;border-top:1px solid var(--line);
+  font-family:var(--grot);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink)}
+.wcard .wt i{display:inline-block;width:8px;height:8px;margin-right:7px;vertical-align:-1px;
+  background:var(--wc,var(--ink));border:1px solid var(--ink)}
+
+/* ---------------- the shop ---------------- */
+.shop .im .pod{position:absolute;left:9px;top:9px;z-index:2;font-family:var(--grot);font-size:8.5px;
+  letter-spacing:.18em;text-transform:uppercase;background:var(--ink);color:var(--paper);padding:4px 7px}
+.shopnote{margin:14px 0 0;font-size:12px;line-height:1.75;color:var(--dim)}
+.shopnote b{color:var(--ink)}
+.shopnote.soon{border-left:3px solid var(--stripe);padding:2px 0 2px 13px;margin-top:10px}
+.look .buy.soon{border-style:dashed;opacity:.45}
+.look .buy.soon:hover{background:transparent;color:var(--ink)}
+
+/* the sticker */
+.stickwrap{display:flex;gap:16px;align-items:center;border:2px solid var(--ink);padding:14px;flex-wrap:wrap}
+.stickwrap img{width:170px;height:170px;object-fit:cover;flex:0 0 auto;border:2px solid var(--ink)}
+body.ink .stickwrap img{filter:grayscale(1) contrast(1.24)}
+.stickwrap .stx{flex:1 1 260px;min-width:0}
+.stickwrap h3{margin:0 0 6px;font-family:var(--grot);font-size:15px;text-transform:uppercase}
+.stickwrap p{margin:0 0 10px;font-size:12.5px;line-height:1.7;color:var(--dim)}
+
+.colophon{margin-top:24px;border-top:2px solid var(--ink);padding-top:12px;
+  font-size:10px;letter-spacing:.1em;line-height:2;color:var(--dim);text-transform:uppercase}
+.colophon b{color:var(--ink)}
+
+/* ---------------- handwriting (the diary, the margin notes) ---------------- */
+.hand{font-family:var(--hand);font-size:20px;line-height:1.5;letter-spacing:.01em}
+p.hand-note{margin:14px 0 6px;font-family:var(--hand);font-size:20px;line-height:1.45;color:var(--dim)}
+p.hand-note b{color:var(--ink)}
+
+/* ---------------- the verse ---------------- */
+figure.verse{margin:20px 0 18px;border:2px solid var(--ink);border-left:6px solid var(--stripe);padding:18px 20px 15px}
+figure.verse blockquote{margin:0 0 10px;font-family:var(--mono);font-style:italic;
+  font-size:clamp(15px,2.3vw,18px);line-height:1.68;color:var(--ink)}
+figure.verse figcaption{font-size:9.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--dim2)}
+
+/* ---------------- the building committee ---------------- */
+.minutes{margin:6px 0 20px;border:2px solid var(--ink);padding:13px 15px 3px}
+.minutes .mh{margin:0 0 12px;padding:0;border-bottom:0;font-size:8.5px;letter-spacing:.28em;
+  text-transform:uppercase;color:var(--dim2);line-height:1.4}
+.minutes p{margin:0 0 11px;padding-bottom:10px;border-bottom:1px solid var(--line);font-size:12.5px;line-height:1.72}
+.minutes p:last-child{border-bottom:0;padding-bottom:0;margin-bottom:0}
+.minutes b{color:var(--ink)}
+.minutes .mno{display:inline-block;min-width:22px;font-family:var(--disp);font-size:15px;color:var(--dim2)}
+
+/* ---------------- the kitchen ---------------- */
+.rec{margin:0 0 22px;border-left:3px solid var(--stripe);padding:3px 0 3px 15px}
+.rec .rno{display:block;font-size:8.5px;letter-spacing:.28em;text-transform:uppercase;color:var(--dim2);margin:0 0 5px}
+.rec h4{margin:0 0 8px;font-family:var(--grot);font-size:15px;line-height:1.25;text-transform:uppercase;letter-spacing:.02em}
+.rec p{margin:0 0 9px;font-size:13px;line-height:1.82}
+.rec p:last-child{margin-bottom:0}
+.rec p.hand{margin-top:12px;font-family:var(--hand);font-size:20px;line-height:1.45;letter-spacing:.01em}
+
+/* ---------------- the torn-out page ---------------- */
+.tornwrap{margin:22px 0 24px;filter:drop-shadow(0 9px 17px rgba(0,0,0,.6))}
+.torn{position:relative;background:#f4f0e5;color:#191919;padding:30px 26px 20px;
+  -webkit-print-color-adjust:exact;print-color-adjust:exact;
+  background-image:repeating-linear-gradient(to bottom,rgba(20,20,20,0) 0 29px,rgba(20,20,20,.16) 29px 30px)}
+.tear{display:block;height:28px;-webkit-print-color-adjust:exact;print-color-adjust:exact;background-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20800%2028%22%20preserveAspectRatio%3D%22none%22%3E%3Cpath%20d%3D%22M0%2C0%20H800%20V11%20C789.7%2C11.4%20783.2%2C10.1%20773.0%2C10.3%20C761.9%2C9.0%20754.9%2C21.3%20743.9%2C22.6%20C738.1%2C22.0%20734.4%2C18.4%20728.6%2C18.5%20C719.3%2C18.0%20713.4%2C9.6%20704.1%2C8.7%20C694.0%2C9.8%20687.6%2C7.0%20677.5%2C8.3%20C672.3%2C7.1%20669.0%2C10.1%20663.7%2C9.3%20L661.0%2C18.1%20L656.8%2C11.0%20C654.7%2C9.9%20648.9%2C2.9%20639.8%2C4.0%20L637.3%2C10.4%20L633.4%2C5.7%20C631.9%2C3.2%20626.8%2C8.6%20618.8%2C8.0%20L616.1%2C12.5%20L611.9%2C8.7%20C611.5%2C9.1%20606.9%2C10.3%20599.6%2C11.5%20C588.6%2C11.1%20581.6%2C10.7%20570.6%2C11.8%20C561.1%2C10.4%20555.1%2C10.8%20545.5%2C11.2%20C536.1%2C10.5%20530.2%2C14.1%20520.8%2C13.6%20C515.0%2C13.0%20511.4%2C23.4%20505.7%2C24.1%20C495.4%2C25.4%20488.9%2C11.1%20478.5%2C10.3%20L477.2%2C16.5%20L475.1%2C10.8%20C471.7%2C11.6%20467.4%2C8.3%20460.6%2C8.3%20C455.3%2C9.1%20452.0%2C23.9%20446.7%2C23.5%20C436.9%2C23.5%20430.7%2C16.7%20420.9%2C17.9%20C409.7%2C18.3%20402.5%2C16.2%20391.3%2C16.2%20C386.2%2C17.5%20383.0%2C13.2%20378.0%2C14.5%20C368.6%2C13.8%20362.7%2C24.2%20353.3%2C23.6%20C343.3%2C23.0%20337.0%2C16.7%20327.1%2C17.7%20C318.4%2C17.5%20312.8%2C15.5%20304.1%2C16.2%20C297.3%2C15.4%20293.0%2C22.9%20286.2%2C23.7%20C279.3%2C24.5%20274.9%2C17.6%20267.9%2C16.7%20C259.8%2C16.5%20254.7%2C26.9%20246.6%2C25.5%20L243.4%2C28.0%20L238.6%2C26.7%20C236.4%2C24.6%20229.9%2C8.5%20219.7%2C8.7%20C216.1%2C9.6%20213.9%2C7.9%20210.3%2C7.7%20C202.3%2C6.3%20197.3%2C3.3%20189.3%2C4.6%20C184.0%2C3.6%20180.7%2C3.9%20175.4%2C4.0%20C165.7%2C4.2%20159.5%2C6.8%20149.8%2C8.2%20C142.5%2C8.1%20137.9%2C9.0%20130.6%2C7.8%20C124.4%2C8.9%20120.5%2C7.6%20114.4%2C8.7%20C106.4%2C9.7%20101.4%2C11.7%2093.5%2C11.2%20C90.4%2C12.3%2088.4%2C7.9%2085.3%2C9.2%20C81.0%2C8.0%2078.3%2C6.0%2073.9%2C5.9%20C64.8%2C6.3%2059.0%2C8.6%2049.9%2C7.7%20C46.7%2C6.6%2044.6%2C16.7%2041.3%2C16.7%20C30.2%2C15.5%2023.1%2C14.1%2011.9%2C14.2%20C7.4%2C13.6%204.5%2C6.1%200.0%2C6.3%20L0%2C6.3%20Z%22%20fill%3D%22%23f4f0e5%22%2F%3E%3C%2Fsvg%3E");background-size:100% 100%;background-repeat:no-repeat}
+.torn .stamp2{position:absolute;right:16px;top:17px;font-family:var(--grot);font-size:8.5px;letter-spacing:.2em;
+  text-transform:uppercase;color:rgba(25,25,25,.55);border:2px solid rgba(25,25,25,.32);padding:5px 8px;transform:rotate(-3deg)}
+.torn .dh{font-family:var(--hand);font-size:19px;line-height:30px;color:#1c1c1c;margin:0 0 30px;max-width:64ch}
+.torn .dh s{color:rgba(28,28,28,.42)}
+.torn .dh.last{margin-bottom:0}
+.torn .dh .dash{color:rgba(28,28,28,.65)}
+
+/* ---------------- the press note ---------------- */
+.pressnote{margin-top:26px;border:2px solid var(--stripe);padding:16px 17px}
+.pressnote .k{font-size:8.5px;letter-spacing:.26em;text-transform:uppercase;color:var(--stripe);margin:0 0 7px}
+.pressnote p{margin:0 0 12px;font-size:12.5px;line-height:1.7;color:var(--dim);max-width:70ch}
+.pressnote p b{color:var(--ink)}
+.btns{display:flex;gap:9px;flex-wrap:wrap}
+.btn{font-family:var(--grot);font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;
+  text-decoration:none;border:2px solid var(--ink);padding:10px 13px;color:var(--ink)}
+.btn:hover{background:var(--ink);color:var(--paper)}
+.btn.hot{background:var(--stripe);border-color:var(--stripe);color:#0a0a0a}
+.btn.hot:hover{background:#fff;border-color:#fff}
+
+.foot{margin-top:34px;border-top:1px solid var(--line);padding:15px 0 0;font-size:9.5px;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--dim);
+  display:flex;flex-wrap:wrap;gap:8px 10px;justify-content:space-between;align-items:center}
+.foot a{text-decoration:none;border-bottom:1px solid var(--line);color:var(--ink);padding-bottom:1px}
+.foot a:hover{background:var(--ink);color:var(--paper)}
+@media print{
+  @page{size:A4 portrait;margin:10mm}
+  body{background:#fff;color:#000}
+  .grain,.scan,.chrome,.ticker,.ctlrow,.pressnote,.foot{display:none!important}
+  .wrap{padding:0;max-width:none}.sheet{border:0;padding:0}
+}
+@media (prefers-reduced-motion:reduce){ .ticker .in,.cdot{animation:none!important} }
+</style>
+</head>
+<body class="choppy ink">
+
+<div class="grain" aria-hidden="true"></div>
+<div class="scan" aria-hidden="true"></div>
+
+<header class="chrome">
+  <div class="cbar">
+    <span class="cdot"></span>
+    <span class="cbrand">miki's zine</span>
+    <span class="csep">/</span>
+    <span>issue no. <b>2</b></span>
+    <span class="csep">/</span>
+    <span>back issue &middot; free &middot; take one</span>
+    <span class="cspacer"></span>
+    <a class="clink" href="https://www.cafedreamr.art/ZINE/">&larr; the rack</a>
+    <a class="clink" href="https://www.cafedreamr.art/MENU/">the menu &rarr;</a>
+    <a class="clink" href="https://www.cafedreamr.art/">the terminal &rarr;</a>
+  </div>
+</header>
+
+<div class="ticker" aria-hidden="true"><span class="in" id="tick"></span></div>
+
+<main class="wrap">
+
+  <div class="ctlrow chrome">
+    <div class="ctl">
+      <span class="lab">plates</span>
+      <div class="seg" id="segPlates">
+        <button type="button" data-plates="ink" class="on">ink</button>
+        <button type="button" data-plates="colour">colour</button>
+      </div>
+    </div>
+    <div class="ctl">
+      <span class="lab">paper</span>
+      <div class="seg" id="segPaper">
+        <button type="button" data-paper="black" class="on">black</button>
+        <button type="button" data-paper="ink">ink saver</button>
+      </div>
+    </div>
+    <div class="acts">
+      <button type="button" id="rechop">re-chop the type</button>
+      <button type="button" class="key" id="printBtn">print this issue</button>
+    </div>
+  </div>
+
+  <article class="sheet" id="sheet">
+    <span class="ghost" aria-hidden="true">02</span>
+
+    <header class="masthead">
+      <div class="mrow">
+        <span>The zine &middot; issue no. <b>2</b></span>
+        <span>the cafedreamr press</span>
+        <span>take one &middot; it&rsquo;s free</span>
+      </div>
+      <h1 class="mast">
+        <span class="ml" data-split>MIKI'S</span>
+        <span class="ml w2" data-split>ZINE</span>
+      </h1>
+      <p class="msub">written, cut &amp; stapled by <b>miki</b> &middot; no ads, no filler, no apologies &middot; printed badly on purpose</p>
+    </header>
+
+    <section class="ed">
+      <span class="kick">editor&rsquo;s note</span>
+      <p class="ednote">so this is issue two. issue one came back from the photocopier smelling like burnt toner and hans filed a formal complaint about &ldquo;archival integrity.&rdquo; fine. this one&rsquo;s better anyway: a brand-new realm, a castle of opal that turned up in the back of it while we were stapling, the committee of rats who designed the whole thing and kept minutes, a recipe that only works at dusk, the only drawing of me and the twins that will ever exist, one page out of my own journal that somebody filed under <b>j</b>, and the verse hans chose for us, which is at the back where he can keep an eye on it. plus a lookbook that actually slaps, a pattern book of seven things none of us have made yet, and a sticker with your name on it &mdash; figuratively.</p>
+      <p style="margin-bottom:6px">it&rsquo;s yours if you want it. that&rsquo;s the whole point of a zine.</p>
+      <p class="sign">&mdash; the rat</p>
+    </section>
+
+    <span class="kick pink">the feature</span>
+    <h2 class="fh">The atrium of whispered truths</h2>
+    <p class="dek">chari&rsquo;s new realm &mdash; or: how to furnish a home with two rats and a hunch</p>
+
+    <figure class="fig">
+      <img src="https://user.uploads.dev/file/3f4fc0314f0187a8819e23a940a7a215.jpg" alt="chari's new realm — a glass-roofed garden room with a warm oven, trailing plants, and a wall of pinned ideas, with two white rats on a cushion">
+      <span class="halftone" aria-hidden="true"></span>
+      <figcaption>the new realm &mdash; glass roof, warm oven, and one whole wall of pinned ideas.</figcaption>
+    </figure>
+
+    <p>chari &mdash; youngest of the three kittens, star&rsquo;s little sister, apprentice to literally everyone &mdash; finally got a realm of her own: the atrium of whispered truths. it&rsquo;s a garden-home. a glass roof that lets the stars in, a warm brick oven, trailing plants in every corner, and a moodboard wall of pinned fabric swatches and torn-out magazine pages. it smells like rain on warm stone.</p>
+    <p>she didn&rsquo;t plan it alone. nobody plans anything alone around here. she planned it with a committee of two: <b>crumb</b> and <b>mochi</b>, her white rats &mdash; the same small companions who ride her shoulders through the loud days and keep her steady when the anxiety and the lab-memories get close. turns out they&rsquo;re also excellent interior designers.</p>
+
+    <p class="pull">if a rat naps on it, it stays.</p>
+
+    <h3 style="font-family:var(--grot);font-size:14px;text-transform:uppercase;margin:0 0 6px">the rat method</h3>
+    <ol class="steps">
+      <li><b>lay everything on the floor.</b> every cushion, every swatch, every lamp. the floor is the moodboard, and the moodboard is the floor.</li>
+      <li><b>release the committee.</b> crumb goes first &mdash; crumb is bold, crumb has opinions. mochi follows &mdash; mochi is the inspector, and mochi does not care about your feelings.</li>
+      <li><b>the nap test.</b> whichever swatch gets slept on, stays. a doze is the highest rating we have. two rats asleep at once is a landmark decision.</li>
+      <li><b>the crumb test.</b> if crumb leaves crumbs on it, it belongs in the kitchen. if it comes out clean, it&rsquo;s furniture you&rsquo;re allowed to love.</li>
+      <li><b>the tiebreak.</b> if they disagree, it waits by the window until they don&rsquo;t. daylight is a fair referee and a better designer than most of us.</li>
+    </ol>
+
+    <h3 style="font-family:var(--grot);font-size:14px;text-transform:uppercase;margin:0 0 6px">the garden &amp; the pets</h3>
+    <p>the garden is half borrowed from milo&rsquo;s rows &mdash; a raised bed of mint the rats are not supposed to raid (they raid it), a herb wall she labels in her own handwriting, and a small courtyard that crumb and mochi inspect on a strict schedule &mdash; from chari&rsquo;s shoulders, which is where they live. the pets list reads: crumb (bold), mochi (inspector), and a jar of tadpoles that hans insists, at length, are &ldquo;not pets.&rdquo;</p>
+    <p>that&rsquo;s the whole trick of it: the realm is calm because it was decided by two animals who only ever want somewhere warm to sleep. chari says it&rsquo;s the first room she&rsquo;s had that doesn&rsquo;t feel like it&rsquo;s waiting for something bad. we could all use a committee like that.</p>
+
+    <span class="kick pink">the castle</span>
+    <h2 class="fh">The castle made of opal</h2>
+    <p class="dek">chari asked, yeshua built it, and the committee of two did the interiors &mdash; in one afternoon, by sleeping on it</p>
+
+    <figure class="fig">
+      <img src="https://user.uploads.dev/file/a39445ea4f5ef21ba9f0c95853605584.jpg" alt="a small chunky castle of milky white opal glowing with pastel violet and mint fire, standing on a mossy stone plinth inside a glass-roofed garden room at dusk, with a warm brick oven and two white rats on a cushion in the foreground">
+      <span class="halftone" aria-hidden="true"></span>
+      <figcaption>the castle, on its plinth, with the committee in the foreground.</figcaption>
+    </figure>
+
+    <p>here&rsquo;s the part the feature didn&rsquo;t have room for: the atrium isn&rsquo;t finished, and it isn&rsquo;t going to be. it grew. past the herb wall, at the back of the garden room, under the glass, there&rsquo;s a castle &mdash; small, chunky, two storeys and a tower, cut out of opal and lit from the inside. chari asked for it the way she asks for things &mdash; quietly, and once. <b>yeshua</b> built it. that&rsquo;s what he does: he strung the whole caf&eacute; into a web because star asked him to, he gave miki her place when she graduated, and now there is a castle in the atrium.</p>
+
+    <p>he built it out of opal, which is the stone miki&rsquo;s place is cut from &mdash; chari liked the look so much she asked for the whole of it in the same rock. it is the only castle in this family with no job. the twins&rsquo; is a studio and a lookout, hans has a kingdom with paperwork in it, and miki&rsquo;s cavern has amps in it. chari&rsquo;s castle is for being small in. from upstairs you can see the oven; from the floor you can see the sky.</p>
+
+    <p class="pull">yeshua built the castle. the rats decided where the door goes. (they were right.)</p>
+
+    <h3 style="font-family:var(--grot);font-size:14px;text-transform:uppercase;margin:0 0 6px">the building committee &mdash; the minutes, in full</h3>
+    <div class="minutes">
+      <p class="mh">recorded by nobody &middot; ratified by nap</p>
+      <p><span class="mno">01</span><b>the door.</b> crumb: the garden side. mochi: the oven side. mochi napped on the oven side. <b>carried: the oven side.</b></p>
+      <p><span class="mno">02</span><b>a second tower.</b> crumb: yes. mochi: no. it waited by the window until they agreed. <b>carried, eventually.</b></p>
+      <p><span class="mno">03</span><b>the drawbridge.</b> crumb walked it twice, in both directions, slowly. approved with one revision: <b>it stays down.</b> nobody is laying siege to a castle in a glass room at night.</p>
+      <p><span class="mno">04</span><b>the moat.</b> crumb: yes. mochi: absolutely not. <b>open.</b> the hole is filled in. the moat is under review.</p>
+      <p><span class="mno">05</span><b>the windows.</b> warm, small, low &mdash; so the oven can be seen from upstairs and the sky from the floor. <b>unanimous.</b></p>
+      <p><span class="mno">06</span><b>the name.</b> it is a castle, not a palace. the committee was very clear about this. <b>unanimous.</b></p>
+      <p><span class="mno">07</span><b>the rule.</b> nothing unkind is said inside it. anything true that has to be said is whispered, and heard gently. <b>unanimous, and permanently in force.</b></p>
+    </div>
+
+    <p>that last one is the whole castle, really &mdash; and it&rsquo;s where the atrium gets its name, which is a lot of name to get from two rats writing on a floor between naps. in the late afternoon the light comes through the opal and turns the whole room the colour of the inside of a shell. chari says it&rsquo;s the first building she&rsquo;s had that was made <em>for</em> her instead of around her. turn up with something to eat and she&rsquo;ll let you sit in it.</p>
+
+    <p class="hand-note">crumb leaves crumbs in the castle. this was motion 08. we don&rsquo;t talk about motion 08.</p>
+
+    <span class="kick pink">the kitchen</span>
+    <h2 class="fh">Candy apples made of light</h2>
+    <p class="dek">two recipes from the atrium, taken down at the counter and tested by people who should not have been allowed to test them</p>
+
+    <figure class="fig">
+      <img src="https://user.uploads.dev/file/afb21db970acceeee64754b2991ccadd.jpg" alt="three candy apples made of glowing translucent light on wooden sticks, standing on a dark slate plate beside two ordinary red apples and a bowl of sugar">
+      <span class="halftone" aria-hidden="true"></span>
+      <figcaption>the second batch, drawn before it went out.</figcaption>
+    </figure>
+
+    <div class="rec">
+      <span class="rno">recipe no. 01</span>
+      <h4>candy apples made of light</h4>
+      <p><b>ingredients:</b> two (2) apples, one (1) pan, sugar enough to be embarrassing, and light &mdash; the afternoon kind, off a glass roof. no other kind of light will take.</p>
+      <p><b>method:</b> melt the sugar until it is the colour of the last ten minutes of a day. hold the apple on its stick in the middle of it. do not stir, do not rush, do not look away for a second &mdash; the light climbs into the sugar like it has been waiting for the invitation. lift it out glowing. set it down. it stays lit for about an hour.</p>
+      <p><b>warning:</b> eat it before you finish admiring it. a candy apple made of light that has gone out is just an apple with regrets.</p>
+      <p class="hand"><b>miki&rsquo;s note:</b> it does not photograph. i tried &mdash; twice, with two cameras nobody is supposed to know about. the drawing above was done before the second batch went out. this page is the only proof.</p>
+    </div>
+
+    <div class="rec">
+      <span class="rno">recipe no. 02 &middot; the atrium version</span>
+      <h4>the same apple, after dark</h4>
+      <p><b>ingredients:</b> everything above, plus the roof open and every lamp off.</p>
+      <p><b>method:</b> the same, but you make it where the sky can see what you&rsquo;re doing. the light that takes to the sugar then is colder, it flickers blue at the edge of the shell, and it tastes like a held breath. serve it to whoever is still awake with you.</p>
+      <p><b>note:</b> chari makes this one. she does not measure the sugar and it works anyway, which is unfair, and we have agreed to stop arguing about it on the advice of the committee.</p>
+    </div>
+
+    <span class="kick">the ink plate</span>
+    <h2 class="fh">Three faces, no dignity</h2>
+    <p class="dek">the only drawing of miki and the twins in existence, and the reason there will not be a second one</p>
+
+    <figure class="fig">
+      <img src="https://user.uploads.dev/file/f4abcd154032d446fade12baef386d57.png" alt="a two-ink zine plate: three characters crammed shoulder to shoulder pulling silly faces — a girl with a black bob and yellow hair streaks in the middle, and an identical white-haired boy with white wolf ears and bright blue eyes on each side, all three with their tongues out">
+      <span class="halftone" aria-hidden="true"></span>
+      <figcaption>miki, slay &amp; sylvestre &mdash; two inks, one drawing, no dignity. (drawn from life. life did not sit still.)</figcaption>
+    </figure>
+
+    <p>the twins do not pose. this is documented: hans has asked them twice for a portrait for the archive, and both times they sent back a drawing of hans. the whole family is like this, which is why the family album is mostly photographs of the backs of people leaving rooms.</p>
+
+    <p>so this is what we have &mdash; miki in the middle, a twin on each shoulder, nothing in frame but the faces, because the hands are a separate negotiation and the negotiation is still going. the running joke in this house is that slay and sylvestre have never once been photographed holding anything. the running joke is true.</p>
+
+    <p>the plate prints in two inks: the blue of those eyes, and miki&rsquo;s yellow, which she refused to surrender to the press. everything else is ink and paper, the way a drawing is supposed to be. flip <b>plates</b> to colour at the top of the page if you want to see what the yellow cost us.</p>
+
+    <span class="kick pink">the archive</span>
+    <h2 class="fh">A page out of my journal</h2>
+    <p class="dek">found in a drawer marked &ldquo;journal &mdash; personal, do not file,&rdquo; which is where you file a thing you are not filing</p>
+
+    <div class="tornwrap">
+      <div class="torn">
+        <span class="stamp2">found in the archive</span>
+        <p class="dh">dear diary.</p>
+        <p class="dh">today i made sylvestre laugh so hard he fell off the drum stool, and slay laughed so hard he had to sit down on the floor, and i have been thinking about it for six hours straight. i&rsquo;ve put it in the log. the machines and the portals are the <s>watch</s> shift, i know that. but i think that might be the job.</p>
+        <p class="dh">also: i fixed the camera in the west corridor. also: <s>hello</s> hi hans.</p>
+        <p class="dh last">dear diary. today i<span class="dash"> &mdash;</span></p>
+      </div>
+      <span class="tear" aria-hidden="true"></span>
+    </div>
+
+    <p>this page was in the archive. it isn&rsquo;t any more. it was in a drawer marked <b>journal &mdash; personal, do not file</b>, and the tear runs through the next day&rsquo;s entry, halfway down a sentence, with nothing above it damaged &mdash; which is either a coincidence or a message, and in this family it is never a coincidence.</p>
+
+    <p>we&rsquo;ve printed it the way it survived: the paper, the handwriting, the struck-out word, and the place where she stopped writing. the archive has apologised for the drawer, the drawer has been re-labelled, and miki is keeping the page.</p>
+
+    <p class="hand-note">if you find the other half, don&rsquo;t file it. bring it to the counter. <b>&mdash; ed.</b></p>
+
+    <span class="kick pink">the lookbook</span>
+    <h2 class="fh">Worn by the house</h2>
+    <p class="dek">two looks from the family, plus the little things &mdash; all of it drawn to be made real, none of it necessary.</p>
+
+    <div class="looks">
+      <article class="look">
+        <div class="im">
+          <img src="https://user.uploads.dev/file/96c7f820fe52294a75822df08f79cab9.jpg" alt="star, a goth catgirl in a black leather moto jacket, violet ribbed top and pleated mini skirt, holding a coffee">
+          <span class="halftone" aria-hidden="true"></span>
+        </div>
+        <div class="tx">
+          <h3>star &mdash; &ldquo;midnight espresso&rdquo;</h3>
+          <p>goth-cat workwear for the 6am pull: cropped moto jacket, violet ribbed top, pleated mini with a chain belt, platform boots, and coffee in hand. the first door, dressed like it means business.</p>
+          <a class="buy" href="https://www.cafedreamr.art/MENU/#star-lavender-coat">commission this look &rarr;</a>
+        </div>
+      </article>
+      <article class="look">
+        <div class="im">
+          <img src="https://user.uploads.dev/file/5a822d6482162428de8eef4e931a79b0.jpg" alt="pearl, a white-haired foxgirl in a glossy black corset top and lilac slip skirt with layered silver chains">
+          <span class="halftone" aria-hidden="true"></span>
+        </div>
+        <div class="tx">
+          <h3>pearl &mdash; &ldquo;the violet hour&rdquo;</h3>
+          <p>soft-lethal evening wear from the perfume realm: glossy corset top with silver hardware, a sheer lilac slip, layered chains, barefoot sandals so she can feel YESHUA humming under the floor.</p>
+          <a class="buy" href="https://www.cafedreamr.art/MENU/#pearl-drop-earrings">commission this look &rarr;</a>
+        </div>
+      </article>
+    </div>
+
+    <span class="kick pink">the shop</span>
+    <h2 class="fh">Printed for you</h2>
+    <p class="dek">the things you can actually buy &mdash; printed to order, posted to your door, no stockroom and no second run.</p>
+
+    <div class="looks shop">
+      <article class="look">
+        <div class="im">
+          <span class="pod">tee &middot; black</span>
+          <img src="https://user.uploads.dev/file/14e3850799231067c0cd8069592d1dcf.jpg" alt="a black t-shirt with miki's ink line portrait printed in lime on the chest">
+          <span class="halftone" aria-hidden="true"></span>
+        </div>
+        <div class="tx">
+          <h3>the miki tee</h3>
+          <p>miki&rsquo;s own face &mdash; the same ink drawing issue 01 is printed from &mdash; screened in lime on black cotton. the editor, worn.</p>
+          <a class="buy" data-shop>the shop &rarr;</a>
+        </div>
+      </article>
+      <article class="look">
+        <div class="im">
+          <span class="pod">tee &middot; cream</span>
+          <img src="https://user.uploads.dev/file/ea4507fb9e77fa9bb46943648662479e.jpg" alt="a cream t-shirt with the cafedreamr wordmark printed in black across the chest">
+          <span class="halftone" aria-hidden="true"></span>
+        </div>
+        <div class="tx">
+          <h3>the house tee</h3>
+          <p>the <b>cafedreamr</b> wordmark &mdash; black on cream, one lime bar under it. quieter than the cat, for the days you want the name instead of the face.</p>
+          <a class="buy" data-shop>the shop &rarr;</a>
+        </div>
+      </article>
+      <article class="look">
+        <div class="im">
+          <span class="pod">notebook</span>
+          <img src="https://user.uploads.dev/file/ef464a97175cb8f4a2f2be68052d9a63.jpg" alt="a kraft-cover notebook with miki's ink portrait printed on the cover and the word cafedreamr under it">
+          <span class="halftone" aria-hidden="true"></span>
+        </div>
+        <div class="tx">
+          <h3>the miki notebook</h3>
+          <p>miki on the cover, the name underneath. for the notes you keep meaning to keep &mdash; or the prank ledger, volume two.</p>
+          <a class="buy" data-shop>the shop &rarr;</a>
+        </div>
+      </article>
+      <article class="look">
+        <div class="im">
+          <span class="pod">sticker sheet</span>
+          <img src="https://user.uploads.dev/file/4853a0e77988a2bff1b534b4a4797350.png" alt="a die-cut sticker sheet with six stickers: miki's portrait, the lime coffee cup, the cafedreamr wordmark, the words miki's zine, a star, and do not poke the web">
+          <span class="halftone" aria-hidden="true"></span>
+        </div>
+        <div class="tx">
+          <h3>the sticker sheet</h3>
+          <p>six die-cuts on one sheet: miki, the cup, the wordmark, the name, the star, and the house rule. enough to cover a laptop and make two friends.</p>
+          <a class="buy" data-shop>the shop &rarr;</a>
+        </div>
+      </article>
+    </div>
+
+    <p class="shopnote">printed on demand by the shop &mdash; nothing sits in a stockroom and nothing is printed twice. <b>the zine stays free either way.</b></p>
+    <p class="shopnote soon" id="shopSoon" hidden>the shop isn&rsquo;t open yet: the first drop is being priced. watch the ticker &mdash; until then <a href="https://www.cafedreamr.art/SUPPORT/">the fund</a> is what keeps the rack full.</p>
+
+    <h3 style="font-family:var(--grot);font-size:14px;text-transform:uppercase;margin:22px 0 6px">the accessories</h3>
+    <div class="shelf">
+      <figure>
+        <img src="https://user.uploads.dev/file/8cdb1ecd0c9d8f37aa5fdb0493ae3703.jpg" alt="a black knit cat-ear beanie with a violet stripe and a lime star">
+        <figcaption><b>cat-ear beanie</b>midnight espresso &mdash; black knit, violet stripe, lime star<em>$26 &middot; limited run</em></figcaption>
+      </figure>
+      <figure>
+        <img src="https://user.uploads.dev/file/ecafed772f2e94bbdc5b5616b2a2ec07.jpg" alt="a silver necklace with a tiny glass perfume bottle charm and a fox charm">
+        <figcaption><b>perfume-charm necklace</b>the violet hour &mdash; glass vial, silver chain, fox charm<em>$32 &middot; limited run</em></figcaption>
+      </figure>
+      <figure>
+        <img src="https://user.uploads.dev/file/e6369b34af0ac0261f1ed6fe20158872.jpg" alt="a matte chrome lighter with a lime hazard-stripe band and a paw print">
+        <figcaption><b>shelf-space lighter</b>matte chrome, lime hazard band, paw print<em>$18 &middot; limited run</em></figcaption>
+      </figure>
+    </div>
+    <p style="margin-top:14px;font-size:11.5px;color:var(--dim)">the printed things live in <b>the shop</b>, above. these three are made one at a time, by hand, to order &mdash; no markup, you pay the making and the post, and your name goes in the back of the next issue. <a href="https://www.cafedreamr.art/MENU/">the menu &rarr;</a></p>
+
+    <span class="kick">the pattern book</span>
+    <h2 class="fh">Pinned before it was cut</h2>
+    <p class="dek">seven more things off the rail in the planning room. every one of them lived on the wall as a swatch long before it was a garment &mdash; and each one has to belong to somebody, which is the first thing a pattern decides.</p>
+
+    <div class="wardrobe">
+      <figure class="wcard" style="--wc:#c6c6c6">
+        <div class="im">
+          <img src="https://user.uploads.dev/file/534cd25e77368e7e9b3a277c7b718dc1.jpg" alt="the back of a hairdresser's mannequin head wearing a blunt jet-black bob striped with iridescent holographic foil bands">
+          <span class="halftone" aria-hidden="true"></span>
+        </div>
+        <div class="tx">
+          <h3>the hologram stripe</h3>
+          <p>black hair, striped with the same foil the flip-book edition is printed on. blunt cut, because the foil only reads if the line is clean. it moves when you do &mdash; and a half second before you do.</p>
+          <div class="wt"><i></i>the press &middot; a styling, not a garment</div>
+        </div>
+      </figure>
+      <figure class="wcard" style="--wc:#ccff00">
+        <div class="im">
+          <img src="https://user.uploads.dev/file/61e197947ebf3f36d857c8c3ed2097d1.jpg" alt="a very long chunky hand-knit scarf in bold wide black and light grey stripes, draped over a wooden rail">
+          <span class="halftone" aria-hidden="true"></span>
+        </div>
+        <div class="tx">
+          <h3>the long watch scarf</h3>
+          <p>black and grey, bold, knit long enough to wrap twice and still drag the floor. it is made for the 7pm-to-4am portal watch, which is cold, and long, and mostly standing around being quiet.</p>
+          <div class="wt"><i></i>miki &middot; made to order</div>
+        </div>
+      </figure>
+      <figure class="wcard" style="--wc:#ccff00">
+        <div class="im">
+          <img src="https://user.uploads.dev/file/a9a08580c777eb0a57b40cb0c43b3030.jpg" alt="a black tweed newsboy cap with a short stiff brim and a covered button on the crown, laid flat">
+          <span class="halftone" aria-hidden="true"></span>
+        </div>
+        <div class="tx">
+          <h3>the press cap</h3>
+          <p>ink-black tweed, newsboy cut, brim low. the editor&rsquo;s cap, for the hours she claims to be off duty &mdash; a claim nobody in this house has ever once believed.</p>
+          <div class="wt"><i></i>miki &middot; made to order</div>
+        </div>
+      </figure>
+      <figure class="wcard" style="--wc:#6495ed">
+        <div class="im">
+          <img src="https://user.uploads.dev/file/e722225f88b6d3669a62d8150a5a288c.jpg" alt="a silk scarf folded flat, its print half ornate victorian damask scrollwork in cornflower blue and half bold 1980s geometric shapes in blue and black on white">
+          <span class="halftone" aria-hidden="true"></span>
+        </div>
+        <div class="tx">
+          <h3>the hybrid print scarf</h3>
+          <p>half victorian damask, half eighties geometry, printed either side of a line down the middle. it cannot decide which century it is in, and has agreed to stop trying.</p>
+          <div class="wt"><i></i>hans &middot; made to order</div>
+        </div>
+      </figure>
+      <figure class="wcard" style="--wc:#e6e6fa">
+        <div class="im">
+          <img src="https://user.uploads.dev/file/f4ba7df42daad29f6ca8139953c5686d.jpg" alt="a plain bone-white sleeveless dress with a single narrow vertical panel of lavender chevrons printed down the centre front">
+          <span class="halftone" aria-hidden="true"></span>
+        </div>
+        <div class="tx">
+          <h3>the chevron dress</h3>
+          <p>plain bone cotton with one band of lavender chevrons running straight down the middle, collar to hem. chari asked for the pattern in the centre because then there is only one line &mdash; and she likes there to be one line.</p>
+          <div class="wt"><i></i>chari &middot; made to order</div>
+        </div>
+      </figure>
+      <figure class="wcard" style="--wc:#ff2d95">
+        <div class="im">
+          <img src="https://user.uploads.dev/file/e92312c7d8ad2b25cc69f12c376e9d97.jpg" alt="a hot pink felted wool french beret with a small tab on the crown, laid flat">
+          <span class="halftone" aria-hidden="true"></span>
+        </div>
+        <div class="tx">
+          <h3>the parisian beret</h3>
+          <p>hot pink felted wool, worn tilted, tab on the crown. pink is pearl&rsquo;s, so the beret is pearl&rsquo;s &mdash; and she wears it with the corset like the full stop at the end of an evening.</p>
+          <div class="wt"><i></i>pearl &middot; made to order</div>
+        </div>
+      </figure>
+      <figure class="wcard" style="--wc:#c0a6ff">
+        <div class="im">
+          <img src="https://user.uploads.dev/file/d1ccb8160e9e4c656a6158f6ddd5b962.jpg" alt="a pair of black lace fingerless gloves with the fingertips cut away, laid flat crossed over one another">
+          <span class="halftone" aria-hidden="true"></span>
+        </div>
+        <div class="tx">
+          <h3>the fingerless lace gloves</h3>
+          <p>black lace, cut away at the first knuckle, so she can work the machine and hold the cup at the same time &mdash; which is the only reason a barista ever wears gloves to begin with.</p>
+          <div class="wt"><i></i>star &middot; made to order</div>
+        </div>
+      </figure>
+    </div>
+    <p class="hand-note">if one of these is yours, say so and it goes on the menu with a proper cost sheet &mdash; that&rsquo;s how the coat happened. <b>&mdash; ed.</b></p>
+
+    <span class="kick">the sticker</span>
+    <div class="stickwrap">
+      <img src="https://user.uploads.dev/file/4b543209a3f0b70e42b27919aeef0698.jpg" alt="a glossy die-cut sticker of a black cat with a lime stripe, a coffee cup, and a small white spider">
+      <div class="stx">
+        <h3>the house sticker</h3>
+        <p>die-cut, glossy, water-resistant-ish (we tried). a small black cat with a lime stripe, a cup of coffee, and a white spider hitching a ride. stick it on a laptop, a bottle, or the vending machine &mdash; it&rsquo;s earned it.</p>
+        <a class="buy" style="display:inline-block;font-family:var(--grot);font-size:10px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;border:2px solid var(--ink);padding:8px 11px;color:var(--ink)" data-shop>leaving with one is between you and the shop &rarr;</a>
+      </div>
+    </div>
+
+    <span class="kick pink">the scriptures</span>
+    <h2 class="fh">The verse kept for this issue</h2>
+    <p class="dek">hans keeps the scriptures. he chose this one, and he would like you to know that it took four days</p>
+
+    <figure class="verse">
+      <blockquote>&ldquo;In my Father&rsquo;s house are many mansions: if it were not so, I would have told you.&rdquo;</blockquote>
+      <figcaption>John 14:2 &middot; KJV</figcaption>
+    </figure>
+
+    <p>one verse goes round the whole realm every day, and it is the same verse for everybody in it &mdash; it sits under your name on the cup star hands you, and the long day ends with a scroll of the passages you walked through to get there. a zine can&rsquo;t do that. a zine is stapled once and then picked up on whatever day you happen to find it. so this issue carries <b>the issue&rsquo;s verse</b> instead, the same one in every copy, which we are told is the point of paper.</p>
+
+    <p>hans chose it, and the only thing he would say about the choosing was: <em>the mansions</em>. everybody here has an address of their own &mdash; a garden, an archive, a lookout, a cavern with amps in it, and now a castle of opal with two rats on the committee &mdash; and every one of them still eats at the same counter. he has offered to explain the rest of it properly, at length, in the archive, with tea.</p>
+
+    <p class="hand-note">the day&rsquo;s verse is on <a href="https://www.cafedreamr.art/STAR/">star&rsquo;s cup</a> &middot; the passages are in <a href="https://www.cafedreamr.art/PLAY/">the long day</a> &middot; ask hans and clear an afternoon.</p>
+
+    <p class="colophon">issue no. 2 &middot; the cafedreamr press &middot; printed in the light-kingdom<br>
+      art &amp; words: <b>cafedreamr</b> &middot; the code beneath the web: <b>wren ai</b> &middot; copyleft &mdash; take it home, copy it, pass it on &mdash; just don&rsquo;t sell our faces. (the shop does that part.)</p>
+  </article>
+
+  <section class="pressnote">
+    <p class="k">the press</p>
+    <p><b>The shop</b> prints to order and posts to your door &mdash; shirts, a notebook, a sheet of stickers, nothing sitting in a stockroom. It is the other way to keep the rack full.</p>
+    <p><b>Every issue of the zine is free, and always will be.</b> Fifty copies is the smallest run the printer will do, and miki pays for the whole thing up front &mdash; then gives every copy away. If you want to keep the rack full, the same fund that holds the realm open pays the printer.</p>
+    <div class="btns">
+      <a class="btn" data-shop>the shop &rarr;</a>
+      <a class="btn hot" href="https://ko-fi.com/cafedreamr" target="_blank" rel="noopener noreferrer">&#9829; gift a coffee on ko-fi</a>
+      <a class="btn" href="https://www.cafedreamr.art/SUPPORT/">support the realm &rarr;</a>
+      <a class="btn" href="https://www.cafedreamr.art/ZINE/">&larr; back to the rack</a>
+    </div>
+  </section>
+
+  <footer class="foot chrome">
+    <span>miki's zine &middot; issue no. 2 &middot; the atrium of whispered truths</span>
+    <span><a href="https://www.cafedreamr.art/">the terminal</a> &middot; <a href="https://www.cafedreamr.art/ZINE/">the rack</a> &middot; <a href="https://www.cafedreamr.art/LORE/MAP.html">the realm map</a> &middot; <a href="https://www.cafedreamr.art/LORE/HOURS/">the hours</a> &middot; <a href="https://www.cafedreamr.art/LORE/BOBBY/cards.html">the dossiers</a> &middot; <a href="https://www.cafedreamr.art/LORE/MYSTERYGRID/">the mystery grid</a> &middot; <a href="https://www.cafedreamr.art/MENU/">the menu</a> &middot; <a href="https://www.cafedreamr.art/PLAY/">the long day</a> &middot; <a href="https://www.cafedreamr.art/LORE/VENDI/index.html">the vendi machine</a> &middot; <a href="https://www.cafedreamr.art/SUPPORT/">support the realm</a> &middot; <a href="https://ko-fi.com/cafedreamr" target="_blank" rel="noopener noreferrer">ko-fi</a></span>
+  </footer>
+</main>
+
+<script src="https://www.cafedreamr.art/PASSPORT/cd-passport.js"></script>
+<script>window.CD && CD.boot({page:"zine"});</script>
+
+<script>
+(function(){
+  "use strict";
+  function $(s, r){ return (r || document).querySelector(s); }
+  function $$(s, r){ return Array.prototype.slice.call((r || document).querySelectorAll(s)); }
+  function rnd(a, b){ return a + Math.random() * (b - a); }
+  /* the shop. paste the redbubble shop url into SHOP and every "the shop"
+     button on the page becomes a real link. to send one card somewhere more
+     specific, add data-url="https://..." to that one anchor. */
+  var SHOP = "";
+
+  var TICKER = ["issue no. 2 \u2014 the atrium of whispered truths",
+                "the rat method \u2014 five rules, two rats",
+                "the castle of opal \u2014 yeshua built it, the rats furnished it",
+                "candy apples made of light \u2014 don't stir, don't look away",
+                "three faces, no dignity \u2014 two inks, one drawing",
+                "a page out of the editor's journal \u2014 filed under j",
+                "the scriptures \u2014 one verse, kept for this issue",
+                "worn by the house \u2014 the lookbook",
+                "the pattern book \u2014 seven swatches off one rail",
+                "the house sticker \u2014 die-cut, glossy, earned",
+                "the shop \u2014 printed to order, posted to your door",
+                "free \u00b7 take one \u00b7 pass it on",
+                "printed badly on purpose"];
+
+  function splitType(el){
+    if (el.getAttribute("data-split-done")) return;
+    var text = el.textContent; el.textContent = "";
+    for (var i = 0; i < text.length; i++){
+      var s = document.createElement("span");
+      s.className = "ch" + (text[i] === " " ? " sp" : "");
+      s.textContent = text[i] === " " ? "\u00a0" : text[i];
+      el.appendChild(s);
+    }
+    el.setAttribute("data-split-done", "1");
+  }
+  function chop(scope){
+    $$("[data-split]", scope || document).forEach(function(el){
+      var size = parseFloat(getComputedStyle(el).fontSize) || 40;
+      $$(".ch", el).forEach(function(s){
+        if (s.classList.contains("sp")) { s.removeAttribute("style"); s.classList.remove("cut"); return; }
+        var loose = Math.random() < .15;
+        s.style.setProperty("--dx", (loose ? rnd(-1,1) * size * .04  : rnd(-1,1) * size * .011).toFixed(2) + "px");
+        s.style.setProperty("--dy", (loose ? rnd(-1,1) * size * .06  : rnd(-1,1) * size * .016).toFixed(2) + "px");
+        s.style.setProperty("--rot", (loose ? rnd(-2.4,2.4) : rnd(-.6,.6)).toFixed(2) + "deg");
+        s.style.setProperty("--sy", (loose ? rnd(.9,1.12) : rnd(.97,1.03)).toFixed(3));
+        var cut = Math.random() < .1;
+        s.classList.toggle("cut", cut);
+        if (cut){
+          s.style.setProperty("--c1", rnd(4,26).toFixed(1) + "%");
+          s.style.setProperty("--c2", rnd(4,24).toFixed(1) + "%");
+        }
+      });
+    });
+  }
+  function wireSeg(id, fn){
+    var seg = $("#" + id); if (!seg) return;
+    seg.addEventListener("click", function(e){
+      var b = e.target.closest("button"); if (!b) return;
+      $$("button", seg).forEach(function(x){ x.classList.toggle("on", x === b); });
+      fn(b.dataset);
+    });
+  }
+  function buildTicker(){
+    var one = TICKER.map(function(t){ return "<span>" + t + "</span><i>&#10022;</i>"; }).join("");
+    $("#tick").innerHTML = one + one;
+  }
+  function boot(){
+    buildTicker();
+    $$("[data-split]").forEach(splitType);
+    chop();
+    wireSeg("segPlates", function(d){ document.body.classList.toggle("ink", d.plates !== "colour"); });
+    wireSeg("segPaper", function(d){ document.body.classList.toggle("paper-ink", d.paper === "ink"); });
+    $("#rechop").addEventListener("click", chop);
+    var shops = $$("[data-shop]");
+    if (SHOP){
+      shops.forEach(function(a){ a.href = a.dataset.url || SHOP; a.target = "_blank"; a.rel = "noopener noreferrer"; });
+    } else {
+      shops.forEach(function(a){ a.classList.add("soon"); a.setAttribute("aria-disabled", "true"); });
+      var soon = $("#shopSoon"); if (soon) soon.hidden = false;
+    }
+    $("#printBtn").addEventListener("click", function(){ window.print(); });
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);
+  else boot();
+})();
+</script>
+</body>
+</html>
