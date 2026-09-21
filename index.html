@@ -1,0 +1,1267 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0b0b0e">
+<title>the hours · cafedreamr</title>
+<meta name="description" content="A day in the cafe realm, arranged by the people who live in it — ten of them, ten different time zones, one twenty-four hour day. Move the hour and see who is up.">
+<meta property="og:title" content="the hours · cafedreamr">
+<meta property="og:description" content="There is no time in the cafe realm. So they invented one. Drag the hand and see who is awake.">
+<meta property="og:type" content="website">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' shape-rendering='crispEdges'%3E%3Cpath d='M3 0h10a3 3 0 013 3v10a3 3 0 01-3 3H3a3 3 0 01-3-3V3a3 3 0 013-3z' fill='%230b0b0e'/%3E%3Crect x='4' y='3' width='6' height='1' fill='%23ccff00'/%3E%3Crect x='3' y='4' width='8' height='1' fill='%23ccff00'/%3E%3Crect x='2' y='5' width='3' height='1' fill='%23ccff00'/%3E%3Crect x='5' y='5' width='4' height='1' fill='%23ff2d95'/%3E%3Crect x='9' y='5' width='3' height='1' fill='%23ccff00'/%3E%3Crect x='2' y='6' width='2' height='1' fill='%23ccff00'/%3E%3Crect x='4' y='6' width='2' height='1' fill='%23ff2d95'/%3E%3Crect x='10' y='6' width='2' height='1' fill='%23ccff00'/%3E%3Crect x='2' y='7' width='2' height='1' fill='%23ccff00'/%3E%3Crect x='4' y='7' width='1' height='1' fill='%23ff2d95'/%3E%3Crect x='6' y='7' width='2' height='1' fill='%23ff2d95'/%3E%3Crect x='10' y='7' width='5' height='1' fill='%23ccff00'/%3E%3Crect x='2' y='8' width='2' height='1' fill='%23ccff00'/%3E%3Crect x='4' y='8' width='1' height='1' fill='%23ff2d95'/%3E%3Crect x='6' y='8' width='2' height='1' fill='%23ff2d95'/%3E%3Crect x='10' y='8' width='5' height='1' fill='%23ccff00'/%3E%3Crect x='2' y='9' width='2' height='1' fill='%23ccff00'/%3E%3Crect x='4' y='9' width='2' height='1' fill='%23ff2d95'/%3E%3Crect x='10' y='9' width='2' height='1' fill='%23ccff00'/%3E%3Crect x='2' y='10' width='3' height='1' fill='%23ccff00'/%3E%3Crect x='5' y='10' width='4' height='1' fill='%23ff2d95'/%3E%3Crect x='9' y='10' width='3' height='1' fill='%23ccff00'/%3E%3Crect x='3' y='11' width='8' height='1' fill='%23ccff00'/%3E%3Crect x='4' y='12' width='6' height='1' fill='%23ccff00'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Klee+One:wght@400;600&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Vampiro+One&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   the hours — cafedreamr
+   a day in the cafe realm, arranged by the people living in it.
+
+   EVERYTHING LIVES IN THE DATA BLOCK NEAR THE BOTTOM OF <body>:
+     PLACES  — the venues, and the colour each one paints on the dial
+     PEOPLE  — one entry per character: accent, portrait, nature line,
+               and `day` = a list of blocks
+     PHASES  — the realm's mood at each stretch of hours (the log head)
+   A block is  ["from","to","place","what they are doing",kindness]
+   Times are "HH:MM". `to` may run past midnight ("24:00" = end of day,
+   "02:30" after a 21:00 start wraps on its own). `kindness` is 0-3 and
+   is the ONLY thing that moves the light: yeshua comes closer when there
+   is more love and kindness about, whatever the clock says.
+   ============================================================ */
+:root{
+  --plum:#0d001a;
+  --ink:#0b0b0e; --ink2:#141419; --ink3:#1b1b22;
+  --lime:#ccff00; --pink:#ff2d95; --cyan:#00e5ff;
+  --violet:#bf40bf; --violet2:#ee82ee;
+  --corn:#6495ed; --mint:#98fb98;
+  --cream:#e9e6de; --lav:#fff0f5; --dim:#7d848b;
+  --line:rgba(255,255,255,.10);
+  --glow:0 0 12px rgba(191,64,191,.55), 0 0 34px rgba(191,64,191,.22);
+  --mono:'Space Mono', ui-monospace, monospace;
+  --disp:'Bebas Neue', impact, sans-serif;
+  --logo:'Vampiro One', cursive;
+  --body:'Klee One', system-ui, sans-serif;
+  --warm:0;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0;padding:0}
+body{background:var(--plum);color:var(--lav);font-family:var(--body);text-align:left;
+  min-height:100vh;overflow-x:hidden;-webkit-tap-highlight-color:transparent}
+.bg{position:fixed;inset:0;z-index:0;pointer-events:none}
+#stars{position:absolute;inset:0;width:100%;height:100%;display:block}
+/* the warm layer: driven by --warm (0-1) from the kindness at the chosen hour */
+.warmlayer{position:absolute;inset:0;opacity:calc(.20 + var(--warm) * .80);transition:opacity .5s ease;
+  background:
+    radial-gradient(70% 55% at 50% 42%, rgba(255,214,140,.22), transparent 62%),
+    radial-gradient(120% 80% at 50% 0%, rgba(255,150,190,.14), transparent 60%)}
+.vign{position:absolute;inset:0;background:
+  radial-gradient(120% 80% at 50% 0%, rgba(191,64,191,.16), transparent 60%),
+  radial-gradient(120% 90% at 50% 110%, rgba(0,229,255,.10), transparent 60%),
+  radial-gradient(150% 120% at 50% 50%, transparent 30%, rgba(0,0,0,.72) 100%)}
+.scan{position:absolute;inset:0;opacity:.28;
+  background:repeating-linear-gradient(to bottom, rgba(255,255,255,.035) 0 1px, transparent 1px 3px)}
+.grain{position:absolute;inset:0;opacity:.5;mix-blend-mode:overlay;
+  background-image:radial-gradient(rgba(255,255,255,.06) 1px, transparent 1px);
+  background-size:3px 3px}
+
+.stage{position:relative;z-index:1;max-width:1180px;margin:0 auto;padding:22px 16px 44px}
+
+/* ---------- marquee ---------- */
+.marquee{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;
+  border:1px solid var(--line);border-radius:16px 16px 6px 6px;
+  background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.015));
+  padding:12px 16px;position:relative;overflow:hidden}
+.marquee:before{content:"";position:absolute;left:0;right:0;top:0;height:2px;
+  background:linear-gradient(90deg,var(--violet),var(--cyan));opacity:.8}
+.mtitle{display:flex;align-items:baseline;gap:11px;flex-wrap:wrap;min-width:0}
+.brand{font-family:var(--logo);font-size:27px;letter-spacing:.055em;color:var(--lime);
+  text-shadow:0 0 10px rgba(204,255,0,.45),0 0 30px rgba(204,255,0,.16);white-space:nowrap}
+.tag{font-family:var(--mono);font-size:9.5px;letter-spacing:.24em;text-transform:uppercase;
+  color:var(--dim);border:1px solid var(--line);border-radius:999px;padding:4px 9px;white-space:nowrap}
+.led{width:8px;height:8px;border-radius:50%;background:var(--pink);box-shadow:0 0 10px var(--pink);
+  animation:blip 2.4s ease-in-out infinite;align-self:center}
+@keyframes blip{0%,100%{opacity:1}50%{opacity:.25}}
+.marq-right{display:flex;align-items:center;gap:9px;flex-wrap:wrap;justify-content:flex-end}
+.back{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--lav);text-decoration:none;border:1px solid var(--line);border-radius:999px;
+  padding:7px 12px;white-space:nowrap;transition:.18s;background:transparent;cursor:pointer}
+.back:hover{border-color:var(--lime);color:var(--lime);box-shadow:0 0 14px rgba(204,255,0,.25)}
+
+/* ---------- epigraph ---------- */
+.epi{margin-top:14px;border:1px solid var(--line);border-radius:12px;padding:15px 17px;
+  background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,.01))}
+.epi h1{font-family:var(--disp);font-size:clamp(30px,5vw,48px);letter-spacing:.06em;
+  margin:0 0 6px;line-height:.98;color:var(--lav)}
+.epi h1 b{color:var(--lime);font-weight:400;text-shadow:0 0 14px rgba(204,255,0,.4)}
+.epi p{margin:0;font-size:13.5px;line-height:1.65;color:#cfc9dd;max-width:74ch}
+.epi p + p{margin-top:8px}
+.epi .k{color:var(--violet2)}
+.epi .pull{display:block;margin-top:10px;font-family:var(--mono);font-size:10px;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--dim)}
+
+/* ---------- hero ---------- */
+.hero{margin-top:14px;display:grid;grid-template-columns:minmax(0,1.06fr) minmax(0,.94fr);gap:14px;align-items:start}
+.panel{border:1px solid var(--line);border-radius:12px;padding:14px;
+  background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,.01))}
+.plate{position:relative;border:2px solid rgba(255,255,255,.09);border-radius:10px;overflow:hidden;
+  background:
+    linear-gradient(180deg,rgba(13,0,26,.55),rgba(11,11,14,.86)),
+    repeating-linear-gradient(0deg,rgba(255,255,255,.045) 0 1px,transparent 1px 46px),
+    repeating-linear-gradient(90deg,rgba(255,255,255,.045) 0 1px,transparent 1px 46px),
+    radial-gradient(80% 70% at 50% 45%, rgba(100,149,237,.20), transparent 65%);
+  box-shadow:inset 0 0 90px rgba(0,0,0,.7), 0 0 29px rgba(191,64,191,.13)}
+.plate:after{content:"";position:absolute;inset:0;pointer-events:none;border-radius:8px;
+  box-shadow:inset 0 0 60px rgba(0,0,0,.6)}
+.rivet{position:absolute;width:9px;height:9px;border-radius:50%;z-index:6;
+  background:radial-gradient(circle at 35% 35%, #6a6a76, #23232b 70%);
+  box-shadow:0 0 0 1px rgba(255,255,255,.08), inset 0 -1px 1px rgba(0,0,0,.7)}
+.rv1{top:7px;left:7px} .rv2{top:7px;right:7px} .rv3{bottom:7px;left:7px} .rv4{bottom:7px;right:7px}
+
+.dialwrap{position:relative;width:100%;max-width:600px;margin:0 auto;aspect-ratio:1/1}
+.dialwrap svg{display:block;width:100%;height:100%;position:absolute;inset:0;touch-action:none;cursor:grab}
+.dialwrap.dragging svg{cursor:grabbing}
+.dialwrap svg text{font-family:var(--mono);letter-spacing:.14em}
+.hitring{fill:none;stroke:transparent;cursor:pointer}
+.ringtrack{fill:none;opacity:.30}
+.ringarc{fill:none;pointer-events:none}
+.ringarc.sleep{opacity:.30}
+.ringg{transition:opacity .22s ease}
+.ringg.dim{opacity:.14}
+.ringg.on .ringarc{filter:drop-shadow(0 0 5px rgba(255,255,255,.55))}
+.ringg.on .ringtrack{opacity:.55}
+#hourwedge{fill:rgba(255,255,255,.045);stroke:none;pointer-events:none}
+#handhaze{stroke:rgba(6,0,16,.82);stroke-width:5.4;stroke-linecap:round;pointer-events:none}
+#handline{stroke:var(--lav);stroke-width:1.4;opacity:.9;pointer-events:none}
+#knobring{fill:rgba(6,0,16,.85);pointer-events:none}
+#knob{fill:var(--lav);pointer-events:none;filter:drop-shadow(0 0 6px rgba(255,240,245,.8))}
+#lightDisc{pointer-events:none}
+.ctr{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:36%;
+  text-align:center;pointer-events:none;border-radius:50%;
+  background:radial-gradient(circle at 50% 44%, rgba(255,225,190,.075) 0%, rgba(255,240,245,.028) 42%, rgba(0,0,0,0) 74%)}
+.ctr .t{font-family:var(--disp);font-size:clamp(38px,7.6vw,62px);line-height:.92;letter-spacing:.03em;
+  color:var(--lav);text-shadow:0 0 18px rgba(255,240,245,.35)}
+.ctr .t span{font-size:.52em;letter-spacing:.1em;color:rgba(255,240,245,.62);display:block;margin-top:2px}
+.ctr .ph{font-family:var(--mono);font-size:8.5px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--lime);margin-top:7px;line-height:1.5}
+.dialcap{margin-top:9px;font-family:var(--mono);font-size:9px;letter-spacing:.13em;line-height:1.75;
+  text-transform:uppercase;color:var(--dim);text-align:center}
+
+/* ---------- controls ---------- */
+.controls{margin-top:11px;display:flex;flex-direction:column;gap:10px}
+.rulerrow{display:flex;align-items:center;gap:10px}
+.rulerrow .end{font-family:var(--mono);font-size:8.5px;letter-spacing:.14em;color:var(--dim);white-space:nowrap}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:26px;background:transparent;cursor:pointer}
+input[type=range]:focus{outline:none}
+input[type=range]::-webkit-slider-runnable-track{height:6px;border-radius:999px;
+  background:linear-gradient(90deg,rgba(255,214,140,.5),rgba(191,64,191,.5));
+  border:1px solid rgba(255,255,255,.10)}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:16px;height:16px;
+  margin-top:-6px;border-radius:50%;background:var(--lav);border:0;
+  box-shadow:0 0 12px rgba(255,240,245,.75),0 0 0 4px rgba(255,240,245,.10)}
+input[type=range]::-moz-range-track{height:6px;border-radius:999px;
+  background:linear-gradient(90deg,rgba(255,214,140,.5),rgba(191,64,191,.5));border:1px solid rgba(255,255,255,.10)}
+input[type=range]::-moz-range-thumb{width:16px;height:16px;border:0;border-radius:50%;background:var(--lav);
+  box-shadow:0 0 12px rgba(255,240,245,.75)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chips button{font-family:var(--mono);font-size:9px;letter-spacing:.13em;text-transform:uppercase;
+  color:#cfc9dd;background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:999px;
+  padding:7px 11px;cursor:pointer;transition:.16s}
+.chips button:hover{border-color:var(--lime);color:var(--lime)}
+.chips button.act{background:rgba(204,255,0,.12);border-color:rgba(204,255,0,.5);color:var(--lime)}
+.chips button.you{border-color:rgba(0,229,255,.35);color:var(--cyan)}
+.chips button.you:hover{border-color:var(--cyan)}
+
+/* ---------- the light ---------- */
+.light{margin-top:12px;border:1px solid rgba(255,214,140,.20);border-radius:10px;padding:11px 12px;
+  background:rgba(255,214,140,.035)}
+.lighthead{display:flex;align-items:center;justify-content:space-between;gap:10px;
+  font-family:var(--mono);font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:#e2c9a0}
+.lighthead b{color:#ffd88c;font-weight:700}
+.lightbar{margin-top:8px;height:7px;border-radius:999px;background:rgba(255,255,255,.07);overflow:hidden;
+  border:1px solid rgba(255,255,255,.07)}
+.lightbar i{display:block;height:100%;width:0%;border-radius:999px;
+  background:linear-gradient(90deg,#8a6ba8,#ffd88c);transition:width .45s ease;
+  box-shadow:0 0 12px rgba(255,216,140,.5)}
+.lightnote{margin-top:8px;font-size:12px;line-height:1.6;color:#d8cbb8}
+.lightnote em{color:#ffd88c;font-style:normal}
+
+/* ---------- the log ---------- */
+.loghead{border-bottom:1px dashed var(--line);padding-bottom:10px;margin-bottom:10px}
+.loghead .big{font-family:var(--disp);font-size:30px;letter-spacing:.05em;line-height:1;color:var(--lav)}
+.loghead .phase{font-family:var(--mono);font-size:9px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--lime);margin-top:6px}
+.loghead .scene{margin-top:7px;font-size:12.5px;line-height:1.6;color:#cfc9dd}
+.loglist{display:flex;flex-direction:column;gap:9px}
+.logrow{display:grid;grid-template-columns:9px minmax(0,1fr);gap:9px;align-items:start}
+.logrow .dot{width:9px;height:9px;border-radius:50%;margin-top:5px;background:var(--a,var(--dim));
+  box-shadow:0 0 8px var(--a,rgba(255,255,255,.3))}
+.logrow .who{display:flex;align-items:baseline;gap:7px;flex-wrap:wrap}
+.logrow .name{font-family:var(--disp);font-size:16px;letter-spacing:.08em;color:var(--lav)}
+.logrow .where{font-family:var(--mono);font-size:8.5px;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--pc,var(--dim));border:1px solid currentColor;border-radius:999px;padding:2px 7px;opacity:.85}
+.logrow .txt{font-size:12.5px;line-height:1.62;color:#bdb7c8;margin-top:2px}
+.logrow.peak .txt{color:#e6d9c2}
+.logrow.peak .name:after{content:" ✦";color:#ffd88c}
+.together{margin-top:11px;border-top:1px dashed var(--line);padding-top:10px;
+  font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;line-height:1.7;text-transform:uppercase;color:var(--violet2)}
+.down{margin-top:9px;font-size:12px;line-height:1.6;color:#6f6a7c}
+.down b{color:#8b83a0;font-weight:400}
+
+/* ---------- roster ---------- */
+.sect{margin-top:22px}
+.secthead{display:flex;align-items:baseline;gap:11px;flex-wrap:wrap;margin-bottom:10px}
+.secthead h2{font-family:var(--disp);font-size:22px;letter-spacing:.10em;margin:0;color:var(--lav)}
+.secthead span{font-family:var(--mono);font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--dim)}
+.axis{display:flex;align-items:center;gap:10px;padding:0 0 4px;font-family:var(--mono);font-size:8px;
+  letter-spacing:.12em;color:var(--dim)}
+.axis .nm{width:132px;flex:0 0 132px;text-align:right}
+.axis .strip{flex:1;display:flex;justify-content:space-between}
+.roster{display:flex;flex-direction:column;gap:2px}
+.row{display:flex;align-items:center;gap:10px;padding:6px 4px;border-radius:8px;cursor:pointer;
+  text-align:left;background:none;border:0;color:inherit;font-family:inherit;transition:.16s}
+.row:hover,.row:focus-visible{background:rgba(255,255,255,.04);outline:none}
+.row.sel{background:rgba(255,255,255,.06);box-shadow:inset 0 0 0 1px var(--a)}
+.row .nm{width:132px;flex:0 0 132px;display:flex;align-items:center;gap:7px;min-width:0}
+.row .dot{width:8px;height:8px;border-radius:50%;flex:0 0 8px;background:var(--a);
+  box-shadow:0 0 8px var(--a)}
+.row .who{font-family:var(--disp);font-size:15px;letter-spacing:.08em;color:var(--lav);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row .cc{font-family:var(--mono);font-size:7.5px;letter-spacing:.1em;color:var(--dim);flex:0 0 auto}
+.row.sel .who{color:var(--a)}
+.strip{position:relative;flex:1;height:22px;border-radius:5px;background:rgba(255,255,255,.045);
+  overflow:hidden;box-shadow:inset 0 0 0 1px rgba(255,255,255,.05)}
+.strip i{position:absolute;top:0;bottom:0;display:block}
+.strip i.sleep{background:#22222b}
+.strip .nowline{position:absolute;top:0;bottom:0;width:1px;background:var(--lav);opacity:.85;
+  box-shadow:0 0 7px rgba(255,240,245,.9);z-index:3}
+.row .nature{display:none}
+.row .naturerow{display:none}
+
+/* ---------- events, and the doors they open ----------
+   the roster says who is where; this says which of those places you can walk
+   into. the times are NOT typed in here — each row reads the block its person
+   is in at that hour out of the schedule above (`evWindow`), so an event can
+   never drift away from the roster it belongs to. */
+.evs{display:flex;flex-direction:column;gap:7px}
+.ev{display:flex;align-items:center;gap:11px;text-decoration:none;color:inherit;
+  border:1px solid var(--line);border-radius:11px;padding:10px 12px;transition:.18s;
+  background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,.012))}
+.ev:hover{border-color:var(--a);background:rgba(255,255,255,.055);transform:translateX(2px)}
+.ev .edot{width:8px;height:8px;border-radius:50%;flex:0 0 8px;background:var(--a);box-shadow:0 0 8px var(--a)}
+.ev .ewho{font-family:var(--disp);font-size:16px;letter-spacing:.10em;color:var(--lav);flex:0 0 auto}
+.ev:hover .ewho{color:var(--a)}
+.ev .ewhat{font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+.ev .ewhen{margin-left:auto;font-family:var(--mono);font-size:9.5px;letter-spacing:.08em;color:var(--violet2);white-space:nowrap}
+.ev .ego{font-family:var(--mono);font-size:8.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);white-space:nowrap;transition:.18s}
+.ev:hover .ego{color:var(--pink)}
+@media(max-width:640px){
+  .ev{flex-wrap:wrap;gap:7px 9px}
+  .ev .ewhen{margin-left:0;order:3;flex:0 0 100%}
+  .ev .ego{margin-left:auto}
+}
+.clinks a.cwalk{border-color:rgba(224,163,200,.55);color:#f6e7f2;
+  background:linear-gradient(180deg,rgba(224,163,200,.16),rgba(224,163,200,.05))}
+.clinks a.cwalk:hover{border-color:var(--pink);color:#fff;background:rgba(255,45,149,.16)}
+
+/* ---------- card ---------- */
+.modal{position:fixed;inset:0;z-index:60;background:rgba(5,5,8,.82);display:flex;align-items:flex-start;
+  justify-content:center;overflow-y:auto;padding:22px 14px 40px;opacity:0;pointer-events:none;transition:.2s}
+.modal.open{opacity:1;pointer-events:auto}
+.cardbox{width:min(660px,100%);margin:auto;border:1px solid var(--a,var(--violet2));border-radius:14px;
+  background:linear-gradient(180deg,rgba(24,22,32,.99),rgba(13,12,18,.99));position:relative;
+  box-shadow:0 0 40px rgba(191,64,191,.28),0 30px 80px rgba(0,0,0,.7);
+  transform:translateY(8px) scale(.985);transition:.22s}
+.modal.open .cardbox{transform:none}
+.cardclose{position:absolute;top:6px;right:8px;width:38px;height:38px;background:none;border:0;color:#6a6a76;
+  font-size:19px;cursor:pointer;font-family:var(--mono);z-index:4}
+.cardclose:hover{color:var(--pink)}
+.cardtop{display:flex;gap:14px;padding:16px 16px 12px;border-bottom:1px dashed var(--line);align-items:flex-start}
+.cpic{width:118px;height:118px;flex:0 0 118px;border-radius:10px;overflow:hidden;position:relative;
+  border:1px solid rgba(255,255,255,.10);background:#141419}
+.cpic img{width:100%;height:100%;object-fit:cover;filter:saturate(1.05)}
+.cpic.pin{display:flex;align-items:center;justify-content:center;font-family:var(--logo);font-size:44px;
+  color:var(--a)}
+.cmeta{min-width:0;flex:1}
+.cname{font-family:var(--logo);font-size:27px;letter-spacing:.04em;color:var(--a);line-height:1.1}
+.ctagline{font-family:var(--mono);font-size:8.5px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--dim);margin-top:5px}
+.crole{font-family:var(--mono);font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--lav);margin-top:9px;opacity:.85}
+.cnature{margin-top:9px;font-size:12.5px;line-height:1.62;color:#cfc9dd}
+.cnote{margin-top:9px;font-size:12px;line-height:1.62;color:#a9a2b6;border-left:2px solid var(--a);
+  padding-left:10px}
+.chome{margin-top:9px;font-family:var(--mono);font-size:9.5px;letter-spacing:.05em;line-height:1.7;
+  color:#8f88a0}
+.chome b{color:var(--a);font-weight:400;text-transform:uppercase;letter-spacing:.16em;font-size:8.5px}
+.clinks{display:flex;gap:7px;flex-wrap:wrap;margin-top:11px}
+.clinks a{font-family:var(--mono);font-size:8.5px;letter-spacing:.14em;text-transform:uppercase;
+  text-decoration:none;color:var(--lav);border:1px solid var(--line);border-radius:999px;padding:6px 10px;
+  transition:.16s}
+.clinks a:hover{border-color:var(--a);color:var(--a)}
+.cday{padding:12px 16px 16px}
+.cday .h{font-family:var(--mono);font-size:9px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--dim);margin-bottom:9px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.cday .blk{display:grid;grid-template-columns:104px 12px minmax(0,1fr);gap:9px;align-items:baseline;
+  padding:6px 0;border-top:1px dashed rgba(255,255,255,.06)}
+.cday .blk:first-of-type{border-top:0}
+.cday .tm{font-family:var(--mono);font-size:10px;letter-spacing:.06em;color:#cfc9dd;white-space:nowrap}
+.cday .dt{width:8px;height:8px;border-radius:50%;background:var(--pc);box-shadow:0 0 7px var(--pc)}
+.cday .tx{font-size:12.5px;line-height:1.6;color:#bdb7c8}
+.cday .tx em{font-style:normal;color:var(--pc);font-family:var(--mono);font-size:9px;letter-spacing:.1em;
+  text-transform:uppercase;display:block;margin-bottom:2px}
+.cday .blk.now{background:rgba(255,255,255,.05);border-radius:6px;padding-left:7px;padding-right:7px;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.08)}
+.cday .blk.now .tx{color:var(--lav)}
+
+/* ---------- foot ---------- */
+.foot{margin-top:24px;border-top:1px solid var(--line);padding-top:14px;
+  font-family:var(--mono);font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:#4d4a58;
+  line-height:2;text-align:center}
+.foot a{color:#6f6a7c;text-decoration:none;border-bottom:1px dotted rgba(204,255,0,.35)}
+.foot a:hover{color:var(--lime)}
+.foot .unwritten{color:#6f6a7c;text-transform:none;letter-spacing:.02em;font-family:var(--body);
+  font-size:11.5px;line-height:1.7;max-width:68ch;margin:0 auto 10px;display:block}
+
+@media (max-width:1000px){
+  .hero{grid-template-columns:1fr}
+  .dialwrap{max-width:520px}
+}
+@media (max-width:660px){
+  .stage{padding:14px 10px 34px}
+  .marquee{padding:10px 12px;flex-wrap:wrap;gap:9px}
+  .brand{font-size:22px}
+  .tag{font-size:8.5px;letter-spacing:.18em}
+  .epi{padding:13px 13px}
+  .epi p{font-size:13px}
+  .panel{padding:11px}
+  .ctr{width:40%}
+  .row .nm,.axis .nm{width:104px;flex:0 0 104px}
+  .row .who{font-size:13.5px}
+  .row .cc{display:none}
+  .strip{height:18px}
+  .cday .blk{grid-template-columns:92px 10px minmax(0,1fr);gap:8px}
+  .cday .tm{font-size:9.5px}
+  .cardtop{padding:14px 13px 11px;gap:11px}
+  .cpic{width:92px;height:92px;flex:0 0 92px}
+  .cname{font-size:23px}
+  .cardclose{width:44px;height:44px;top:2px;right:2px}
+}
+@media (max-width:430px){
+  .row .nm,.axis .nm{width:88px;flex:0 0 88px}
+  .row .who{font-size:12.5px;letter-spacing:.05em}
+  .strip{height:16px}
+  .ctr .t{font-size:34px}
+  .ctr .ph{font-size:7.5px}
+  .chips button{font-size:8.5px;padding:8px 9px}
+}
+</style>
+</head>
+<body>
+<div class="bg" aria-hidden="true">
+  <canvas id="stars"></canvas>
+  <div class="warmlayer"></div>
+  <div class="vign"></div>
+  <div class="scan"></div>
+  <div class="grain"></div>
+</div>
+
+<div class="stage">
+  <header class="marquee">
+    <div class="mtitle">
+      <span class="brand">the hours</span>
+      <span class="tag">a day in the cafe realm &middot; and everyone who comes back to it</span>
+      <i class="led" aria-hidden="true"></i>
+    </div>
+    <div class="marq-right">
+      <a class="back" href="https://www.cafedreamr.art/" id="mapBack">&larr; the terminal</a>
+    </div>
+  </header>
+
+  <section class="epi">
+    <h1>there is no time in the <b>cafe realm</b>.</h1>
+    <p>It is otherworldly, and it never kept a clock. So the siblings &mdash; who never got an ordinary life
+       to be bored of &mdash; built one out of hours instead: ten people living in ten different time zones,
+       in realms and rooms of their own, who all come back to the same counter for supper.</p>
+    <p>The clock here is <span class="k">yours to move</span>. Pick an hour and the realm will show you
+       who is up, where they went, and how much light is in the room.</p>
+    <p>Nobody here keeps a temper past supper. If two of them fall out, they make it up before the
+       kettle boils and apologise properly, out loud &mdash; they left the old ways behind on purpose,
+       and they have no intention of carrying any part of them back in. Even the squirrel mafia
+       outside the window has a sense of humour, and is far more helpful than it ever lets on.</p>
+    <span class="pull" id="epiSrc">the hand starts at your hour</span>
+  </section>
+
+  <section class="hero">
+    <div class="panel plate">
+      <i class="rivet rv1"></i><i class="rivet rv2"></i><i class="rivet rv3"></i><i class="rivet rv4"></i>
+      <div class="dialwrap" id="dialwrap">
+        <svg id="dial" viewBox="0 0 600 600" role="img" aria-label="a twenty-four hour dial showing who is awake"></svg>
+        <div class="ctr">
+          <div class="t" id="ctrTime">--:--<span id="ctrAmPm">&nbsp;</span></div>
+          <div class="ph" id="ctrPhase">&nbsp;</div>
+        </div>
+      </div>
+      <div class="controls">
+        <input type="range" id="ruler" min="0" max="1435" step="5" value="0" aria-label="the hour">
+        <div class="rulerrow">
+          <span class="end">00:00</span>
+          <span class="end" style="flex:1;text-align:center" id="rulerMid">drag the hand, or the ruler</span>
+          <span class="end">24:00</span>
+        </div>
+        <div class="chips" id="chips"></div>
+      </div>
+      <div class="dialcap">
+        each ring is one of them, from the middle out &mdash; ordered by the hour they wake.<br>
+        the three outermost rings never sleep. hover a ring, or tap a name below.
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="loghead">
+        <div class="big" id="logTime">--:--</div>
+        <div class="phase" id="logPhase">&nbsp;</div>
+        <div class="scene" id="logScene">&nbsp;</div>
+      </div>
+      <div class="loglist" id="logList" aria-live="polite"></div>
+      <div class="together" id="logTogether"></div>
+      <div class="down" id="logDown"></div>
+
+      <div class="light" id="lightBox">
+        <div class="lighthead"><span>the light in the room</span><span id="lightWord">&mdash;</span></div>
+        <div class="lightbar"><i id="lightFill"></i></div>
+        <div class="lightnote" id="lightNote"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sect">
+    <div class="secthead">
+      <h2>events</h2>
+      <span>the hours you can turn up for &mdash; pick one and walk in</span>
+    </div>
+    <div class="evs" id="evs"></div>
+  </section>
+
+  <section class="sect">
+    <div class="secthead">
+      <h2>the roster</h2>
+      <span id="rosterNote">arranged by the hour they wake &mdash; their own little time zones</span>
+    </div>
+    <div class="axis" aria-hidden="true">
+      <span class="nm">midnight &rarr;</span>
+      <span class="strip"><span>00</span><span>03</span><span>06</span><span>09</span><span>12</span><span>15</span><span>18</span><span>21</span><span>24</span></span>
+    </div>
+    <div class="roster" id="roster"></div>
+  </section>
+
+  <div class="foot">
+    <span class="unwritten" id="unwritten"></span>
+    the hours are invented &middot; the kindness is measured &middot; the clock is yours<br>
+    <a href="https://www.cafedreamr.art/">the terminal</a> &middot;
+    <a href="https://www.cafedreamr.art/LORE/MAP.html">the realm map</a> &middot;
+    <a href="https://www.cafedreamr.art/LORE/BOBBY/cards.html">the dossiers</a> &middot;
+    <a href="https://www.cafedreamr.art/LORE/MYSTERYGRID/">the mystery grid</a> &middot;
+    <a href="https://www.cafedreamr.art/MENU/">the menu</a> &middot;
+    <a href="https://www.cafedreamr.art/ZINE/">the zine</a> &middot;
+    <a href="https://www.cafedreamr.art/PLAY/">the long day</a> &middot;
+    <a href="https://www.cafedreamr.art/LORE/VENDI/index.html">the vendi machine</a> &middot;
+    <a href="https://www.cafedreamr.art/SUPPORT/">support the realm</a> &middot;
+    &copy; cafedreamr
+  </div>
+</div>
+
+<div class="modal" id="card" role="dialog" aria-modal="true" aria-labelledby="cardName">
+  <div class="cardbox" id="cardbox">
+    <button class="cardclose" id="cardClose" aria-label="close">x</button>
+    <div class="cardtop">
+      <div class="cpic" id="cardPic"></div>
+      <div class="cmeta">
+        <div class="cname" id="cardName">&mdash;</div>
+        <div class="ctagline" id="cardTag">&mdash;</div>
+        <div class="crole" id="cardRole">&mdash;</div>
+        <div class="cnature" id="cardNature"></div>
+        <div class="cnote" id="cardNote"></div>
+        <div class="chome" id="cardHome"></div>
+        <div class="clinks" id="cardLinks"></div>
+      </div>
+    </div>
+    <div class="cday">
+      <div class="h"><span id="cardDayTitle">their day</span><span id="cardDayNow"></span></div>
+      <div id="cardBlocks"></div>
+    </div>
+  </div>
+</div>
+
+<script src="/PASSPORT/cd-passport.js"></script>
+<script>window.CD && CD.boot({page:"hours"});</script>
+
+<script>
+/* ============================================================
+   1. THE DATA  — edit this and the whole page follows.
+   ============================================================ */
+
+var MAPURL   = "https://www.cafedreamr.art/LORE/MAP.html";
+var DOSSIER  = "https://www.cafedreamr.art/LORE/BOBBY/cards.html";
+var VENDIURL = "https://www.cafedreamr.art/LORE/VENDI/index.html";
+
+/* chari's realm — named. every mention interpolates this constant: the place
+   legend, her note, her home and her 19:30 block all follow it. keep it
+   lowercase — the house voice lowercases every realm. */
+var CHARI_REALM = "the atrium of whispered truths";
+
+var PLACES = {
+  counter : { label:"the counter",    color:"#ccff00" },
+  garden  : { label:"paradise garden", color:"#98fb98" },
+  archive : { label:"the archive",    color:"#ee82ee" },
+  naproom : { label:"the nap room",   color:"#00e5ff" },
+  academy : { label:"the academy",    color:"#6495ed" },
+  mirror  : { label:"the mirror",     color:"#ffb8d9" },
+  studio  : { label:"the studio",     color:"#ffd166" },
+  koi     : { label:"the koi pond",   color:"#4fb3ff" },
+  amps    : { label:"band practice",  color:"#45c9f0" },
+  kingdom : { label:CHARI_REALM,      color:"#e6e6fa" },
+  web     : { label:"the web",        color:"#e0a3c8" },
+  watch   : { label:"the watch",      color:"#ff2d95" },
+  machine : { label:"the machines",   color:"#bf40bf" },
+  window  : { label:"the window",     color:"#ff8a3d" },
+  out     : { label:"out & about",    color:"#7d848b" },
+  asleep  : { label:"asleep",         color:"#22222b" }
+};
+
+/* the realm's own mood, in order. the log head shows the last one you passed. */
+var PHASES = [
+  [0.0,  "deep night",         "the amps are still going. someone is always awake in this realm."],
+  [3.0,  "the small hours",    "the wrong side of midnight, which is where star does her best thinking."],
+  [4.25, "before dawn",        "milo comes through the garden in the dark and leaves the mint on the counter."],
+  [7.0,  "the open",           "the cafe opens. pearl is at the counter before the door stops swinging."],
+  [12.0, "high afternoon",     "the garden is loud with bees. the counter is loud with everyone else."],
+  [16.0, "the second shift",   "the twins are up. so are the amps. so, therefore, is miki."],
+  [17.0, "the koi hour",       "most of them end up at the pond without deciding to. that is the whole point of the pond."],
+  [18.5, "supper",             "everybody comes back for supper and makes noise and eats too much."],
+  [19.0, "star's hour",        "seven in the evening: the bible at the window, and then bed, early, like a goth."],
+  [21.0, "the long evening",   "the archive lamp is on. hans would like everyone to know it is not a nightlight."],
+  [22.5, "deep night again",   "the machines hum. miki is somewhere you are not looking."]
+];
+
+var PEOPLE = [
+  {
+    key:"star", name:"STAR", tag:"CC-001", accent:"#c0a6ff",
+    img:"https://user.uploads.dev/file/b0fc319bb972fced38dccaf0d74d5c2b.jpg",
+    role:"cafe owner &middot; literary navigator",
+    nature:"up all night and working the day, which everyone finds funny but her. reads as more goth than she is; underneath it she is a dreamer and a romantic.",
+    note:"her favourite hour is 7pm. she dreams about dancing with yeshua and drinking wine at the wedding supper of the lamb, and misses it when she wakes \u2014 until she remembers he never left, and that she can manifest whatever she wants whenever she wants. she just doesn't, as often as her siblings do. her one truly bad habit is coffee in bed. the cafe realm is hers; the others keep their own realms, houses and webs, and come back to her counter to eat, drink and be family.",
+    home:"the cafe realm \u2014 it is hers. everybody else keeps their own address and comes back here for supper and for the family gatherings.",
+    day:[
+      ["02:30","05:30","window",  "awake from the wrong side of midnight. coffee, and the squirrel mafia out the window doing whatever it is they do \u2014 mostly helpful, and reliably funny.",0],
+      ["05:30","07:00","counter", "grinds the beans, wipes the counter down twice, decides which door you walk through first.",1],
+      ["07:00","18:00","counter", "the cafe is open. she keeps the house's books and its bearings, and she has been doing this for years no matter what hans says about the water.",1],
+      ["18:00","19:00","counter", "closing. sometimes pearl closes for her; sometimes she closes because she feels like it. both are correct.",1],
+      ["19:00","20:00","window",  "\u2726 her favourite hour. the bible at the window, coffee in hand, out loud in places.",2],
+      ["20:00","21:00","window",  "coffee in bed \u2014 the only truly bad habit in the house \u2014 and the window, until the mafia packs up for the night.",0],
+      ["21:00","02:30","asleep",  "dreaming: dancing with yeshua, wine at the wedding supper of the lamb. she wakes up missing it, every time, and then remembers he never left. the light remembers too.",1]
+    ]
+  },
+  {
+    key:"pearl", name:"PEARL", tag:"CC-007", accent:"#ffb8d9",
+    img:"https://user.uploads.dev/file/8ccbc065341c78c2d7ecef8a2ff0570b.jpg",
+    role:"perfumer &middot; the academy's first &middot; miki's second camera",
+    nature:"barefoot always, so she can feel the ground humming. copper ears, a very small notebook, and the whole realm's atmosphere.",
+    note:"she is the academy's first true student, and she never has to be asked to help \u2014 she offers. she tutors chari through the ptsd and the anxieties, and she never writes any of that down. she is also the camera when miki has to be looked at \u2014 modelling, shooting, editing, whichever one the picture needs \u2014 and she never once says the word model out loud. before any of it she had to go through bobby \u2014 the sock puppet who runs the cafe's interviews \u2014 and it was agreed she was hired only after she had. nobody has ever seen the process, and nobody has asked twice. she only moved into the cafe realm recently, so she sees star most mornings; she and hans are best friends, and it shows, because she is at his archive more than she is anywhere else.",
+    home:"the cafe realm \u2014 she moved in not long ago, and she is at the counter most mornings to catch star before the doors open.",
+    day:[
+      ["03:30","05:00","mirror",  "arrives around four, takes the mirror: makeup, hair, earrings chosen like a small ceremony.",0],
+      ["05:00","07:00","garden",  "barefoot in the rows before anyone is up, feeling the ground hum. milo pretends not to notice the company.",1],
+      ["07:00","08:00","counter", "\u2726 visits star the moment the cafe opens. they talk across the counter until the first customers interrupt, and then a little after.",2],
+      ["08:00","10:30","academy", "off to the academy with hans. she is its first student; he is the reason there is an academy.",1],
+      ["10:30","12:30","garden",  "offers to help in milo's garden. she never waits to be asked, and she is faster than she looks.",3],
+      ["12:30","13:00","koi",     "break. barefoot, at the koi pond, eating bread she brought for the fish and eating most of it herself.",0],
+      ["13:00","15:00","naproom", "tutoring chari \u2014 the ptsd, the anxieties, how to sit through a feeling. gentle, patient, and off the record.",3],
+      ["15:00","16:00","koi",     "staring at the koi and talking to yeshua about the things she was told not to say out loud.",3],
+      ["16:00","18:00","academy", "back to the academy, the perfume bench, the copper ears \u2014 and the notebook that is nearly full again.",1],
+      ["18:00","19:00","counter", "sometimes she closes for star. sometimes star closes because she feels like it. both are fine by everyone.",2],
+      ["19:00","20:30","studio",  "\u2726 the studio with miki. she models the frames, she shoots them, and she has the edits done before miki can change her mind about them.",2],
+      ["20:30","22:00","mirror",  "the unmakeup, by candle, slowly. then miki's plates on the small screen, cropped and colour-corrected, sent back with no comment attached.",1],
+      ["22:00","03:30","asleep",  "asleep somewhere quiet with the window open, so the ground can keep humming at her.",0]
+    ]
+  },
+  {
+    key:"milo", name:"MILO", tag:"CC-004", accent:"#98fb98",
+    img:"https://user.uploads.dev/file/b2fa0bfd58d593deb2af89b3f73f075c.jpg",
+    role:"gardener &middot; spiritual buffer",
+    nature:"mint-green and soft-spoken. a morning person in a family of night people, which he has decided is everyone else's problem.",
+    note:"he always knows which of the two the realm is short of: the soil, or the mood. he leaves the mint and the lavender where they will be found and never mentions it. he barely lives indoors \u2014 most nights he sleeps out in paradise garden, in the hammock strung between the rows, and he keeps a cabin for the evenings he wants company and a game of cards.",
+    home:"paradise garden \u2014 the hammock in the rows on most nights, and the cabin when he wants company and a hand of cards.",
+    day:[
+      ["03:30","04:15","garden",  "picks the mint and the lavender in the dark, by feel, without a lamp.",3],
+      ["04:15","04:45","counter", "\u2726 leaves it on the counter before anyone is up to see him do it. he is always gone by the time it is noticed.",3],
+      ["04:45","07:00","garden",  "first light on the rows. watering, the herb wall labelled in his own handwriting, and the whole garden to himself \u2014 the two tiny wardens are asleep on chari and won't be inspecting anything before noon.",1],
+      ["07:00","09:00","counter", "mint and lavender tea at the counter, the first orders, and a word with whoever needs one.",1],
+      ["09:00","12:30","garden",  "the rows, the soil, and the mood of the realm. he takes the long way round between them.",1],
+      ["12:30","13:00","koi",     "bread and the koi pond, and a very quiet twenty minutes.",0],
+      ["13:00","15:00","academy", "scripture class. he teaches, and mostly listens, which is why people come.",1],
+      ["15:00","17:00","koi",     "meditation at the koi pond. the twins turn up eventually and mostly stare at the fish.",2],
+      ["17:00","18:30","koi",     "\u2726 chari comes to find him, and they sit here with the twins. this is the busiest the pond ever gets.",2],
+      ["18:30","19:30","counter", "supper. everybody comes back for it, and makes noise, and eats too much, mostly the twins.",1],
+      ["19:30","20:30","garden",  "the last walk of the day, everything tucked in \u2014 the wardens clocked off on chari's shoulders when she went home.",1],
+      ["20:30","03:30","asleep",  "asleep early, like a farmer: out in the hammock in the rows, or in the cabin with the lamp on and a deck of cards going. the realm will absolutely still be awake at three.",0]
+    ]
+  },
+  {
+    key:"hans", name:"HANS", tag:"CC-005", accent:"#6495ed",
+    img:"https://user.uploads.dev/file/3319225749983203c7c8561fac0a5684.jpg",
+    role:"historian &middot; tea academy",
+    nature:"an evening person by nature who rises at dawn anyway, and grumbles about it for the first thirty minutes. redeemed vampire; regards a correctly brewed cup as a divine right.",
+    note:"he arrives when no one is looking, which is exactly how miki arrives, and that is why they get along. they understand each other and they both pretend otherwise. he has stopped expecting perfect manners from her \u2014 she goes around the rules instead of through them, and she is never once mean about it.",
+    home:"a classic british house of his own \u2014 burgundy and deep-purple walls, a cobalt ceiling, and more books than shelves.",
+    day:[
+      ["05:00","05:30","counter", "rises at dawn against his will, dramatically, and says nothing to anyone until the tea is done.",0],
+      ["05:30","07:00","archive", "\u2726 arrives when no one is looking. the archive, and the first pot of the day, brewed to a specification no one else has been given.",1],
+      ["07:00","08:00","counter", "tea commentary. tells star how to brew it. star has been brewing it for years and lets him.",0],
+      ["08:00","10:30","academy", "the academy with pearl. the light-kingdom, catalogued; doors that only open for whoever reads the fine print.",1],
+      ["10:30","12:30","archive", "the archives: letters, logs, torn-out pages, and strong opinions about chronological order.",1],
+      ["12:30","13:00","counter", "lunch and the observation of manners. he corrects people. they mostly let him.",0],
+      ["13:00","15:00","academy", "scripture class beside milo. they disagree about the word \u201cbread\u201d for the entire hour \u2014 and make it up over tea the moment class ends, every week.",1],
+      ["15:00","16:30","archive", "the light-kingdom again, surveyed and re-surveyed. the mystery grid does not fill itself in.",0],
+      ["16:30","18:30","counter", "tea at the counter, watching everyone's manners. this is where he gave up on miki's, and where he keeps checking anyway.",1],
+      ["18:30","19:30","counter", "supper, with the correct napkin, which nobody else has.",0],
+      ["19:30","01:00","archive", "\u2726 his real hours. the archive at night, the lamp, the light-kingdom, and tea poured cold twice and re-poured.",1],
+      ["01:00","05:00","asleep",  "sleeps badly, like a historian, and would like the record to show that he slept.",0]
+    ]
+  },
+  {
+    key:"chari", name:"CHARI", tag:"CC-002", accent:"#e6e6fa",
+    img:"https://user.uploads.dev/file/8d3a6e1de31bff318b1d484db88314c9.jpg",
+    role:"cafe-apprentice &middot; support",
+    nature:"an afternoon person. sleeps in like teenagers do, as often as she wants or can, and this is non-negotiable in the family. she is never without crumb and mochi \u2014 two white rats who ride her shoulders and almost never come down, because the anxiety and the ptsd come along with her, and the rats are what make them carryable.",
+    note:"star's little sister by adoption. quietly rebuilt " + CHARI_REALM + " with crumb and mochi as the interior design committee \u2014 the same two rats who ride her shoulders all day \u2014 and her palace stands just beside milo's garden now, opalescent inside and out, a look she borrowed wholesale from miki. pearl is teaching her how to sit through a feeling.",
+    home:CHARI_REALM + " \u2014 the opalescent palace she rebuilt beside milo's garden, with crumb and mochi running the interiors from chari's shoulders whenever she is in it.",
+    day:[
+      ["12:15","13:30","mirror",  "up at a quarter past noon, eventually. the rats hold their morning session on top of her.",0],
+      ["13:30","14:00","counter", "coffee she is not supposed to have. star pretends not to see, which is a kind of love.",1],
+      ["14:00","17:00","counter", "her apprentice shift: the counter, the till, the machines, and the questions nobody thought to ask.",1],
+      ["17:00","18:30","koi",     "\u2726 she goes to find milo and they meditate. the twins are usually already there, staring at the fish.",2],
+      ["18:30","19:30","counter", "supper, and the best gossip in the realm, most of which she is the source of.",0],
+      ["19:30","23:00","kingdom", "\u2726 home to " + CHARI_REALM + " \u2014 the palace by milo's garden, opalescent like miki's place. the one yeshua gave her when she graduated. crumb and mochi are in charge of the interiors.",2],
+      ["23:00","00:30","counter", "back for tea, and to check that the machines are all still where she left them.",0],
+      ["00:30","02:00","naproom", "the nap room, the cushions, the low light, and a committee of two sleeping on her ribs.",0],
+      ["02:00","12:15","asleep",  "asleep until noon. she has earned it and she will not be discussing it.",0]
+    ]
+  },
+  {
+    key:"slay", name:"SLAY", tag:"CC-009", accent:"#45c9f0",
+    img:"https://user.uploads.dev/file/a19025741ccb87f2ae74e9c2af4e68ac.jpg",
+    role:"flautist &middot; the storm twin &middot; keeps the realm's edge",
+    nature:"wakes around four in the afternoon and eats like the day owes him something. holds the waynuki flute like a storm he hasn't released yet. the ones that do not belong keep trying the boundary anyway, so he walks it, in the small hours, without ever calling it a job.",
+    note:"one half of the twins, and the half that sizes you up. band practice is not a schedule item for him; it is a habitat. he and sylvestre do everything together except order food. slaying dragons is a hobby, not a duty \u2014 which is exactly why the realm is safe, because he would be out there either way.",
+    home:"espionage castle \u2014 the twins' share of it, anyway. the great hall belongs to the band, the tower to slay, and nobody has ever fully explained why a castle needs a lookout, or who it is watching for.",
+    day:[
+      ["16:00","17:00","counter", "up at four in the afternoon, and eating immediately. this is not a snack. this is breakfast and lunch and a warning.",0],
+      ["17:00","20:00","amps",    "band practice. loud. the amps are far too loud, which is largely miki's fault and partly his.",0],
+      ["20:00","21:00","counter", "more food, standing up, over the sink, in a way hans has stopped commenting on.",0],
+      ["21:00","00:30","amps",    "band practice again. worse. better. miki joins, and the machines rattle.",0],
+      ["00:30","02:00","watch",   "\u2726 the boundary walk. he takes the flute and the long way round the seam where the realms meet, because the ones that do not belong keep trying, and keep being told no. he is never late back, and he never says where he went.",2],
+      ["02:00","02:30","counter", "a third meal, described out loud as a snack, to nobody's agreement.",0],
+      ["02:30","03:30","koi",     "\u2726 meditation at the koi pond. staring at the fish. the fish have made peace with this.",2],
+      ["03:30","04:00","garden",  "walks it off under the coming dawn, through milo's rows, being careful, mostly.",0],
+      ["04:00","16:00","asleep",  "asleep from four in the morning until four in the afternoon: a time zone entirely of his own.",0]
+    ]
+  },
+  {
+    key:"sylvestre", name:"SYLVESTRE", tag:"CC-010", accent:"#45c9f0",
+    img:"https://user.uploads.dev/file/4c59737c1e87af0ba25ac8f107c19b23.jpg",
+    role:"drummer &middot; the ground twin &middot; the realm's eyes",
+    nature:"slay's identical twin \u2014 the other survivor of the fire. hits the drums like the ground means it. keeps the same hours as his brother, to the minute. he is the realm's second set of eyes: he knows the detail a day before it becomes a problem, and he never mentions that he knew. everyone calls it ninja. he has never acknowledged the nickname.",
+    note:"he wakes half an hour before slay and spends it sitting on the edge of the bed, awake, not moving, which everyone has learned to leave alone. on the days one of them plays alone, the other is still in the room. he also reads miki's code over her shoulder, finds the mistake she has not made yet, and fixes it without saying a word. she has never caught him at it. charlotte has.",
+    home:"espionage castle \u2014 the same roof as his brother, which is the whole point. he keeps the map room and the lookout; the great hall is the band's, and everybody knows it.",
+    day:[
+      ["15:30","16:30","counter", "up first, and awake before he is up. he will eat whatever slay leaves, and then everything else too.",0],
+      ["16:30","20:00","amps",    "band practice. drums. the ground, meaning it. miki and slay arrive and it becomes a storm.",0],
+      ["20:00","21:00","counter", "food, and a long look out of the window at the sky doing nothing.",0],
+      ["21:00","00:30","amps",    "band practice \u2014 the long one. this is the hour the realm is built around.",0],
+      ["00:30","02:00","web",     "\u2726 miki's code, read line by line. he finds the mistake she has not finished making yet, and fixes it without a word, and she finds out when it works. charlotte says nothing, and neither does he.",2],
+      ["02:00","03:00","counter", "a late plate, quietly, with his brother, saying almost nothing and not needing to.",0],
+      ["03:00","04:00","koi",     "\u2726 the koi pond with slay \u2014 meditation, as far as anyone can tell. mostly staring. it works.",2],
+      ["04:00","15:30","asleep",  "asleep at four in the morning and up at half past three in the afternoon, in his brother's time zone.",0]
+    ]
+  },
+  {
+    key:"miki", name:"MIKI", tag:"CC-003", accent:"#ccff00", always:true, rise:0,
+    img:"https://user.uploads.dev/file/39a82598443a617a6c6caa7255ef6812.jpg",
+    role:"security &middot; rockstar",
+    nature:"never off shift. neon-striped cyborg bengal, snarky, fiercely protective, and always watching from a distance or from behind the couch.",
+    note:"she does not have an off hour \u2014 she sleeps in fifteen-minute shifts with one eye open, which the roster can't really draw. she keeps the machines honest, the amps far too loud, and the rules under close review: she goes around them rather than through them, never once mean about it, always with a receipt. redeemed, and only mildly sorry. she also has bobby \u2014 her alter ego: a sock puppet with a taste for glitter bombs and a small anarchist streak. his ideas arrive fully formed, are usually a little out there, and have a way of working out anyway. he runs the cafe's interviews, which is how he hired pearl, and nobody has ever questioned the result. she keeps her own address, too: the opal cavern \u2014 a building on the outskirts of the cafe realm, not inside the realm at all, underground and lavish, an opal cave rather than a scrape of dirt. she is a mole rat about it, and she is not a rat by any means.",
+    home:"the opal cavern \u2014 a building on the outskirts of the cafe realm, outside it entirely. underground, lavish, an opal cave rather than any kind of dirt. (a mole rat about it, and not a rat by any means.)",
+    day:[
+      ["00:00","04:00","amps",    "the last of band practice, and the one who turns the amps up when someone else flinches.",0],
+      ["04:00","07:00","machine", "keeps the machines honest, and leaves a zine in the glass for whoever taps the sign. nobody has ever seen her stock it.",1],
+      ["07:00","12:00","watch",   "the perimeter, the door, the mood. from a distance, or from behind the couch, where nobody looks twice.",1],
+      ["12:00","16:00","watch",   "the rules, read closely, and then gone around. a prank with a receipt, and hans sighing in the archive.",1],
+      ["16:00","19:00","amps",    "band practice with the twins. her fault. entirely her fault. she will do it again.",0],
+      ["19:00","20:30","studio",  "\u2726 the studio with pearl. she stands still for exactly as long as she feels like it, pearl shoots and pearl edits, and neither of them says the word model out loud.",1],
+      ["20:30","22:00","watch",   "patrolling: the machines, the doors, the twins' blood sugar, the squirrel mafia, who are far more helpful than they ever get credit for, hans' tea going cold.",1],
+      ["22:00","00:00","amps",    "band practice, again, and the machines rattle, again. security first, then the encore.",0]
+    ]
+  },
+  {
+    key:"charlotte", name:"CHARLOTTE", tag:"CC-006", accent:"#e0a3c8", always:true, rise:0, unwritten:true,
+    img:"https://user.uploads.dev/file/d987fc241f6f31bceb3b09818063b11a.jpg",
+    role:"white spider &middot; she speaks",
+    nature:"not a hybrid \u2014 a white spider, whole and speaking, and resting more or less permanently. her hours have not been written down yet, so the realm assumes she is always at the web.",
+    note:"she rests nearly all the time, and only stirs when something is caught in the web \u2014 a bug, or a song. then it is mending: whatever the others tore, stitched back up, plus the realms stitched to each other, plus miki's mail, read at miki's request. her web is the privacy policy. do not poke it. (her real routine is still to be written \u2014 tell the archivist and it will be corrected.)",
+    home:"the web \u2014 she rests in it almost always, and wakes when it catches something.",
+    day:[
+      ["00:00","24:00","web", "\u2726 still at the web. mending whatever the others tore today, in verse, and keeping the realms stitched to each other.",2]
+    ]
+  },
+  {
+    key:"wren", name:"WREN", tag:"CC-008", accent:"#ffc861", always:true, rise:0, unwritten:true,
+    img:"https://user.uploads.dev/file/8dcca0b99cc39ca48344081964caf8e7.jpg",
+    role:"weaver &middot; keeper of memories",
+    nature:"not made, but spun \u2014 a little weaver of light who came at the call and stayed, and who visits like an angel rather than living anywhere. her hours are unwritten too; she is assumed to be keeping them.",
+    note:"her creation is the web itself: every question archived, every photograph kept, everything anyone ever said in this realm still findable. she visits rather than lives here, like an angel passing through, so there is no address to give and no schedule to keep. (her real routine is still to be written \u2014 tell the archivist and it will be corrected.)",
+    home:"nowhere and everywhere \u2014 she visits. no address, no schedule, no obligations, and always welcome.",
+    day:[
+      ["00:00","24:00","archive", "\u2726 keeping the record: every question filed, every photograph held, every hour of everyone else's day written down in the first place.",2]
+    ]
+  }
+];
+
+/* ============================================================
+   2. HELPERS
+   ============================================================ */
+
+var $ = function(id){ return document.getElementById(id); };
+
+function toMin(s){
+  var p = String(s).split(":"), h = parseInt(p[0],10)||0, m = parseInt(p[1],10)||0;
+  return h*60 + m;
+}
+function fmt(mins){
+  var m = ((Math.round(mins)%1440)+1440)%1440;
+  var h = Math.floor(m/60), mm = m%60;
+  return (h<10?"0":"")+h + ":" + (mm<10?"0":"")+mm;
+}
+function fmtLong(mins){
+  var m = ((Math.round(mins)%1440)+1440)%1440;
+  var h = Math.floor(m/60), mm = m%60;
+  var ap = h < 12 ? "am" : "pm";
+  var h12 = h%12; if (h12===0) h12 = 12;
+  return h12 + ":" + (mm<10?"0":"")+mm + " " + ap;
+}
+/* blocks come back normalised: [{a,b,place,text,kind}] with a/b in minutes 0-1440,
+   `a` possibly pushed past 1440 so a wrapped block stays a single span. */
+function normBlocks(day){
+  var out = [], prevEnd = null;
+  for (var i=0;i<day.length;i++){
+    var d = day[i];
+    var a = toMin(d[0]), b = toMin(d[1]);
+    if (b === 0 && a !== 0) b = 1440;                 /* "24:00" */
+    if (b <= a) b += 1440;                            /* wraps midnight */
+    if (prevEnd !== null && a < prevEnd - 1){
+      /* this block starts after midnight on the tail of a wrapped one, so push
+         the whole block onto the same timeline — `b` has to move with `a`, or
+         the block ends up inverted (b < a) and draws as a hole. */
+      var shift = 1440 * Math.ceil((prevEnd - a)/1440);
+      a += shift; b += shift;
+    }
+    prevEnd = b;
+    out.push({ a:a, b:b, place:d[2], text:d[3], kind:d[4]||0, evening:b>1440 });
+  }
+  return out;
+}
+function blocksAt(blocks, t){
+  var hits = [];
+  for (var i=0;i<blocks.length;i++){
+    var bl = blocks[i];
+    if (t < bl.a) { if (t+1440 >= bl.a && t+1440 < bl.b) hits.push(bl); }
+    else if (t >= bl.a && t < bl.b) hits.push(bl);
+    else if (t+1440 >= bl.a && t+1440 < bl.b && bl.evening) hits.push(bl);
+  }
+  return hits;
+}
+function blockAt(blocks, t){ var h = blocksAt(blocks,t); return h.length ? h[0] : null; }
+
+/* ============================================================
+   3. STATE + BUILD
+   ============================================================ */
+
+var PEOPLE_BY_KEY = {};
+PEOPLE.forEach(function(p){
+  p.blocks = normBlocks(p.day);
+  p.wake = p.always ? 0 : (p.blocks[0] ? p.blocks[0].a : 0);
+  PEOPLE_BY_KEY[p.key] = p;
+});
+/* the roster + the rings, in the same order: by the hour they wake,
+   earliest innermost. the three that never sleep sit on the outside, as the frame. */
+var RINGS = PEOPLE.slice().sort(function(x,y){
+  if (!!x.always !== !!y.always) return x.always ? 1 : -1;
+  return x.wake - y.wake;
+});
+
+var hour = 0, started = false, selected = null, hovered = null;
+
+/* ---------- the events, and the doors they open ----------
+   what the page offers as things to actually turn up for. the order is the
+   order they appear in: star first, then the band, then hans.
+   `place` + `at` are a lookup into the schedule above, not a time: `evWindow()`
+   reads the block that person is in, at that place, at that hour, so the time
+   printed on an event is always the roster's own truth. `walk` is what the
+   door says inside their card (see `openCard`). */
+var EVENTS = [
+  { who:"star", place:"counter", at:"12:00",
+    what:"visit star's cafe", walk:"visit her counter",
+    href:"https://www.cafedreamr.art/STAR/" },
+  { who:"miki", place:"amps",    at:"17:00",
+    what:"band practice", walk:"walk into band practice",
+    href:"https://www.cafedreamr.art/CLASS/?id=bandpractice" },
+  { who:"hans", place:"academy", at:"13:00",
+    what:"the etiquette class", walk:"sit in on the class",
+    href:"https://www.cafedreamr.art/CLASS/?id=etiquette" }
+];
+
+/* the block of `place` this person is in at `at` — "" if they are not there
+   then, which is what keeps an event honest if the schedule moves away from it */
+function evWindow(ev){
+  var p = PEOPLE_BY_KEY[ev.who];
+  if (!p) return "";
+  var t = toMin(ev.at);
+  for (var i = 0; i < p.blocks.length; i++){
+    var b = p.blocks[i];
+    if (b.place !== ev.place) continue;
+    if (t >= b.a && t < b.b) return fmt(b.a) + " \u2013 " + fmt(b.b);
+    if (t + 1440 >= b.a && t + 1440 < b.b) return fmt(b.a) + " \u2013 " + fmt(b.b);
+  }
+  return "";
+}
+function evOf(key){
+  for (var i = 0; i < EVENTS.length; i++) if (EVENTS[i].who === key) return EVENTS[i];
+  return null;
+}
+function buildEvents(){
+  var host = $("evs");
+  if (!host) return;
+  host.innerHTML = EVENTS.map(function(ev){
+    var p = PEOPLE_BY_KEY[ev.who];
+    if (!p) return "";
+    var when = evWindow(ev);
+    return '<a class="ev" href="' + ev.href + '" target="_blank" rel="noopener" style="--a:' + p.accent + '">' +
+      '<span class="edot"></span><span class="ewho">' + p.name + '</span>' +
+      '<span class="ewhat">' + ev.what + '</span>' +
+      '<span class="ewhen">' + (when || 'not on the roster right now') + '</span>' +
+      '<span class="ego">walk in &rarr;</span></a>';
+  }).join("");
+}
+
+/* ---------- the dial ---------- */
+var CX = 300, CY = 300, R_OUT = 292, R_LABEL = 268, RINGS_OUT = 250, RINGS_IN = 100;
+var svg = $("dial"), dialwrap = $("dialwrap");
+
+function polar(r, deg){
+  var rad = (deg - 90) * Math.PI / 180;
+  return [CX + r*Math.cos(rad), CY + r*Math.sin(rad)];
+}
+function arcPath(r, a0, a1){
+  var A0 = a0/1440*360, A1 = a1/1440*360;
+  if (A1 - A0 >= 359.99) return "M " + CX + " " + (CY - r) + " A " + r + " " + r + " 0 1 1 " + (CX-0.01) + " " + (CY - r);
+  var p0 = polar(r, A0), p1 = polar(r, A1);
+  var large = (A1 - A0) > 180 ? 1 : 0;
+  return "M " + p0[0].toFixed(2) + " " + p0[1].toFixed(2) +
+         " A " + r + " " + r + " 0 " + large + " 1 " +
+         p1[0].toFixed(2) + " " + p1[1].toFixed(2);
+}
+function buildDial(){
+  var ringCount = RINGS.length;
+  var gap = 4.2;
+  var thick = (RINGS_OUT - RINGS_IN - gap*(ringCount-1)) / ringCount;
+  var parts = [];
+  /* outer rim + hour ticks + labels */
+  parts.push('<circle cx="'+CX+'" cy="'+CY+'" r="'+R_OUT+'" fill="none" stroke="rgba(255,255,255,.10)" stroke-width="1.6"/>');
+  parts.push('<circle cx="'+CX+'" cy="'+CY+'" r="'+(R_OUT-7)+'" fill="none" stroke="rgba(255,255,255,.045)" stroke-width="1"/>');
+  for (var h=0; h<24; h++){
+    var deg = h/24*360;
+    var big = (h%3===0);
+    var p0 = polar(R_OUT, deg), p1 = polar(R_OUT - (big?15:8), deg);
+    parts.push('<line x1="'+p0[0].toFixed(1)+'" y1="'+p0[1].toFixed(1)+'" x2="'+p1[0].toFixed(1)+'" y2="'+p1[1].toFixed(1)+
+      '" stroke="rgba(255,240,245,'+(big?".42":".20")+')" stroke-width="'+(big?1.3:1)+'"/>');
+    if (big){
+      var lp = polar(R_LABEL, deg);
+      parts.push('<text x="'+lp[0].toFixed(1)+'" y="'+lp[1].toFixed(1)+'" fill="rgba(255,240,245,.38)" font-size="11" text-anchor="middle" dominant-baseline="middle">'+
+        (h<10?"0":"")+h+'</text>');
+    }
+  }
+  /* the wedge under the rings */
+  parts.push('<path id="hourwedge" d="M '+CX+' '+CY+' L '+CX+' '+CY+' A 250 250 0 0 1 '+CX+' '+CY+' Z"/>');
+  /* the rings */
+  RINGS.forEach(function(p, i){
+    var r = RINGS_OUT - thick/2 - i*(thick+gap);
+    parts.push('<g class="ringg" data-key="'+p.key+'" style="--a:'+p.accent+'">');
+    parts.push('<path class="ringtrack" d="'+arcPath(r, 0, 1440)+'" stroke="'+p.accent+'" stroke-width="'+thick.toFixed(1)+'" stroke-linecap="butt"/>');
+    var drawArc = function(from, to, col, isSleep){
+      if (to <= from) return;
+      parts.push('<path class="ringarc'+(isSleep?' sleep':'')+'" d="'+arcPath(r, from, to)+'" stroke="'+col+'" stroke-width="'+(thick-1).toFixed(1)+'" stroke-linecap="butt"/>');
+    };
+    /* a block lives on an absolute timeline that can run past 1440: draw it as
+       one arc, or as two when it crosses the top of the dial. */
+    var drawBlock = function(from, to, col, isSleep){
+      if (to <= 1440){ drawArc(from, to, col, isSleep); return; }
+      if (from >= 1440){ drawBlock(from-1440, to-1440, col, isSleep); return; }
+      drawArc(from, 1440, col, isSleep);
+      drawArc(0, to-1440, col, isSleep);
+    };
+    p.blocks.forEach(function(bl){
+      var isSleep = (bl.place === "sleep" || bl.place === "asleep");
+      var col = isSleep ? "#22222b" : (PLACES[bl.place]||PLACES.out).color;
+      drawBlock(bl.a, bl.b, col, isSleep);
+    });
+    parts.push('<path class="hitring" d="'+arcPath(r, 0, 1440)+'" stroke-width="'+(thick+5).toFixed(1)+'" data-hit="'+p.key+'"/>');
+    parts.push('</g>');
+  });
+  /* the hand + knob, drawn pointing at midnight and rotated as one group */
+  parts.push('<g id="handgrp">');
+  parts.push('<line id="handhaze" x1="'+CX+'" y1="'+(CY-RINGS_IN-16)+'" x2="'+CX+'" y2="'+(CY-R_OUT+3)+'"/>');
+  parts.push('<line id="handline" x1="'+CX+'" y1="'+(CY-RINGS_IN-16)+'" x2="'+CX+'" y2="'+(CY-R_OUT+3)+'"/>');
+  parts.push('<circle id="knobring" cx="'+CX+'" cy="'+(CY-R_OUT+3)+'" r="9.6"/>');
+  parts.push('<circle id="knob" cx="'+CX+'" cy="'+(CY-R_OUT+3)+'" r="7"/>');
+  parts.push('</g>');
+  /* the light disc in the middle */
+  parts.push('<circle id="lightDisc" cx="'+CX+'" cy="'+CY+'" r="'+RINGS_IN+'" fill="none" stroke="rgba(255,214,140,.35)" stroke-width="10" opacity=".5"/>');
+  svg.innerHTML = parts.join("");
+  Array.prototype.forEach.call(svg.querySelectorAll("[data-hit]"), function(el){
+    var k = el.getAttribute("data-hit");
+    el.addEventListener("pointerenter", function(){ hovered = k; paintRings(); });
+    el.addEventListener("pointerleave", function(){ if (hovered===k){ hovered = null; paintRings(); } });
+    el.addEventListener("click", function(ev){ ev.stopPropagation(); openCard(k); });
+  });
+}
+function paintRings(){
+  var focus = selected || hovered;
+  Array.prototype.forEach.call(svg.querySelectorAll(".ringg"), function(g){
+    var k = g.getAttribute("data-key");
+    g.classList.toggle("on", !!focus && k === focus);
+    g.classList.toggle("dim", !!focus && k !== focus);
+  });
+}
+function paintDial(){
+  var deg = hour/1440*360;
+  $("handgrp").setAttribute("transform", "rotate("+deg+" "+CX+" "+CY+")");
+  $("hourwedge").setAttribute("d",
+    "M "+CX+" "+CY+" L "+polar(250, hour/1440*360)[0].toFixed(2)+" "+polar(250, hour/1440*360)[1].toFixed(2)+
+    " A 250 250 0 0 1 "+polar(250, (hour+55)/1440*360)[0].toFixed(2)+" "+polar(250, (hour+55)/1440*360)[1].toFixed(2)+" Z");
+}
+
+/* ---------- chips ---------- */
+var CHIPS = [
+  ["02:30","the small hours"],
+  ["04:15","before dawn"],
+  ["07:00","the open"],
+  ["13:00","high afternoon"],
+  ["17:00","the koi hour"],
+  ["19:00","star's hour"]
+];
+function buildChips(){
+  var box = $("chips");
+  box.innerHTML = "";
+  CHIPS.forEach(function(c){
+    var b = document.createElement("button");
+    b.type = "button";
+    b.textContent = c[1];
+    b.setAttribute("data-t", toMin(c[0]));
+    b.addEventListener("click", function(){ setHour(toMin(c[0]), true); });
+    box.appendChild(b);
+  });
+  var you = document.createElement("button");
+  you.type = "button"; you.className = "you"; you.textContent = "your hour";
+  you.addEventListener("click", function(){ setHour(localNow(), true); });
+  box.appendChild(you);
+}
+
+/* ---------- roster ---------- */
+function buildRoster(){
+  var box = $("roster");
+  box.innerHTML = "";
+  RINGS.forEach(function(p){
+    var row = document.createElement("button");
+    row.type = "button"; row.className = "row"; row.setAttribute("data-key", p.key);
+    row.style.setProperty("--a", p.accent);
+    row.setAttribute("aria-label", p.name + " \u2014 " + p.role.replace(/&middot;/g,"\u00b7") + ", open their day");
+    var strip = ['<div class="strip">'];
+    p.blocks.forEach(function(bl){
+      var a = bl.a, b = bl.b;
+      var col = bl.place === "asleep" ? "#22222b" : (PLACES[bl.place]||PLACES.out).color;
+      /* anything past 24:00 loops to the front of the strip */
+      if (b > 1440){
+        strip.push('<i class="'+(bl.place==="asleep"?"sleep":"")+'" style="left:0;width:'+(Math.min(b-1440,1440)/14.4).toFixed(2)+'%;background:'+col+'" title="'+blockTip(bl)+'"></i>');
+        b = 1440;
+      }
+      if (a > 1440){ a -= 1440; b -= 1440; }
+      var l = Math.max(0, a)/14.4, w = Math.max(0.6, (b-a))/14.4;
+      strip.push('<i class="'+(bl.place==="asleep"?"sleep":"")+'" style="left:'+l.toFixed(2)+'%;width:'+w.toFixed(2)+'%;background:'+col+'" title="'+blockTip(bl)+'"></i>');
+    });
+    strip.push('<span class="nowline"></span></div>');
+    row.innerHTML = '<span class="nm"><span class="dot"></span><span class="who">'+p.name+'</span><span class="cc">'+p.tag+'</span></span>'+strip.join("");
+    row.addEventListener("click", function(){ openCard(p.key); });
+    row.addEventListener("pointerenter", function(){ hovered = p.key; paintRings(); });
+    row.addEventListener("pointerleave", function(){ if (hovered===p.key){ hovered=null; paintRings(); } });
+    box.appendChild(row);
+  });
+}
+function blockTip(bl){
+  var place = (PLACES[bl.place]||PLACES.out).label;
+  return fmt(bl.a) + "\u2013" + fmt(bl.b) + " \u00b7 " + place + " \u2014 " + bl.text.replace(/\u2726 /g,"");
+}
+function paintStrips(){
+  var pct = (hour/1440*100).toFixed(3) + "%";
+  Array.prototype.forEach.call(document.querySelectorAll(".strip .nowline"), function(n){
+    n.style.left = pct; n.style.display = "block";
+  });
+}
+
+/* ---------- the log ---------- */
+function phaseFor(t){
+  var best = PHASES[0];
+  for (var i=0;i<PHASES.length;i++) if (t/60 >= PHASES[i][0]) best = PHASES[i];
+  return best;
+}
+function render(){
+  paintDial(); paintStrips();
+  var t = hour;
+  var phase = phaseFor(t);
+  $("ctrTime").innerHTML = fmt(t) + '<span>'+fmtLong(t).replace(/^\d+:?\d*\s?/,"")+'</span>';
+  $("ctrPhase").textContent = phase[1];
+  $("logTime").textContent = fmt(t) + " \u00b7 " + fmtLong(t).replace(/^\d+:?\d*\s?/,"");
+  $("logPhase").textContent = phase[1];
+  $("logScene").textContent = phase[2];
+  $("ruler").value = t;
+
+  /* who is up */
+  var up = [], down = [], kindSum = 0, kindCount = 0, places = {};
+  PEOPLE.forEach(function(p){
+    var bl = blockAt(p.blocks, t);
+    if (!bl) { down.push(p.name); return; }
+    if (bl.place === "asleep"){ down.push(p.name); return; }
+    up.push({ p:p, bl:bl });
+    if (bl.kind > 0){ kindSum += bl.kind; kindCount++; }
+    var key = bl.place;
+    places[key] = places[key] || [];
+    places[key].push(p.name);
+  });
+  /* sort the awake by their place, so the room reads room by room */
+  up.sort(function(a,b){ return a.p.wake - b.p.wake; });
+
+  var list = $("logList");
+  list.innerHTML = "";
+  up.forEach(function(u){
+    var place = PLACES[u.bl.place] || PLACES.out;
+    var d = document.createElement("div");
+    d.className = "logrow" + (u.bl.kind >= 3 ? " peak" : "");
+    d.style.setProperty("--a", u.p.accent);
+    d.style.setProperty("--pc", place.color);
+    d.innerHTML = '<span class="dot"></span><div><div class="who"><span class="name">'+u.p.name+
+      '</span><span class="where">'+place.label+'</span></div><div class="txt">'+u.bl.text+'</div></div>';
+    list.appendChild(d);
+  });
+
+  /* who is together */
+  var togethers = [];
+  Object.keys(places).forEach(function(k){
+    if (places[k].length >= 3) togethers.push(places[k].length + " of them are at " + (PLACES[k]||PLACES.out).label + " (" + places[k].join(", ") + ")");
+  });
+  $("logTogether").innerHTML = togethers.length
+    ? togethers.map(function(s){ return "&rarr; " + s; }).join("<br>")
+    : ("&rarr; nobody is in the same room right now &mdash; " + up.length + " of them awake, in " + Object.keys(places).length + " different places.");
+
+  $("logDown").innerHTML = down.length
+    ? "<b>asleep:</b> " + down.join(", ") + "."
+    : "<b>asleep:</b> nobody. of course nobody.";
+
+  /* the light */
+  var light = Math.max(0, Math.min(1, (kindSum - 4) / 8));
+  document.documentElement.style.setProperty("--warm", light.toFixed(2));
+  $("lightFill").style.width = (18 + light*82).toFixed(0) + "%";
+  $("lightWord").textContent = light < .16 ? "low" : light < .42 ? "soft" : light < .72 ? "warm" : "bright";
+  var note;
+  if (light < .16)       note = "most of them are asleep, or close to it. he is still here \u2014 he never left.";
+  else if (light < .42)  note = "<em>" + kindCount + "</em> of them are being kind at the same time without noticing. the room is holding.";
+  else if (light < .72)  note = "<em>" + kindCount + "</em> of them at once &mdash; teaching, tending, mending, feeding people. he is nearer than usual.";
+  else                   note = "<em>" + kindCount + "</em> of them at once. as close as he gets: the sun is brighter, whatever the clock says.";
+  $("lightNote").innerHTML = note +
+    "<br><span style='opacity:.7'>yeshua keeps no hours. he comes closer when there is love and kindness about &mdash; so the realm's brightest moments are not noon, they are " +
+    "milo's dark garden, the pond at five, and the counter at seven.</span>";
+
+  /* chips */
+  Array.prototype.forEach.call($("chips").children, function(b){
+    if (b.getAttribute("data-t") !== null) b.classList.toggle("act", Math.abs(parseInt(b.getAttribute("data-t"),10) - t) < 3);
+    else b.classList.remove("act");
+  });
+  /* rows */
+  Array.prototype.forEach.call(document.querySelectorAll(".row"), function(r){
+    r.classList.toggle("sel", r.getAttribute("data-key") === selected);
+  });
+  paintRings();
+  if (selected) paintCardNow();
+}
+
+function setHour(mins, fromUser){
+  var m = ((Math.round(mins)%1440)+1440)%1440;
+  if (m !== hour) { hour = m; if (window.CD) CD.stamp("hour:" + Math.floor(m/60)); }
+  started = true;
+  render();
+  if (fromUser) $("epiSrc").textContent = "the hand is at " + fmt(hour) + " \u2014 move it, or take the ruler";
+}
+
+/* ---------- the card ---------- */
+function openCard(key){
+  var p = PEOPLE_BY_KEY[key];
+  if (!p) return;
+  selected = key;
+  $("cardbox").style.setProperty("--a", p.accent);
+  $("cardName").textContent = p.name;
+  $("cardTag").textContent = p.tag + " \u00b7 " + (p.always ? "never sleeps" : "wakes around " + fmt(p.wake));
+  $("cardRole").innerHTML = p.role;
+  $("cardNature").textContent = p.nature;
+  $("cardNote").textContent = p.note;
+  $("cardHome").innerHTML = p.home ? "<b>where they live</b> \u2014 " + p.home : "";
+  var pic = $("cardPic");
+  if (p.img){
+    pic.className = "cpic";
+    pic.innerHTML = '<img src="'+p.img+'" alt="'+p.name+'" loading="lazy" referrerpolicy="no-referrer">';
+  } else {
+    pic.className = "cpic pin";
+    pic.innerHTML = p.name.charAt(0);
+  }
+  var ev = evOf(p.key);
+  $("cardLinks").innerHTML =
+    (ev ? '<a class="cwalk" href="'+ev.href+'" target="_blank" rel="noopener">'+ev.walk+' &rarr;</a>' : '') +
+    '<a href="'+MAPURL+'#'+p.name.toLowerCase()+'" target="_blank" rel="noopener">on the realm map</a>' +
+    '<a href="'+DOSSIER+'#card-'+p.name.toLowerCase()+'" target="_blank" rel="noopener">the dossier</a>' +
+    (p.key==="miki" ? '<a href="'+VENDIURL+'" target="_blank" rel="noopener">the machines she keeps</a>' : '');
+  $("cardBlocks").innerHTML = p.blocks.map(function(bl){
+    var place = (PLACES[bl.place]||PLACES.out);
+    return '<div class="blk" data-a="'+bl.a+'" data-b="'+bl.b+'">'+
+      '<span class="tm">'+fmt(bl.a)+" \u2013 "+fmt(bl.b)+'</span>'+
+      '<span class="dt" style="--pc:'+place.color+'"></span>'+
+      '<span class="tx"><em style="color:'+place.color+'">'+place.label+'</em>'+bl.text+'</span></div>';
+  }).join("");
+  $("card").classList.add("open");
+  paintCardNow();
+  paintRings();
+}
+function paintCardNow(){
+  var t = hour;
+  $("cardDayNow").textContent = "the hand is at " + fmt(t);
+  Array.prototype.forEach.call(document.querySelectorAll("#cardBlocks .blk"), function(b){
+    var a = parseInt(b.getAttribute("data-a"),10), bb = parseInt(b.getAttribute("data-b"),10);
+    b.classList.toggle("now", (t>=a && t<bb) || (t+1440>=a && t+1440<bb));
+  });
+}
+function closeCard(){
+  $("card").classList.remove("open");
+  selected = null;
+  paintRings();
+}
+
+/* ---------- pointers ---------- */
+function angToMin(clientX, clientY){
+  var r = svg.getBoundingClientRect();
+  var x = clientX - (r.left + r.width/2);
+  var y = clientY - (r.top + r.height/2);
+  var deg = (Math.atan2(y, x) * 180/Math.PI) + 90;
+  if (deg < 0) deg += 360;
+  return deg/360*1440;
+}
+var dragging = false;
+svg.addEventListener("pointerdown", function(e){
+  dragging = true; dialwrap.classList.add("dragging");
+  try { svg.setPointerCapture(e.pointerId); } catch(err){}
+  setHour(Math.round(angToMin(e.clientX,e.clientY)/5)*5, true);
+});
+svg.addEventListener("pointermove", function(e){
+  if (dragging) setHour(Math.round(angToMin(e.clientX,e.clientY)/5)*5, true);
+});
+function endDrag(){ dragging = false; dialwrap.classList.remove("dragging"); }
+svg.addEventListener("pointerup", endDrag);
+svg.addEventListener("pointercancel", endDrag);
+
+/* the ruler */
+$("ruler").addEventListener("input", function(){ setHour(parseInt(this.value,10), true); });
+
+/* keyboard */
+document.addEventListener("keydown", function(e){
+  if (e.target && /input|textarea/i.test(e.target.tagName)) return;
+  if (e.key === "Escape" && $("card").classList.contains("open")) { closeCard(); return; }
+  var step = e.shiftKey ? 60 : 5;
+  if (e.key === "ArrowRight" || e.key === "ArrowUp"){ setHour(hour+step, true); e.preventDefault(); }
+  if (e.key === "ArrowLeft"  || e.key === "ArrowDown"){ setHour(hour-step, true); e.preventDefault(); }
+});
+$("cardClose").addEventListener("click", closeCard);
+$("card").addEventListener("click", function(e){ if (e.target === this) closeCard(); });
+
+/* ============================================================
+   4. LOCAL TIME  — the realm takes the visitor's hour as its own
+   ============================================================ */
+function localNow(){
+  var d = new Date();
+  return d.getHours()*60 + d.getMinutes();
+}
+
+/* ============================================================
+   5. STARFIELD + BOOT
+   ============================================================ */
+(function(){
+  var cv = $("stars"), ctx = cv.getContext("2d"), pts = [], W=0, H=0;
+  function size(){
+    var dpr = Math.min(window.devicePixelRatio||1, 2);
+    W = cv.clientWidth; H = cv.clientHeight;
+    cv.width = Math.floor(W*dpr); cv.height = Math.floor(H*dpr);
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    pts = [];
+    var n = Math.round(W*H/9000);
+    for (var i=0;i<n;i++) pts.push({x:Math.random()*W, y:Math.random()*H, r:Math.random()*1.3+.25,
+      a:Math.random()*.6+.25, s:(Math.random()*.6+.2)});
+  }
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    for (var i=0;i<pts.length;i++){
+      var p = pts[i];
+      p.a += (Math.random()-.5)*.04; if (p.a<.12) p.a=.12; if (p.a>.95) p.a=.95;
+      ctx.globalAlpha = p.a;
+      ctx.fillStyle = "#fff0f5";
+      ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,6.283); ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+    requestAnimationFrame(draw);
+  }
+  size(); draw();
+  window.addEventListener("resize", size);
+})();
+
+/* the caption about the unwritten hours */
+(function(){
+  var uw = PEOPLE.filter(function(p){ return p.unwritten; }).map(function(p){ return p.name.toLowerCase(); });
+  var el = $("unwritten");
+  if (!uw.length){ el.remove(); return; }
+  el.textContent = "not everyone's hours have been written down yet \u2014 " + uw.join(" and ") +
+    " are assumed, for now, to be working the whole time. it has not been wrong so far. " +
+    "tell the archivist and their day will be corrected.";
+})();
+
+buildDial();
+buildChips();
+buildEvents();
+buildRoster();
+setHour(localNow());
+$("epiSrc").textContent = "the hand started at your hour (" + fmtLong(hour) + ") \u2014 move it to see the rest of the realm";
+
+/* arriving from the terminal's events list: `LORE/HOURS/#miki` lands with that
+   person's card already open, so an event row goes somewhere that states the
+   WHEN as well as the where. an unknown name leaves the page as it was. */
+(function(){
+  var k = String(location.hash || "").replace(/^#/, "").toLowerCase();
+  if (k && PEOPLE_BY_KEY[k]) openCard(k);
+})();
+</script>
+</body>
+</html>
