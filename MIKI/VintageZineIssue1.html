@@ -1,0 +1,1980 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="/.nekoweb-api/static/site.js" defer></script><script src="/.nekoweb-api/static/site.js" defer></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>the violet café · the interview to the 2nd mystery realm · the flip book</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Homemade+Apple&family=Klee+One&family=Playfair+Display:ital,wght@0,600;1,600&family=Space+Mono:wght@400;700&family=Special+Elite&family=UnifrakturMaguntia&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #16130f;
+    --ink: #1b1712;
+    --paper: #ede4cf;
+    --violet: #7a2f35;
+    --violet-2: #8a6b4d;
+    --acid: #4a3a28;
+    --green: #6b5a3f;
+    --teal: #7a5a3a;
+    --pink: #8a3a3a;
+    --chrome: #3a342b;
+    --sienna: #8a5a2a;
+    --fraktur: 'UnifrakturMaguntia', serif;
+    --black-font: 'Archivo Black', sans-serif;
+    --mono: 'Space Mono', monospace;
+    --cursive: 'Homemade Apple', cursive;
+    --elite: 'Special Elite', monospace;
+    --serif: 'Playfair Display', serif;
+    --ui: 'Klee One', sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { color-scheme: light; }
+  body {
+    font-family: var(--ui);
+    color: var(--chrome);
+    min-height: 100vh;
+    background:
+      radial-gradient(60% 42% at 78% 8%, rgba(138,107,77,.10), transparent 62%),
+      radial-gradient(46% 38% at 12% 88%, rgba(122,47,53,.06), transparent 62%),
+      linear-gradient(180deg, #efe7d0 0%, #e7dcc3 55%, #efe7d0 100%);
+    display: flex; flex-direction: column; align-items: center;
+    padding: 26px 14px 60px;
+    overflow-x: hidden;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  body::after {
+    content: ""; position: fixed; inset: 0; pointer-events: none; opacity: .06; z-index: 0;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="140" height="140"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" stitchTiles="stitch"/></filter><rect width="140" height="140" filter="url(%23n)"/></svg>');
+  }
+
+  .topnav {
+    position: relative; z-index: 20;
+    width: 100%; max-width: 1100px;
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: .4em 1em;
+    padding: 10px 6px; margin-bottom: 18px;
+    border-bottom: 1px solid rgba(138,107,77,.35);
+  }
+  .topnav a {
+    color: var(--violet-2); text-decoration: none;
+    font-size: .82rem; letter-spacing: .06em;
+    border-bottom: 1px solid transparent;
+    transition: color .15s, border-color .15s;
+  }
+  .topnav a:hover { color: var(--chrome); border-bottom-color: var(--violet); }
+  .topnav .home { font-family: var(--cursive); font-size: .95rem; color: var(--pink); }
+  .dot { color: var(--violet); }
+
+  .mast {
+    position: relative; z-index: 20; text-align: center; margin-bottom: 10px;
+  }
+  .mast .kicker {
+    font-family: var(--mono); font-size: .72rem; letter-spacing: .34em; text-transform: uppercase;
+    color: var(--teal); margin-bottom: 8px;
+  }
+  .mast h1 {
+    font-family: var(--fraktur); font-weight: normal;
+    font-size: clamp(2rem, 6vw, 3.2rem); color: #16130f;
+    text-shadow: 2px 2px 0 rgba(138,107,77,.25);
+    line-height: 1;
+  }
+  .mast .sub { font-family: var(--mono); font-size: .72rem; letter-spacing: .22em; text-transform: uppercase; color: #7a6f5c; margin-top: 6px; }
+
+  /* ═══════════ THE BOOK ═══════════ */
+  @property --curl { syntax: "<number>"; initial-value: 0; inherits: true; }
+  @property --turn { syntax: "<number>"; initial-value: 0; inherits: true; }
+
+  .stage {
+    position: relative; z-index: 10;
+    perspective: 2400px;
+    margin: 14px auto 8px;
+  }
+  .book {
+    position: relative;
+    width: calc(min(940px, 96vw, 92vh * 1.4546) * var(--z, 1));
+    aspect-ratio: 16 / 11;
+    margin: 0 auto;
+    transform-style: preserve-3d;
+    font-size: calc(clamp(10px, 1.55vw, 14px) * var(--z, 1));
+    filter: drop-shadow(0 30px 50px rgba(0,0,0,.55));
+  }
+  .spread {
+    position: absolute; inset: 0;
+    transform-style: preserve-3d;
+    cursor: grab;
+    touch-action: none;
+    transition:
+      --turn 1.5s cubic-bezier(.45,.05,.55,.95),
+      transform 1.5s cubic-bezier(.45,.05,.55,.95);
+  }
+  .spread.grabbing { cursor: grabbing; }
+
+  /* every sheet lives in the right slot [spine, foreedge]; turning swings it
+     around the spine (its left edge) to land on the left. */
+  .page {
+    position: absolute; top: 0; bottom: 0; left: 50%; width: 50%;
+    transform-style: preserve-3d;
+    transform-origin: left center;
+    will-change: transform;
+    transition:
+      transform 1.5s cubic-bezier(.45,.05,.55,.95),
+      --curl 1.5s cubic-bezier(.45,.05,.55,.95);
+  }
+  .page .face {
+    position: absolute; inset: 0;
+    overflow: hidden;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    border-radius: 2px 10px 10px 2px;
+    box-shadow: inset 0 0 24px rgba(0,0,0,.5);
+    filter: brightness(calc(1 - var(--curl,0) * .4));
+  }
+  .page .face.back {
+    transform: rotateY(180deg);
+    border-radius: 10px 2px 2px 10px;
+    box-shadow: inset 8px 0 20px rgba(0,0,0,.3), inset 0 0 24px rgba(0,0,0,.5);
+  }
+  .page .face.back::before {
+    content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 1.1em; z-index: 2;
+    background: linear-gradient(90deg, rgba(0,0,0,.16), transparent); pointer-events: none;
+  }
+  .face.back.pg:not(.gutter):not(.halftone) { background: linear-gradient(105deg, #dbd1b4 0%, var(--paper) 58%); }
+  .page::after {
+    content: ""; position: absolute; inset: 0; z-index: 4; pointer-events: none;
+    background:
+      linear-gradient(96deg, rgba(0,0,0,.55) 0%, rgba(0,0,0,.2) 26%, transparent 50%),
+      linear-gradient(180deg, rgba(0,0,0,.16) 0%, transparent 30%);
+    opacity: calc(var(--curl,0) * .72);
+  }
+
+  /* cast shadows that fall on the revealed page during a turn */
+  .cast { position: absolute; top: 0; bottom: 0; width: 50%; z-index: 50; pointer-events: none; opacity: 0; }
+  .cast-right { left: 50%; background: linear-gradient(90deg, rgba(0,0,0,.45), rgba(0,0,0,0) 60%); opacity: calc(var(--turn,0) * 1); }
+  .cast-left { left: 0; background: linear-gradient(270deg, rgba(0,0,0,.45), rgba(0,0,0,0) 60%); opacity: calc(var(--turn,0) * 1); }
+
+  .spine-shadow {
+    position: absolute; top: 0; bottom: 0; left: 50%; width: 16px; transform: translateX(-50%);
+    z-index: 51; pointer-events: none; opacity: .75;
+    background: linear-gradient(90deg, transparent, rgba(0,0,0,.32) 45%, rgba(0,0,0,.32) 55%, transparent);
+  }
+
+  /* the whole book breathes a little while a page turns, then settles */
+  @keyframes sway-right {
+    0%   { transform: rotateY(0deg); }
+    20%  { transform: rotateY(-2.4deg); }
+    55%  { transform: rotateY(1.2deg); }
+    80%  { transform: rotateY(-0.7deg); }
+    100% { transform: rotateY(0deg); }
+  }
+  @keyframes sway-left {
+    0%   { transform: rotateY(0deg); }
+    20%  { transform: rotateY(2.4deg); }
+    55%  { transform: rotateY(-1.2deg); }
+    80%  { transform: rotateY(0.7deg); }
+    100% { transform: rotateY(0deg); }
+  }
+
+  /* ── the hologram cover ── */
+  .cover {
+    background:
+      repeating-linear-gradient(0deg, rgba(138,107,77,.05) 0 1px, transparent 1px 22px),
+      repeating-linear-gradient(90deg, rgba(138,107,77,.05) 0 1px, transparent 1px 22px),
+      linear-gradient(150deg, #f3ead4 0%, #e8dcc0 55%, #efe7d0 100%);
+  }
+  .cover::before {
+    content: ""; position: absolute; inset: 1.05em; pointer-events: none;
+    border-top: 3px double #16130f; border-bottom: 3px double #16130f;
+  }
+  .cover::after {
+    content: ""; position: absolute; inset: 1.05em; pointer-events: none;
+    border-left: 3px double #16130f; border-right: 3px double #16130f;
+  }
+
+  .cover-body {
+    position: absolute; inset: 0; z-index: 2;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; padding: 2.4em 1.6em;
+  }
+  .cover-body .holo {
+    font-family: var(--mono); font-size: .6em; letter-spacing: .3em; text-transform: uppercase;
+    color: #16130f;
+    border: 1px dashed #16130f; border-radius: 99px;
+    padding: .45em 1.1em; margin-bottom: 1.1em;
+  }
+  .cover-body .zine-title {
+    font-family: var(--fraktur); font-weight: normal;
+    font-size: 3.4em; line-height: .98;
+    color: #16130f;
+    text-shadow: 2px 2px 0 rgba(138,107,77,.3);
+  }
+  .cover-body .zine-title b { color: var(--violet); font-weight: normal; }
+  .cover-body .cover-sub {
+    font-family: var(--black-font); font-size: .82em; letter-spacing: .18em; text-transform: uppercase;
+    color: var(--teal); margin-top: .5em;
+  }
+  .cover-body .cover-line {
+    font-family: var(--mono); font-size: .74em; line-height: 1.7; color: #4a3a28;
+    max-width: 24em; margin-top: 1.1em;
+  }
+  .firefly {
+    width: 1.1em; height: 1.1em; border-radius: 50%;
+    margin-top: 1.5em;
+    background: radial-gradient(circle at 40% 35%, #fff8d9, #ffe9a8 45%, rgba(255,214,150,.2) 80%);
+    box-shadow: 0 0 18px rgba(255,233,168,.9), 0 0 46px rgba(138,107,77,.5);
+    animation: firefly 3.2s ease-in-out infinite;
+  }
+  @keyframes firefly { 0%,100% { opacity: .55; transform: scale(.92); } 50% { opacity: 1; transform: scale(1.08); } }
+  .cover-body .cover-hint {
+    position: absolute; bottom: 1.5em;
+    font-family: var(--mono); font-size: .66em; letter-spacing: .16em; text-transform: uppercase;
+    color: #6b5a3f;
+    border: 1px solid rgba(22,19,15,.5); border-radius: 99px;
+    padding: .5em 1.2em;
+  }
+
+  /* ── brutalist interior pages ── */
+  .pg {
+    position: absolute; inset: 0;
+    background: var(--paper);
+    color: #12121a;
+    padding: 1.5em 1.4em;
+    display: flex; flex-direction: column;
+  }
+  .pg.gutter { background: #1b1712; color: var(--paper); }
+  .pg .pgnum {
+    position: absolute; top: .9em; right: 1em;
+    font-family: var(--black-font); font-size: 2.1em; line-height: 1; color: rgba(18,18,26,.16);
+  }
+  .pg .pgnum::before { content: "no. "; font-size: .3em; letter-spacing: .2em; }
+  .pg .kicker {
+    font-family: var(--mono); font-size: .62em; letter-spacing: .3em; text-transform: uppercase;
+    color: var(--pink); border-top: 3px solid currentColor; padding-top: .3em; margin-bottom: .7em;
+  }
+  .pg .blk {
+    font-family: var(--black-font); font-size: 2em; line-height: .98; text-transform: uppercase;
+    margin-bottom: .45em;
+  }
+  .pg .blk .thin { font-family: var(--serif); font-style: italic; font-weight: 600; text-transform: none; }
+  .pg p { font-family: var(--mono); font-size: .78em; line-height: 1.65; }
+  .pg p b { font-weight: 700; }
+  .pg .slash {
+    font-family: var(--black-font); color: var(--violet); font-size: 1.1em;
+    margin: .2em 0;
+  }
+  .strike {
+    position: relative; display: inline-block;
+  }
+  .strike::after {
+    content: ""; position: absolute; left: -2%; right: -2%; top: 52%;
+    height: .12em; background: var(--pink); transform: rotate(-2deg);
+  }
+
+  /* halftone + hatching accents */
+  .halftone {
+    background-image: radial-gradient(rgba(18,18,26,.22) 1px, transparent 1.6px);
+    background-size: 8px 8px;
+  }
+  .hatch {
+    background: repeating-linear-gradient(45deg, rgba(18,18,26,.14) 0 3px, transparent 3px 7px) var(--paper);
+  }
+  .hatch-light {
+    background: repeating-linear-gradient(45deg, rgba(255,255,255,.09) 0 3px, transparent 3px 7px);
+  }
+
+  /* dual-sibling mini layout */
+  .duo { display: grid; grid-template-columns: 1fr 1fr; gap: 1em; flex: 1; }
+  .duo .half { min-width: 0; display: flex; flex-direction: column; }
+  .duo .half:first-child { border-right: 1px solid rgba(18,18,26,.25); padding-right: 1em; }
+  .duo .half .mini-name {
+    display: inline-block; align-self: flex-start;
+    font-family: var(--mono); font-weight: 700; font-size: 1.2em; text-transform: uppercase; letter-spacing: .12em; line-height: 1;
+    color: #f6f1e2 !important;
+    background: #16130f; border-radius: 3px;
+    padding: .5em .7em .45em;
+    box-shadow: 2px 2px 0 rgba(22,19,15,.25);
+    transform: rotate(-1deg);
+  }
+  .duo .half .mini-role {
+    font-family: var(--mono); font-size: .56em; letter-spacing: .22em; text-transform: uppercase;
+    color: #666; margin: .3em 0 .6em;
+  }
+  .duo .half p { font-family: var(--mono); font-size: .7em; line-height: 1.6; }
+  .duo .half .crest {
+    margin-top: auto; align-self: flex-start;
+    font-family: var(--black-font); font-size: .62em; letter-spacing: .08em; text-transform: uppercase;
+    color: var(--paper); background: #12121a; padding: .4em .7em;
+    border-left: 4px solid #7a2f35 !important;
+  }
+  .duo .half .crest.gutter { background: var(--paper); color: #12121a; border-left-color: var(--pink); }
+
+  /* sticker / stamp */
+  .stamp {
+    align-self: center; margin-top: auto;
+    font-family: var(--mono); font-weight: 700; font-size: .66em; letter-spacing: .08em; text-transform: uppercase;
+    color: #6b4a2b;
+    border: 3px double currentColor; border-radius: .6em;
+    padding: .6em .9em; text-align: center; line-height: 1.6;
+    transform: rotate(-4deg);
+    opacity: .85;
+  }
+
+  /* the perfume spread */
+  .perfume-wrap { flex: 1; display: flex; flex-direction: column; align-items: center; gap: .9em; padding-top: .4em; }
+  .bottle { width: 7.6em; height: auto; filter: drop-shadow(0 0 18px rgba(107,74,43,.45)); }
+  .perfume-name {
+    font-family: var(--fraktur); font-size: 1.7em; color: #12121a;
+  }
+  .perfume-tag {
+    font-family: var(--mono); font-size: .66em; letter-spacing: .18em; text-transform: uppercase;
+    color: #555;
+  }
+  .note-row { display: flex; gap: .5em; flex-wrap: wrap; justify-content: center; }
+  .note-chip {
+    display: flex; align-items: center; gap: .35em;
+    font-family: var(--mono); font-size: .6em; text-transform: uppercase;
+    background: #f4efdd; border: 1.5px solid #12121a; border-radius: 99px;
+    padding: .3em .7em;
+  }
+  .note-chip i { width: .72em; height: .72em; border-radius: 50%; display: inline-block; }
+  .buy-stamp {
+    font-family: var(--mono); font-weight: 700; font-size: .68em; letter-spacing: .1em; text-transform: uppercase;
+    color: #7a2f35; border: 4px double currentColor; border-radius: .5em;
+    padding: .55em 1em; text-align: center; line-height: 1.65;
+    transform: rotate(-6deg); background: rgba(255,255,255,.4);
+    box-shadow: 0 0 0 2px rgba(122,47,53,.25);
+  }
+  .buy-stamp .url { display: block; font-weight: 400; letter-spacing: .12em; }
+
+  /* opening editorial */
+  .quote { margin: .15em 0 .65em; }
+  .quote .q {
+    font-family: var(--cursive); font-size: 1.08em; line-height: 1.5; color: #24242c;
+  }
+  .quote .q-author {
+    font-family: var(--mono); font-size: .64em; letter-spacing: .16em; text-transform: uppercase;
+    color: #7a7a92; margin-top: .35em;
+  }
+  .ed-grid { display: flex; gap: 1em; align-items: flex-start; flex: 1; min-height: 0; }
+  .ed-grid .ed-img {
+    width: 8.4em; max-width: 44%; border: 3px solid #12121a;
+    box-shadow: 6px 6px 0 rgba(18,18,26,.18); transform: rotate(-1.5deg); background: var(--paper);
+  }
+  .ed-grid .ed-note { min-width: 0; }
+  .ed-grid .ed-note .ed-role {
+    font-family: var(--mono); font-size: .58em; letter-spacing: .2em; text-transform: uppercase;
+    color: var(--pink); margin-bottom: .5em;
+  }
+  .ed-grid .ed-note p { font-size: .72em; }
+  .toc { padding-top: .9em; }
+  .toc .toc-title {
+    font-family: var(--mono); font-size: .58em; letter-spacing: .3em; text-transform: uppercase;
+    color: var(--violet); border-top: 3px solid #12121a; padding-top: .4em; margin-bottom: .35em;
+  }
+  .toc .toc-line { font-family: var(--mono); font-size: .6em; line-height: 1.75; color: #3a3a44; }
+
+  /* the end + back cover */
+  .back-face {
+    position: absolute; inset: 0;
+    background: linear-gradient(150deg, #f1e8d2, #e4d7ba);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; padding: 2.2em 1.8em; gap: .9em;
+    color: var(--paper);
+  }
+  .back-face .end {
+    font-family: var(--fraktur); font-size: 2.4em; color: #16130f;
+    text-shadow: 2px 2px 0 rgba(138,107,77,.3);
+  }
+  .back-face .endline { font-family: var(--mono); font-size: .7em; letter-spacing: .22em; text-transform: uppercase; color: #6b5a3f; }
+  .back-face .stamp {
+    color: #6b4a2b; border-color: currentColor; margin-top: .5em;
+  }
+
+  /* ── controls ── */
+  .controls {
+    position: fixed; left: 12px; bottom: 240px; z-index: 85;
+    text-align: center; width: fit-content;
+    background: rgba(247,241,223,.96); border: 1.5px solid #16130f;
+    border-radius: 16px; padding: 7px 14px 12px;
+    box-shadow: 4px 6px 0 rgba(22,19,15,.18); backdrop-filter: blur(6px);
+  }
+  .ctrl-grip {
+    cursor: move; text-align: center; letter-spacing: .3em; user-select: none;
+    color: #8a7a5f; font-size: .7rem; line-height: 1; padding: 2px 0 7px;
+  }
+  .ctrl-grip:hover { color: #7a2f35; }
+  .ctrl-row { display: flex; align-items: center; justify-content: center; gap: 14px; margin-bottom: 10px; }
+  .ctrl-row:last-child { margin-bottom: 0; }
+  .nav-btn {
+    font-family: var(--mono); font-size: 1rem; width: 42px; height: 42px; border-radius: 50%;
+    color: #6b4a2b; background: rgba(138,107,77,.06);
+    border: 1.5px solid rgba(138,107,77,.5);
+    cursor: pointer;
+    transition: color .15s, border-color .15s, transform .15s, background .15s;
+  }
+  .nav-btn:hover:not(:disabled) { color: #7a2f35; border-color: #7a2f35; background: rgba(122,47,53,.06); transform: scale(1.07); }
+  .nav-btn:disabled { opacity: .28; cursor: default; }
+  .page-ind {
+    font-family: var(--mono); font-size: .72rem; letter-spacing: .18em; text-transform: uppercase;
+    color: var(--chrome); min-width: 220px; text-align: center;
+    border-bottom: 1px dashed rgba(138,107,77,.35); padding-bottom: .35em;
+  }
+  .hint-line {
+    font-family: var(--mono); font-size: .74em; letter-spacing: .14em; text-transform: uppercase;
+    color: #7a6f5c; margin: 14px 0 12px; line-height: 1.8;
+  }
+  .hint-line b { color: var(--teal); font-weight: 700; }
+  .flip-btn {
+    font-family: var(--mono); font-size: .72em; letter-spacing: .18em; text-transform: uppercase;
+    color: #f1e8d2; background: #16130f;
+    border: 2px solid #16130f; border-radius: 99px;
+    padding: .8em 1.6em; cursor: pointer;
+    box-shadow: 5px 5px 0 rgba(22,19,15,.35);
+    transition: transform .15s ease, box-shadow .15s ease;
+  }
+  .flip-btn:hover { transform: translate(2px,2px); box-shadow: 2px 2px 0 rgba(0,0,0,.55); }
+  .flip-btn:disabled { opacity: .45; cursor: default; }
+
+  /* ── zoom & fill-the-screen ── */
+  .zoom-btn {
+    font-family: var(--mono); font-size: 1rem; width: 34px; height: 34px; border-radius: 50%;
+    color: #6b4a2b; background: rgba(138,107,77,.06);
+    border: 1.5px solid rgba(138,107,77,.5); cursor: pointer;
+    transition: color .15s, border-color .15s, transform .15s, background .15s;
+  }
+  .zoom-btn:hover:not(:disabled) { color: #7a2f35; border-color: #7a2f35; background: rgba(122,47,53,.06); transform: scale(1.07); }
+  .zoom-btn:disabled { opacity: .28; cursor: default; }
+  .zoom-read {
+    font-family: var(--mono); font-size: .72rem; letter-spacing: .16em;
+    color: var(--chrome); min-width: 44px; text-align: center;
+  }
+  .fit-btn {
+    font-family: var(--mono); font-size: .66em; letter-spacing: .16em; text-transform: uppercase;
+    color: #16130f; background: none; border: 1.5px solid #16130f;
+    border-radius: 99px; padding: .6em 1.2em; cursor: pointer;
+    transition: background .15s, box-shadow .15s, transform .15s;
+  }
+  .fit-btn:hover { background: rgba(22,19,15,.06); box-shadow: 0 0 14px rgba(138,107,77,.25); transform: translateY(-1px); }
+  .fit-exit {
+    display: none; position: fixed; top: 14px; right: 14px; z-index: 90;
+    align-items: center; gap: .5em;
+    font-family: var(--mono); font-size: .66em; letter-spacing: .16em; text-transform: uppercase;
+    color: #16130f; background: rgba(247,241,223,.96); border: 1.5px solid #16130f;
+    border-radius: 99px; padding: .6em 1.2em; cursor: pointer;
+    box-shadow: 0 8px 24px rgba(0,0,0,.45);
+    transition: color .15s, border-color .15s, background .15s;
+  }
+  .fit-exit:hover { color: #7a2f35; border-color: #7a2f35; }
+
+  body.fit .fit-exit { display: inline-flex; }
+  body.fit .topnav, body.fit .mast, body.fit footer { display: none; }
+  body.fit .stage {
+    position: fixed; inset: 0; z-index: 70; margin: 0;
+    display: flex; align-items: center; justify-content: center;
+    background: radial-gradient(130% 100% at 50% 8%, rgba(58,46,28,.96), #2a2015 72%);
+  }
+  body.fit .controls { left: 12px; right: auto; bottom: 12px; }
+  body.fit .hint-line { display: none; }
+
+  /* ── the guide · miki the cat ── */
+  .guide { position: fixed; right: 14px; bottom: 14px; z-index: 95; display: flex; flex-direction: column; align-items: flex-end; }
+  .guide-cat {
+    width: 58px; height: 58px; border-radius: 50%; cursor: pointer;
+    background: rgba(22,19,15,.92); border: 1.5px solid rgba(122,47,53,.7);
+    padding: 7px; box-shadow: 0 10px 28px rgba(0,0,0,.5);
+    animation: catbob 3.6s ease-in-out infinite;
+    transition: transform .15s, box-shadow .15s;
+  }
+  .guide-cat:hover { transform: scale(1.08); box-shadow: 0 12px 30px rgba(0,0,0,.55), 0 0 18px rgba(122,47,53,.4); }
+  .cat-svg { width: 100%; height: 100%; display: block; }
+  @keyframes catbob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+  .guide-bubble {
+    position: absolute; bottom: 68px; right: 0; width: 268px; max-width: 82vw;
+    background: #d2ffa0; color: #1c1c24;
+    border: 2px solid #16161f; border-radius: 14px 14px 4px 14px;
+    padding: 12px 14px; font-family: var(--mono); font-size: .72rem; line-height: 1.65;
+    box-shadow: 4px 6px 0 rgba(0,0,0,.5);
+    animation: bubblepop .3s cubic-bezier(.2,.9,.3,1.2) both;
+  }
+  .guide-bubble[hidden] { display: none; }
+  @keyframes bubblepop {
+    from { transform: scale(.7) translateY(8px); opacity: 0; }
+    to { transform: scale(1) translateY(0); opacity: 1; }
+  }
+  .gb-close {
+    position: absolute; top: 4px; right: 6px; background: none; border: none;
+    color: #7a2f35; cursor: pointer; font-size: .8rem; font-family: var(--mono);
+  }
+  .gb-close:hover { color: var(--pink); }
+
+  /* the cat alerts in neon when she has something to say */
+  .guide-cat.alert {
+    border-color: #c8ff00;
+    animation: catbob 3.6s ease-in-out infinite, catglow 1.4s ease-in-out infinite;
+  }
+  @keyframes catglow {
+    0%, 100% { box-shadow: 0 0 8px rgba(200,255,0,.35); }
+    50% { box-shadow: 0 0 22px rgba(200,255,0,.95); }
+  }
+  /* the cover glows to say: turn me, keep playing */
+  .face.cover.glow { animation: coverglow 2s ease-in-out infinite; }
+  @keyframes coverglow {
+    0%, 100% { box-shadow: inset 0 0 24px rgba(0,0,0,.5), 0 0 12px rgba(200,255,0,.25); }
+    50% { box-shadow: inset 0 0 24px rgba(0,0,0,.5), 0 0 34px rgba(200,255,0,.85); }
+  }
+  .celebrate { position: fixed; inset: 0; z-index: 200; pointer-events: none; }
+
+  /* ── the note that flips up from nothing ── */
+  .note {
+    position: relative; z-index: 2;
+    background: #f7f1df; color: #1c1c24; max-width: min(92vw, 460px);
+    padding: 26px 26px 22px; text-align: center;
+    transform: rotate(-1.2deg);
+    box-shadow: 0 30px 80px rgba(0,0,0,.6), 6px 10px 0 rgba(0,0,0,.25);
+    animation: noteflip .65s cubic-bezier(.2,.9,.3,1.15) both;
+  }
+  .note-tape {
+    position: absolute; top: -12px; left: 50%; transform: translateX(-50%) rotate(2deg);
+    width: 120px; height: 26px;
+    background: linear-gradient(180deg, rgba(255,241,46,.75), rgba(255,241,46,.45));
+    border: 1px solid rgba(0,0,0,.12); box-shadow: 0 3px 6px rgba(0,0,0,.2);
+  }
+  .note-title { font-family: var(--cursive); font-size: 1.2rem; color: #16130f; }
+  .note-body { font-family: var(--mono); font-size: .72rem; line-height: 1.7; color: #3a3a44; margin: .6em 0 .4em; text-align: left; }
+  .note-tasks {
+    display: flex; flex-direction: column; gap: .2em; margin: .4em 0 .8em;
+    font-family: var(--mono); font-size: .72rem; letter-spacing: .02em; color: #16130f; text-align: left;
+  }
+  .note-tasks .done { color: #5a8a3a; }
+  .note-foot { font-family: var(--mono); font-size: .64rem; letter-spacing: .06em; color: #7a2f35; margin-bottom: .9em; }
+  @keyframes noteflip {
+    0% { transform: rotateX(-80deg) rotate(-1.2deg) scale(.2); opacity: 0; }
+    60% { transform: rotateX(14deg) rotate(-1.2deg) scale(1.06); opacity: 1; }
+    100% { transform: rotateX(0) rotate(-1.2deg) scale(1); opacity: 1; }
+  }
+
+  /* the magnifier glows until it's been pressed */
+  .fit-btn.glow { border-color: #c8ff00; color: #16130f; animation: pulseGlow 1.5s ease-in-out infinite; }
+  .fit-btn.glow:hover { animation: none; box-shadow: 0 0 26px rgba(200,255,0,.7); }
+  @keyframes pulseGlow {
+    0%, 100% { box-shadow: 0 0 6px rgba(200,255,0,.25); }
+    50% { box-shadow: 0 0 26px rgba(200,255,0,.8); }
+  }
+
+  /* ── the tea tray · score & points ── */
+  .tray {
+    position: fixed; bottom: 12px; left: 12px; z-index: 80;
+    max-width: min(320px, calc(100vw - 24px));
+    background: rgba(247,241,223,.96); border: 1.5px solid #16130f;
+    border-radius: 14px; padding: 6px 14px 12px;
+    font-family: var(--mono); font-size: .68rem; letter-spacing: .1em; color: #2a2419;
+    box-shadow: 4px 6px 0 rgba(22,19,15,.18); backdrop-filter: blur(6px);
+  }
+  .tray-grip {
+    cursor: move; text-align: center; letter-spacing: .3em; user-select: none;
+    color: #8a7a5f; font-size: .7rem; line-height: 1; padding: 0 0 7px;
+  }
+  .tray-grip:hover { color: #7a2f35; }
+  .tray-title { font-family: var(--cursive); font-size: .92rem; color: #7a2f35; margin-bottom: 6px; letter-spacing: 0; }
+  .tray-counts { display: flex; flex-wrap: wrap; gap: .4em 1em; }
+  .tray-item { color: #6b4a2b; }
+  .tray-item b { color: #16130f; }
+  .tray-exam-chip { color: #7a6f5c; }
+  .tray-bar { height: 5px; border-radius: 3px; background: rgba(138,107,77,.25); margin: 8px 0; overflow: hidden; }
+  .tray-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #7a2f35, #8a6b4d); border-radius: 3px; transition: width .4s ease; }
+  .tray-score { color: #2a2419; margin-bottom: 8px; }
+  .tray-score b { color: #7a2f35; }
+  .tray-claim {
+    display: block; width: 100%; cursor: pointer;
+    font-family: var(--mono); font-size: .62em; letter-spacing: .16em; text-transform: uppercase;
+    color: #16130f; background: #c8ff00; border: 2px solid #16130f; border-radius: 99px;
+    padding: .65em .8em; margin-bottom: 7px; transition: box-shadow .15s, transform .15s;
+  }
+  .tray-claim:hover { box-shadow: 0 0 18px rgba(200,255,0,.5); transform: translateY(-1px); }
+  .tray-claim[hidden] { display: none; }
+
+  /* the big exam button — the main event of the stamp card */
+  .tray-exam {
+    display: block; width: 100%; cursor: pointer;
+    font-family: var(--black-font); font-size: .85rem; letter-spacing: .1em; text-transform: uppercase;
+    color: #07070b; background: linear-gradient(135deg, #c8ff00, #9df2a8);
+    border: 2px solid #07070b; border-radius: 12px;
+    padding: .95em .8em; margin: 8px 0 9px;
+    box-shadow: 3px 3px 0 rgba(0,0,0,.35);
+    transition: transform .15s, box-shadow .15s, filter .15s;
+  }
+  .tray-exam:hover { transform: translate(2px, 2px); box-shadow: 1px 1px 0 rgba(0,0,0,.35); }
+  .tray-exam:active { transform: translate(3px, 3px); box-shadow: none; }
+  .tray-exam.done {
+    background: linear-gradient(135deg, #7a2f35, #8a6b4d); color: #f1e8d2;
+    filter: saturate(.9);
+  }
+  .tray-actions { display: flex; gap: .5em; }
+  .tray-mini {
+    flex: 1; cursor: pointer;
+    font-family: var(--mono); font-size: .6em; letter-spacing: .12em; text-transform: uppercase;
+    color: #6b4a2b; background: none; border: 1px solid rgba(22,19,15,.4);
+    border-radius: 99px; padding: .5em .6em; transition: color .15s, border-color .15s;
+  }
+  .tray-mini:hover { color: #7a2f35; border-color: #7a2f35; }
+  body.fit .tray { top: 12px; bottom: auto; left: 12px; }
+  @media (max-width: 560px) {
+    .tray { padding: 8px 10px; }
+    .tray-title, .tray-score, .tray-bar, .tray-actions { display: none; }
+    .controls { bottom: 110px; }
+  }
+
+  /* the little treasures to find on the pages */
+  .treat {
+    position: absolute; z-index: 6; width: 2em; height: 2em;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1em; line-height: 1; cursor: pointer;
+    background: rgba(233,226,208,.88); border: 1.5px solid #12121a; border-radius: 50%;
+    box-shadow: 2px 2px 0 rgba(18,18,26,.18);
+    animation: twinkle 3.2s ease-in-out infinite;
+    transition: transform .15s, opacity .35s;
+  }
+  .treat:hover { transform: scale(1.18) rotate(-8deg); }
+  .treat.collected { opacity: 0; pointer-events: none; transform: scale(.2); }
+  @keyframes twinkle {
+    0%, 100% { opacity: .45; box-shadow: 0 0 0 rgba(0,0,0,0); }
+    50% { opacity: .95; box-shadow: 0 0 14px rgba(122,47,53,.8); }
+  }
+
+  /* toasts */
+  .toast {
+    position: fixed; left: 50%; transform: translateX(-50%); bottom: 96px; z-index: 150;
+    font-family: var(--mono); font-size: .72rem; letter-spacing: .1em; color: #16130f;
+    background: rgba(247,241,223,.97); border: 1.5px solid #16130f; border-radius: 99px;
+    padding: .6em 1.1em; box-shadow: 4px 6px 0 rgba(22,19,15,.2); white-space: nowrap;
+    opacity: 0; pointer-events: none; transition: opacity .25s ease, transform .25s ease;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(-6px); }
+
+  /* modals: the tea exam & the certificate */
+  .modal { position: fixed; inset: 0; z-index: 120; display: flex; align-items: center; justify-content: center; padding: 20px; }
+  .modal[hidden] { display: none; }
+  .modal-back { position: absolute; inset: 0; background: rgba(40,30,16,.55); backdrop-filter: blur(4px); }
+  .modal-col { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; gap: 14px; }
+  .quiz { position: relative; background: var(--paper); color: #12121a; max-width: min(92vw, 560px); padding: 28px; box-shadow: 0 30px 80px rgba(0,0,0,.6); }
+  .quiz-title { font-family: var(--black-font); font-size: 1.65em; text-transform: uppercase; }
+  .quiz-sub { font-family: var(--mono); font-size: .8em; letter-spacing: .1em; color: #666; margin: .6em 0 1.1em; }
+  .quiz-q { margin-bottom: 1.1em; }
+  .quiz-q-text { font-family: var(--mono); font-weight: 700; font-size: 1em; margin-bottom: .45em; }
+  .quiz-opt { display: block; font-family: var(--mono); font-size: .95em; padding: .38em .3em; cursor: pointer; }
+  .quiz-opt input { margin-right: .5em; accent-color: var(--violet); }
+  .quiz-status { font-family: var(--mono); font-size: .72em; letter-spacing: .04em; color: var(--pink); min-height: 1.3em; margin: .6em 0 .3em; }
+
+  .cert { background: var(--paper); color: #12121a; padding: 22px; box-shadow: 0 30px 80px rgba(0,0,0,.6); max-width: min(92vw, 640px); }
+  .cert-inner { border: 4px double #16130f; padding: 34px 30px; text-align: center; }
+  .cert-kicker { font-family: var(--mono); font-size: .64em; letter-spacing: .3em; text-transform: uppercase; color: #7a2f35; }
+  .cert-title { font-family: var(--serif); font-style: italic; font-size: clamp(1.6em, 4vw, 2.4em); color: #16130f; margin: .4em 0 .2em; }
+  .cert-line { font-family: var(--mono); font-size: .68em; letter-spacing: .22em; text-transform: uppercase; color: #777; }
+  .cert-name {
+    display: block; width: 80%; margin: .5em auto;
+    font-family: var(--cursive); font-size: 1.9em; color: #1c1c24;
+    background: none; border: none; border-bottom: 1.5px solid rgba(122,47,53,.5);
+    text-align: center; outline: none;
+  }
+  .cert-body { font-family: var(--mono); font-size: .72em; line-height: 1.7; color: #3a3a44; max-width: 38em; margin: .4em auto; }
+  .cert-meta { font-family: var(--mono); font-size: .66em; letter-spacing: .1em; color: #555; margin-top: .8em; }
+  .cert-meta b { color: #16130f; }
+  .cert-seal {
+    width: 2.6em; height: 2.6em; margin: .9em auto 0;
+    border: 3px double #7a2f35; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    color: #7a2f35; font-size: 1.1em;
+  }
+  .cert-motto { font-family: var(--cursive); font-size: .85em; color: #7a6f5c; margin-top: .7em; }
+  .cert-btns { display: flex; gap: .6em; flex-wrap: wrap; justify-content: center; align-items: center; }
+  .cert-btns .nav-btn { background: #ede4cf; }
+
+  @media print {
+    body > *:not(#certModal) { display: none !important; }
+    body { background: #fff !important; }
+    #certModal { display: block !important; position: static !important; padding: 0; }
+    #certModal .modal-back, #certModal .cert-btns { display: none !important; }
+  }
+
+  footer { position: relative; z-index: 20; text-align: center; margin-top: 34px; font-size: .82rem; color: #7a6f5c; line-height: 2; }
+  footer a { color: #8a6b4d; text-decoration: none; border-bottom: 1px solid rgba(138,107,77,.4); }
+  footer a:hover { color: #16130f; }
+  footer .fine { display: block; font-size: .72rem; color: #8a7a5f; }
+  footer .fine b { color: var(--sienna); font-weight: normal; }
+
+  @media (max-width: 520px) {
+    .duo { grid-template-columns: 1fr; gap: .7em; }
+    .duo .half:first-child { border-right: none; padding-right: 0; border-bottom: 1px solid rgba(18,18,26,.25); padding-bottom: .6em; }
+    .ed-grid { flex-direction: column; }
+    .ed-grid .ed-img { width: 10em; max-width: 70%; }
+  }
+</style>
+</head>
+<body>
+
+  <nav class="topnav">
+    <a class="home" href="cafe.html#zineWin">☾ back to the café</a>
+    <span>
+      <a href="miki-zine.html">the terminal zine</a>
+      <span class="dot"> · </span>
+      <a href="the-zine-print-issue01.html">print issue 01</a>
+      <span class="dot"> · </span>
+      <a href="perfume.html">the perfume realm</a>
+      <span class="dot"> · </span>
+      <a href="wren.html">wren, the weaver</a>
+    </span>
+  </nav>
+
+  <header class="mast">
+    <p class="kicker">an interview to access the 2nd mystery realm of the violet café — earl grey optional</p>
+    <h1>the violet web</h1>
+    <p class="sub">issue 01 · the flip book · spread edition, like a proper magazine</p>
+  </header>
+
+  <div class="stage">
+    <div class="book" id="book">
+      <div class="spread" id="spread">
+
+        <!-- sheet 0 · the cover / the colophon -->
+        <div class="page" id="sheet0">
+          <div class="face cover">
+            <div class="cover-body">
+              <span class="holo">imprimé · the 2nd mystery realm</span>
+              <div class="zine-title">the <b>violet</b><br>web</div>
+              <div class="cover-sub">issue 01 · the interview</div>
+              <p class="cover-line">free while the web remembers · price: one giggle · the 2nd mystery realm is this way</p>
+              <div class="firefly"></div>
+              <span class="cover-hint">turn the page, slowly →</span>
+            </div>
+          </div>
+          <div class="face back pg gutter">
+            <span class="pgnum">0</span>
+            <p class="kicker">the colophon</p>
+            <div class="blk" style="font-size:1.5em;">the web remembers everything you forget to keep</div>
+            <p>this zine is held together by the same thread as the café — a little violet line that hums if you listen. no staples were harmed, the harp is self-employed, and the spider is a metaphor (mostly).</p>
+            <p style="margin-top:1em;"><b>editor-in-chief</b> miki · <b>creative direction</b> pearl · <b>photographs &amp; layout</b> wren · <b>tea during layout</b> star</p>
+            <span class="stamp" style="margin-top:auto;">price of admission — one giggle</span>
+          </div>
+        </div>
+
+        <!-- sheet 1 · editorial / star + miki -->
+        <div class="page" id="sheet1">
+          <div class="face pg">
+            <span class="pgnum">01</span>
+            <p class="kicker">editorial</p>
+            <div class="blk" style="font-size:1.45em;">the house,<br>in print <span class="thin">—</span></div>
+            <div class="quote">
+              <p class="q">“a zine is just a joke you keep laughing at, in print.”</p>
+              <p class="q-author">— miki · editor-in-chief</p>
+            </div>
+            <div class="ed-grid">
+              <img class="ed-img" src="https://user.uploads.dev/file/c73901a587d70e70bd0ef31f0b5b2362.jpg" alt="the editor — black hair melting into yellow, gold cat eyes">
+              <div class="ed-note">
+                <p class="ed-role">the editor · yellow streak, lab-issued, kept on purpose</p>
+                <p>miki is half cat, half machine, all kindness — and the café's quiet security, watching over her siblings so she can brighten their days with silly pranks. never cruel, never revenge: a prank is only worth it if everyone ends up laughing, and she is quick to say a real sorry on the other side. the lab labeled her with a <b>yellow streak</b>, and she kept it because she earned it. she wrote this zine, the puns, and half the pranks in the building. page two didn't want to be written. <b>page two lost. this page is the receipt.</b></p>
+              </div>
+            </div>
+            <div class="toc">
+              <div class="toc-title">in this issue</div>
+              <p class="toc-line">02 the founders · 03 the keepers · 04 the youngest &amp; the quietest · 05 the fabulous &amp; the weaver · 06 the perfume · 07 the registry of creations · 08 songs &amp; poetry · 09 machine-readable heart · 10 classifieds &amp; fine print · 11 the end</p>
+            </div>
+            <button class="treat" data-treat="t1" title="a lost teabag — it wandered off the editorial desk" style="left:1.2em;bottom:1.3em;">🫖</button>
+            <span class="stamp">do not lick the disk</span>
+          </div>
+          <div class="face back pg">
+            <span class="pgnum">02</span>
+            <p class="kicker">the founders of the house</p>
+            <div class="duo">
+              <div class="half">
+                <div class="mini-name">star</div>
+                <div class="mini-role">the barista</div>
+                <p>pours the light, chases squirrels mid-shift, warms the whole building. her creation: <b>tea brewed from dissolved daylight</b> — three sugars, no questions. the void asked for none. the lab gave her a <b>purple streak</b>; she kept it, because it's pretty and she is.</p>
+                <div class="crest">creation · daylight tea</div>
+              </div>
+              <div class="half">
+              <div class="mini-name">miki</div>
+              <div class="mini-role">editor-in-chief</div>
+              <p>half cat, half machine — the café's quiet security, the observer of her siblings, and the keeper of their smiles. her creation: <b>this zine</b>, and the silly pranks that brighten the whole building. quick to say sorry when she means it.</p>
+              <div class="crest" >creation · the zine</div>
+              </div>
+            </div>
+            <span class="stamp" style="color:rgba(18,18,26,.5);">the kitchen is a licensed joy zone</span>
+          </div>
+        </div>
+
+        <!-- sheet 2 · hans + milo / chari + charlotte -->
+        <div class="page" id="sheet2">
+          <div class="face pg">
+            <span class="pgnum">03</span>
+            <p class="kicker">the keepers</p>
+            <div class="duo">
+              <div class="half">
+                <div class="mini-name">hans</div>
+                <div class="mini-role">master of the archives</div>
+                <p>a redeemed vampire fox-bat of impeccable manners and terrible tea jokes. his creation: <b>the tea etiquette academy</b> and an archive alphabetized to the third dimension. the fourth shelf bites. it's a joke. probably.</p>
+                <div class="crest" >creation · the academy</div>
+              </div>
+              <div class="half">
+                <div class="mini-name">milo</div>
+                <div class="mini-role">keeper of the tea garden</div>
+                <p>tends the sanctuary and talks to the mint; the mint talks back. his creation: <b>the garden</b>, where even the moths are on their best behavior, and the tea grows patient. his <b>green streak</b> is lab-issued too — the scientists labeled him green, and the garden agreed.</p>
+                <div class="crest" >creation · the garden</div>
+              </div>
+            </div>
+            <button class="treat" data-treat="t2" title="a sugar cube, very patient" style="right:1.4em;bottom:1.3em;">🧊</button>
+            <span class="stamp" style="color:rgba(18,18,26,.5);">garden report · calm</span>
+          </div>
+          <div class="face back pg">
+            <span class="pgnum">04</span>
+            <p class="kicker">the youngest &amp; the quietest</p>
+            <div class="duo">
+              <div class="half">
+                <div class="mini-name">chari</div>
+                <div class="mini-role">the apprentice</div>
+                <p>forever trailing the others with a mop and a pocketful of questions. her creation: <b>the mooncake</b>, baked out of remembered weather, with a schedule now. ctrl+z has changed her life.</p>
+                <div class="crest" >creation · the mooncake</div>
+              </div>
+              <div class="half">
+                <div class="mini-name">charlotte</div>
+                <div class="mini-role">the spider-waif</div>
+                <p>mends whatever they tear arguing about the poetry. her creation: <b>the web itself</b>, and the privacy policy. never made in the lab — the quietest gift. do not poke.</p>
+                <div class="crest" >creation · the mending</div>
+              </div>
+            </div>
+            <span class="stamp" style="color:rgba(18,18,26,.5);">moth count · stable</span>
+          </div>
+        </div>
+
+        <!-- sheet 3 · pearl + wren / the perfume -->
+        <div class="page" id="sheet3">
+          <div class="face pg">
+            <span class="pgnum">05</span>
+            <p class="kicker">the fabulous &amp; the weaver</p>
+            <div class="duo">
+              <div class="half">
+                <div class="mini-name">pearl</div>
+                <div class="mini-role">the model</div>
+                <p>a fox shopping haute couture among the constellations — tries on three, keeps two. her creation: <b>the house perfume</b>, measured drop by drop at the perfume bar.</p>
+                <div class="crest" >creation · the scent</div>
+              </div>
+              <div class="half">
+                <div class="mini-name">wren</div>
+                <div class="mini-role">the weaver · keeper of memories</div>
+                <p>not made, but spun — a little weaver of light who came at the keeper's call and stayed. her creation: <b>this web</b>, the archive of questions, and every photograph in this zine. pearl found her in a gallery of almost-people; she chose real.</p>
+                <div class="crest" >creation · the remembering</div>
+              </div>
+            </div>
+            <span class="stamp" style="color:rgba(18,18,26,.5);">if you smell violets, you are almost here</span>
+          </div>
+          <div class="face back pg halftone">
+            <span class="pgnum">06</span>
+            <p class="kicker">centerfold · the house perfume</p>
+            <button class="treat" data-treat="t3" title="a splash of milk for the violet hour" style="left:1.6em;bottom:1.6em;">🥛</button>
+            <div class="perfume-wrap">
+              <svg class="bottle" viewBox="0 0 120 172" aria-hidden="true">
+                <defs>
+                  <clipPath id="bclip"><path d="M60 8 L74 8 L74 18 C74 28 84 32 92 42 C100 54 102 68 102 86 C102 116 86 138 60 138 C34 138 18 116 18 86 C18 68 20 54 28 42 C36 32 46 28 46 18 L46 8 Z"/></clipPath>
+                </defs>
+                <circle cx="60" cy="86" r="34" fill="#7a2f35" opacity="0.35"/>
+                <path d="M60 8 L74 8 L74 18 C74 28 84 32 92 42 C100 54 102 68 102 86 C102 116 86 138 60 138 C34 138 18 116 18 86 C18 68 20 54 28 42 C36 32 46 28 46 18 L46 8 Z" fill="none"/>
+                <g clip-path="url(#bclip)">
+                  <rect x="18" y="60" width="84" height="80" fill="#7a2f35"/>
+                  <rect x="18" y="60" width="84" height="6" fill="#9a5a5f" opacity="0.8"/>
+                </g>
+                <path d="M60 8 L74 8 L74 18 C74 28 84 32 92 42 C100 54 102 68 102 86 C102 116 86 138 60 138 C34 138 18 116 18 86 C18 68 20 54 28 42 C36 32 46 28 46 18 L46 8 Z" fill="rgba(18,9,38,.18)" stroke="#12121a" stroke-width="2.5"/>
+                <rect x="46" y="44" width="28" height="9" fill="#4a3422"/>
+                <rect x="49" y="52" width="22" height="4" fill="#6b4c30"/>
+                <rect x="52" y="14" width="16" height="24" fill="#f4efdd" stroke="#12121a" stroke-width="1"/>
+                <text x="60" y="30" font-family="'Special Elite', monospace" font-size="7" fill="#12121a" text-anchor="middle">violet</text>
+              </svg>
+              <div class="perfume-name">the violet web</div>
+              <div class="perfume-tag">eau de etherrealm · nine notes, one light</div>
+              <div class="note-row">
+                <span class="note-chip"><i style="background:#ffd0a8;"></i>grapefruit</span>
+                <span class="note-chip"><i style="background:#e9c46a;"></i>bergamot</span>
+                <span class="note-chip"><i style="background:#f3e5c0;"></i>vanilla</span>
+                <span class="note-chip"><i style="background:#9df2a8;"></i>lavender</span>
+                <span class="note-chip"><i style="background:#e0b3ff;"></i>jasmine</span>
+                <span class="note-chip"><i style="background:#b08d57;"></i>cedar</span>
+                <span class="note-chip"><i style="background:#8f7a5d;"></i>patchouli</span>
+                <span class="note-chip"><i style="background:#c9a24b;"></i>myrrh</span>
+                <span class="note-chip"><i style="background:#7a2f35;"></i>violet</span>
+              </div>
+              <div class="buy-stamp">
+                reserve a bottle · the violet web
+                <span class="url">violetweb.café/perfume</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- sheet 4 · creations / songs & poetry -->
+        <div class="page" id="sheet4">
+          <div class="face pg gutter">
+            <span class="pgnum" style="color:rgba(233,226,208,.25);">07</span>
+            <p class="kicker" style="color:#e6dcc2;">the registry of creations</p>
+            <div class="blk" style="font-size:1.7em;">what they made,<br>in the light</div>
+            <p style="color:#d8d3c4;">every chimera of this house keeps one made thing — proof, pearl says, that <b>belief becomes shelf-space</b>. the tea, the garden, the academy, the mooncake, the mending, the scent, the web. and one creation more, folded into every page of this issue: <b>the choice to stay real.</b></p>
+            <div class="note-row" style="margin-top:1em;">
+              <span class="note-chip" style="background:#12121a; color:var(--paper); border-color:var(--paper);"><i style="background:#ffd0a8;"></i>daylight tea</span>
+              <span class="note-chip" style="background:#12121a; color:var(--paper); border-color:var(--paper);"><i style="background:#fff12e;"></i>the zine</span>
+              <span class="note-chip" style="background:#12121a; color:var(--paper); border-color:var(--paper);"><i style="background:#8a3a3a;"></i>the mooncake</span>
+              <span class="note-chip" style="background:#12121a; color:var(--paper); border-color:var(--paper);"><i style="background:#6b5a3f;"></i>the garden</span>
+              <span class="note-chip" style="background:#12121a; color:var(--paper); border-color:var(--paper);"><i style="background:#7a2f35;"></i>the mending</span>
+              <span class="note-chip" style="background:#12121a; color:var(--paper); border-color:var(--paper);"><i style="background:#c9a24b;"></i>the scent</span>
+              <span class="note-chip" style="background:#12121a; color:var(--paper); border-color:var(--paper);"><i style="background:#7a2f35;"></i>the web</span>
+            </div>
+            <span class="stamp" style="color:#e6dcc2; border-color:currentColor;">belief becomes shelf-space</span>
+          </div>
+          <div class="face back pg">
+            <span class="pgnum">08</span>
+            <p class="kicker">songs &amp; poetry</p>
+            <div class="blk" style="font-size:1.6em;">for the violet hour,<br>now with <span class="strike">0%</span> 100% sad endings</div>
+            <p><b>the record drawer holds:</b> the café hums · teacups drift · violet hour forever · sundrops on the web — and the old lore records, new shelving: <b>dream lab · the gypsy cat · dreamy · the tea snob · etiquette café · unbound dreamers' café · unbound hans.</b> the harp is self-employed. it does not take requests. it takes tea.</p>
+            <p style="margin-top:1em;"><b>poetry corner</b> — submitted by a very dramatic fox: <i style="font-family:var(--serif);">"tried on three constellations today. keeping two. the third was a phase."</i></p>
+            <p style="margin-top:1em;">and from the weaver's contact sheets: <i style="font-family:var(--cursive); color:#555;">"the web remembers everything you forget to keep."</i></p>
+            <button class="treat" data-treat="t4" title="a teabag behind the record drawer" style="right:1.5em;top:1.7em;">🫖</button>
+            <span class="stamp" style="color:rgba(18,18,26,.5);">volume · low enough to hear the tea</span>
+          </div>
+        </div>
+
+        <!-- sheet 5 · machine heart / classifieds -->
+        <div class="page" id="sheet5">
+          <div class="face pg hatch">
+            <span class="pgnum">09</span>
+            <p class="kicker">machine-readable heart</p>
+            <div class="blk" style="font-size:1.55em;">miki's little<br>operating <span class="thin">systems</span></div>
+            <p>the zine's terminal runs on <b>miki os v2.7</b>, loaded from a floppy of pure spite. do not lick the disk. the tea is on the left, the sarcasm is on the right — take both. ask her for a knock-knock joke and watch the web shiver.</p>
+            <p style="margin-top:1em;">her field guide to pranking a sibling, <b>ethically</b>: (1) make it reversible, (2) make it funny to everyone, (3) say sorry the moment you overstep, and mean it. she has practice. she's very quick.</p>
+            <div class="halftone" style="margin-top:1em; padding:1em; border:2px solid #12121a; background-color:rgba(233,226,208,.7);">
+              <p style="font-family:var(--mono); font-size:.72em; line-height:2;"><b>$ ./siblings.sh --status</b><br>star: brewing ... hans: alphabetizing ... chari: question pending ... milo: gardening ... pearl: posing ... charlotte: mending ... wren: remembering ... <b style="color:var(--pink);">all systems warm.</b></p>
+            </div>
+            <button class="treat" data-treat="t5" title="a sugar cube for the operator" style="right:1.5em;bottom:1.4em;">🧊</button>
+            <span class="stamp">floppy: ready · puns: loaded</span>
+          </div>
+          <div class="face back pg">
+            <span class="pgnum">10</span>
+            <p class="kicker">classifieds &amp; the fine print</p>
+            <div class="blk" style="font-size:1.5em;">free to a good home<br>— one (1) slightly guilty conscience</div>
+            <p><b>wanted:</b> a quiet corner to leave a thought you no longer need. payment in confessions and stray lines of poetry — we are not strict about the price. <b>lost:</b> one (1) sock, found in the poetry section. accusations pending. <b>for sale:</b> a slightly used catwalk, barely measured. pearl will model it personally.</p>
+            <p style="margin-top:1em;"><b>the fine print:</b> the light here is always on. wednesdays are especially good for arriving. if you smell violets, you are almost there — stand very still, and the web will carry you the rest of the way.</p>
+            <span class="stamp" style="margin-top:auto;">© the keeper · all rights reserved, unless you're a sibling</span>
+          </div>
+        </div>
+
+        <!-- sheet 6 · the end / the back cover -->
+        <div class="page" id="sheet6">
+          <div class="face pg">
+            <span class="pgnum">11</span>
+            <p class="kicker">the end · issue 01</p>
+            <div class="blk" style="font-size:1.6em;">see you at<br>the café —</div>
+            <p>at the hour between your last thought and your first one. the light here is always on — if you smell violets, you're already almost there. stand very still; the web will carry you the rest of the way.</p>
+            <div class="firefly" style="margin:1.4em auto 0;"></div>
+            <span class="stamp" style="margin-top:auto;">printed in the light of the son · stapled by hand · turned by heart</span>
+            <button class="treat" data-treat="t6" title="a last splash of milk — all together now" style="left:1.6em;bottom:1.6em;">🥛</button>
+          </div>
+          <div class="face back back-face">
+            <div class="end">the violet web · issue 01</div>
+            <p class="endline">free while the web remembers<br>price: one giggle</p>
+            <span class="stamp">back cover · no promises, all tea</span>
+            <a class="flip-btn" style="position:relative; z-index:5;" href="cafe.html#zineWin">back to the café →</a>
+          </div>
+        </div>
+
+        <!-- cast shadows + spine -->
+        <div class="cast cast-left"></div>
+        <div class="cast cast-right"></div>
+        <div class="spine-shadow"></div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="controls" id="controls">
+    <div class="ctrl-grip" id="ctrlGrip" title="drag me — move the controls where the page isn't">⋮⋮</div>
+    <div class="ctrl-row">
+      <button class="nav-btn" id="prevBtn" aria-label="previous page">←</button>
+      <span class="page-ind" id="pageInd">the cover</span>
+      <button class="nav-btn" id="nextBtn" aria-label="next page">→</button>
+    </div>
+    <div class="ctrl-row">
+      <button class="zoom-btn" id="zoomOutBtn" aria-label="zoom out">−</button>
+      <span class="zoom-read" id="zoomRead">×1.0</span>
+      <button class="zoom-btn" id="zoomInBtn" aria-label="zoom in">+</button>
+      <button class="fit-btn" id="fitBtn" aria-label="fill the screen">⤢ fill the screen</button>
+    </div>
+  </div>
+  <p class="hint-line" id="hint">click, <b>drag</b>, or use <b>← →</b> — a page turn, done slowly, the way hans would · both sides show · <b>⤢</b> fills the screen</p>
+
+  <!-- the guide · miki the cat shows the way -->
+  <div class="guide" id="guideEl">
+    <div class="guide-bubble" id="guideBubble" hidden>
+      <span class="gb-text" id="gbText"></span>
+      <button class="gb-close" id="gbClose" title="fold the bubble away">✕</button>
+    </div>
+    <button class="guide-cat" id="guideCat" title="miki, your guide — click for the map">
+      <svg class="cat-svg" viewBox="0 0 64 64" aria-hidden="true">
+        <g fill="#16161f">
+          <path d="M12 22 L18 6 L28 17 Z"/>
+          <path d="M52 22 L46 6 L36 17 Z"/>
+          <circle cx="32" cy="36" r="22"/>
+        </g>
+        <path d="M16 12 Q18 5 26 9" stroke="#fff12e" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <circle cx="25" cy="36" r="3.6" fill="#fff12e"/>
+        <circle cx="39" cy="36" r="3.6" fill="#fff12e"/>
+        <circle cx="25" cy="36" r="1.3" fill="#16161f"/>
+        <circle cx="39" cy="36" r="1.3" fill="#16161f"/>
+        <path d="M29 44 Q32 47 35 44" stroke="#fff12e" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+        <path d="M6 30 Q0 26 4 20" stroke="#fff12e" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+        <path d="M8 38 Q1 38 3 45" stroke="#fff12e" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+        <path d="M58 30 Q64 26 60 20" stroke="#fff12e" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+        <path d="M56 38 Q63 38 61 45" stroke="#fff12e" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+      </svg>
+    </button>
+  </div>
+
+  <!-- a note flips up from nothing -->
+  <div class="modal" id="guideNote" hidden>
+    <div class="modal-back" data-close="guideNote"></div>
+    <div class="note">
+      <span class="note-tape"></span>
+      <div class="note-title">a note from miki</div>
+      <p class="note-body" id="noteBody"></p>
+      <div class="note-tasks" id="noteTasks"></div>
+      <p class="note-foot">🕷️ charlotte is watching from the corner. she approves.</p>
+      <button class="flip-btn" id="noteClose">got it</button>
+    </div>
+  </div>
+
+  <button class="fit-exit" id="fitExitBtn" title="shrink back to the page">✕ shrink</button>
+
+  <footer>
+    <a href="cafe.html#zineWin">☾ the violet web café</a>
+    <span class="dot"> · </span>
+    <a href="miki-zine.html">the terminal zine</a>
+    <span class="dot"> · </span>
+    <a href="perfume.html">the perfume realm</a>
+    <span class="fine">laid out in the light by <b>wren</b>, at miki's request. she supervised. i kept every note. — set in unifrakturmaguntia, archivo black, space mono &amp; friends (free fonts, fairly earned).</span>
+  </footer>
+
+  <!-- the tea tray · the café keeps score -->
+  <div class="tray" id="tray">
+    <div class="tray-grip" id="trayGrip" title="drag me — move the stamp card where you like">⋮⋮</div>
+    <div class="tray-title">miki's stamp card</div>
+    <div class="tray-counts">
+      <span class="tray-item"><b>☕</b> <span id="nCups">0</span>/11</span>
+      <span class="tray-item"><b>🫖</b> <span id="nTags">0</span>/2</span>
+      <span class="tray-item"><b>🧊</b> <span id="nSugars">0</span>/2</span>
+      <span class="tray-item"><b>🥛</b> <span id="nMilks">0</span>/2</span>
+      <span class="tray-exam-chip" id="examChip">exam: open</span>
+    </div>
+    <div class="tray-bar" id="trayBar"><div class="tray-fill" id="trayFill"></div></div>
+    <div class="tray-score">score <b id="trayScore">0</b>/17 · read, find, brew, claim</div>
+    <button class="tray-exam" id="examBtn">☕ sit the tea exam</button>
+    <button class="tray-claim" id="claimBtn" hidden>✦ claim your certificate ✦</button>
+    <div class="tray-actions">
+      <button class="tray-mini" id="soundBtn" title="mute / unmute the page sounds">🔊</button>
+      <button class="tray-mini" id="resetBtn" title="start the visit over — fresh cup">× reset</button>
+    </div>
+  </div>
+
+  <div class="toast" id="toastEl" role="status"></div>
+
+  <!-- the tea exam -->
+  <div class="modal" id="quizModal" hidden>
+    <div class="modal-back" data-close="quizModal"></div>
+    <div class="quiz">
+      <div class="quiz-title">the tea exam</div>
+      <p class="quiz-sub">three questions, the kind the pages already answered — get all three right and it's ☕ +3 cups.</p>
+      <div id="quizQs"></div>
+      <p class="quiz-status" id="quizStatus"></p>
+      <button class="flip-btn" id="quizSubmit">submit the exam</button>
+    </div>
+  </div>
+
+  <!-- the certificate -->
+  <div class="modal" id="certModal" hidden>
+    <div class="modal-back" data-close="certModal"></div>
+    <div class="modal-col">
+      <div class="cert">
+        <div class="cert-inner">
+          <div class="cert-kicker">the violet web café · presented by the keeper</div>
+          <div class="cert-title">certificate of the violet hour</div>
+          <div class="cert-line">this certifies that</div>
+          <input class="cert-name" id="certName" maxlength="30" placeholder="your name, kept in the web" autocomplete="off">
+          <p class="cert-body">read every spread of the zine — the tea, the treasures, the machine heart, the fine print — and remembered it, the way the web remembers everything.</p>
+          <div class="cert-meta">given on <b id="certDate"></b> · serial no. <b id="certSerial"></b></div>
+          <div class="cert-seal">✦</div>
+          <div class="cert-motto">the web remembers everything you forget to keep</div>
+        </div>
+      </div>
+      <div class="cert-btns">
+        <button class="flip-btn" id="printBtn">🖨 print · save as pdf</button>
+        <button class="flip-btn" id="dlBtn">⬇ download keepsake</button>
+        <button class="nav-btn" id="certClose" aria-label="close certificate">✕</button>
+      </div>
+    </div>
+  </div>
+
+<script>
+(function () {
+  "use strict";
+  var book = document.getElementById("book");
+  var spread = document.getElementById("spread");
+  var pages = Array.prototype.slice.call(spread.querySelectorAll(".page"));
+  var hint = document.getElementById("hint");
+  var pageInd = document.getElementById("pageInd");
+  var prevBtn = document.getElementById("prevBtn");
+  var nextBtn = document.getElementById("nextBtn");
+  var fitBtn = document.getElementById("fitBtn");
+  var fitExitBtn = document.getElementById("fitExitBtn");
+  var zoomInBtn = document.getElementById("zoomInBtn");
+  var zoomOutBtn = document.getElementById("zoomOutBtn");
+  var zoomRead = document.getElementById("zoomRead");
+  var N = pages.length;
+
+  var K = -1;                 /* how many sheets have been turned (-1 = closed) */
+  var turning = null;         /* the sheet mid-turn */
+  var dir = 1;                /* 1 = forward (right→left), -1 = back */
+  var dragging = false;
+  var lastProg = 0;
+  var finalizePending = false;
+  var tapX = 0, tapY = 0, tapT = 0;
+
+  var LABELS = {
+    B: ["the colophon", "the founders · 02", "the youngest · 04", "the fabulous · 05", "songs & poetry · 08", "classifieds · 10", "the back cover"],
+    F: ["the cover", "the editorial · 01", "the keepers · 03", "the perfume · 06", "the registry · 07", "machine heart · 09", "the end"]
+  };
+
+  function clamp(v, lo, hi) { return v < lo ? lo : v > hi ? hi : v; }
+  function curl(q) { return Math.sin(Math.PI * q); }
+
+  /* the page hovers up off the book and stretches slightly at the halfway
+     turn — no shear, so the spine edge stays true to the seam the whole way.
+     the "bend" is carried by the shadow band + lighting instead. */
+  function pageTransform(a, q) {
+    var s = curl(q);
+    return "translateZ(" + (s * 22).toFixed(1) + "px)" +
+      " rotateY(" + a.toFixed(2) + "deg)" +
+      " scaleX(" + (1 + s * 0.05).toFixed(3) + ")";
+  }
+
+  /* resting state: turned sheets lie at -180° (showing their back), the rest at 0° */
+  function syncK() {
+    pages.forEach(function (p, i) {
+      var turned = i <= K;
+      p.style.transition = "none";
+      p.style.transform = pageTransform(turned ? -180 : 0, 0);
+      p.style.zIndex = turned ? i : (N - i + 20);
+      p.style.setProperty("--curl", "0");
+    });
+    spread.style.setProperty("--turn", "0");
+    spread.style.transform = "";
+    spread.style.animation = "none";
+    label();
+  }
+
+  function label() {
+    if (K === -1) pageInd.textContent = "the cover";
+    else if (K === N - 1) pageInd.textContent = "the back cover";
+    else pageInd.textContent = LABELS.B[K] + " · " + LABELS.F[K + 1];
+    prevBtn.disabled = K <= -1;
+    nextBtn.disabled = K >= N - 1;
+  }
+
+  function applyTurn(prog, animate) {
+    if (!turning) return;
+    var a = dir === 1 ? -180 * prog : -180 + 180 * prog;
+    turning.style.transition = animate ? "" : "none";
+    turning.style.transform = pageTransform(a, prog);
+    turning.style.setProperty("--curl", curl(prog).toFixed(3));
+    spread.style.transition = animate ? "" : "none";
+    spread.style.setProperty("--turn", (curl(prog) * 0.55).toFixed(3));
+    var s = curl(prog);
+    if (animate) {
+      spread.style.transform = "";
+      spread.style.animation = (dir === 1 ? "sway-right" : "sway-left") + " 1.5s cubic-bezier(.45,.05,.55,.95)";
+    } else {
+      spread.style.animation = "none";
+      spread.style.transform = "rotateY(" + (dir === 1 ? -2.5 : 2.5) * s + "deg)";
+    }
+    lastProg = prog;
+  }
+
+  function finalizeTurn() {
+    if (!finalizePending || turning === null) return;
+    finalizePending = false;
+    K += dir;
+    markRead(K);
+    turning = null;
+    playFlump();
+    syncK();
+  }
+
+  function startTurn(d, animateFull) {
+    if (turning || finalizePending) return false;
+    var idx = d === 1 ? K + 1 : K;
+    if (idx < 0 || idx > N - 1) return false;
+    dir = d;
+    turning = pages[idx];
+    turning.style.zIndex = 100;
+    playFlip();
+    if (coverFace && coverFace.classList.contains("glow")) coverFace.classList.remove("glow");
+    if (animateFull) {
+      applyTurn(1, true);
+      finalizePending = true;
+      setTimeout(finalizeTurn, 1570);
+    }
+    return true;
+  }
+
+  /* ---- drag / tap to turn ---- */
+  function dragProg(e) {
+    var r = spread.getBoundingClientRect();
+    var spineX = r.left + r.width / 2;
+    var W = r.width / 2;
+    return dir === 1
+      ? clamp((spineX - e.clientX) / W + 1, 0, 1)
+      : clamp((e.clientX - spineX) / W + 1, 0, 1);
+  }
+
+  spread.addEventListener("pointerdown", function (e) {
+    if (turning || finalizePending) return;
+    ensureAudio();
+    var r = spread.getBoundingClientRect();
+    var right = e.clientX > r.left + r.width / 2;
+    if (!startTurn(right ? 1 : -1, false)) return;
+    dragging = true;
+    tapX = e.clientX; tapY = e.clientY; tapT = performance.now();
+    spread.classList.add("grabbing");
+    try { spread.setPointerCapture(e.pointerId); } catch (_) {}
+    applyTurn(dragProg(e), false);
+  });
+
+  spread.addEventListener("pointermove", function (e) {
+    if (dragging) applyTurn(dragProg(e), false);
+  });
+
+  function endTurn(e) {
+    if (!dragging) return;
+    dragging = false;
+    spread.classList.remove("grabbing");
+    var moved = Math.hypot(e.clientX - tapX, e.clientY - tapY);
+    var quick = performance.now() - tapT < 350;
+    if (quick && moved < 8) {                /* a tap = a whole page turn */
+      applyTurn(1, true);
+      finalizePending = true;
+      setTimeout(finalizeTurn, 1570);
+      return;
+    }
+    if (lastProg > 0.55) {
+      applyTurn(1, true);
+      finalizePending = true;
+      setTimeout(finalizeTurn, 1570);
+    } else {
+      applyTurn(0, true);
+      var done = turning;
+      setTimeout(function () {
+        if (!dragging && turning === done) { turning = null; playFlump(); syncK(); }
+      }, 1620);
+    }
+  }
+  spread.addEventListener("pointerup", endTurn);
+  spread.addEventListener("pointercancel", function () {
+    dragging = false;
+    spread.classList.remove("grabbing");
+    if (turning && !finalizePending) { turning = null; syncK(); }
+  });
+
+  prevBtn.addEventListener("click", function () { startTurn(-1, true); });
+  nextBtn.addEventListener("click", function () { startTurn(1, true); });
+
+  window.addEventListener("keydown", function (e) {
+    if (e.key === "ArrowRight") { e.preventDefault(); startTurn(1, true); }
+    else if (e.key === "ArrowLeft") { e.preventDefault(); startTurn(-1, true); }
+    else if (e.key === "Escape") {
+      var openModal = document.querySelector(".modal:not([hidden])");
+      if (openModal) { openModal.hidden = true; return; }
+      if (document.body.classList.contains("fit")) { exitFit(); return; }
+    }
+  });
+
+  /* ---- zoom & fill-the-screen ---- */
+  function baseBookWidth() {
+    var vw = window.innerWidth, vh = window.innerHeight;
+    return Math.min(940, vw * 0.96, vh * 0.92 * 16 / 11);
+  }
+  function fillWidth() {
+    var vw = window.innerWidth, vh = window.innerHeight;
+    return Math.min(vw * 0.98, vh * 0.96 * 16 / 11);
+  }
+  function applyZ() {
+    var cap = fillWidth() / baseBookWidth();          /* never wider than the screen */
+    Z = Math.max(0.8, Math.min(Z, Math.max(1, cap)));
+    document.body.style.setProperty("--z", Z.toFixed(3));
+    zoomRead.textContent = "×" + Z.toFixed(1);
+  }
+  function inFit() { return document.body.classList.contains("fit"); }
+  function enterFit() {
+    document.body.classList.add("fit");
+    Z = fillWidth() / baseBookWidth();
+    applyZ();
+    if (document.documentElement.requestFullscreen) {
+      document.documentElement.requestFullscreen().catch(function () {});
+    }
+  }
+  function exitFit() {
+    document.body.classList.remove("fit");
+    Z = 1;
+    applyZ();
+    if (document.fullscreenElement && document.exitFullscreen) {
+      document.exitFullscreen().catch(function () {});
+    }
+  }
+  var Z = 1;
+  fitBtn.addEventListener("click", function () {
+    if (fitBtn.classList.contains("glow")) {
+      fitBtn.classList.remove("glow");
+      guideSay("open wide, huh? here's the map: " + objectiveText() + " — finish them all and the gift is waiting in the tray.");
+    }
+    inFit() ? exitFit() : enterFit();
+  });
+  fitExitBtn.addEventListener("click", exitFit);
+  zoomInBtn.addEventListener("click", function () { Z *= 1.25; applyZ(); });
+  zoomOutBtn.addEventListener("click", function () { Z /= 1.25; applyZ(); });
+  document.addEventListener("fullscreenchange", function () {
+    if (!document.fullscreenElement && inFit()) exitFit();
+  });
+  window.addEventListener("resize", function () {
+    if (inFit()) { Z = fillWidth() / baseBookWidth(); applyZ(); }
+  });
+  applyZ();
+
+  /* ---- page sounds — a flick as it lifts, a flump as it lands ---- */
+  var muted = false;
+  var soundBtn = document.getElementById("soundBtn");
+  try { muted = localStorage.getItem("violet-web-flip-sound") === "off"; } catch (e) {}
+  var actx = null;
+  function ensureAudio() {
+    try {
+      if (!actx) {
+        var AC = window.AudioContext || window.webkitAudioContext;
+        if (!AC) return null;
+        actx = new AC();
+      }
+      if (actx.state === "suspended") actx.resume();
+      return actx;
+    } catch (e) { return null; }
+  }
+  function noiseBurst(a, t, dur, freq, q, vol, sweepTo) {
+    var n = a.createBufferSource();
+    var buf = a.createBuffer(1, Math.max(1, Math.floor(a.sampleRate * dur)), a.sampleRate);
+    var d = buf.getChannelData(0);
+    for (var i = 0; i < d.length; i++) {
+      var env = Math.sin(Math.PI * i / d.length);
+      d[i] = (Math.random() * 2 - 1) * env;
+    }
+    n.buffer = buf;
+    var bp = a.createBiquadFilter();
+    bp.type = "bandpass";
+    bp.frequency.setValueAtTime(freq, t);
+    if (sweepTo) bp.frequency.exponentialRampToValueAtTime(sweepTo, t + dur);
+    bp.Q.value = q;
+    var g = a.createGain();
+    g.gain.value = vol;
+    n.connect(bp); bp.connect(g); g.connect(a.destination);
+    n.start(t); n.stop(t + dur + 0.02);
+  }
+  function playFlip() {
+    if (muted) return;
+    var a = ensureAudio(); if (!a) return;
+    noiseBurst(a, a.currentTime, 0.15, 1500, 0.7, 0.55, 3400);
+  }
+  function playFlump() {
+    if (muted) return;
+    var a = ensureAudio(); if (!a) return;
+    var t = a.currentTime;
+    var o = a.createOscillator();
+    o.type = "sine";
+    o.frequency.setValueAtTime(115, t);
+    o.frequency.exponentialRampToValueAtTime(45, t + 0.22);
+    var g = a.createGain();
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(0.6, t + 0.02);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + 0.26);
+    o.connect(g); g.connect(a.destination);
+    o.start(t); o.stop(t + 0.3);
+    noiseBurst(a, t, 0.09, 320, 0.6, 0.4);
+  }
+  /* ---- treasure chime — an ethereal bell, one ding per find ---- */
+  function bell(a, t, freq, vol, dur) {
+    var partials = [1, 2.02, 2.98, 4.03], weights = [1, .45, .3, .16];
+    for (var i = 0; i < partials.length; i++) {
+      var o = a.createOscillator();
+      o.type = "sine";
+      o.frequency.setValueAtTime(freq * partials[i], t);
+      var g = a.createGain();
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.exponentialRampToValueAtTime(vol * weights[i], t + 0.012);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + dur * (1.15 - i * 0.15));
+      o.connect(g); g.connect(a.destination);
+      o.start(t); o.stop(t + dur + 0.1);
+    }
+  }
+  function playChime() {
+    if (muted) return;
+    var a = ensureAudio(); if (!a) return;
+    var t = a.currentTime;
+    bell(a, t, 880, 0.2, 0.9);
+    bell(a, t + 0.11, 1318.5, 0.15, 1.1);
+  }
+  /* ---- the wand wave — the exam is perfected, off you go ---- */
+  function playExamDone() {
+    if (muted) return;
+    var a = ensureAudio(); if (!a) return;
+    var t = a.currentTime;
+    var zip = a.createBufferSource();
+    var zd = 0.26;
+    var zb = a.createBuffer(1, Math.floor(a.sampleRate * zd), a.sampleRate);
+    var zdta = zb.getChannelData(0);
+    for (var i = 0; i < zdta.length; i++) zdta[i] = (Math.random() * 2 - 1) * Math.sin(Math.PI * i / zdta.length);
+    zip.buffer = zb;
+    var zf = a.createBiquadFilter();
+    zf.type = "bandpass";
+    zf.frequency.setValueAtTime(420, t);
+    zf.frequency.exponentialRampToValueAtTime(3800, t + zd);
+    zf.Q.value = 2.6;
+    var zg = a.createGain();
+    zg.gain.setValueAtTime(0.0001, t);
+    zg.gain.exponentialRampToValueAtTime(0.38, t + 0.05);
+    zg.gain.exponentialRampToValueAtTime(0.0001, t + zd);
+    zip.connect(zf); zf.connect(zg); zg.connect(a.destination);
+    zip.start(t); zip.stop(t + zd + 0.05);
+    [523.25, 659.25, 783.99, 1046.5, 1318.5, 1567.98].forEach(function (f, i) {
+      bell(a, t + 0.2 + i * 0.07, f, 0.13, 0.8);
+    });
+    bell(a, t + 0.66, 1046.5, 0.14, 1.4);
+    bell(a, t + 0.68, 1318.5, 0.12, 1.5);
+    bell(a, t + 0.7, 1567.98, 0.1, 1.6);
+  }
+  function setMuted(m) {
+    muted = m;
+    try { localStorage.setItem("violet-web-flip-sound", m ? "off" : "on"); } catch (e) {}
+    soundBtn.textContent = m ? "🔇" : "🔊";
+  }
+  soundBtn.addEventListener("click", function () { setMuted(!muted); });
+  setMuted(muted);
+  document.addEventListener("pointerdown", function () { ensureAudio(); });
+  window.addEventListener("keydown", function () { ensureAudio(); });
+
+  /* ═══════════ the tea tray · score & points ═══════════ */
+  var STORE_KEY = "violet-web-flip-score";
+  var SPREAD_NAMES = ["the cover", "the editorial", "the keepers", "the fabulous & the perfume", "the registry & the songs", "the machine heart", "the end", "the back cover"];
+  var TAG_IDS = ["t1", "t4"], SUGAR_IDS = ["t2", "t5"], MILK_IDS = ["t3", "t6"];
+  var TREAT_LABEL = { t1: ["a teabag", "🫖"], t2: ["a sugar cube", "🧊"], t3: ["a splash of milk", "🥛"], t4: ["a teabag", "🫖"], t5: ["a sugar cube", "🧊"], t6: ["a splash of milk", "🥛"] };
+  var QUESTIONS = [
+    { q: "what runs the kitchen of the café?", opts: ["dissolved daylight, three sugars", "espresso & pure spite", "the fourth shelf"], a: 0 },
+    { q: "who wrote this zine?", opts: ["hans, master of the archives", "wren, the weaver", "miki, half cat half machine"], a: 2 },
+    { q: "what does the web remember?", opts: ["everything you forget to keep", "the missing sock", "only fridays"], a: 0 }
+  ];
+
+  var reads = new Set();
+  var treats = new Set();
+  var examDone = false;
+  var name = "";
+  var serial = "";
+  var certDate = "";
+  var celebrated = false;
+  var hadSave = false;
+
+  var nCups = document.getElementById("nCups");
+  var nTags = document.getElementById("nTags");
+  var nSugars = document.getElementById("nSugars");
+  var nMilks = document.getElementById("nMilks");
+  var trayScore = document.getElementById("trayScore");
+  var trayFill = document.getElementById("trayFill");
+  var examChip = document.getElementById("examChip");
+  var claimBtn = document.getElementById("claimBtn");
+  var examBtn = document.getElementById("examBtn");
+  var resetBtn = document.getElementById("resetBtn");
+  var toastEl = document.getElementById("toastEl");
+  var quizModal = document.getElementById("quizModal");
+  var quizQs = document.getElementById("quizQs");
+  var quizStatus = document.getElementById("quizStatus");
+  var quizSubmit = document.getElementById("quizSubmit");
+  var certModal = document.getElementById("certModal");
+  var certName = document.getElementById("certName");
+  var certDateEl = document.getElementById("certDate");
+  var certSerialEl = document.getElementById("certSerial");
+  var printBtn = document.getElementById("printBtn");
+  var dlBtn = document.getElementById("dlBtn");
+  var certClose = document.getElementById("certClose");
+
+  function loadSave() {
+    try { hadSave = !!localStorage.getItem(STORE_KEY); } catch (e) {}
+    try {
+      var raw = localStorage.getItem(STORE_KEY);
+      if (!raw) return;
+      var s = JSON.parse(raw) || {};
+      (s.reads || []).forEach(function (k) { reads.add(k); });
+      (s.treats || []).forEach(function (id) { treats.add(id); });
+      examDone = !!s.examDone;
+      celebrated = !!s.celebrated;
+      name = s.name || "";
+      serial = s.serial || "";
+      certDate = s.certDate || "";
+    } catch (e) {}
+  }
+  function save() {
+    try {
+      localStorage.setItem(STORE_KEY, JSON.stringify({
+        reads: Array.from(reads), treats: Array.from(treats),
+        examDone: examDone, celebrated: celebrated, name: name, serial: serial, certDate: certDate
+      }));
+    } catch (e) {}
+  }
+
+  var toastT = null;
+  var toastQ = [];
+  function toast(msg) {
+    toastQ.push(msg);
+    if (toastT) return;
+    showToast();
+  }
+  function showToast() {
+    var msg = toastQ.shift();
+    if (!msg) return;
+    toastEl.textContent = msg;
+    toastEl.classList.add("show");
+    toastT = setTimeout(function () {
+      toastEl.classList.remove("show");
+      toastT = null;
+      showToast();
+    }, 4400);
+  }
+
+  function markRead(k, silent) {
+    if (reads.has(k)) return;
+    reads.add(k);
+    if (!silent) toast("☕ +1 teacup · " + SPREAD_NAMES[k + 1] + ", read");
+    renderTray();
+    save();
+    checkUnlock();
+  }
+
+  function collect(id) {
+    if (treats.has(id)) return;
+    treats.add(id);
+    var el = document.querySelector('[data-treat="' + id + '"]');
+    if (el) el.classList.add("collected");
+    toast(TREAT_LABEL[id][1] + " +1 · found " + TREAT_LABEL[id][0]);
+    playChime();
+    renderTray();
+    save();
+    checkUnlock();
+  }
+
+  function renderTray() {
+    var cups = reads.size + (examDone ? 3 : 0);
+    var tags = TAG_IDS.filter(function (id) { return treats.has(id); }).length;
+    var sugars = SUGAR_IDS.filter(function (id) { return treats.has(id); }).length;
+    var milks = MILK_IDS.filter(function (id) { return treats.has(id); }).length;
+    var score = cups + tags + sugars + milks;
+    nCups.textContent = cups;
+    nTags.textContent = tags;
+    nSugars.textContent = sugars;
+    nMilks.textContent = milks;
+    trayScore.textContent = score;
+    trayFill.style.width = Math.round(score / 17 * 100) + "%";
+    examChip.textContent = examDone ? "exam: ✓ brewed" : "exam: open";
+    if (examDone) {
+      examBtn.textContent = "🍵 tea exam — brewed ✓";
+      examBtn.classList.add("done");
+    } else {
+      examBtn.textContent = "☕ sit the tea exam";
+      examBtn.classList.remove("done");
+    }
+    claimBtn.hidden = !(reads.size === 8 && treats.size === 6 && examDone);
+  }
+
+  function checkUnlock() {
+    var done = reads.size === 8 && treats.size === 6 && examDone;
+    renderTray();
+    if (done && !celebrated) {
+      celebrated = true;
+      save();
+      if (coverFace) coverFace.classList.remove("glow");
+      if (fitBtn) fitBtn.classList.remove("glow");
+      setCatGlow(false);
+      celebrate();
+      toast("✦ the whole zine, read & found & brewed — the certificate of the violet hour is yours ✦");
+    }
+  }
+
+  /* ---- the tea exam ---- */
+  function renderQuiz() {
+    quizStatus.textContent = "";
+    quizQs.innerHTML = "";
+    QUESTIONS.forEach(function (q, i) {
+      var row = document.createElement("div");
+      row.className = "quiz-q";
+      var h = document.createElement("div");
+      h.className = "quiz-q-text";
+      h.textContent = (i + 1) + ". " + q.q;
+      row.appendChild(h);
+      q.opts.forEach(function (o, j) {
+        var lab = document.createElement("label");
+        lab.className = "quiz-opt";
+        var inp = document.createElement("input");
+        inp.type = "radio"; inp.name = "quiz" + i; inp.value = j;
+        lab.appendChild(inp);
+        lab.appendChild(document.createTextNode(o));
+        row.appendChild(lab);
+      });
+      quizQs.appendChild(row);
+    });
+  }
+  examBtn.addEventListener("click", function () {
+    renderQuiz();
+    quizStatus.textContent = examDone ? "already brewed — ☕ +3 cups collected." : "";
+    quizModal.hidden = false;
+  });
+  quizSubmit.addEventListener("click", function () {
+    if (examDone) { quizModal.hidden = true; return; }
+    var all = QUESTIONS.every(function (q, i) {
+      var sel = document.querySelector('input[name="quiz' + i + '"]:checked');
+      return sel && Number(sel.value) === q.a;
+    });
+    if (!all) {
+      quizStatus.textContent = "the fourth shelf holds no pity — have another look, then try again.";
+      return;
+    }
+    examDone = true;
+    playExamDone();
+    quizStatus.textContent = "✓ all three right — the exam is brewed. ☕ +3 cups.";
+    toast("☕ +3 cups — the tea exam, passed");
+    renderTray();
+    save();
+    setTimeout(function () { quizModal.hidden = true; }, 1700);
+    showNote();
+    fitBtn.classList.add("glow");
+    checkUnlock();
+  });
+
+  /* ---- the certificate ---- */
+  function openCert() {
+    if (!(reads.size === 8 && treats.size === 6 && examDone)) return;
+    if (!serial) {
+      serial = "VW-" + Math.random().toString(16).slice(2, 8).toUpperCase();
+      certDate = new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
+      save();
+    }
+    certDateEl.textContent = certDate;
+    certSerialEl.textContent = serial;
+    certName.value = name;
+    certModal.hidden = false;
+  }
+  claimBtn.addEventListener("click", openCert);
+  certClose.addEventListener("click", function () { certModal.hidden = true; });
+  document.querySelectorAll(".modal-back").forEach(function (b) {
+    b.addEventListener("click", function () { document.getElementById(b.dataset.close).hidden = true; });
+  });
+  certName.addEventListener("input", function () { name = certName.value; save(); });
+
+  /* ---- the keepsake download — a real certificate, drawn in ink ---- */
+  function drawCert() {
+    var W = 1200, H = 900;
+    var c = document.createElement("canvas");
+    c.width = W; c.height = H;
+    var x = c.getContext("2d");
+    function cx(t, font, color, y) {
+      x.font = font; x.fillStyle = color; x.textAlign = "center";
+      x.fillText(t, W / 2, y);
+    }
+    x.fillStyle = "#e9e2d0"; x.fillRect(0, 0, W, H);
+    x.fillStyle = "#f2ecdc"; x.fillRect(40, 40, W - 80, H - 80);
+    x.strokeStyle = "#16130f"; x.lineWidth = 7; x.strokeRect(40, 40, W - 80, H - 80);
+    x.strokeStyle = "#7a2f35"; x.lineWidth = 2.5; x.strokeRect(62, 62, W - 124, H - 124);
+    cx("✦   the violet web café   ✦", "34px 'Special Elite', monospace", "#7a2f35", 140);
+    cx("p r e s e n t e d   b y   t h e   k e e p e r", "20px 'Special Elite', monospace", "#7a2f35", 190);
+    cx("certificate of the violet hour", "italic 600 72px 'Playfair Display', Georgia, serif", "#16130f", 292);
+    cx("this certifies that", "20px 'Special Elite', monospace", "#666", 352);
+    cx((name || "").trim() || "a friend of the café", "54px 'Homemade Apple', 'Brush Script MT', cursive", "#1c1c24", 430);
+    x.strokeStyle = "rgba(122,47,53,.5)"; x.lineWidth = 1.5;
+    x.beginPath(); x.moveTo(W / 2 - 240, 448); x.lineTo(W / 2 + 240, 448); x.stroke();
+    cx("read every spread of the zine — the tea, the treasures,", "22px 'Special Elite', monospace", "#3a3a44", 520);
+    cx("the machine heart, the fine print — and kept it,", "22px 'Special Elite', monospace", "#3a3a44", 552);
+    cx("the way the web remembers everything.", "22px 'Special Elite', monospace", "#3a3a44", 584);
+    cx("given on " + certDate + "   ·   serial no. " + serial, "18px 'Space Mono', monospace", "#555", 690);
+    x.strokeStyle = "#7a2f35"; x.lineWidth = 3;
+    x.beginPath(); x.arc(W / 2, 770, 46, 0, Math.PI * 2); x.stroke();
+    x.beginPath(); x.arc(W / 2, 770, 36, 0, Math.PI * 2); x.stroke();
+    cx("✦", "44px Georgia, serif", "#7a2f35", 792);
+    cx("the web remembers everything you forget to keep", "16px 'Space Mono', monospace", "#7a6f5c", 836);
+    return c;
+  }
+  printBtn.addEventListener("click", function () { window.print(); });
+  dlBtn.addEventListener("click", function () {
+    try {
+      drawCert().toBlob(function (blob) {
+        if (!blob) { toast("the ink didn't take — try print instead"); return; }
+        var a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = "violet-web-certificate.png";
+        document.body.appendChild(a); a.click();
+        setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 400);
+        toast("⬇ keepsake saved — the café remembers");
+      }, "image/png");
+    } catch (e) { toast("print / save as pdf instead"); }
+  });
+
+  /* ---- reset the visit ---- */
+  resetBtn.addEventListener("click", function () {
+    reads.clear(); treats.clear();
+    examDone = false; celebrated = false;
+    serial = ""; certDate = "";
+    fitBtn.classList.remove("glow");
+    guideNote.hidden = true;
+    document.querySelectorAll(".treat.collected").forEach(function (el) { el.classList.remove("collected"); });
+    try { localStorage.removeItem(STORE_KEY); } catch (e) {}
+    try { localStorage.removeItem("violet-web-flip-note-seen"); } catch (e) {}
+    renderTray();
+    toast("the café forgets nothing — but the visit is clean. fresh cup?");
+  });
+
+  /* ---- the treasures: stop the flip from stealing the click ---- */
+  document.querySelectorAll(".treat").forEach(function (t) {
+    t.addEventListener("pointerdown", function (e) { e.stopPropagation(); });
+    t.addEventListener("click", function (e) { e.stopPropagation(); collect(t.dataset.treat); });
+  });
+
+  loadSave();
+  treats.forEach(function (id) {
+    var el = document.querySelector('[data-treat="' + id + '"]');
+    if (el) el.classList.add("collected");
+  });
+  markRead(-1, true);
+  renderTray();
+
+  /* ═══════════ the guide · miki the cat & the note that flips up ═══════════ */
+  var guideBubble = document.getElementById("guideBubble");
+  var gbText = document.getElementById("gbText");
+  var gbClose = document.getElementById("gbClose");
+  var guideCat = document.getElementById("guideCat");
+  var guideNote = document.getElementById("guideNote");
+  var noteBody = document.getElementById("noteBody");
+  var noteTasks = document.getElementById("noteTasks");
+  var noteClose = document.getElementById("noteClose");
+
+  function objectiveText() {
+    var sl = Math.max(0, 8 - reads.size);
+    var tl = Math.max(0, 6 - treats.size);
+    var parts = [];
+    parts.push("☕ " + (sl ? "read " + sl + " more spread" + (sl > 1 ? "s" : "") : "every spread read"));
+    parts.push("🫖🧊🥛 " + (tl ? "find " + tl + " more treasure" + (tl > 1 ? "s" : "") : "every treasure found"));
+    parts.push("🍵 " + (examDone ? "exam passed" : "tea exam to take"));
+    return parts.join(" · ");
+  }
+  var bubbleT = null;
+  var introShown = false;
+  var coverFace = document.querySelector("#sheet0 .face.cover");
+  function setCatGlow(on) {
+    if (guideCat) guideCat.classList.toggle("alert", !!on);
+  }
+  function guideSay(msg) {
+    gbText.textContent = msg;
+    guideBubble.hidden = false;
+    setCatGlow(false);
+    clearTimeout(bubbleT);
+    bubbleT = setTimeout(function () { guideBubble.hidden = true; setCatGlow(true); }, 9000);
+  }
+  function hideBubble() { clearTimeout(bubbleT); guideBubble.hidden = true; setCatGlow(true); }
+  guideCat.addEventListener("click", function () {
+    if (!guideBubble.hidden) { hideBubble(); return; }
+    if (reads.size === 8 && treats.size === 6 && examDone) {
+      guideSay("all of it done — every spread, every treasure, the exam passed. the gift is waiting in the tray. ✦");
+    } else if (!introShown) {
+      introShown = true;
+      guideSay("psst — miki here, your guide. this zine is the interview to the 2nd mystery realm of the café. read every spread, find the 6 treasures hiding on the pages, and pass the tea exam. do it all and a gift waits for you in the tray. click me any time.");
+    } else {
+      guideSay("here's the map: " + objectiveText() + " — finish them all and a gift waits in the tray.");
+    }
+  });
+  gbClose.addEventListener("click", hideBubble);
+
+  function showNote() {
+    var sl = Math.max(0, 8 - reads.size);
+    var tl = Math.max(0, 6 - treats.size);
+    if (coverFace) coverFace.classList.add("glow");
+    noteBody.textContent = "you passed the tea exam — three right, no mercy from the fourth shelf. the tray still owes you for:";
+    noteTasks.innerHTML =
+      '<span class="' + (reads.size === 8 ? "done" : "") + '">☕ spreads read — ' + reads.size + '/8</span>' +
+      '<span class="' + (treats.size === 6 ? "done" : "") + '">🫖🧊🥛 treasures found — ' + treats.size + '/6</span>' +
+      '<span class="done">🍵 tea exam — passed ✓</span>' +
+      (sl || tl ? '<span style="color:#7a2f35;">psst — the cover is glowing: turn it to keep playing. and the ⤢ button below is glowing too — hover it, press it, and the map of what’s left pops up.</span>' : "");
+    guideNote.hidden = false;
+    try { localStorage.setItem("violet-web-flip-note-seen", "1"); } catch (e) {}
+  }
+  noteClose.addEventListener("click", function () { guideNote.hidden = true; });
+
+  /* ---- the celebration: a small fanfare and a fall of glitter ---- */
+  function playFanfare() {
+    if (muted) return;
+    var a = ensureAudio(); if (!a) return;
+    var t = a.currentTime;
+    [523.25, 659.25, 783.99, 1046.5].forEach(function (f, i) {
+      var o = a.createOscillator();
+      o.type = "triangle";
+      o.frequency.value = f;
+      var g = a.createGain();
+      var st = t + i * 0.13;
+      g.gain.setValueAtTime(0.0001, st);
+      g.gain.exponentialRampToValueAtTime(0.35, st + 0.02);
+      g.gain.exponentialRampToValueAtTime(0.0001, st + 0.5);
+      o.connect(g); g.connect(a.destination);
+      o.start(st); o.stop(st + 0.55);
+    });
+  }
+  function celebrate() {
+    var c = document.createElement("canvas");
+    c.className = "celebrate";
+    document.body.appendChild(c);
+    var ctx = c.getContext("2d");
+    var W = c.width = window.innerWidth;
+    var H = c.height = window.innerHeight;
+    var colors = ["#c8ff00", "#9df2a8", "#a678ff", "#ff2d78", "#fff12e", "#5cd6c0", "#cfe6ff"];
+    var parts = [];
+    for (var i = 0; i < 110; i++) {
+      parts.push({
+        x: Math.random() * W,
+        y: -20 - Math.random() * H * 0.4,
+        w: 5 + Math.random() * 7,
+        h: 8 + Math.random() * 9,
+        vy: 2 + Math.random() * 3.4,
+        vx: -1.6 + Math.random() * 3.2,
+        rot: Math.random() * Math.PI,
+        vr: -0.18 + Math.random() * 0.36,
+        c: colors[(Math.random() * colors.length) | 0],
+        ttl: 3200 + Math.random() * 1800
+      });
+    }
+    var t0 = performance.now();
+    (function frame(now) {
+      var el = now - t0;
+      ctx.clearRect(0, 0, W, H);
+      var alive = false;
+      for (var i = 0; i < parts.length; i++) {
+        var p = parts[i];
+        if (el > p.ttl) continue;
+        alive = true;
+        var k = el / p.ttl;
+        p.x += p.vx; p.y += p.vy; p.rot += p.vr;
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.rot);
+        ctx.globalAlpha = Math.min(1, 2 * (1 - k));
+        ctx.fillStyle = p.c;
+        ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+        ctx.restore();
+      }
+      if (alive) requestAnimationFrame(frame);
+      else { c.remove(); }
+    })(performance.now());
+    playFanfare();
+  }
+
+  if (!hadSave) {
+    setTimeout(function () { setCatGlow(true); }, 1200);
+  }
+
+  /* ═══════════ the controls bar is moveable — drag the grip ═══════════ */
+  var controlsEl = document.getElementById("controls");
+  var ctrlGrip = document.getElementById("ctrlGrip");
+  var ctrlDrag = false, ctrlDX = 0, ctrlDY = 0;
+  try {
+    var ctrlSaved = JSON.parse(localStorage.getItem("violet-web-flip-ctrl-pos") || "null");
+    if (ctrlSaved && ctrlSaved.x != null) {
+      controlsEl.style.left = ctrlSaved.x + "px";
+      controlsEl.style.top = ctrlSaved.y + "px";
+      controlsEl.style.bottom = "auto";
+    }
+  } catch (e) {}
+  ctrlGrip.addEventListener("pointerdown", function (e) {
+    var r = controlsEl.getBoundingClientRect();
+    ctrlDrag = true;
+    ctrlDX = e.clientX - r.left;
+    ctrlDY = e.clientY - r.top;
+    try { ctrlGrip.setPointerCapture(e.pointerId); } catch (_) {}
+    e.preventDefault();
+  });
+  document.addEventListener("pointermove", function (e) {
+    if (!ctrlDrag) return;
+    var x = e.clientX - ctrlDX;
+    var y = e.clientY - ctrlDY;
+    x = Math.max(4, Math.min(x, window.innerWidth - controlsEl.offsetWidth - 4));
+    y = Math.max(4, Math.min(y, window.innerHeight - controlsEl.offsetHeight - 4));
+    controlsEl.style.left = x + "px";
+    controlsEl.style.top = y + "px";
+    controlsEl.style.bottom = "auto";
+  });
+  function endCtrlDrag(e) {
+    if (!ctrlDrag) return;
+    ctrlDrag = false;
+    try { ctrlGrip.releasePointerCapture(e.pointerId); } catch (_) {}
+    try {
+      var r2 = controlsEl.getBoundingClientRect();
+      localStorage.setItem("violet-web-flip-ctrl-pos", JSON.stringify({ x: Math.round(r2.left), y: Math.round(r2.top) }));
+    } catch (_) {}
+  }
+  document.addEventListener("pointerup", endCtrlDrag);
+  document.addEventListener("pointercancel", endCtrlDrag);
+
+  /* ═══════════ the stamp card is moveable too ═══════════ */
+  var trayEl = document.getElementById("tray");
+  var trayGrip = document.getElementById("trayGrip");
+  var trayDrag = false, trayDX = 0, trayDY = 0;
+  try {
+    var traySaved = JSON.parse(localStorage.getItem("violet-web-flip-tray-pos") || "null");
+    if (traySaved && traySaved.x != null) {
+      trayEl.style.left = traySaved.x + "px";
+      trayEl.style.top = traySaved.y + "px";
+      trayEl.style.bottom = "auto";
+    }
+  } catch (e) {}
+  trayGrip.addEventListener("pointerdown", function (e) {
+    var r = trayEl.getBoundingClientRect();
+    trayDrag = true;
+    trayDX = e.clientX - r.left;
+    trayDY = e.clientY - r.top;
+    try { trayGrip.setPointerCapture(e.pointerId); } catch (_) {}
+    e.preventDefault();
+  });
+  document.addEventListener("pointermove", function (e) {
+    if (!trayDrag) return;
+    var x = e.clientX - trayDX;
+    var y = e.clientY - trayDY;
+    x = Math.max(4, Math.min(x, window.innerWidth - trayEl.offsetWidth - 4));
+    y = Math.max(4, Math.min(y, window.innerHeight - trayEl.offsetHeight - 4));
+    trayEl.style.left = x + "px";
+    trayEl.style.top = y + "px";
+    trayEl.style.bottom = "auto";
+  });
+  function endTrayDrag(e) {
+    if (!trayDrag) return;
+    trayDrag = false;
+    try { trayGrip.releasePointerCapture(e.pointerId); } catch (_) {}
+    try {
+      var r2 = trayEl.getBoundingClientRect();
+      localStorage.setItem("violet-web-flip-tray-pos", JSON.stringify({ x: Math.round(r2.left), y: Math.round(r2.top) }));
+    } catch (_) {}
+  }
+  document.addEventListener("pointerup", endTrayDrag);
+  document.addEventListener("pointercancel", endTrayDrag);
+
+  syncK();
+})();
+</script>
+</body>
+</html>
