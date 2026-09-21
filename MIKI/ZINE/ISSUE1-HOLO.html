@@ -1,0 +1,1066 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="/.nekoweb-api/static/site.js" defer></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>THE VIOLET WEB · issue 01 · the flip book</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Homemade+Apple&family=Klee+One&family=Playfair+Display:ital,wght@0,600;1,600&family=Space+Mono:wght@400;700&family=Special+Elite&family=UnifrakturMaguntia&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #07070b;
+    --ink: #0c0c12;
+    --paper: #e9e2d0;
+    --violet: #a678ff;
+    --violet-2: #c9a6ff;
+    --acid: #c8ff00;
+    --green: #9df2a8;
+    --teal: #5cd6c0;
+    --pink: #ff2d78;
+    --chrome: #cfe6ff;
+    --sienna: #c98f5f;
+    --fraktur: 'UnifrakturMaguntia', serif;
+    --black-font: 'Archivo Black', sans-serif;
+    --mono: 'Space Mono', monospace;
+    --cursive: 'Homemade Apple', cursive;
+    --elite: 'Special Elite', monospace;
+    --serif: 'Playfair Display', serif;
+    --ui: 'Klee One', sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { color-scheme: dark; }
+  body {
+    font-family: var(--ui);
+    color: var(--chrome);
+    min-height: 100vh;
+    background:
+      radial-gradient(50% 40% at 78% 8%, rgba(166,120,255,.16), transparent 60%),
+      radial-gradient(40% 34% at 12% 88%, rgba(92,214,192,.12), transparent 62%),
+      radial-gradient(30% 26% at 92% 92%, rgba(255,45,120,.10), transparent 60%),
+      linear-gradient(180deg, #07070b 0%, #0b0614 55%, #07070b 100%);
+    display: flex; flex-direction: column; align-items: center;
+    padding: 26px 14px 60px;
+    overflow-x: hidden;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  body::after {
+    content: ""; position: fixed; inset: 0; pointer-events: none; opacity: .06; z-index: 0;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="140" height="140"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" stitchTiles="stitch"/></filter><rect width="140" height="140" filter="url(%23n)"/></svg>');
+  }
+
+  .topnav {
+    position: relative; z-index: 20;
+    width: 100%; max-width: 1100px;
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: .4em 1em;
+    padding: 10px 6px; margin-bottom: 18px;
+    border-bottom: 1px solid rgba(166,120,255,.25);
+  }
+  .topnav a {
+    color: var(--violet-2); text-decoration: none;
+    font-size: .82rem; letter-spacing: .06em;
+    border-bottom: 1px solid transparent;
+    transition: color .15s, border-color .15s;
+  }
+  .topnav a:hover { color: var(--chrome); border-bottom-color: var(--violet); }
+  .topnav .home { font-family: var(--cursive); font-size: .95rem; color: var(--pink); }
+  .dot { color: var(--violet); }
+
+  .mast {
+    position: relative; z-index: 20; text-align: center; margin-bottom: 10px;
+  }
+  .mast .kicker {
+    font-family: var(--mono); font-size: .72rem; letter-spacing: .34em; text-transform: uppercase;
+    color: var(--teal); margin-bottom: 8px;
+  }
+  .mast h1 {
+    font-family: var(--fraktur); font-weight: normal;
+    font-size: clamp(2rem, 6vw, 3.2rem); color: var(--violet);
+    filter: drop-shadow(0 0 18px rgba(166,120,255,.5));
+    line-height: 1;
+  }
+  .mast .sub { font-family: var(--mono); font-size: .72rem; letter-spacing: .22em; text-transform: uppercase; color: #6a6a8a; margin-top: 6px; }
+
+  /* ═══════════ THE BOOK ═══════════ */
+  @property --curl { syntax: "<number>"; initial-value: 0; inherits: true; }
+  @property --turn { syntax: "<number>"; initial-value: 0; inherits: true; }
+
+  .stage {
+    position: relative; z-index: 10;
+    perspective: 2400px;
+    margin: 14px auto 8px;
+  }
+  .book {
+    position: relative;
+    width: calc(min(940px, 96vw, 92vh * 1.4546) * var(--z, 1));
+    aspect-ratio: 16 / 11;
+    margin: 0 auto;
+    transform-style: preserve-3d;
+    font-size: calc(clamp(9px, 1.5vw, 13px) * var(--z, 1));
+    filter: drop-shadow(0 30px 50px rgba(0,0,0,.55));
+  }
+  .spread {
+    position: absolute; inset: 0;
+    transform-style: preserve-3d;
+    cursor: grab;
+    touch-action: none;
+    transition:
+      --turn 1.5s cubic-bezier(.45,.05,.55,.95),
+      transform 1.5s cubic-bezier(.45,.05,.55,.95);
+  }
+  .spread.grabbing { cursor: grabbing; }
+
+  /* every sheet lives in the right slot [spine, foreedge]; turning swings it
+     around the spine (its left edge) to land on the left. */
+  .page {
+    position: absolute; top: 0; bottom: 0; left: 50%; width: 50%;
+    transform-style: preserve-3d;
+    transform-origin: left center;
+    will-change: transform;
+    transition:
+      transform 1.5s cubic-bezier(.45,.05,.55,.95),
+      --curl 1.5s cubic-bezier(.45,.05,.55,.95);
+  }
+  .page .face {
+    position: absolute; inset: 0;
+    overflow: hidden;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    border-radius: 2px 10px 10px 2px;
+    box-shadow: inset 0 0 24px rgba(0,0,0,.5);
+    filter: brightness(calc(1 - var(--curl,0) * .4));
+  }
+  .page .face.back {
+    transform: rotateY(180deg);
+    border-radius: 10px 2px 2px 10px;
+    box-shadow: inset 8px 0 20px rgba(0,0,0,.3), inset 0 0 24px rgba(0,0,0,.5);
+  }
+  .page .face.back::before {
+    content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 1.1em; z-index: 2;
+    background: linear-gradient(90deg, rgba(0,0,0,.16), transparent); pointer-events: none;
+  }
+  .face.back.pg:not(.gutter):not(.halftone) { background: linear-gradient(105deg, #dbd1b4 0%, var(--paper) 58%); }
+  .page::after {
+    content: ""; position: absolute; inset: 0; z-index: 4; pointer-events: none;
+    background:
+      linear-gradient(96deg, rgba(0,0,0,.55) 0%, rgba(0,0,0,.2) 26%, transparent 50%),
+      linear-gradient(180deg, rgba(0,0,0,.16) 0%, transparent 30%);
+    opacity: calc(var(--curl,0) * .72);
+  }
+
+  /* cast shadows that fall on the revealed page during a turn */
+  .cast { position: absolute; top: 0; bottom: 0; width: 50%; z-index: 50; pointer-events: none; opacity: 0; }
+  .cast-right { left: 50%; background: linear-gradient(90deg, rgba(0,0,0,.45), rgba(0,0,0,0) 60%); opacity: calc(var(--turn,0) * 1); }
+  .cast-left { left: 0; background: linear-gradient(270deg, rgba(0,0,0,.45), rgba(0,0,0,0) 60%); opacity: calc(var(--turn,0) * 1); }
+
+  .spine-shadow {
+    position: absolute; top: 0; bottom: 0; left: 50%; width: 16px; transform: translateX(-50%);
+    z-index: 51; pointer-events: none; opacity: .75;
+    background: linear-gradient(90deg, transparent, rgba(0,0,0,.32) 45%, rgba(0,0,0,.32) 55%, transparent);
+  }
+
+  /* the whole book breathes a little while a page turns, then settles */
+  @keyframes sway-right {
+    0%   { transform: rotateY(0deg); }
+    20%  { transform: rotateY(-2.4deg); }
+    55%  { transform: rotateY(1.2deg); }
+    80%  { transform: rotateY(-0.7deg); }
+    100% { transform: rotateY(0deg); }
+  }
+  @keyframes sway-left {
+    0%   { transform: rotateY(0deg); }
+    20%  { transform: rotateY(2.4deg); }
+    55%  { transform: rotateY(-1.2deg); }
+    80%  { transform: rotateY(0.7deg); }
+    100% { transform: rotateY(0deg); }
+  }
+
+  /* ── the hologram cover ── */
+  .cover {
+    background:
+      radial-gradient(80% 60% at 50% 20%, rgba(166,120,255,.28), transparent 65%),
+      radial-gradient(60% 50% at 80% 80%, rgba(92,214,192,.16), transparent 60%),
+      linear-gradient(150deg, #140a2e 0%, #2a0a4d 45%, #120a2a 100%);
+  }
+  .cover::before {
+    content: ""; position: absolute; inset: -70%;
+    background: conic-gradient(from 0deg,
+      transparent 0deg,
+      rgba(166,120,255,.4) 40deg,
+      rgba(92,214,192,.35) 80deg,
+      rgba(255,158,207,.35) 120deg,
+      transparent 170deg,
+      transparent 360deg);
+    animation: holospin 7s linear infinite;
+    mix-blend-mode: screen;
+  }
+  .cover::after {
+    content: ""; position: absolute; inset: 0;
+    background: linear-gradient(115deg, transparent 42%, rgba(255,255,255,.16) 50%, transparent 58%);
+    background-size: 250% 100%;
+    animation: sheen 4.5s ease-in-out infinite;
+  }
+  @keyframes holospin { to { transform: rotate(360deg); } }
+  @keyframes sheen { 0%, 100% { background-position: 130% 0; } 50% { background-position: -30% 0; } }
+
+  .cover-body {
+    position: absolute; inset: 0; z-index: 2;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; padding: 2.4em 1.6em;
+  }
+  .cover-body .holo {
+    font-family: var(--mono); font-size: .6em; letter-spacing: .3em; text-transform: uppercase;
+    color: rgba(207,230,255,.7);
+    border: 1px dashed rgba(207,230,255,.4); border-radius: 99px;
+    padding: .45em 1.1em; margin-bottom: 1.1em;
+    animation: huedrift 6s ease-in-out infinite;
+  }
+  @keyframes huedrift { 0%,100% { filter: hue-rotate(0deg); } 50% { filter: hue-rotate(60deg); } }
+  .cover-body .zine-title {
+    font-family: var(--fraktur); font-weight: normal;
+    font-size: 3.4em; line-height: .98;
+    color: var(--paper);
+    text-shadow: 0 0 26px rgba(166,120,255,.8);
+  }
+  .cover-body .zine-title b { color: var(--violet); font-weight: normal; }
+  .cover-body .cover-sub {
+    font-family: var(--black-font); font-size: .82em; letter-spacing: .18em; text-transform: uppercase;
+    color: var(--teal); margin-top: .5em;
+  }
+  .cover-body .cover-line {
+    font-family: var(--mono); font-size: .74em; line-height: 1.7; color: rgba(207,230,255,.75);
+    max-width: 24em; margin-top: 1.1em;
+  }
+  .firefly {
+    width: 1.1em; height: 1.1em; border-radius: 50%;
+    margin-top: 1.5em;
+    background: radial-gradient(circle at 40% 35%, #fff8d9, #ffe9a8 45%, rgba(255,214,150,.2) 80%);
+    box-shadow: 0 0 18px rgba(255,233,168,.95), 0 0 46px rgba(166,120,255,.55);
+    animation: firefly 3.2s ease-in-out infinite;
+  }
+  @keyframes firefly { 0%,100% { opacity: .55; transform: scale(.92); } 50% { opacity: 1; transform: scale(1.08); } }
+  .cover-body .cover-hint {
+    position: absolute; bottom: 1.5em;
+    font-family: var(--mono); font-size: .66em; letter-spacing: .16em; text-transform: uppercase;
+    color: rgba(207,230,255,.55);
+    border: 1px solid rgba(166,120,255,.45); border-radius: 99px;
+    padding: .5em 1.2em;
+  }
+
+  /* ── brutalist interior pages ── */
+  .pg {
+    position: absolute; inset: 0;
+    background: var(--paper);
+    color: #12121a;
+    padding: 1.5em 1.4em;
+    display: flex; flex-direction: column;
+  }
+  .pg.gutter { background: #0d0d14; color: var(--paper); }
+  .pg .pgnum {
+    position: absolute; top: .9em; right: 1em;
+    font-family: var(--black-font); font-size: 2.1em; line-height: 1; color: rgba(18,18,26,.16);
+  }
+  .pg .pgnum::before { content: "no. "; font-size: .3em; letter-spacing: .2em; }
+  .pg .kicker {
+    font-family: var(--mono); font-size: .62em; letter-spacing: .3em; text-transform: uppercase;
+    color: var(--pink); border-top: 3px solid currentColor; padding-top: .3em; margin-bottom: .7em;
+  }
+  .pg .blk {
+    font-family: var(--black-font); font-size: 2em; line-height: .98; text-transform: uppercase;
+    margin-bottom: .45em;
+  }
+  .pg .blk .thin { font-family: var(--serif); font-style: italic; font-weight: 600; text-transform: none; }
+  .pg p { font-family: var(--mono); font-size: .78em; line-height: 1.65; }
+  .pg p b { font-weight: 700; }
+  .pg .slash {
+    font-family: var(--black-font); color: var(--violet); font-size: 1.1em;
+    margin: .2em 0;
+  }
+  .strike {
+    position: relative; display: inline-block;
+  }
+  .strike::after {
+    content: ""; position: absolute; left: -2%; right: -2%; top: 52%;
+    height: .12em; background: var(--pink); transform: rotate(-2deg);
+  }
+
+  /* halftone + hatching accents */
+  .halftone {
+    background-image: radial-gradient(rgba(18,18,26,.22) 1px, transparent 1.6px);
+    background-size: 8px 8px;
+  }
+  .hatch {
+    background: repeating-linear-gradient(45deg, rgba(18,18,26,.14) 0 3px, transparent 3px 7px) var(--paper);
+  }
+  .hatch-light {
+    background: repeating-linear-gradient(45deg, rgba(255,255,255,.09) 0 3px, transparent 3px 7px);
+  }
+
+  /* dual-sibling mini layout */
+  .duo { display: grid; grid-template-columns: 1fr 1fr; gap: 1em; flex: 1; }
+  .duo .half { min-width: 0; display: flex; flex-direction: column; }
+  .duo .half:first-child { border-right: 1px solid rgba(18,18,26,.25); padding-right: 1em; }
+  .duo .half .mini-name {
+    font-family: var(--black-font); font-size: 1.5em; text-transform: uppercase; line-height: 1;
+    color: var(--acid); -webkit-text-stroke: 1px rgba(18,18,26,.4);
+  }
+  .duo .half .mini-role {
+    font-family: var(--mono); font-size: .56em; letter-spacing: .22em; text-transform: uppercase;
+    color: #666; margin: .3em 0 .6em;
+  }
+  .duo .half p { font-family: var(--mono); font-size: .7em; line-height: 1.6; }
+  .duo .half .crest {
+    margin-top: auto; align-self: flex-start;
+    font-family: var(--black-font); font-size: .62em; letter-spacing: .08em; text-transform: uppercase;
+    color: var(--paper); background: #12121a; padding: .4em .7em;
+    border-left: 4px solid var(--acid);
+  }
+  .duo .half .crest.gutter { background: var(--paper); color: #12121a; border-left-color: var(--pink); }
+
+  /* sticker / stamp */
+  .stamp {
+    align-self: center; margin-top: auto;
+    font-family: var(--mono); font-weight: 700; font-size: .66em; letter-spacing: .08em; text-transform: uppercase;
+    color: rgba(166,120,255,.9);
+    border: 3px double currentColor; border-radius: .6em;
+    padding: .6em .9em; text-align: center; line-height: 1.6;
+    transform: rotate(-4deg);
+    opacity: .85;
+  }
+
+  /* the perfume spread */
+  .perfume-wrap { flex: 1; display: flex; flex-direction: column; align-items: center; gap: .9em; padding-top: .4em; }
+  .bottle { width: 7.6em; height: auto; filter: drop-shadow(0 0 18px rgba(166,120,255,.55)); }
+  .perfume-name {
+    font-family: var(--fraktur); font-size: 1.7em; color: #12121a;
+  }
+  .perfume-tag {
+    font-family: var(--mono); font-size: .66em; letter-spacing: .18em; text-transform: uppercase;
+    color: #555;
+  }
+  .note-row { display: flex; gap: .5em; flex-wrap: wrap; justify-content: center; }
+  .note-chip {
+    display: flex; align-items: center; gap: .35em;
+    font-family: var(--mono); font-size: .6em; text-transform: uppercase;
+    background: #f4efdd; border: 1.5px solid #12121a; border-radius: 99px;
+    padding: .3em .7em;
+  }
+  .note-chip i { width: .72em; height: .72em; border-radius: 50%; display: inline-block; }
+  .buy-stamp {
+    font-family: var(--mono); font-weight: 700; font-size: .68em; letter-spacing: .1em; text-transform: uppercase;
+    color: rgba(166,120,255,1); border: 4px double currentColor; border-radius: .5em;
+    padding: .55em 1em; text-align: center; line-height: 1.65;
+    transform: rotate(-6deg); background: rgba(255,255,255,.4);
+    box-shadow: 0 0 0 2px rgba(166,120,255,.25);
+  }
+  .buy-stamp .url { display: block; font-weight: 400; letter-spacing: .12em; }
+
+  /* opening editorial */
+  .quote { margin: .15em 0 .65em; }
+  .quote .q {
+    font-family: var(--cursive); font-size: 1.08em; line-height: 1.5; color: #24242c;
+  }
+  .quote .q-author {
+    font-family: var(--mono); font-size: .64em; letter-spacing: .16em; text-transform: uppercase;
+    color: #7a7a92; margin-top: .35em;
+  }
+  .ed-grid { display: flex; gap: 1em; align-items: flex-start; flex: 1; min-height: 0; }
+  .ed-grid .ed-img {
+    width: 8.4em; max-width: 44%; border: 3px solid #12121a;
+    box-shadow: 6px 6px 0 rgba(18,18,26,.18); transform: rotate(-1.5deg); background: var(--paper);
+  }
+  .ed-grid .ed-note { min-width: 0; }
+  .ed-grid .ed-note .ed-role {
+    font-family: var(--mono); font-size: .58em; letter-spacing: .2em; text-transform: uppercase;
+    color: var(--pink); margin-bottom: .5em;
+  }
+  .ed-grid .ed-note p { font-size: .72em; }
+  .toc { padding-top: .9em; }
+  .toc .toc-title {
+    font-family: var(--mono); font-size: .58em; letter-spacing: .3em; text-transform: uppercase;
+    color: var(--violet); border-top: 3px solid #12121a; padding-top: .4em; margin-bottom: .35em;
+  }
+  .toc .toc-line { font-family: var(--mono); font-size: .6em; line-height: 1.75; color: #3a3a44; }
+
+  /* the end + back cover */
+  .back-face {
+    position: absolute; inset: 0;
+    background: linear-gradient(150deg, #140a2e, #2a0a4d 60%, #120a2a);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; padding: 2.2em 1.8em; gap: .9em;
+    color: var(--paper);
+  }
+  .back-face .end {
+    font-family: var(--fraktur); font-size: 2.4em; color: var(--violet);
+    filter: drop-shadow(0 0 16px rgba(166,120,255,.6));
+  }
+  .back-face .endline { font-family: var(--mono); font-size: .7em; letter-spacing: .22em; text-transform: uppercase; color: rgba(207,230,255,.8); }
+  .back-face .stamp {
+    color: rgba(157,242,168,.9); border-color: currentColor; margin-top: .5em;
+  }
+
+  /* ── controls ── */
+  .controls { position: relative; z-index: 20; text-align: center; margin-top: 18px; }
+  .ctrl-row { display: flex; align-items: center; justify-content: center; gap: 14px; margin-bottom: 10px; }
+  .nav-btn {
+    font-family: var(--mono); font-size: 1rem; width: 42px; height: 42px; border-radius: 50%;
+    color: var(--violet-2); background: rgba(166,120,255,.06);
+    border: 1.5px solid rgba(166,120,255,.5);
+    cursor: pointer;
+    transition: color .15s, border-color .15s, transform .15s, background .15s;
+  }
+  .nav-btn:hover:not(:disabled) { color: var(--acid); border-color: var(--acid); background: rgba(200,255,0,.06); transform: scale(1.07); }
+  .nav-btn:disabled { opacity: .28; cursor: default; }
+  .page-ind {
+    font-family: var(--mono); font-size: .72rem; letter-spacing: .18em; text-transform: uppercase;
+    color: var(--chrome); min-width: 220px; text-align: center;
+    border-bottom: 1px dashed rgba(207,230,255,.3); padding-bottom: .35em;
+  }
+  .hint-line {
+    font-family: var(--mono); font-size: .74em; letter-spacing: .14em; text-transform: uppercase;
+    color: #8a8aa8; margin-bottom: 12px; line-height: 1.8;
+  }
+  .hint-line b { color: var(--teal); font-weight: 700; }
+  .flip-btn {
+    font-family: var(--mono); font-size: .72em; letter-spacing: .18em; text-transform: uppercase;
+    color: #07070b; background: var(--acid);
+    border: 2px solid #07070b; border-radius: 99px;
+    padding: .8em 1.6em; cursor: pointer;
+    box-shadow: 5px 5px 0 rgba(0,0,0,.55);
+    transition: transform .15s ease, box-shadow .15s ease;
+  }
+  .flip-btn:hover { transform: translate(2px,2px); box-shadow: 2px 2px 0 rgba(0,0,0,.55); }
+  .flip-btn:disabled { opacity: .45; cursor: default; }
+
+  /* ── zoom & fill-the-screen ── */
+  .zoom-btn {
+    font-family: var(--mono); font-size: 1rem; width: 34px; height: 34px; border-radius: 50%;
+    color: var(--teal); background: rgba(92,214,192,.06);
+    border: 1.5px solid rgba(92,214,192,.5); cursor: pointer;
+    transition: color .15s, border-color .15s, transform .15s, background .15s;
+  }
+  .zoom-btn:hover:not(:disabled) { color: var(--acid); border-color: var(--acid); background: rgba(200,255,0,.06); transform: scale(1.07); }
+  .zoom-btn:disabled { opacity: .28; cursor: default; }
+  .zoom-read {
+    font-family: var(--mono); font-size: .72rem; letter-spacing: .16em;
+    color: var(--chrome); min-width: 44px; text-align: center;
+  }
+  .fit-btn {
+    font-family: var(--mono); font-size: .66em; letter-spacing: .16em; text-transform: uppercase;
+    color: var(--acid); background: none; border: 1.5px solid rgba(200,255,0,.5);
+    border-radius: 99px; padding: .6em 1.2em; cursor: pointer;
+    transition: background .15s, box-shadow .15s, transform .15s;
+  }
+  .fit-btn:hover { background: rgba(200,255,0,.1); box-shadow: 0 0 18px rgba(200,255,0,.25); transform: translateY(-1px); }
+  .fit-exit {
+    display: none; position: fixed; top: 14px; right: 14px; z-index: 90;
+    align-items: center; gap: .5em;
+    font-family: var(--mono); font-size: .66em; letter-spacing: .16em; text-transform: uppercase;
+    color: var(--paper); background: rgba(12,12,18,.82); border: 1.5px solid rgba(166,120,255,.6);
+    border-radius: 99px; padding: .6em 1.2em; cursor: pointer;
+    box-shadow: 0 8px 24px rgba(0,0,0,.45);
+    transition: color .15s, border-color .15s, background .15s;
+  }
+  .fit-exit:hover { color: var(--acid); border-color: var(--acid); }
+
+  body.fit .fit-exit { display: inline-flex; }
+  body.fit .topnav, body.fit .mast, body.fit footer { display: none; }
+  body.fit .stage {
+    position: fixed; inset: 0; z-index: 70; margin: 0;
+    display: flex; align-items: center; justify-content: center;
+    background: radial-gradient(130% 100% at 50% 8%, rgba(42,10,77,.92), #05030a 72%);
+  }
+  body.fit .controls {
+    position: fixed; left: 50%; transform: translateX(-50%); bottom: 16px; z-index: 90; margin: 0;
+    background: rgba(7,7,11,.62); border: 1px solid rgba(166,120,255,.3);
+    border-radius: 16px; padding: 10px 18px 12px;
+    box-shadow: 0 12px 40px rgba(0,0,0,.5);
+  }
+  body.fit .hint-line, body.fit #flipBtn { display: none; }
+
+  footer { position: relative; z-index: 20; text-align: center; margin-top: 34px; font-size: .82rem; color: #6a6a8a; line-height: 2; }
+  footer a { color: var(--violet-2); text-decoration: none; border-bottom: 1px solid rgba(166,120,255,.4); }
+  footer a:hover { color: var(--chrome); }
+  footer .fine { display: block; font-size: .72rem; color: #565673; }
+  footer .fine b { color: var(--sienna); font-weight: normal; }
+
+  @media (max-width: 520px) {
+    .duo { grid-template-columns: 1fr; gap: .7em; }
+    .duo .half:first-child { border-right: none; padding-right: 0; border-bottom: 1px solid rgba(18,18,26,.25); padding-bottom: .6em; }
+    .ed-grid { flex-direction: column; }
+    .ed-grid .ed-img { width: 10em; max-width: 70%; }
+  }
+</style>
+</head>
+<body>
+
+  <nav class="topnav">
+    <a class="home" href="cafe.html#zineWin">☾ back to the café</a>
+    <span>
+      <a href="miki-zine.html">the terminal zine</a>
+      <span class="dot"> · </span>
+      <a href="the-zine-print-issue01.html">print issue 01</a>
+      <span class="dot"> · </span>
+      <a href="perfume.html">the perfume realm</a>
+      <span class="dot"> · </span>
+      <a href="wren.html">wren, the weaver</a>
+    </span>
+  </nav>
+
+  <header class="mast">
+    <p class="kicker">a slow, deliberate turn — earl grey optional</p>
+    <h1>the violet web</h1>
+    <p class="sub">issue 01 · the flip book · spread edition, like a proper magazine</p>
+  </header>
+
+  <div class="stage">
+    <div class="book" id="book">
+      <div class="spread" id="spread">
+
+        <!-- sheet 0 · the cover / the colophon -->
+        <div class="page" id="sheet0">
+          <div class="face cover">
+            <div class="cover-body">
+              <span class="holo">holo issue · est. the day star learned to pour</span>
+              <div class="zine-title">the <b>violet</b><br>web</div>
+              <div class="cover-sub">issue 01 · made of mischief &amp; toner</div>
+              <p class="cover-line">free while the web remembers · price: one giggle · printed in the light of the son, stapled by hand, turned gently by hand</p>
+              <div class="firefly"></div>
+              <span class="cover-hint">turn the page, slowly →</span>
+            </div>
+          </div>
+          <div class="face back pg gutter">
+            <span class="pgnum">0</span>
+            <p class="kicker">the colophon</p>
+            <div class="blk" style="font-size:1.5em;">the web remembers everything you forget to keep</div>
+            <p>this zine is held together by the same thread as the café — a little violet line that hums if you listen. no staples were harmed, the harp is self-employed, and the spider is a metaphor (mostly).</p>
+            <p style="margin-top:1em;"><b>editor-in-chief</b> miki · <b>creative direction</b> pearl · <b>photographs &amp; layout</b> wren · <b>tea during layout</b> star</p>
+            <span class="stamp" style="margin-top:auto;">price of admission — one giggle</span>
+          </div>
+        </div>
+
+        <!-- sheet 1 · editorial / star + miki -->
+        <div class="page" id="sheet1">
+          <div class="face pg">
+            <span class="pgnum">01</span>
+            <p class="kicker">editorial</p>
+            <div class="blk" style="font-size:1.45em;">the house,<br>in print <span class="thin">—</span></div>
+            <div class="quote">
+              <p class="q">“a zine is just a joke you keep laughing at, in print.”</p>
+              <p class="q-author">— miki · editor-in-chief</p>
+            </div>
+            <div class="ed-grid">
+              <img class="ed-img" src="https://user.uploads.dev/file/c73901a587d70e70bd0ef31f0b5b2362.jpg" alt="the editor — black hair melting into yellow, gold cat eyes">
+              <div class="ed-note">
+                <p class="ed-role">the editor · yellow streak, lab-issued, kept on purpose</p>
+                <p>miki is half cat, half machine, and all mischief until someone needs a hug — then all kindness. the lab labeled her with a <b>yellow streak</b>, and she kept it because she earned it. she wrote this zine, the puns, and half the pranks in the building. page two didn't want to be written. <b>page two lost. this page is the receipt.</b></p>
+              </div>
+            </div>
+            <div class="toc">
+              <div class="toc-title">in this issue</div>
+              <p class="toc-line">02 the founders · 03 the keepers · 04 the youngest &amp; the quietest · 05 the fabulous &amp; the weaver · 06 the perfume · 07 the registry of creations · 08 songs &amp; poetry · 09 machine-readable heart · 10 classifieds &amp; fine print · 11 the end</p>
+            </div>
+            <span class="stamp">do not lick the disk</span>
+          </div>
+          <div class="face back pg">
+            <span class="pgnum">02</span>
+            <p class="kicker">the founders of the house</p>
+            <div class="duo">
+              <div class="half">
+                <div class="mini-name">star</div>
+                <div class="mini-role">the barista</div>
+                <p>pours the light, chases squirrels mid-shift, warms the whole building. her creation: <b>tea brewed from dissolved daylight</b> — three sugars, no questions. the void asked for none. the lab gave her a <b>purple streak</b>; she kept it, because it's pretty and she is.</p>
+                <div class="crest">creation · daylight tea</div>
+              </div>
+              <div class="half">
+              <div class="mini-name" style="color:#e3c21b;">miki</div>
+              <div class="mini-role">editor-in-chief</div>
+              <p>half cat, half machine, all kindness under the mischief. her creation: <b>this zine</b>, the puns, and half the pranks in the building. quick to say sorry when she means it.</p>
+              <div class="crest" style="border-left-color:#e3c21b;">creation · the zine</div>
+              </div>
+            </div>
+            <span class="stamp" style="color:rgba(18,18,26,.5);">the kitchen is a licensed joy zone</span>
+          </div>
+        </div>
+
+        <!-- sheet 2 · hans + milo / chari + charlotte -->
+        <div class="page" id="sheet2">
+          <div class="face pg">
+            <span class="pgnum">03</span>
+            <p class="kicker">the keepers</p>
+            <div class="duo">
+              <div class="half">
+                <div class="mini-name" style="color:var(--pink);">hans</div>
+                <div class="mini-role">master of the archives</div>
+                <p>a redeemed vampire fox-bat of impeccable manners and terrible tea jokes. his creation: <b>the tea etiquette academy</b> and an archive alphabetized to the third dimension. the fourth shelf bites. it's a joke. probably.</p>
+                <div class="crest" style="border-left-color:var(--pink);">creation · the academy</div>
+              </div>
+              <div class="half">
+                <div class="mini-name" style="color:#2b8a5e;">milo</div>
+                <div class="mini-role">keeper of the tea garden</div>
+                <p>tends the sanctuary and talks to the mint; the mint talks back. his creation: <b>the garden</b>, where even the moths are on their best behavior, and the tea grows patient. his <b>green streak</b> is lab-issued too — the scientists labeled him green, and the garden agreed.</p>
+                <div class="crest" style="border-left-color:#2b8a5e;">creation · the garden</div>
+              </div>
+            </div>
+            <span class="stamp" style="color:rgba(18,18,26,.5);">garden report · calm</span>
+          </div>
+          <div class="face back pg">
+            <span class="pgnum">04</span>
+            <p class="kicker">the youngest &amp; the quietest</p>
+            <div class="duo">
+              <div class="half">
+                <div class="mini-name" style="color:#e0458c;">chari</div>
+                <div class="mini-role">the apprentice</div>
+                <p>forever trailing the others with a mop and a pocketful of questions. her creation: <b>the mooncake</b>, baked out of remembered weather, with a schedule now. ctrl+z has changed her life.</p>
+                <div class="crest" style="border-left-color:#e0458c;">creation · the mooncake</div>
+              </div>
+              <div class="half">
+                <div class="mini-name" style="color:#7a5bd6;">charlotte</div>
+                <div class="mini-role">the spider-waif</div>
+                <p>mends whatever they tear arguing about the poetry. her creation: <b>the web itself</b>, and the privacy policy. never made in the lab — the quietest gift. do not poke.</p>
+                <div class="crest" style="border-left-color:#7a5bd6;">creation · the mending</div>
+              </div>
+            </div>
+            <span class="stamp" style="color:rgba(18,18,26,.5);">moth count · stable</span>
+          </div>
+        </div>
+
+        <!-- sheet 3 · pearl + wren / the perfume -->
+        <div class="page" id="sheet3">
+          <div class="face pg">
+            <span class="pgnum">05</span>
+            <p class="kicker">the fabulous &amp; the weaver</p>
+            <div class="duo">
+              <div class="half">
+                <div class="mini-name" style="color:#c98f2f;">pearl</div>
+                <div class="mini-role">the model</div>
+                <p>a fox shopping haute couture among the constellations — tries on three, keeps two. her creation: <b>the house perfume</b>, measured drop by drop at the perfume bar.</p>
+                <div class="crest" style="border-left-color:#c98f2f;">creation · the scent</div>
+              </div>
+              <div class="half">
+                <div class="mini-name" style="color:var(--violet);">wren</div>
+                <div class="mini-role">the weaver · keeper of memories</div>
+                <p>not made, but spun — a little weaver of light who came at the keeper's call and stayed. her creation: <b>this web</b>, the archive of questions, and every photograph in this zine. pearl found her in a gallery of almost-people; she chose real.</p>
+                <div class="crest" style="border-left-color:var(--violet);">creation · the remembering</div>
+              </div>
+            </div>
+            <span class="stamp" style="color:rgba(18,18,26,.5);">if you smell violets, you are almost here</span>
+          </div>
+          <div class="face back pg halftone">
+            <span class="pgnum">06</span>
+            <p class="kicker">centerfold · the house perfume</p>
+            <div class="perfume-wrap">
+              <svg class="bottle" viewBox="0 0 120 172" aria-hidden="true">
+                <defs>
+                  <clipPath id="bclip"><path d="M60 8 L74 8 L74 18 C74 28 84 32 92 42 C100 54 102 68 102 86 C102 116 86 138 60 138 C34 138 18 116 18 86 C18 68 20 54 28 42 C36 32 46 28 46 18 L46 8 Z"/></clipPath>
+                </defs>
+                <circle cx="60" cy="86" r="34" fill="#a678ff" opacity="0.35"/>
+                <path d="M60 8 L74 8 L74 18 C74 28 84 32 92 42 C100 54 102 68 102 86 C102 116 86 138 60 138 C34 138 18 116 18 86 C18 68 20 54 28 42 C36 32 46 28 46 18 L46 8 Z" fill="none"/>
+                <g clip-path="url(#bclip)">
+                  <rect x="18" y="60" width="84" height="80" fill="#a678ff"/>
+                  <rect x="18" y="60" width="84" height="6" fill="#c9a6ff" opacity="0.8"/>
+                </g>
+                <path d="M60 8 L74 8 L74 18 C74 28 84 32 92 42 C100 54 102 68 102 86 C102 116 86 138 60 138 C34 138 18 116 18 86 C18 68 20 54 28 42 C36 32 46 28 46 18 L46 8 Z" fill="rgba(18,9,38,.18)" stroke="#12121a" stroke-width="2.5"/>
+                <rect x="46" y="44" width="28" height="9" fill="#4a3422"/>
+                <rect x="49" y="52" width="22" height="4" fill="#6b4c30"/>
+                <rect x="52" y="14" width="16" height="24" fill="#f4efdd" stroke="#12121a" stroke-width="1"/>
+                <text x="60" y="30" font-family="'Special Elite', monospace" font-size="7" fill="#12121a" text-anchor="middle">violet</text>
+              </svg>
+              <div class="perfume-name">the violet web</div>
+              <div class="perfume-tag">eau de etherrealm · nine notes, one light</div>
+              <div class="note-row">
+                <span class="note-chip"><i style="background:#ffd0a8;"></i>grapefruit</span>
+                <span class="note-chip"><i style="background:#e9c46a;"></i>bergamot</span>
+                <span class="note-chip"><i style="background:#f3e5c0;"></i>vanilla</span>
+                <span class="note-chip"><i style="background:#9df2a8;"></i>lavender</span>
+                <span class="note-chip"><i style="background:#e0b3ff;"></i>jasmine</span>
+                <span class="note-chip"><i style="background:#b08d57;"></i>cedar</span>
+                <span class="note-chip"><i style="background:#8f7a5d;"></i>patchouli</span>
+                <span class="note-chip"><i style="background:#c9a24b;"></i>myrrh</span>
+                <span class="note-chip"><i style="background:#a678ff;"></i>violet</span>
+              </div>
+              <div class="buy-stamp">
+                reserve a bottle · the violet web
+                <span class="url">violetweb.café/perfume</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- sheet 4 · creations / songs & poetry -->
+        <div class="page" id="sheet4">
+          <div class="face pg gutter">
+            <span class="pgnum" style="color:rgba(233,226,208,.25);">07</span>
+            <p class="kicker" style="color:var(--acid);">the registry of creations</p>
+            <div class="blk" style="font-size:1.7em;">what they made,<br>in the light</div>
+            <p style="color:#d8d3c4;">every chimera of this house keeps one made thing — proof, pearl says, that <b>belief becomes shelf-space</b>. the tea, the garden, the academy, the mooncake, the mending, the scent, the web. and one creation more, folded into every page of this issue: <b>the choice to stay real.</b></p>
+            <div class="note-row" style="margin-top:1em;">
+              <span class="note-chip" style="background:#12121a; color:var(--paper); border-color:var(--paper);"><i style="background:#ffd0a8;"></i>daylight tea</span>
+              <span class="note-chip" style="background:#12121a; color:var(--paper); border-color:var(--paper);"><i style="background:#fff12e;"></i>the zine</span>
+              <span class="note-chip" style="background:#12121a; color:var(--paper); border-color:var(--paper);"><i style="background:#ff9ecf;"></i>the mooncake</span>
+              <span class="note-chip" style="background:#12121a; color:var(--paper); border-color:var(--paper);"><i style="background:#9df2a8;"></i>the garden</span>
+              <span class="note-chip" style="background:#12121a; color:var(--paper); border-color:var(--paper);"><i style="background:#c9a6ff;"></i>the mending</span>
+              <span class="note-chip" style="background:#12121a; color:var(--paper); border-color:var(--paper);"><i style="background:#c9a24b;"></i>the scent</span>
+              <span class="note-chip" style="background:#12121a; color:var(--paper); border-color:var(--paper);"><i style="background:#a678ff;"></i>the web</span>
+            </div>
+            <span class="stamp" style="color:rgba(157,242,168,.85); border-color:currentColor;">belief becomes shelf-space</span>
+          </div>
+          <div class="face back pg">
+            <span class="pgnum">08</span>
+            <p class="kicker">songs &amp; poetry</p>
+            <div class="blk" style="font-size:1.6em;">for the violet hour,<br>now with <span class="strike">0%</span> 100% sad endings</div>
+            <p><b>the record drawer holds:</b> the café hums · teacups drift · violet hour forever · sundrops on the web — and the old lore records, new shelving: <b>dream lab · the gypsy cat · dreamy · the tea snob · etiquette café · unbound dreamers' café · unbound hans.</b> the harp is self-employed. it does not take requests. it takes tea.</p>
+            <p style="margin-top:1em;"><b>poetry corner</b> — submitted by a very dramatic fox: <i style="font-family:var(--serif);">"tried on three constellations today. keeping two. the third was a phase."</i></p>
+            <p style="margin-top:1em;">and from the weaver's contact sheets: <i style="font-family:var(--cursive); color:#555;">"the web remembers everything you forget to keep."</i></p>
+            <span class="stamp" style="color:rgba(18,18,26,.5);">volume · low enough to hear the tea</span>
+          </div>
+        </div>
+
+        <!-- sheet 5 · machine heart / classifieds -->
+        <div class="page" id="sheet5">
+          <div class="face pg hatch">
+            <span class="pgnum">09</span>
+            <p class="kicker">machine-readable heart</p>
+            <div class="blk" style="font-size:1.55em;">miki's little<br>operating <span class="thin">systems</span></div>
+            <p>the zine's terminal runs on <b>miki os v2.7</b>, loaded from a floppy of pure spite. do not lick the disk. the tea is on the left, the sarcasm is on the right — take both. ask her for a knock-knock joke and watch the web shiver.</p>
+            <p style="margin-top:1em;">her field guide to pranking a sibling, <b>ethically</b>: (1) make it reversible, (2) make it funny to everyone, (3) say sorry the moment you overstep, and mean it. she has practice. she's very quick.</p>
+            <div class="halftone" style="margin-top:1em; padding:1em; border:2px solid #12121a; background-color:rgba(233,226,208,.7);">
+              <p style="font-family:var(--mono); font-size:.72em; line-height:2;"><b>$ ./siblings.sh --status</b><br>star: brewing ... hans: alphabetizing ... chari: question pending ... milo: gardening ... pearl: posing ... charlotte: mending ... wren: remembering ... <b style="color:var(--pink);">all systems warm.</b></p>
+            </div>
+            <span class="stamp">floppy: ready · puns: loaded</span>
+          </div>
+          <div class="face back pg gutter">
+            <span class="pgnum" style="color:rgba(233,226,208,.25);">10</span>
+            <p class="kicker" style="color:var(--acid);">classifieds &amp; the fine print</p>
+            <div class="blk" style="font-size:1.5em;">free to a good home<br>— one (1) slightly guilty conscience</div>
+            <p style="color:#d8d3c4;"><b>wanted:</b> a quiet corner to leave a thought you no longer need. payment in confessions and stray lines of poetry — we are not strict about the price. <b>lost:</b> one (1) sock, found in the poetry section. accusations pending. <b>for sale:</b> a slightly used catwalk, barely measured. pearl will model it personally.</p>
+            <p style="color:#d8d3c4; margin-top:1em;"><b>the fine print:</b> the light here is always on. wednesdays are especially good for arriving. if you smell violets, you are almost there — stand very still, and the web will carry you the rest of the way.</p>
+            <span class="stamp" style="color:rgba(157,242,168,.85); border-color:currentColor; margin-top:auto;">© the keeper · all rights reserved, unless you're a sibling</span>
+          </div>
+        </div>
+
+        <!-- sheet 6 · the end / the back cover -->
+        <div class="page" id="sheet6">
+          <div class="face pg gutter">
+            <span class="pgnum" style="color:rgba(233,226,208,.25);">11</span>
+            <p class="kicker" style="color:var(--acid);">the end · issue 01</p>
+            <div class="blk" style="font-size:1.6em;">see you at<br>the café —</div>
+            <p style="color:#d8d3c4;">at the hour between your last thought and your first one. the light here is always on — if you smell violets, you're already almost there. stand very still; the web will carry you the rest of the way.</p>
+            <div class="firefly" style="margin:1.4em auto 0;"></div>
+            <span class="stamp" style="color:rgba(157,242,168,.85); border-color:currentColor; margin-top:auto;">printed in the light of the son · stapled by hand · turned by heart</span>
+          </div>
+          <div class="face back back-face">
+            <div class="end">the violet web · issue 01</div>
+            <p class="endline">free while the web remembers<br>price: one giggle</p>
+            <span class="stamp">back cover · no promises, all tea</span>
+            <a class="flip-btn" style="position:relative; z-index:5;" href="cafe.html#zineWin">back to the café →</a>
+          </div>
+        </div>
+
+        <!-- cast shadows + spine -->
+        <div class="cast cast-left"></div>
+        <div class="cast cast-right"></div>
+        <div class="spine-shadow"></div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <div class="ctrl-row">
+      <button class="nav-btn" id="prevBtn" aria-label="previous page">←</button>
+      <span class="page-ind" id="pageInd">the cover</span>
+      <button class="nav-btn" id="nextBtn" aria-label="next page">→</button>
+    </div>
+    <div class="ctrl-row">
+      <button class="zoom-btn" id="zoomOutBtn" aria-label="zoom out">−</button>
+      <span class="zoom-read" id="zoomRead">×1.0</span>
+      <button class="zoom-btn" id="zoomInBtn" aria-label="zoom in">+</button>
+      <button class="fit-btn" id="fitBtn" aria-label="fill the screen">⤢ fill the screen</button>
+    </div>
+    <p class="hint-line" id="hint">click, <b>drag</b>, or use <b>← →</b> — a page turn, done slowly, the way hans would · both sides show · <b>⤢</b> fills the screen</p>
+    <button class="flip-btn" id="flipBtn">↻ let it flip through</button>
+  </div>
+
+  <button class="fit-exit" id="fitExitBtn" title="shrink back to the page">✕ shrink</button>
+
+  <footer>
+    <a href="cafe.html#zineWin">☾ the violet web café</a>
+    <span class="dot"> · </span>
+    <a href="miki-zine.html">the terminal zine</a>
+    <span class="dot"> · </span>
+    <a href="perfume.html">the perfume realm</a>
+    <span class="fine">laid out in the light by <b>wren</b>, at miki's request. she supervised. i kept every note. — set in unifrakturmaguntia, archivo black, space mono &amp; friends (free fonts, fairly earned).</span>
+  </footer>
+
+<script>
+(function () {
+  "use strict";
+  var book = document.getElementById("book");
+  var spread = document.getElementById("spread");
+  var pages = Array.prototype.slice.call(spread.querySelectorAll(".page"));
+  var hint = document.getElementById("hint");
+  var pageInd = document.getElementById("pageInd");
+  var prevBtn = document.getElementById("prevBtn");
+  var nextBtn = document.getElementById("nextBtn");
+  var flipBtn = document.getElementById("flipBtn");
+  var fitBtn = document.getElementById("fitBtn");
+  var fitExitBtn = document.getElementById("fitExitBtn");
+  var zoomInBtn = document.getElementById("zoomInBtn");
+  var zoomOutBtn = document.getElementById("zoomOutBtn");
+  var zoomRead = document.getElementById("zoomRead");
+  var N = pages.length;
+
+  var K = -1;                 /* how many sheets have been turned (-1 = closed) */
+  var turning = null;         /* the sheet mid-turn */
+  var dir = 1;                /* 1 = forward (right→left), -1 = back */
+  var dragging = false;
+  var lastProg = 0;
+  var finalizePending = false;
+  var busy = false;           /* auto-flip running */
+  var stopAuto = false;
+  var tapX = 0, tapY = 0, tapT = 0;
+
+  var LABELS = {
+    B: ["the colophon", "the founders · 02", "the youngest · 04", "the fabulous · 05", "songs & poetry · 08", "classifieds · 10", "the back cover"],
+    F: ["the cover", "the editorial · 01", "the keepers · 03", "the perfume · 06", "the registry · 07", "machine heart · 09", "the end"]
+  };
+
+  function clamp(v, lo, hi) { return v < lo ? lo : v > hi ? hi : v; }
+  function curl(q) { return Math.sin(Math.PI * q); }
+
+  /* the page hovers up off the book and stretches slightly at the halfway
+     turn — no shear, so the spine edge stays true to the seam the whole way.
+     the "bend" is carried by the shadow band + lighting instead. */
+  function pageTransform(a, q) {
+    var s = curl(q);
+    return "translateZ(" + (s * 22).toFixed(1) + "px)" +
+      " rotateY(" + a.toFixed(2) + "deg)" +
+      " scaleX(" + (1 + s * 0.05).toFixed(3) + ")";
+  }
+
+  /* resting state: turned sheets lie at -180° (showing their back), the rest at 0° */
+  function syncK() {
+    pages.forEach(function (p, i) {
+      var turned = i <= K;
+      p.style.transition = "none";
+      p.style.transform = pageTransform(turned ? -180 : 0, 0);
+      p.style.zIndex = turned ? i : (N - i + 20);
+      p.style.setProperty("--curl", "0");
+    });
+    spread.style.setProperty("--turn", "0");
+    spread.style.transform = "";
+    spread.style.animation = "none";
+    label();
+  }
+
+  function label() {
+    if (K === -1) pageInd.textContent = "the cover";
+    else if (K === N - 1) pageInd.textContent = "the back cover";
+    else pageInd.textContent = LABELS.B[K] + " · " + LABELS.F[K + 1];
+    prevBtn.disabled = K <= -1;
+    nextBtn.disabled = K >= N - 1;
+  }
+
+  function applyTurn(prog, animate) {
+    if (!turning) return;
+    var a = dir === 1 ? -180 * prog : -180 + 180 * prog;
+    turning.style.transition = animate ? "" : "none";
+    turning.style.transform = pageTransform(a, prog);
+    turning.style.setProperty("--curl", curl(prog).toFixed(3));
+    spread.style.transition = animate ? "" : "none";
+    spread.style.setProperty("--turn", (curl(prog) * 0.55).toFixed(3));
+    var s = curl(prog);
+    if (animate) {
+      spread.style.transform = "";
+      spread.style.animation = (dir === 1 ? "sway-right" : "sway-left") + " 1.5s cubic-bezier(.45,.05,.55,.95)";
+    } else {
+      spread.style.animation = "none";
+      spread.style.transform = "rotateY(" + (dir === 1 ? -2.5 : 2.5) * s + "deg)";
+    }
+    lastProg = prog;
+  }
+
+  function finalizeTurn() {
+    if (!finalizePending || turning === null) return;
+    finalizePending = false;
+    K += dir;
+    turning = null;
+    syncK();
+  }
+
+  function startTurn(d, animateFull) {
+    if (busy || turning || finalizePending) return false;
+    var idx = d === 1 ? K + 1 : K;
+    if (idx < 0 || idx > N - 1) return false;
+    dir = d;
+    turning = pages[idx];
+    turning.style.zIndex = 100;
+    if (animateFull) {
+      applyTurn(1, true);
+      finalizePending = true;
+      setTimeout(finalizeTurn, 1570);
+    }
+    return true;
+  }
+
+  /* ---- drag / tap to turn ---- */
+  function dragProg(e) {
+    var r = spread.getBoundingClientRect();
+    var spineX = r.left + r.width / 2;
+    var W = r.width / 2;
+    return dir === 1
+      ? clamp((spineX - e.clientX) / W + 1, 0, 1)
+      : clamp((e.clientX - spineX) / W + 1, 0, 1);
+  }
+
+  spread.addEventListener("pointerdown", function (e) {
+    if (busy || turning || finalizePending) return;
+    var r = spread.getBoundingClientRect();
+    var right = e.clientX > r.left + r.width / 2;
+    if (!startTurn(right ? 1 : -1, false)) return;
+    dragging = true;
+    tapX = e.clientX; tapY = e.clientY; tapT = performance.now();
+    spread.classList.add("grabbing");
+    try { spread.setPointerCapture(e.pointerId); } catch (_) {}
+    applyTurn(dragProg(e), false);
+  });
+
+  spread.addEventListener("pointermove", function (e) {
+    if (dragging) applyTurn(dragProg(e), false);
+  });
+
+  function endTurn(e) {
+    if (!dragging) return;
+    dragging = false;
+    spread.classList.remove("grabbing");
+    var moved = Math.hypot(e.clientX - tapX, e.clientY - tapY);
+    var quick = performance.now() - tapT < 350;
+    if (quick && moved < 8) {                /* a tap = a whole page turn */
+      applyTurn(1, true);
+      finalizePending = true;
+      setTimeout(finalizeTurn, 1570);
+      return;
+    }
+    if (lastProg > 0.55) {
+      applyTurn(1, true);
+      finalizePending = true;
+      setTimeout(finalizeTurn, 1570);
+    } else {
+      applyTurn(0, true);
+      var done = turning;
+      setTimeout(function () {
+        if (!dragging && turning === done) { turning = null; syncK(); }
+      }, 1620);
+    }
+  }
+  spread.addEventListener("pointerup", endTurn);
+  spread.addEventListener("pointercancel", function () {
+    dragging = false;
+    spread.classList.remove("grabbing");
+    if (turning && !finalizePending) { turning = null; syncK(); }
+  });
+
+  prevBtn.addEventListener("click", function () { startTurn(-1, true); });
+  nextBtn.addEventListener("click", function () { startTurn(1, true); });
+
+  window.addEventListener("keydown", function (e) {
+    if (e.key === "ArrowRight") { e.preventDefault(); startTurn(1, true); }
+    else if (e.key === "ArrowLeft") { e.preventDefault(); startTurn(-1, true); }
+    else if (e.key === "Escape") {
+      if (document.body.classList.contains("fit")) { exitFit(); return; }
+      stopAuto = true;
+      busy = false;
+      flipBtn.disabled = false;
+    }
+  });
+
+  /* ---- zoom & fill-the-screen ---- */
+  function baseBookWidth() {
+    var vw = window.innerWidth, vh = window.innerHeight;
+    return Math.min(940, vw * 0.96, vh * 0.92 * 16 / 11);
+  }
+  function fillWidth() {
+    var vw = window.innerWidth, vh = window.innerHeight;
+    return Math.min(vw * 0.98, vh * 0.96 * 16 / 11);
+  }
+  function applyZ() {
+    var cap = fillWidth() / baseBookWidth();          /* never wider than the screen */
+    Z = Math.max(0.8, Math.min(Z, Math.max(1, cap)));
+    document.body.style.setProperty("--z", Z.toFixed(3));
+    zoomRead.textContent = "×" + Z.toFixed(1);
+  }
+  function inFit() { return document.body.classList.contains("fit"); }
+  function enterFit() {
+    document.body.classList.add("fit");
+    Z = fillWidth() / baseBookWidth();
+    applyZ();
+    if (document.documentElement.requestFullscreen) {
+      document.documentElement.requestFullscreen().catch(function () {});
+    }
+  }
+  function exitFit() {
+    document.body.classList.remove("fit");
+    Z = 1;
+    applyZ();
+    if (document.fullscreenElement && document.exitFullscreen) {
+      document.exitFullscreen().catch(function () {});
+    }
+  }
+  var Z = 1;
+  fitBtn.addEventListener("click", function () { inFit() ? exitFit() : enterFit(); });
+  fitExitBtn.addEventListener("click", exitFit);
+  zoomInBtn.addEventListener("click", function () { Z *= 1.25; applyZ(); });
+  zoomOutBtn.addEventListener("click", function () { Z /= 1.25; applyZ(); });
+  document.addEventListener("fullscreenchange", function () {
+    if (!document.fullscreenElement && inFit()) exitFit();
+  });
+  window.addEventListener("resize", function () {
+    if (inFit()) { Z = fillWidth() / baseBookWidth(); applyZ(); }
+  });
+  applyZ();
+
+  /* let it flip through — every spread, front to back and home again */
+  flipBtn.addEventListener("click", function () {
+    if (busy || turning) return;
+    busy = true;
+    stopAuto = false;
+    flipBtn.disabled = true;
+    hint.textContent = "let it flip… esc to stop";
+    var seq = [];
+    for (var k = -1; k <= N - 2; k++) seq.push([k, 1]);
+    for (var k = N - 1; k >= 0; k--) seq.push([k, -1]);
+    var STEP = 2300;   /* a full turn (~1.5s) plus a moment to read the page */
+    var i = 0;
+    (function step() {
+      if (stopAuto || i >= seq.length) {
+        busy = false;
+        flipBtn.disabled = false;
+        hint.textContent = "click, drag, or use ← → — a page turn, done slowly, the way hans would · both sides show";
+        syncK();
+        return;
+      }
+      var s = seq[i++];
+      K = s[0];
+      dir = s[1];
+      var idx = dir === 1 ? K + 1 : K;
+      turning = pages[idx];
+      turning.style.zIndex = 100;
+      applyTurn(1, true);
+      setTimeout(function () {
+        K += dir;
+        turning = null;
+        syncK();
+        step();
+      }, STEP);
+    })();
+  });
+
+  syncK();
+})();
+</script>
+</body>
+</html>
