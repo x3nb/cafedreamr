@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="/.nekoweb-api/static/site.js" defer></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>miki — editor-in-chief · the violet web café</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>✦</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Homemade+Apple&family=Klee+One&family=Press+Start+2P&family=Rubik+Mono+One&family=Special+Elite&family=VT323&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --deeppurple: #8a2be2;
+    --deeppurple-2:#6a1cb8;
+    --violet-2:   #d985ff;
+    --inkblue:    #0a0412;
+    --inkblue-2:  #130821;
+    --faded-violet: #c4a9e8;
+    --light-violet: #b9d0f7;
+    --ink:         #c3c9dc;
+    --glass: rgba(18, 10, 40, .74);
+    --glass-line: rgba(217, 0, 255, .4);
+    --cursive: 'Homemade Apple', cursive;
+    --ui: 'Klee One', 'Segoe UI', sans-serif;
+    --mono: 'VT323', monospace;
+    --blocky: 'Rubik Mono One', sans-serif;
+    --pix: 'Press Start 2P', monospace;
+    --canary: #fff12e;
+    --canary-dim: #b8aa10;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { color-scheme: dark; }
+  body {
+    font-family: var(--ui);
+    color: var(--light-violet);
+    background:
+      radial-gradient(120% 90% at 50% 10%, var(--deeppurple-2) 0%, var(--deeppurple) 38%, #1b1240 72%, var(--inkblue) 100%);
+    min-height: 100vh;
+  }
+  body::before {
+    content: ""; position: fixed; inset: 0; pointer-events: none; opacity: .4;
+    background:
+      radial-gradient(26% 20% at 82% 12%, rgba(255,241,46,.10), transparent 60%),
+      radial-gradient(20% 16% at 10% 88%, rgba(58,230,203,.10), transparent 60%);
+  }
+  .cursive { font-family: var(--cursive); }
+
+  .topnav {
+    position: relative; z-index: 2;
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: .5em 1em;
+    padding: 14px 20px;
+    border-bottom: 1px solid rgba(255,241,46,.22);
+    background: rgba(10,4,18,.55);
+    backdrop-filter: blur(8px);
+  }
+  .topnav a {
+    color: var(--canary); text-decoration: none;
+    font-size: .85rem; letter-spacing: .05em;
+    border-bottom: 1px solid transparent;
+    transition: border-color .15s, color .15s;
+  }
+  .topnav a:hover { color: var(--light-violet); border-bottom-color: var(--canary); }
+  .topnav .home { font-family: var(--cursive); font-size: 1rem; }
+
+  .wrap {
+    position: relative; z-index: 1;
+    max-width: 980px; margin: 0 auto; padding: 34px 20px 60px;
+  }
+
+  .head { text-align: center; padding-bottom: 26px; }
+  .head .sub-cursive { font-size: 1.15rem; color: var(--faded-violet); margin-bottom: 12px; }
+  .head h1 {
+    font-family: var(--blocky); font-weight: normal;
+    font-size: clamp(3.4rem, 12vw, 6rem); line-height: 1.02; letter-spacing: .01em;
+    color: var(--canary);
+    text-shadow: 5px 0 rgba(255,0,128,.8), -5px 0 rgba(0,255,255,.6), 0 0 34px rgba(255,241,46,.35);
+  }
+  .head .role {
+    font-family: var(--mono); font-size: 1.25rem; letter-spacing: .08em; text-transform: uppercase;
+    color: var(--faded-violet); margin-top: 8px;
+  }
+  .head .line {
+    margin-top: 12px; color: var(--ink); font-size: 1.02rem; line-height: 1.8;
+    font-family: var(--mono); font-size: 1.15rem;
+  }
+  .head .line b { color: var(--canary); font-weight: normal; }
+
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start; }
+  @media (max-width: 760px) { .grid { grid-template-columns: 1fr; } }
+
+  .card {
+    background: var(--glass);
+    border: 1px solid var(--glass-line);
+    border-radius: 16px;
+    padding: 20px;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 14px 44px rgba(0,0,0,.5);
+  }
+  .card.miki-card { border-top: 3px solid var(--canary); }
+
+  .portrait-frame {
+    background: rgba(10,4,18,.6);
+    border: 1px solid rgba(255,241,46,.4);
+    border-radius: 14px; padding: 12px;
+    box-shadow: 0 0 0 1px rgba(255,241,46,.15), 0 16px 40px rgba(0,0,0,.55);
+  }
+  .portrait-frame img { display: block; width: 100%; height: auto; border-radius: 8px; background: #fff; }
+  .portrait-frame .cap {
+    display: block; text-align: center;
+    font-family: var(--mono); font-size: 1rem;
+    color: var(--faded-violet); margin-top: 10px; line-height: 1.4;
+  }
+
+  .bio h2, .corner h2, .quotes h2, .prank h2, .find h2 {
+    font-family: var(--blocky); font-weight: normal; font-size: 1.15rem; letter-spacing: .02em;
+    color: var(--canary); margin-bottom: 12px;
+    text-shadow: 0 0 12px rgba(255,241,46,.2);
+  }
+  .bio p { font-size: 1.02rem; line-height: 1.85; color: var(--ink); margin-bottom: 10px; }
+  .bio p b { color: var(--light-violet); font-weight: normal; }
+  .bio .cursive-line { color: var(--faded-violet); font-size: 1.1rem; }
+
+  .quotes blockquote {
+    border-left: 3px solid var(--canary);
+    padding: 2px 0 2px 14px;
+    margin: 0 0 14px;
+    color: var(--light-violet);
+    font-family: var(--mono); font-size: 1.1rem; line-height: 1.5;
+  }
+  .quotes blockquote small { display: block; font-family: var(--ui); font-size: .8rem; color: var(--faded-violet); letter-spacing: .04em; }
+
+  .mini-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  @media (max-width: 560px) { .mini-grid { grid-template-columns: 1fr; } }
+  .mini {
+    background: rgba(10,4,18,.5);
+    border: 1px solid rgba(255,241,46,.22);
+    border-radius: 12px; padding: 14px;
+  }
+  .mini h3 { font-family: var(--blocky); font-weight: normal; font-size: .82rem; color: var(--canary); margin-bottom: 6px; }
+  .mini p { font-size: .9rem; line-height: 1.6; color: var(--ink); }
+
+  .prank { text-align: center; }
+  .prank-btn {
+    cursor: pointer; border: none; background: transparent; padding: 0;
+    font-family: var(--blocky); font-size: .95rem; letter-spacing: .05em;
+    text-transform: uppercase; color: #000; background: var(--canary);
+    border: 3px solid #000; padding: 12px 22px;
+    box-shadow: 5px 5px 0 rgba(0,0,0,.6);
+    transition: transform .15s ease, box-shadow .15s ease;
+  }
+  .prank-btn:hover { transform: translate(2px,2px); box-shadow: 2px 2px 0 rgba(0,0,0,.6); }
+  .prank .say {
+    min-height: 3.5em; margin-top: 16px;
+    font-family: var(--mono); font-size: 1.15rem; line-height: 1.5;
+    color: var(--light-violet);
+  }
+  .prank .hint { font-size: .82rem; color: var(--faded-violet); letter-spacing: .05em; margin-top: 8px; }
+  .prank .say.deployed { animation: printIn .35s ease; }
+  @keyframes printIn { from { opacity: 0; transform: translateY(4px); } }
+
+  footer {
+    position: relative; z-index: 1;
+    text-align: center; padding: 26px 20px 40px;
+    border-top: 1px solid rgba(255,241,46,.18);
+    color: var(--faded-violet); font-size: .9rem; line-height: 1.9;
+  }
+  footer a { color: var(--canary); text-decoration: none; border-bottom: 1px solid rgba(255,241,46,.4); }
+  footer a:hover { color: var(--light-violet); }
+  footer .fine { display: block; margin-top: 4px; font-size: .78rem; color: rgba(196,169,232,.6); }
+  .dot { color: var(--deeppurple); }
+</style>
+</head>
+<body>
+
+  <nav class="topnav">
+    <a class="home" href="cafe.html">☾ back to the café</a>
+    <span>
+      <a href="miki-zine.html">the zine</a>
+      <span class="dot"> · </span>
+      <a href="mikimail.html">mikimail</a>
+      <span class="dot"> · </span>
+      <a href="cafe.html#siblingsWin">the siblings</a>
+    </span>
+  </nav>
+
+  <div class="wrap">
+
+    <header class="head">
+      <p class="sub-cursive">welcome to the editor's terminal. mind the chair. it's terrible on purpose.</p>
+      <h1>miki</h1>
+      <p class="role">editor-in-chief · half cat, half machine · all kindness under the mischief</p>
+      <p class="line">runs the zine, the puns, and half the pranks in this building.
+        <b>the other half are chari's. she's learning.</b></p>
+    </header>
+
+    <div class="grid">
+
+      <div class="card miki-card portrait-frame">
+        <img src="https://user.uploads.dev/file/c89526fd80b552f9fd97ccbac7f2b1d6.png"
+             alt="miki — a black-ink line portrait: a cat-eared character with spiky hair, a wide grin, and a spiral cheek, holding an envelope">
+        <span class="cap">fig. 1 — the editor, mid-thought. photo by nobody, as usual. film: whatever was in the camera.</span>
+      </div>
+
+      <div class="card miki-card bio">
+        <h2>who she is</h2>
+        <p>Half <b>cat</b>, half <b>machine</b>, all kindness under the mischief. Made in a laboratory like the rest of them, saved from it, and quick to say sorry the moment she oversteps — because she remembers what it was like to be the joke, and she keeps her own jokes light on purpose.</p>
+        <p>She owns the zine (issue 01: made of mischief &amp; toner), the newsletter (mikimail: the email that runs on absolution and a dream), and a standing agreement with the light: it stays on, she supervises.</p>
+        <p class="cursive-line">"watching all of you. writing it down."</p>
+      </div>
+
+      <div class="card miki-card corner">
+        <h2>her side of the terminal</h2>
+        <div class="mini-grid">
+          <div class="mini">
+            <h3>the zine</h3>
+            <p>issue 01, free while the web remembers. price: one giggle. she prints the gossip in the light of the son.</p>
+          </div>
+          <div class="mini">
+            <h3>the prank ledger</h3>
+            <p>every prank, filed under evidence. the anniversary editions are the longest pages.</p>
+          </div>
+          <div class="mini">
+            <h3>ctrl+z</h3>
+            <p>she taught chari ctrl+z. the power. the responsibility. it has changed the house forever.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card miki-card quotes">
+        <h2>from the terminal</h2>
+        <blockquote>one prank a day keeps the boredom away. that was a joke. already did today's. <small>she says, watching</small></blockquote>
+        <blockquote>i replaced the doorbell with a cricket sound. twenty-three people have asked. zero have solved it. <small>the score is very healthy</small></blockquote>
+        <blockquote>forty percent machine, eighty percent mischief, one hundred percent sorry when i actually mean it. <small>the math doesn't add up. that's also my doing.</small></blockquote>
+      </div>
+
+      <div class="card miki-card prank">
+        <h2>the prank-o-matic</h2>
+        <button id="prankBtn" class="prank-btn">▮ deploy a prank</button>
+        <p id="prankSay" class="say">press the button. it's a prank. the prank is that you pressed it.</p>
+        <p class="hint">all pranks are safe, rated G, and instantly forgiven</p>
+      </div>
+
+      <div class="card miki-card find">
+        <h2>where to find her</h2>
+        <p>In the zine, obviously — <a href="miki-zine.html" style="color:var(--canary);">miki-zine.html</a>, where the ticker never sleeps and the chat is a command line. And behind mikimail — <a href="mikimail.html" style="color:var(--canary);">mikimail.html</a>, the email that runs on absolution and a dream. If she's not in either, she's supervising the 4th shelf from a distance.</p>
+        <p class="cursive-line">"don't trust the 4th shelf. it bites. that's still a joke. probably."</p>
+      </div>
+
+    </div>
+  </div>
+
+  <footer>
+    <a href="cafe.html">☾ the violet web café</a>
+    <span class="dot"> · </span>
+    <a href="cafe.html#sibling-miki">miki's card</a>
+    <span class="dot"> · </span>
+    <a href="cafe.html#siblingsWin">the siblings</a>
+    <span class="fine">this terminal is her throne. the chair is terrible. she keeps it that way on purpose — you can't fall off a throne you never relax on.</span>
+  </footer>
+
+<script>
+(function () {
+  "use strict";
+  var PRANKS = [
+    "the tea committee has been replaced with a scarecrow. they were both away. no one can tell.",
+    "all of star's mugs now face the same direction. she will figure it out eventually.",
+    "the doorbell has become a cricket. next up: the doormat learns a knock.",
+    "the archive is now sorted by apology-note length. hans noticed. hans is fine. he is not fine.",
+    "a fourth shelf has been added to the actual fourth shelf. the bite is now recursive. this is progress.",
+    "a pigeon has been given a tiny hat. the sky is a runway now.",
+    "the mint has been promoted to shift manager. it declined, but the plaque stays.",
+    "the mooncake now has a chair at the table. chari voted yes. it has a schedule now.",
+    "the record drawer now only plays songs about tea. there are seven. they rotate.",
+    "the firefly has been given a tiny paper lantern. it did not ask for this. it loves it."
+  ];
+  var btn = document.getElementById("prankBtn");
+  var say = document.getElementById("prankSay");
+  var last = -1;
+  btn.addEventListener("click", function () {
+    var i;
+    do { i = Math.floor(Math.random() * PRANKS.length); } while (i === last);
+    last = i;
+    say.textContent = "▮ " + PRANKS[i];
+    say.classList.remove("deployed");
+    void say.offsetWidth;
+    say.classList.add("deployed");
+  });
+})();
+</script>
+</body>
+</html>
