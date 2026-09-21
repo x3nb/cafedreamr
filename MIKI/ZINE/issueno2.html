@@ -1,0 +1,595 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>miki's zine · the rack</title>
+<meta name="description" content="the rack — every issue of miki's zine, free to read, free to print, free to take. issue three: OUR NEW TRACKS! · issue two: the atrium of whispered truths · issue one: the toner incident.">
+<meta property="og:title" content="miki's zine · the rack">
+<meta property="og:description" content="every issue, stapled by hand · free to read, free to print, free to take.">
+<meta property="og:image" content="https://www.cafedreamr.art/ZINE/images/slay-sylvestre-a.jpg">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo+Black&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   the rack — ZINE/index.html
+   the newsstand: every issue of miki's zine, in one mosaic.
+   issue pages live in the folders beside this file (01/ 02/ 03/).
+   the press colour is the single pink; nothing else is coloured.
+   ============================================================ */
+:root{
+  --paper:#050505;
+  --ink:#ffffff;
+  --dim:#a4a4a4;
+  --dim2:#6e6e6e;
+  --line:rgba(255,255,255,.22);
+  --pink:#ff2d95;
+  --cyan:#00e5ff;
+  --stripe:var(--pink);
+  --disp:"Anton","Arial Narrow",Impact,sans-serif;
+  --grot:"Archivo Black","Arial Black",sans-serif;
+  --mono:"Space Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--paper); color:var(--ink); text-align:left;
+  font-family:var(--mono); font-size:13px; line-height:1.5;
+  -webkit-font-smoothing:antialiased; min-height:100vh; overflow-x:hidden;
+}
+body.paper-ink{ --paper:#efece3; --ink:#0a0a0a; --dim:#4a4a4a; --dim2:#7a7a7a; --line:rgba(0,0,0,.28) }
+a{color:inherit}
+
+/* two full-page washes: photocopy grain + crt scan */
+.grain,.scan{position:fixed;inset:0;pointer-events:none;z-index:90}
+.grain{opacity:.5;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='160' height='160' filter='url(%23n)' opacity='.55'/></svg>")}
+.scan{opacity:.2;background:repeating-linear-gradient(to bottom, rgba(0,0,0,.5) 0 1px, transparent 1px 3px)}
+body.paper-ink .grain{opacity:.3;mix-blend-mode:multiply}
+body.paper-ink .scan{opacity:.1}
+
+/* ---------------------------------------------------------------- chrome */
+.chrome{position:relative;z-index:60}
+.cbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:11px 16px;
+  border-bottom:1px solid var(--line);font-size:9.5px;letter-spacing:.22em;
+  text-transform:uppercase;color:var(--dim)}
+.cbar b{color:var(--ink)}
+.cdot{width:7px;height:7px;background:var(--stripe);border-radius:50%;flex:0 0 auto;
+  box-shadow:0 0 8px var(--stripe);animation:blip 1.6s steps(2,end) infinite}
+@keyframes blip{50%{opacity:.15}}
+.cbrand{font-family:var(--grot);letter-spacing:.04em;color:var(--ink);font-size:12px;text-transform:none}
+.csep{opacity:.4}
+.cspacer{flex:1 1 auto}
+.clink{text-decoration:none;border-bottom:1px solid var(--line);padding-bottom:1px;color:var(--ink)}
+.clink:hover{background:var(--ink);color:var(--paper)}
+
+.ticker{position:relative;z-index:55;overflow:hidden;white-space:nowrap;
+  background:var(--ink);color:var(--paper);border-bottom:1px solid var(--line)}
+.ticker .in{display:inline-block;padding:6px 0;font-family:var(--grot);font-size:11.5px;
+  letter-spacing:.1em;text-transform:uppercase;animation:slide 30s linear infinite}
+.ticker .in span{padding:0 14px}
+.ticker .in i{font-style:normal;opacity:.45;padding:0 2px}
+@keyframes slide{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* ---------------------------------------------------------------- layout */
+.wrap{position:relative;z-index:40;max-width:1180px;margin:0 auto;padding:26px 16px 60px}
+.stackhead{display:flex;align-items:baseline;gap:10px;margin:0 0 12px;font-size:9.5px;
+  letter-spacing:.24em;text-transform:uppercase;color:var(--dim);flex-wrap:wrap}
+.stackhead b{color:var(--ink)}
+
+/* ================================================================= masthead */
+.newshead{position:relative;border-top:2px solid var(--ink);border-bottom:2px solid var(--ink);
+  padding:10px 0 14px;margin-bottom:24px}
+.nhkick{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;
+  font-size:9px;letter-spacing:.26em;text-transform:uppercase;color:var(--dim2)}
+.ghost{position:absolute;right:-6px;top:-34px;font-family:var(--disp);
+  font-size:clamp(90px,17vw,190px);line-height:.8;letter-spacing:-.03em;
+  color:transparent;-webkit-text-stroke:2.5px var(--ink);opacity:.16;
+  pointer-events:none;z-index:0;user-select:none}
+.mast{position:relative;z-index:1;margin:8px 0 2px;font-family:var(--disp);font-weight:400;
+  font-size:clamp(42px,9.4vw,104px);line-height:.82;letter-spacing:-.018em;text-transform:uppercase}
+.mast .ml{display:block;white-space:nowrap}
+.mast .ml.rk{padding-left:clamp(30px,7vw,86px)}
+.mast .ch{display:inline-block;
+  transform:translate(var(--dx,0),var(--dy,0)) rotate(var(--rot,0deg)) scaleY(var(--sy,1))}
+.mast .ch.cut{clip-path:inset(var(--c1,0) 0 var(--c2,0) 0)}
+.mast .ch{text-shadow:2.5px 0 var(--stripe), -2px 0 var(--cyan)}
+.nhsub{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:baseline;
+  font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);margin-top:12px}
+.nhsub b{color:var(--ink)}
+
+/* the control strip — same rituals as the cover proof, one line */
+.ctlrow{display:flex;align-items:flex-end;gap:18px;flex-wrap:wrap;position:relative;z-index:50;
+  border:2px solid var(--ink);padding:11px 14px;margin-bottom:24px}
+.ctl{display:flex;flex-direction:column;gap:7px}
+.lab{font-size:9px;letter-spacing:.26em;text-transform:uppercase;color:var(--dim2)}
+.seg{display:flex;gap:6px;flex-wrap:wrap}
+.seg button{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;
+  background:transparent;color:var(--ink);border:1px solid var(--line);padding:5px 9px;cursor:pointer}
+.seg button:hover{border-color:var(--ink)}
+.seg button.on{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.acts{display:flex;gap:8px;flex-wrap:wrap;margin-left:auto}
+.acts button{font-family:var(--grot);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+  background:transparent;color:var(--ink);border:2px solid var(--ink);padding:8px 12px;cursor:pointer}
+.acts button:hover{background:var(--ink);color:var(--paper)}
+.acts button.key{background:var(--stripe);border-color:var(--stripe);color:#0a0a0a}
+
+/* ================================================================== mosaic */
+.rack{display:grid;grid-template-columns:repeat(6,1fr);gap:16px;
+  grid-template-areas:
+    "big big big big s1 s1"
+    "big big big big s2 s2"
+    "wide wide wide wide wide wide";
+  grid-template-rows:minmax(210px,auto) minmax(210px,auto) auto}
+#i3{grid-area:big} #i2{grid-area:s1} #i1{grid-area:s2} #i4{grid-area:wide}
+@media (max-width:900px){
+  .rack{grid-template-columns:1fr;grid-template-rows:none;
+    grid-template-areas:"big" "s1" "s2" "wide"}
+}
+
+.issue{position:relative;display:flex;flex-direction:column;border:2px solid var(--ink);
+  background:var(--paper);color:var(--ink);text-decoration:none;overflow:hidden;
+  isolation:isolate;padding:13px 14px 12px}
+a.issue{transition:transform .16s}
+a.issue:hover{transform:translate(-2px,-2px);box-shadow:5px 5px 0 var(--stripe)}
+a.issue:focus-visible{outline:2px solid var(--stripe);outline-offset:3px}
+.issue .meta{display:flex;justify-content:space-between;gap:8px;align-items:baseline;
+  font-size:8.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);
+  border-bottom:1px solid var(--line);padding-bottom:7px;position:relative;z-index:2}
+.issue .meta b{color:var(--ink)}
+.stamp{font-family:var(--grot);font-size:9px;letter-spacing:.1em;text-transform:uppercase;
+  border:1px solid var(--ink);padding:3px 7px;white-space:nowrap;transform:rotate(-2deg)}
+.stamp.live{background:var(--stripe);border-color:var(--stripe);color:#0a0a0a}
+
+.ititle{display:block;font-family:var(--disp);font-weight:400;line-height:.9;letter-spacing:-.015em;
+  text-transform:uppercase;margin:10px 0 0;position:relative;z-index:2}
+.ikick{display:block;font-size:8.5px;letter-spacing:.26em;text-transform:uppercase;color:var(--dim2)}
+.idek{display:block;font-size:11.5px;color:var(--dim);line-height:1.45;margin-top:6px;
+  position:relative;z-index:2}
+.ilines{display:block;margin-top:8px;font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--dim2);line-height:1.9;position:relative;z-index:2}
+.idoor{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-top:auto;
+  padding-top:10px;border-top:2px solid var(--ink);font-family:var(--grot);font-size:10.5px;
+  letter-spacing:.08em;text-transform:uppercase;position:relative;z-index:2}
+a.issue:hover .idoor{color:var(--stripe)}
+
+/* the shot inside a tile */
+.ishot{position:relative;display:block;overflow:hidden;border:2px solid var(--ink);
+  background:#fff;isolation:isolate;margin-top:11px}
+.ishot img{display:block;width:100%;height:100%;object-fit:cover;
+  filter:contrast(1.2) brightness(1.02)}
+.ishot .halftone{position:absolute;inset:0;pointer-events:none;opacity:.4;
+  background-image:radial-gradient(rgba(0,0,0,.85) 30%, transparent 33%);
+  background-size:3px 3px;mix-blend-mode:multiply}
+.ishot .vig{position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(120% 90% at 50% 30%, transparent 44%, rgba(0,0,0,.62))}
+.ishot .fig{position:absolute;left:9px;bottom:9px;background:var(--ink);color:var(--paper);
+  font-size:8.5px;letter-spacing:.14em;text-transform:uppercase;padding:3px 7px;z-index:3}
+.ishot.grey img{filter:grayscale(1) contrast(1.28) brightness(1.02)}
+
+/* the big tile is the current issue: taller, with the inked plate */
+.big{padding:15px 16px 13px}
+.big .ititle{font-size:clamp(34px,6.6vw,74px)}
+.big .ishot{flex:1 1 0;min-height:240px;margin:12px 0}
+.big .ishot img{object-position:50% 34%}
+.big .idek{font-size:13px;max-width:44ch}
+.big .ghostnum{position:absolute;left:auto;right:6px;top:2px;font-family:var(--disp);
+  font-size:clamp(120px,20vw,240px);line-height:.72;color:transparent;
+  -webkit-text-stroke:2px var(--ink);opacity:.1;pointer-events:none;z-index:0;user-select:none}
+
+/* the small back-issue tiles sit side by side; art on the left */
+.back .ititle{font-size:clamp(21px,2.5vw,30px)}
+.back .row{display:flex;gap:12px;margin-top:10px;position:relative;z-index:2;flex:1 1 auto}
+.back .ishot{flex:0 0 108px;height:108px;margin:0}
+.back .col{min-width:0;display:flex;flex-direction:column}
+.back .ilines{margin-top:7px}
+.back .idoor{margin-top:auto}
+
+/* the wide "coming next" banner */
+#i4{flex-direction:row;align-items:center;gap:20px;flex-wrap:wrap;
+  border-style:dashed;background:transparent}
+#i4 .num{font-family:var(--disp);font-size:clamp(40px,6vw,72px);line-height:.8;
+  color:transparent;-webkit-text-stroke:2px var(--ink);opacity:.55;flex:0 0 auto}
+#i4 .txt{flex:1 1 300px;min-width:0}
+#i4 .ititle{margin:2px 0 0;font-size:clamp(20px,3vw,34px)}
+#i4 .idek{margin-top:5px}
+#i4 .note{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim2);
+  flex:0 0 auto;border:1px solid var(--line);padding:7px 10px}
+
+/* the whole rack slices, on a timer in choppy mode */
+.rack.slice .issue{animation:sliceit .3s steps(2,end) 1}
+@keyframes sliceit{
+  0%,100%{clip-path:inset(0 0 0 0);transform:translate(0,0)}
+  20%{clip-path:inset(11% 0 63% 0);transform:translate(-9px,2px)}
+  45%{clip-path:inset(48% 0 26% 0);transform:translate(8px,-3px)}
+  70%{clip-path:inset(4% 0 82% 0);transform:translate(-6px,1px)}
+  88%{clip-path:inset(68% 0 5% 0);transform:translate(7px,-2px)}
+}
+
+/* =================================================================== press */
+.sec{margin-top:34px}
+.sechead{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;
+  border-bottom:2px solid var(--ink);padding-bottom:9px;margin-bottom:16px}
+.sechead h2{margin:0;font-family:var(--disp);font-size:clamp(24px,4.4vw,40px);letter-spacing:.02em;
+  text-transform:uppercase;line-height:.95}
+.sechead .sub{font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);
+  margin-left:auto}
+.hows{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media (max-width:820px){ .hows{grid-template-columns:1fr} }
+.how{border:2px solid var(--ink);padding:13px 14px}
+.how b{display:block;font-family:var(--grot);font-size:12px;letter-spacing:.05em;text-transform:uppercase;
+  margin-bottom:6px}
+.how p{margin:0;font-size:11.5px;color:var(--dim);line-height:1.62}
+.how a{color:var(--ink);border-bottom:1px solid var(--line);text-decoration:none}
+.how a:hover{background:var(--ink);color:var(--paper)}
+.how .n{display:block;font-family:var(--disp);font-size:22px;color:var(--dim2);line-height:1;margin-bottom:6px}
+
+/* =================================================================== fund */
+.fund{margin-top:34px;border:2px solid var(--stripe);padding:20px 18px;position:relative;
+  background:linear-gradient(180deg, rgba(255,45,149,.09), rgba(5,5,5,.2))}
+.fund .k{font-size:8.5px;letter-spacing:.26em;text-transform:uppercase;color:var(--stripe);margin:0 0 8px}
+.fund h2{margin:0 0 10px;font-family:var(--disp);font-size:clamp(26px,5vw,46px);line-height:.94;
+  letter-spacing:.02em;text-transform:uppercase}
+.fund p{margin:0 0 12px;font-size:12.5px;line-height:1.7;color:var(--dim);max-width:66ch}
+.fund p b{color:var(--ink)}
+.fund p:last-of-type{margin-bottom:0}
+.fbtns{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+.fbtn{font-family:var(--grot);font-size:11px;letter-spacing:.09em;text-transform:uppercase;
+  text-decoration:none;border:2px solid var(--ink);padding:11px 15px;color:var(--ink)}
+.fbtn:hover{background:var(--ink);color:var(--paper)}
+.fbtn.hot{background:var(--stripe);border-color:var(--stripe);color:#0a0a0a}
+.fbtn.hot:hover{background:#fff;border-color:#fff;color:#0a0a0a}
+.fine{margin-top:14px;font-size:9.5px;letter-spacing:.06em;line-height:1.9;color:var(--dim2);max-width:80ch}
+
+/* ================================================================== footer */
+.foot{margin-top:40px;border-top:1px solid var(--line);padding:16px;
+  font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);
+  display:flex;flex-wrap:wrap;gap:8px 10px;justify-content:space-between;align-items:center}
+.foot a{text-decoration:none;border-bottom:1px solid var(--line);color:var(--ink);padding-bottom:1px}
+.foot a:hover{background:var(--ink);color:var(--paper)}
+.defs{position:absolute;width:0;height:0;overflow:hidden}
+
+@media print{
+  @page{size:A4 portrait;margin:10mm}
+  body{background:#fff;color:#000}
+  .grain,.scan,.chrome,.ticker,.ctlrow,.fund,.foot{display:none!important}
+  .wrap{padding:0;max-width:none}
+  .rack{grid-template-columns:1fr 1fr;grid-template-areas:"big big" "s1 s2" "wide wide";
+    grid-template-rows:auto}
+  .issue{page-break-inside:avoid}
+}
+@media (prefers-reduced-motion:reduce){
+  .ticker .in,.cdot{animation:none!important}
+}
+</style>
+</head>
+<body class="choppy">
+
+<svg class="defs" aria-hidden="true" focusable="false">
+  <filter id="inkboil" x="-3%" y="-3%" width="106%" height="106%" color-interpolation-filters="sRGB">
+    <feTurbulence id="boilTurb" type="fractalNoise" baseFrequency="0.012 0.019" numOctaves="2" seed="9" result="n"/>
+    <feDisplacementMap in="SourceGraphic" in2="n" scale="2.2" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+</svg>
+
+<div class="grain" aria-hidden="true"></div>
+<div class="scan" aria-hidden="true"></div>
+
+<header class="chrome">
+  <div class="cbar">
+    <span class="cdot"></span>
+    <span class="cbrand">miki's zine</span>
+    <span class="csep">/</span>
+    <span>the rack &middot; <b>three issues</b> &middot; one on the way</span>
+    <span class="cspacer"></span>
+    <a class="clink" href="https://www.cafedreamr.art/MIKI/MikiZines.html">miki's desk &rarr;</a>
+    <a class="clink" href="https://ko-fi.com/cafedreamr" target="_blank" rel="noopener noreferrer">the ko-fi &rarr;</a>
+    <a class="clink" href="https://www.cafedreamr.art/MENU/">the menu &rarr;</a>
+    <a class="clink" href="https://www.cafedreamr.art/">the terminal &rarr;</a>
+  </div>
+</header>
+
+<div class="ticker" aria-hidden="true"><span class="in" id="tick"></span></div>
+
+<main class="wrap">
+
+  <!-- ============================== the masthead -->
+  <div class="newshead">
+    <span class="ghost" aria-hidden="true">ZINE</span>
+    <div class="nhkick">
+      <span>the cafedreamr press &middot; hand-stapled at the counter</span>
+      <span>est. issue no. 1 &middot; still going</span>
+    </div>
+    <h1 class="mast">
+      <span class="ml" data-split>MIKI'S</span>
+      <span class="ml rk" data-split>ZINE</span>
+    </h1>
+    <div class="nhsub">
+      <span><b>the rack</b> &mdash; every issue, one shelf</span>
+      <span>free &middot; take one &middot; print one &middot; pass it on</span>
+    </div>
+  </div>
+
+  <div class="ctlrow chrome">
+    <div class="ctl">
+      <span class="lab">glitch</span>
+      <div class="seg" id="segGlitch">
+        <button type="button" data-glitch="calm">calm</button>
+        <button type="button" data-glitch="choppy" class="on">choppy</button>
+      </div>
+    </div>
+    <div class="ctl">
+      <span class="lab">paper</span>
+      <div class="seg" id="segPaper">
+        <button type="button" data-paper="black" class="on">black</button>
+        <button type="button" data-paper="ink">ink saver</button>
+      </div>
+    </div>
+    <div class="acts">
+      <button type="button" id="rechop">re-chop the type</button>
+      <button type="button" id="sliceBtn">glitch it</button>
+      <button type="button" class="key" id="printBtn">print the rack</button>
+    </div>
+  </div>
+
+  <div class="stackhead"><b>the rack</b><span id="rackCount">three issues on the shelf &middot; issue no. 4 on the way</span></div>
+
+  <!-- ============================== the mosaic -->
+  <div class="rack" id="rack">
+
+    <!-- ============ issue 03, the current one ============ -->
+    <a class="issue big" id="i3" href="https://www.cafedreamr.art/ZINE/03/" data-issue="3">
+      <span class="ghostnum" aria-hidden="true">03</span>
+      <span class="meta">
+        <span>issue no. <b>3</b></span>
+        <span>run of <b>50</b></span>
+        <span class="stamp live">in print</span>
+      </span>
+      <span class="ishot" aria-hidden="true">
+        <img id="plateA" src="images/slay-sylvestre-a.jpg" alt="" style="filter:url(#inkboil) contrast(1.24) brightness(1.02)">
+        <span class="halftone"></span><span class="vig"></span>
+        <span class="fig">fig. 01 &middot; hands off</span>
+      </span>
+      <span class="ibody">
+        <span class="ikick">the current issue</span>
+        <span class="ititle">our new tracks!</span>
+        <span class="idek">the whole set, cut at midday &mdash; star's new recipe, the new neighbours, and every wrong guess we made about what they'd do next.</span>
+        <span class="ilines">star's new recipe &middot; the new neighbours &middot; sylvestre &amp; slay: hands off &middot; hans, don't read page twelve</span>
+      </span>
+      <span class="idoor">read issue no. 3 <span aria-hidden="true">&rarr;</span></span>
+    </a>
+
+    <!-- ============ issue 02, back issue ============ -->
+    <a class="issue back" id="i2" href="https://www.cafedreamr.art/ZINE/02/" data-issue="2">
+      <span class="meta">
+        <span>issue no. <b>2</b></span>
+        <span>run of <b>50</b></span>
+        <span class="stamp">back issue</span>
+      </span>
+      <span class="row">
+        <span class="ishot grey" aria-hidden="true">
+          <img src="https://user.uploads.dev/file/3f4fc0314f0187a8819e23a940a7a215.jpg" alt="">
+          <span class="halftone"></span>
+        </span>
+        <span class="col">
+          <span class="ikick">chari's realm, two rats, one opal castle</span>
+          <span class="ititle">the atrium of whispered truths</span>
+          <span class="ilines">the rat method &middot; the opal castle &middot; candy apples made of light &middot; the verse kept &middot; worn by the house &middot; the pattern book &middot; the house sticker</span>
+        </span>
+      </span>
+      <span class="idoor">read issue no. 2 <span aria-hidden="true">&rarr;</span></span>
+    </a>
+
+    <!-- ============ issue 01, the first one ============ -->
+    <a class="issue back" id="i1" href="https://www.cafedreamr.art/ZINE/01/" data-issue="1">
+      <span class="meta">
+        <span>issue no. <b>1</b></span>
+        <span>16 pp</span>
+        <span class="stamp">free &middot; take one</span>
+      </span>
+      <span class="row">
+        <span class="ishot grey" aria-hidden="true">
+          <img src="https://user.uploads.dev/file/c89526fd80b552f9fd97ccbac7f2b1d6.png" alt="">
+          <span class="halftone"></span>
+        </span>
+        <span class="col">
+          <span class="ikick">the first issue &middot; the violet web caf&eacute;</span>
+          <span class="ititle">the violet web caf&eacute;</span>
+          <span class="ilines">why the web is safe &middot; miki, as herself &middot; the prankster's corner &middot; the spider who mends</span>
+        </span>
+      </span>
+      <span class="idoor">read issue no. 1 <span aria-hidden="true">&rarr;</span></span>
+    </a>
+
+    <!-- ============ issue 04, coming ============ -->
+    <div class="issue" id="i4">
+      <span class="num" aria-hidden="true">04</span>
+      <span class="txt">
+        <span class="ikick">coming next &middot; not printed yet</span>
+        <span class="ititle">the neighbours answer back</span>
+        <span class="idek">issue three guessed what the new neighbours would do next. they read it. now it's their turn to write back.</span>
+      </span>
+      <span class="note">no. 04 &middot; after practice</span>
+    </div>
+
+  </div>
+
+  <!-- ============================== the press -->
+  <section class="sec" id="press">
+    <div class="sechead">
+      <h2>the press</h2>
+      <span class="sub">how you actually get one &middot; all three ways are free</span>
+    </div>
+    <div class="hows">
+      <div class="how">
+        <span class="n">01</span>
+        <b>take one at the counter</b>
+        <p>miki leaves a stack by the register, hand-numbered and stapled, and refills it when she remembers. if the stack is empty, ask &mdash; she usually has more in the library.</p>
+      </div>
+      <div class="how">
+        <span class="n">02</span>
+        <b>print it at home</b>
+        <p>every issue is a web page, built to print. open the issue, hit the print button, fold it down the middle, staple it twice. that is the whole production budget.</p>
+      </div>
+      <div class="how">
+        <span class="n">03</span>
+        <b>make the machine cough one up</b>
+        <p>the <a href="https://www.cafedreamr.art/LORE/VENDI/index.html">vendi machine</a> always keeps one zine in the glass, no matter what else it's been asked for. slot it and it hands you a copy for nothing.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================== the fund (the ko-fi, both ways) -->
+  <section class="fund" id="fund">
+    <p class="k">the honest bit</p>
+    <h2>the zine is free.<br>the press isn't.</h2>
+    <p>fifty copies is the smallest run the printer will do, and miki pays for the whole thing up front &mdash; the paper, the cover stock, the binding, the staples &mdash; and then gives every single one away. <b>nobody has ever been charged for an issue and nobody ever will be.</b></p>
+    <p>so if you want to keep the rack full: the same fund that holds the realm open pays the printer. a coffee on ko-fi buys ink and paper. a commission from the menu pays for a piece and puts your name in the back of the next issue.</p>
+    <div class="fbtns">
+      <a class="fbtn hot" href="https://ko-fi.com/cafedreamr" target="_blank" rel="noopener noreferrer">&#9829; gift a coffee on ko-fi</a>
+      <a class="fbtn" href="https://www.cafedreamr.art/SUPPORT/">support the realm &rarr;</a>
+      <a class="fbtn" href="https://www.cafedreamr.art/MENU/#miki-zine-cover">fund the print run &rarr;</a>
+    </div>
+    <p class="fine">the realm's whole bill &mdash; the servers, the rooms, the music, the printer &mdash; is written out line by line, with nothing rounded off and nothing invented, on <a href="https://www.cafedreamr.art/SUPPORT/">the support page</a>. one goal at a time lives on ko-fi; the details live there. both point the same way.</p>
+  </section>
+
+  <div class="stackhead" style="margin-top:34px"><b>the whole realm</b><span>every page links to every page &middot; start anywhere</span></div>
+</main>
+
+<footer class="foot chrome">
+  <span>miki's zine &middot; the rack &middot; free, always</span>
+  <span><a href="https://www.cafedreamr.art/">the terminal</a> &middot; <a href="https://www.cafedreamr.art/LORE/MAP.html">the realm map</a> &middot; <a href="https://www.cafedreamr.art/LORE/HOURS/">the hours</a> &middot; <a href="https://www.cafedreamr.art/LORE/BOBBY/cards.html">the dossiers</a> &middot; <a href="https://www.cafedreamr.art/LORE/MYSTERYGRID/">the mystery grid</a> &middot; <a href="https://www.cafedreamr.art/MENU/">the menu</a> &middot; <a href="https://www.cafedreamr.art/PLAY/">the long day</a> &middot; <a href="https://www.cafedreamr.art/LORE/VENDI/index.html">the vendi machine</a> &middot; <a href="https://www.cafedreamr.art/SUPPORT/">support the realm</a> &middot; <a href="https://ko-fi.com/cafedreamr" target="_blank" rel="noopener noreferrer">ko-fi</a></span>
+</footer>
+
+<script src="https://www.cafedreamr.art/PASSPORT/cd-passport.js"></script>
+<script>window.CD && CD.boot({page:"zine"});</script>
+
+<script>
+/* ============================================================
+   the rack — miki's zine, all of it in one shop window.
+   the only machinery here is the same print-shop ritual the
+   cover proofs use: chopped type, a nervous glitch schedule,
+   an ink-saver paper, and a print button. nothing to maintain.
+   ============================================================ */
+(function(){
+  "use strict";
+  function $(s, r){ return (r || document).querySelector(s); }
+  function $$(s, r){ return Array.prototype.slice.call((r || document).querySelectorAll(s)); }
+  function rnd(a, b){ return a + Math.random() * (b - a); }
+
+  var TICKER = [
+    "issue no. 3 \u2014 our new tracks!",
+    "issue no. 2 \u2014 the atrium of whispered truths",
+    "issue no. 1 \u2014 the violet web caf\u00e9",
+    "free \u00b7 take one",
+    "fifty copies, hand-numbered, stapled by miki",
+    "issue no. 4 \u2014 the neighbours answer back, after practice",
+    "printed badly on purpose"
+  ];
+
+  /* ---------------------------------------------- the chopped type */
+  function splitType(el){
+    if (el.getAttribute("data-split-done")) return;
+    var text = el.textContent;
+    el.textContent = "";
+    for (var i = 0; i < text.length; i++){
+      var s = document.createElement("span");
+      s.className = "ch" + (text[i] === " " ? " sp" : "");
+      s.textContent = text[i] === " " ? "\u00a0" : text[i];
+      el.appendChild(s);
+    }
+    el.setAttribute("data-split-done", "1");
+  }
+  function chop(scope){
+    $$("[data-split]", scope || document).forEach(function(el){
+      var size = parseFloat(getComputedStyle(el).fontSize) || 40;
+      $$(".ch", el).forEach(function(s){
+        if (s.classList.contains("sp")) { s.removeAttribute("style"); s.classList.remove("cut"); return; }
+        var loose = Math.random() < .15;
+        s.style.setProperty("--dx", (loose ? rnd(-1,1) * size * .04  : rnd(-1,1) * size * .011).toFixed(2) + "px");
+        s.style.setProperty("--dy", (loose ? rnd(-1,1) * size * .06  : rnd(-1,1) * size * .016).toFixed(2) + "px");
+        s.style.setProperty("--rot", (loose ? rnd(-2.4,2.4) : rnd(-.6,.6)).toFixed(2) + "deg");
+        s.style.setProperty("--sy", (loose ? rnd(.9,1.12) : rnd(.97,1.03)).toFixed(3));
+        var cut = Math.random() < .1;
+        s.classList.toggle("cut", cut);
+        if (cut){
+          s.style.setProperty("--c1", rnd(4,26).toFixed(1) + "%");
+          s.style.setProperty("--c2", rnd(4,24).toFixed(1) + "%");
+        }
+      });
+    });
+  }
+
+  /* ---------------------------------------------- the ink boil */
+  /* the plate breathes like hand-inked animation, same trick as the
+     cover proofs: walk the turbulence a few steps at a time. */
+  var boilOn = !(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches);
+  var lastK = -1;
+  function boil(t){
+    requestAnimationFrame(boil);
+    if (!boilOn) return;
+    var k = Math.floor(t / 110) % 6;
+    if (k === lastK) return;
+    lastK = k;
+    var turb = document.getElementById("boilTurb");
+    if (!turb) return;
+    turb.setAttribute("baseFrequency", (0.0112 + k * .0010).toFixed(4) + " " + (0.0180 + k * .0012).toFixed(4));
+    turb.setAttribute("seed", 3 + (k % 3) * 4);
+  }
+
+  /* ---------------------------------------------- the rituals */
+  function wireSeg(id, fn){
+    var seg = $("#" + id);
+    if (!seg) return;
+    seg.addEventListener("click", function(e){
+      var b = e.target.closest("button");
+      if (!b) return;
+      $$("button", seg).forEach(function(x){ x.classList.toggle("on", x === b); });
+      fn(b.dataset);
+    });
+  }
+  function slice(){
+    var rack = $("#rack");
+    if (!rack || rack.classList.contains("slice")) return;
+    rack.classList.add("slice");
+    setTimeout(function(){ rack.classList.remove("slice"); }, 320);
+  }
+  function buildTicker(){
+    var one = TICKER.map(function(t){ return "<span>" + t + "</span><i>&#10022;</i>"; }).join("");
+    $("#tick").innerHTML = one + one;   /* twice, for the seamless loop */
+  }
+  function scheduleGlitch(){
+    if (document.body.classList.contains("choppy")){
+      var r = Math.random();
+      if (r < .6) slice();
+      else if (r < .78) chop();
+    }
+    setTimeout(scheduleGlitch, rnd(2800, 7400));
+  }
+
+  function boot(){
+    buildTicker();
+    $$("[data-split]").forEach(splitType);
+    chop();
+
+    wireSeg("segGlitch", function(d){
+      document.body.classList.toggle("choppy", d.glitch === "choppy");
+    });
+    wireSeg("segPaper", function(d){ document.body.classList.toggle("paper-ink", d.paper === "ink"); });
+
+    $("#rechop").addEventListener("click", chop);
+    $("#sliceBtn").addEventListener("click", slice);
+    $("#printBtn").addEventListener("click", function(){ window.print(); });
+
+    scheduleGlitch();
+    requestAnimationFrame(boil);
+  }
+
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);
+  else boot();
+})();
+</script>
+</body>
+</html>
