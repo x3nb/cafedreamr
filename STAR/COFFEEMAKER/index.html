@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The L'Aube Handover</title>
+    <style>
+        :root {
+            --laube-bg: #ffffff;
+            --laube-text: #1a1a1a;
+            --amber: #ffca28;
+            --coffee: #5d4037;
+            --milk: #fcfcfc;
+        }
+
+        body {
+            margin: 0; background: var(--laube-bg); color: var(--laube-text);
+            font-family: 'Helvetica Neue', sans-serif;
+            height: 100vh; overflow: hidden;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            perspective: 1200px;
+        }
+
+        /* --- STAGE & VESSEL --- */
+        #stage {
+            width: 300px; height: 300px;
+            display: flex; align-items: flex-end; justify-content: center;
+            position: relative; transition: transform 1.5s ease;
+        }
+        .tilt-forward { transform: rotateX(35deg) translateY(-40px); }
+
+        #vessel {
+            width: 120px; height: 100px; background: #fff; border: 2px solid #1a1a1a;
+            border-bottom-left-radius: 40px; border-bottom-right-radius: 40px;
+            position: relative; overflow: hidden; z-index: 10;
+        }
+
+        /* Shaped Liquid */
+        .liquid-base {
+            position: absolute; bottom: 0; width: 100%; height: 0%;
+            border-bottom-left-radius: 35px; border-bottom-right-radius: 35px;
+            transition: height 3s ease, background-color 1s;
+        }
+
+        #milk-top {
+            position: absolute; top: 0; width: 100%; height: 0%;
+            background: var(--milk); transition: height 1.5s ease;
+            opacity: 0.9;
+        }
+
+        /* --- THE STIRRING SPOON --- */
+        #spoon {
+            position: absolute; top: 20%; left: 50%; width: 4px; height: 80px;
+            background: #ccc; border: 1px solid #999; display: none;
+            transform-origin: top center; z-index: 20;
+        }
+        .stirring { animation: stir-motion 0.5s infinite linear; }
+        @keyframes stir-motion {
+            0% { transform: translateX(-50%) rotate(0deg) translateX(10px) rotate(0deg); }
+            100% { transform: translateX(-50%) rotate(360deg) translateX(10px) rotate(-360deg); }
+        }
+
+        /* --- HELD CUP CURSOR --- */
+        #held-cup {
+            position: fixed; width: 70px; height: 60px;
+            background: #fff; border: 2px solid #1a1a1a;
+            border-bottom-left-radius: 25px; border-bottom-right-radius: 25px;
+            pointer-events: none; display: none; z-index: 9999;
+            transform: translate(-50%, -50%);
+        }
+        #held-liquid {
+            position: absolute; bottom: 0; width: 100%; height: 85%;
+            background: var(--amber); border-bottom-left-radius: 22px; border-bottom-right-radius: 22px;
+        }
+
+        /* --- UI PANEL --- */
+        #ui { margin-top: 40px; text-align: center; max-width: 400px; }
+        .row { display: flex; gap: 10px; justify-content: center; margin-bottom: 15px; }
+        button {
+            padding: 10px 15px; border: 1px solid #ccc; background: #fff;
+            font-size: 0.7rem; cursor: pointer; letter-spacing: 1px;
+        }
+        button.active { border-color: #000; background: #f4f4f4; font-weight: bold; }
+        #main-action { background: #000; color: #fff; width: 100%; border: none; padding: 15px; margin-top: 10px; }
+        
+        .hidden { display: none; }
+        .holding { cursor: none !important; }
+    </style>
+</head>
+<body id="b">
+
+    <div id="stage">
+        <div id="spoon"></div>
+        <div id="vessel" onclick="grab()">
+            <div id="liquid" class="liquid-base">
+                <div id="milk-top"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="held-cup">
+        <div id="held-liquid"></div>
+    </div>
+
+    <div id="ui">
+        <div id="menu">
+            <div class="row">
+                <button id="b-tea" class="active" onclick="setBase('tea')">Imperial_Tea</button>
+                <button id="b-coffee" onclick="setBase('coffee')">Black_Coffee</button>
+            </div>
+            <div class="row">
+                <button id="b-milk" onclick="toggleMilk()">[ + Add_Milk ]</button>
+            </div>
+            <button id="main-action" onclick="startRitual()">BEGIN_STEEP</button>
+        </div>
+        <p id="status" style="font-size: 0.6rem; margin-top: 20px; opacity: 0.5; letter-spacing: 2px;">READY_FOR_SELECTION</p>
+    </div>
+
+    <script>
+        let state = { base: 'tea', milk: false, stirred: false, ritualActive: false };
+        const liquid = document.getElementById('liquid');
+        const milk = document.getElementById('milk-top');
+        const spoon = document.getElementById('spoon');
+        const status = document.getElementById('status');
+
+        function setBase(type) {
+            if(state.ritualActive) return;
+            state.base = type;
+            document.getElementById('b-tea').classList.toggle('active', type === 'tea');
+            document.getElementById('b-coffee').classList.toggle('active', type === 'coffee');
+        }
+
+        function toggleMilk() {
+            if(state.ritualActive) return;
+            state.milk = !state.milk;
+            document.getElementById('b-milk').classList.toggle('active', state.milk);
+        }
+
+        function startRitual() {
+            state.ritualActive = true;
+            document.getElementById('menu').classList.add('hidden');
+            status.innerText = "POURING_BASE...";
+
+            // Fill Base
+            liquid.style.backgroundColor = state.base === 'tea' ? 'var(--amber)' : 'var(--coffee)';
+            liquid.style.height = state.milk ? "70%" : "85%";
+
+            // Add Milk
+            if(state.milk) {
+                setTimeout(() => {
+                    status.innerText = "ADDING_MILK...";
+                    milk.style.height = "25%";
+                }, 3500);
+            }
+
+            // Stirring Phase
+            setTimeout(() => {
+                status.innerText = "STIRRING_REQUIRED (CLICK_CUP)";
+                spoon.style.display = "block";
+                
+                // Clicking the cup now stirs it
+                document.getElementById('vessel').onclick = function() {
+                    spoon.classList.add('stirring');
+                    status.innerText = "MIXING_FLAVORS...";
+                    
+                    setTimeout(() => {
+                        spoon.style.display = "none";
+                        // Blend the colors
+                        liquid.style.backgroundColor = state.base === 'tea' ? '#e3b448' : '#8d6e63';
+                        milk.style.height = "0%";
+                        finishRitual();
+                    }, 2000);
+                };
+            }, state.milk ? 5500 : 3500);
+        }
+
+        function finishRitual() {
+            status.innerText = "RITUAL_COMPLETE. RECEIVE_DRINK.";
+            document.getElementById('stage').classList.add('tilt-forward');
+            document.getElementById('vessel').onclick = grab;
+        }
+
+        function grab() {
+            if(!document.getElementById('stage').classList.contains('tilt-forward')) return;
+            
+            document.getElementById('b').classList.add('holding');
+            document.getElementById('vessel').style.visibility = 'hidden';
+            document.getElementById('ui').style.opacity = '0';
+            
+            const held = document.getElementById('held-cup');
+            const heldLiq = document.getElementById('held-liquid');
+            
+            heldLiq.style.backgroundColor = liquid.style.backgroundColor;
+            held.style.display = 'block';
+
+            window.addEventListener('mousemove', (e) => {
+                held.style.left = e.clientX + 'px';
+                held.style.top = e.clientY + 'px';
+            });
+        }
+    </script>
+</body>
+</html>
