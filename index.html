@@ -140,6 +140,13 @@ body{min-height:100dvh}
 .dialog .dim a.evlink{color:#c0a6ff;border-bottom-color:rgba(192,166,255,.5);
   text-shadow:0 0 9px rgba(192,166,255,.5)}
 .dialog .dim a.evlink:hover{color:#fff;border-bottom-color:currentColor}
+/* the quiet question after star's line is not the word "again" any more: it is a
+   kettle. the whole question is "shall i put it on once more", so the thing that
+   would be put on stands in for the word — the label survives as a tooltip. */
+.dialog .dim a.q{display:inline-block;line-height:1}
+.dialog .dim a.q svg{display:inline-block;width:1.3em;height:1.3em;overflow:visible;
+  vertical-align:-0.16em;transition:transform .18s ease}
+.dialog .dim a.q:hover svg{transform:translateY(-1px)}
 /* the cup rises into the screen */
 .cupwrap{position:absolute;left:0;right:0;bottom:clamp(127px,30%,170px);display:flex;justify-content:center;pointer-events:none}
 .cup{width:104px;opacity:0;pointer-events:auto;
@@ -877,6 +884,16 @@ const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
      the tea timer is the one live hour this page knows, so if hans has set a
      class the line still counts it down — but it sends the visitor to the
      events for the door, because that is where hans's class row lives. */
+  /* the kettle that stands in for the word "again" — drawn here rather than
+     pasted as an emoji so it takes the link's own colour (dim, then violet on
+     hover) instead of arriving as a colour glyph in the middle of the console. */
+  const KETTLE_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
+    + '<path d="M7.6 12.2C7.6 7 16.4 7 16.4 12.2"/>'
+    + '<path d="M10.6 12.2c0-1.4.6-2.3 1.4-2.3s1.4.9 1.4 2.3"/>'
+    + '<path d="M12 9.9V8.6"/>'
+    + '<path d="M6.4 12.2h11.2c1 0 1.8.9 1.6 1.9l-.7 4.3c-.2 1.2-1 1.9-2.2 1.9H8.7c-1.2 0-2-.7-2.2-1.9l-.7-4.3c-.2-1 .6-1.9 1.6-1.9Z"/>'
+    + '<path d="M6.5 13.4 3.4 11.7 3.9 14.4 6.5 15.5"/></svg>';
+
   function eventsLineHtml(kind) {
     const at = kind === "tea" ? classAt() : 0, now = Date.now();
     if (at && now < at) return 'the etiquette class begins in <b class="k" id="starClassK">' + mmss(at - now) + '</b> <span class="dsep">·</span> the events are below \u2193';
@@ -885,7 +902,7 @@ const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
   }
   function showEventsLine(kind) {
     stopClassTick();
-    starRemind.innerHTML = '<span id="starLine"><a class="evlink" href="#events" id="starEventsGo">' + eventsLineHtml(kind) + '</a></span> <span class="dsep">·</span> <a class="q" href="#" id="drinkAgain">again?</a>';
+    starRemind.innerHTML = '<span id="starLine"><a class="evlink" href="#events" id="starEventsGo">' + eventsLineHtml(kind) + '</a></span> <span class="dsep">·</span> <a class="q" href="#" id="drinkAgain" title="again?" aria-label="order the same thing again">' + KETTLE_SVG + '</a>';
     starRemind.hidden = false;
     requestAnimationFrame(() => starRemind.classList.add("on"));
     const again = document.getElementById("drinkAgain");
@@ -974,8 +991,8 @@ const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
         const n = cdN("level:");
         return { met: n >= 1, have: Math.min(n, 1), want: 1, text: "clear the first level of the long day", unit: "of the long day" };
       },
-      sealed: "<b>miki</b> — so you're the one star keeps going on about. practice is at four. there is no four here, so practice is whenever, and the twins started without me an hour ago.<br><br>you're not through the door yet — you haven't even lasted the first hour of the day. <b>clear the first level of the long day</b> and i'll prop the door open for you. bring nothing; we have far too much already.",
-      open: "<b>miki</b> — you lasted the first hour. the twins live here and they still haven't managed that.<br><br>practice is starting. the door's propped, the kettle's on for the one person in this room who doesn't shout, and slay is about to hand you something and then deny it. <b>the portal is open to you now</b> — come down.",
+      sealed: "<b>miki</b> — so you're the one star keeps going on about. practice is at four. there is no four here, so practice is whenever, and the twins started without me an hour ago.<br><br>you're not through the door yet — you haven't even lasted the first hour of the day. <b>clear the first level of the long day</b> and i'll prop the door open for you. bring nothing; we have far too much already, and no tea. obviously.",
+      open: "<b>miki</b> — you lasted the first hour. as asked. the twins live here and they still haven't managed that — i have it on camera.<br><br>practice is starting and the door's propped. no kettle though: i don't do tea. you wait for it, it judges you.<br><br>after practice i'm in the library with the steampunk inventors and whatever the raspberry pi is doing this week, or i'm standing in one of your realms announcing my new zine. issue three: <b>OUR NEW TRACKS!</b> star's new recipe, the new neighbours, and what we think they're going to do next. fifty copies, hand-numbered, stapled by me. i've already left stacks in two realms nobody invited me into. that's the promo strategy, and it works.<br><br>seven to four i'm on the portals with sylvestre and slay — somebody has to be, the scientists are always one door away and dark energy doesn't knock. the machines and the music are the rest of it. hans is my favourite and he has no idea. <b>the portal is open to you now</b> — come down.",
       link: { href: "https://www.cafedreamr.art/CLASS/?id=bandpractice", text: "go to band practice →" }
     }
     /* POCKETED (until further notice) · hans — the archive
