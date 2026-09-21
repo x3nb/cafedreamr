@@ -1,0 +1,1411 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0d001a">
+<title>star &middot; cafedreamr</title>
+<meta name="description" content="Star keeps the cafe: the books, the hours, and the keys to most of the doors. Tell her what you would like &mdash; she takes the order, and keeps the rest to herself.">
+<meta property="og:title" content="star &middot; cafedreamr">
+<meta property="og:description" content="The front of the cafe. Star keeps the books, the hours, and the keys.">
+<meta property="og:image" content="https://user.uploads.dev/file/b0fc319bb972fced38dccaf0d74d5c2b.jpg">
+<meta property="og:type" content="website">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='4' fill='%230d001a'/%3E%3Cpath d='M8 2.4l1.5 3.4 3.7.3-2.8 2.4.85 3.6L8 10.2l-3.25 1.9.85-3.6L2.8 6.1l3.7-.3z' fill='%23c0a6ff'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Klee+One:wght@400;600&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Vampiro+One&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+/* the live site is a plain document — there is no engine stylesheet there to
+   make the `hidden` attribute stick, and a bare attribute is beaten by any
+   author `display` rule (both pill rows below set one). so the counter stages
+   itself from here, where it holds in every environment. */
+[hidden]{display:none !important}
+:root{
+  --plum:#0d001a; --ink:#0b0b0e; --ink2:#141419; --ink3:#1b1b22;
+  --lime:#ccff00; --pink:#ff2d95; --cyan:#00e5ff;
+  --violet:#bf40bf; --violet2:#ee82ee; --corn:#6495ed; --mint:#98fb98;
+  --cream:#e9e6de; --lav:#fff0f5; --dim:#7d848b;
+  --line:rgba(255,255,255,.10);
+  --mono:'Space Mono',ui-monospace,monospace;
+  --disp:'Bebas Neue',impact,sans-serif;
+  --logo:'Vampiro One',cursive;
+  --body:'Klee One',system-ui,sans-serif;
+  --a:#c0a6ff;
+}
+body{background:var(--plum);color:var(--lav);font-family:var(--body);text-align:left;
+  min-height:100dvh;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+.bg{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(780px 560px at 16% 4%, color-mix(in srgb,var(--a) 16%,transparent), transparent 62%),
+    radial-gradient(640px 480px at 96% 106%, rgba(255,45,149,.07), transparent 60%),
+    linear-gradient(180deg,#0d001a,#0b0b0e 55%,#0d001a)}
+.bg:after{content:"";position:absolute;inset:0;opacity:.5;
+  background:repeating-linear-gradient(0deg,rgba(255,255,255,.014) 0 1px,transparent 1px 4px)}
+/* the lit corner where star answers — the chat bubble lands on top of this */
+.corner{position:fixed;right:-40px;bottom:-46px;width:210px;height:210px;z-index:0;pointer-events:none;
+  border-radius:50%;background:radial-gradient(circle at 66% 68%, color-mix(in srgb,var(--a) 20%,transparent), transparent 66%)}
+.corner:after{content:"";position:absolute;inset:34px;border-radius:50%;
+  border:1px dashed color-mix(in srgb,var(--a) 26%,transparent);opacity:.5}
+.stage{position:relative;z-index:1;max-width:900px;margin:0 auto;padding:22px 14px 120px;
+  display:flex;flex-direction:column;gap:14px}
+.marquee{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;
+  border-bottom:1px solid var(--line);padding-bottom:10px}
+.brand{display:block;font-family:var(--logo);font-size:27px;letter-spacing:.05em;color:var(--a);
+  text-shadow:0 0 16px color-mix(in srgb,var(--a) 42%,transparent)}
+.tag{display:block;font-family:var(--mono);font-size:9px;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--dim);margin-top:4px}
+.back{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--violet2);text-decoration:none;border-bottom:1px solid transparent;padding-bottom:2px;white-space:nowrap}
+.back:hover{color:var(--lime);border-bottom-color:currentColor}
+/* the corner webs pass behind the header, so the small type carries its own halo */
+.marquee .tag,.marquee .back{text-shadow:0 1px 4px rgba(11,11,14,.95),0 0 12px rgba(11,11,14,.8)}
+
+.scene{display:grid;grid-template-columns:236px 1fr;gap:14px;align-items:start;cursor:pointer;
+  border:1px solid var(--line);border-radius:16px;padding:14px;
+  background:linear-gradient(165deg,rgba(27,0,44,.55),rgba(11,11,14,.82));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.05),0 20px 60px rgba(0,0,0,.5)}
+.scene:focus-visible{outline:2px solid var(--a);outline-offset:3px}
+.scene:hover{border-color:color-mix(in srgb,var(--a) 40%,transparent)}
+.portrait{position:relative;border-radius:12px;overflow:hidden;border:1px solid var(--line);
+  box-shadow:0 0 0 1px rgba(0,0,0,.35),0 0 28px color-mix(in srgb,var(--a) 22%,transparent);
+  animation:fadein .9s ease both}
+.portrait img{display:block;width:100%;aspect-ratio:1/1;object-fit:cover;object-position:center 22%}
+.portrait:after{content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(180deg,transparent 46%,rgba(11,11,14,.74)),
+    repeating-linear-gradient(0deg,rgba(255,255,255,.02) 0 1px,transparent 1px 4px)}
+.portrait figcaption{position:absolute;left:9px;right:9px;bottom:8px;z-index:2;
+  font-family:var(--mono);font-size:8.5px;letter-spacing:.15em;text-transform:uppercase;color:var(--a)}
+
+.dialog{display:flex;flex-direction:column;gap:9px;min-height:236px;padding:13px 14px;border-radius:12px;
+  background:rgba(10,0,20,.55);border:1px solid color-mix(in srgb,var(--a) 30%,transparent);backdrop-filter:blur(6px)}
+.dialog .who{font-family:var(--disp);font-size:16px;letter-spacing:.10em;color:var(--a)}
+.dialog .txt{font-size:15.5px;line-height:1.68;color:var(--lav);white-space:pre-wrap}
+.dialog .txt.room{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--dim);text-align:center;align-self:center;max-width:94%}
+.dialog .txt.receipt{font-family:var(--mono);font-size:10.5px;line-height:1.95;letter-spacing:.01em;
+  color:var(--lav);white-space:pre;overflow-x:auto}
+.caret{display:inline-block;width:7px;height:14px;background:var(--a);vertical-align:-2px;
+  margin-left:2px;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.bottom{margin-top:auto;display:flex;flex-direction:column;gap:9px}
+.hint{display:inline-flex;align-items:center;align-self:flex-start;
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;
+  padding:7px 13px 7px 11px;border:1px dashed color-mix(in srgb,var(--a) 46%,transparent);border-radius:999px;
+  background:color-mix(in srgb,var(--a) 7%,transparent);
+  color:#e7dcff;text-shadow:0 0 14px color-mix(in srgb,var(--a) 48%,transparent);
+  animation:pulse 2s ease-in-out infinite}
+.hint:before{content:"\25B8";display:inline-block;margin-right:7px;color:var(--a);
+  animation:nudge 1.4s ease-in-out infinite}
+/* when she is waiting on an answer, the line stops being a nudge and becomes
+   an instruction */
+.hint.pick{font-size:12px;letter-spacing:.13em;color:#f4efff;text-shadow:0 0 16px color-mix(in srgb,var(--a) 60%,transparent)}
+@keyframes pulse{0%,100%{opacity:.78}50%{opacity:1}}
+@keyframes nudge{0%,100%{transform:translateX(0)}50%{transform:translateX(4px)}}
+.links{display:flex;flex-wrap:wrap;gap:9px}
+.links a{font-family:var(--mono);font-size:9.5px;letter-spacing:.15em;text-transform:uppercase;text-decoration:none;
+  color:var(--lav);border:1px solid color-mix(in srgb,var(--a) 42%,transparent);border-radius:999px;
+  padding:8px 13px;transition:.18s}
+.links a:hover{border-color:var(--a);color:#fff;box-shadow:0 0 14px color-mix(in srgb,var(--a) 30%,transparent)}
+.links a.ghost{border-color:var(--line);color:var(--dim)}
+.links a.ghost:hover{color:var(--violet2);border-color:currentColor;box-shadow:none}
+.links a.say{border-style:dashed;border-color:color-mix(in srgb,var(--a) 52%,transparent);color:#f0e9ff;
+  background:color-mix(in srgb,var(--a) 8%,transparent)}
+.links a.say:hover{border-color:var(--a);background:color-mix(in srgb,var(--a) 18%,transparent);color:#fff}
+#choices a.skipName:before{content:none}
+#choices a.skipName{border-style:dashed;color:var(--dim);background:transparent;min-height:0;padding:8px 13px;font-size:9.5px}
+#choices a.skipName:hover{color:var(--violet2);border-color:currentColor;box-shadow:none;background:transparent}
+/* the last answer is the one for staying in the room: quiet, dashed, no
+   chevron — so it reads as an answer and not as another thing she is offering */
+#choices a.stay:before{content:none}
+#choices a.stay{border-style:dashed;color:var(--dim);background:transparent;
+  min-height:0;padding:9px 13px;font-size:9.5px;letter-spacing:.15em;text-transform:uppercase}
+#choices a.stay:hover{color:var(--violet2);border-color:currentColor;box-shadow:none;background:transparent}
+/* her questions get answer-rows, not navigation pills: filled, chevroned,
+   stacked full-width, so it is obvious which row is the conversation and
+   which is the way out of the room — and so a thumb can hit one. */
+#choices{flex-direction:column;gap:7px}
+#choices a{display:flex;align-items:center;min-height:42px;width:100%;max-width:340px;
+  font-size:10px;padding:11px 15px 11px 13px;
+  border-color:color-mix(in srgb,var(--a) 72%,transparent);color:#fff;
+  background:color-mix(in srgb,var(--a) 16%,transparent);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.07)}
+#choices a:before{content:"\25B8";margin-right:9px;color:var(--a);font-size:12px;line-height:1}
+#choices a:hover{background:color-mix(in srgb,var(--a) 24%,transparent);border-color:var(--a);
+  transform:translateX(2px);box-shadow:0 0 16px color-mix(in srgb,var(--a) 32%,transparent)}
+#choices a:active{transform:translateX(2px) scale(.985)}
+
+.foot{font-family:var(--mono);font-size:9px;letter-spacing:.1em;line-height:1.95;color:var(--dim);text-align:center;padding-top:4px}
+/* the card the drink is made on: small, holographic, and breathing slowly.
+   the cup arrives as light (see `.comet` below) and this is what is left.
+   the prismatic edge is a border-box gradient under a padding-box card, so it
+   needs no mask — and the colour sits in the corners, never over the words. */
+.cupWrap{position:relative;display:flex;flex-direction:column;align-items:center;text-align:center;gap:9px;
+  width:100%;max-width:362px;align-self:center;overflow:hidden;
+  border:1.5px solid transparent;border-radius:13px;padding:14px 15px 16px;
+  background:
+    radial-gradient(58% 42% at 1% 0%,rgba(192,166,255,.46),transparent 72%) padding-box,
+    radial-gradient(56% 40% at 100% 101%,rgba(0,229,255,.34),transparent 72%) padding-box,
+    radial-gradient(46% 34% at 100% 0%,rgba(255,90,180,.26),transparent 72%) padding-box,
+    linear-gradient(165deg,rgba(44,10,72,.6),rgba(11,11,14,.92)) padding-box,
+    conic-gradient(from 200deg,color-mix(in srgb,var(--a) 92%,transparent),#8ceeff,#ff9eea,color-mix(in srgb,var(--a) 92%,transparent)) border-box;
+  background-blend-mode:screen,screen,screen,normal,normal;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.07),inset 0 0 24px rgba(192,166,255,.08),0 18px 50px rgba(0,0,0,.5);
+  opacity:0;transform:translateY(10px) scale(.96);
+  transition:opacity .6s ease,transform .6s ease}
+.cupWrap.pre{opacity:0;transform:translateY(10px) scale(.94)}
+.cupWrap.in{opacity:1;transform:none;animation:cupPulse 5.6s ease-in-out infinite}
+/* one soft band of holo light, sweeping slowly — faint, so the words stay the
+   first thing read */
+.cupWrap::after{content:"";position:absolute;inset:-25%;z-index:3;pointer-events:none;
+  background:linear-gradient(115deg,transparent 36%,rgba(255,255,255,.07) 45%,rgba(160,240,255,.09) 50%,
+    rgba(255,160,235,.08) 55%,transparent 64%);
+  background-size:240% 100%;background-position:-55% 0;mix-blend-mode:screen;
+  filter:blur(8px);animation:holo 13s linear infinite}
+@keyframes holo{0%{background-position:-55% 0}100%{background-position:170% 0}}
+/* the slow breath, and the edge shifting colour under it */
+@keyframes cupPulse{
+  0%,100%{box-shadow:inset 0 1px 0 rgba(255,255,255,.07),inset 0 0 24px rgba(192,166,255,.08),0 18px 50px rgba(0,0,0,.5),0 0 0 rgba(192,166,255,0)}
+  50%{box-shadow:inset 0 1px 0 rgba(255,255,255,.11),inset 0 0 32px rgba(205,180,255,.20),0 18px 50px rgba(0,0,0,.5),0 0 34px rgba(192,166,255,.45)}}
+.cupWrap.clickable{cursor:pointer}
+.cupWrap.clickable:hover{border-color:var(--a);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.09),0 18px 50px rgba(0,0,0,.5),0 0 26px rgba(192,166,255,.34)}
+.cupWrap.clickable:focus-visible{outline:2px solid var(--a);outline-offset:3px}
+.cupArt{display:grid;place-items:center}
+.cupSvg{display:block;width:100%;max-width:152px;height:auto;
+  filter:drop-shadow(0 14px 26px rgba(0,0,0,.5)) drop-shadow(0 0 24px color-mix(in srgb,var(--a) 26%,transparent))}
+.cupName{font-family:var(--mono);font-weight:700;font-size:30px;fill:#faf7ff;letter-spacing:.05em;
+  filter:drop-shadow(0 0 5px rgba(192,166,255,.6))}
+.cupItem{font-family:var(--mono);font-size:8.8px;fill:#c9bbe6;letter-spacing:.08em}
+.cupMark{font-family:var(--mono);font-size:8.4px;fill:#8671b4;fill-opacity:.8;letter-spacing:.3em}
+.cupSteam{filter:blur(.7px) drop-shadow(0 0 4px rgba(255,255,255,.55))}
+.cupSteam path{fill:none;stroke:#fff;stroke-width:3.2;stroke-linecap:round;stroke-opacity:.62;
+  animation:steam 5.2s ease-in-out infinite}
+.cupSteam path:nth-child(2){animation-delay:.9s}
+.cupSteam path:nth-child(3){animation-delay:1.8s}
+@keyframes steam{0%{opacity:0;transform:translateY(7px)}35%{opacity:.62}75%{opacity:.16;transform:translateY(-9px)}100%{opacity:0;transform:translateY(-14px)}}
+.cupWrap.cold .cupSteam{display:none}
+.cupWrap.togo .cupOpen{display:none}
+.cupWrap.here .cupLid{display:none}
+.cupWords{width:100%;opacity:0;transform:translateY(6px);transition:opacity .9s ease,transform .9s ease}
+.cupWords.in{opacity:1;transform:none}
+.cupK{font-family:var(--mono);font-size:8px;letter-spacing:.18em;text-transform:uppercase;color:var(--a)}
+.cupK span{color:var(--dim)}
+.cupVerse{font-size:12.5px;line-height:1.85;color:var(--lav);margin:7px 0 6px}
+.cupRef{font-family:var(--mono);font-size:8.5px;letter-spacing:.14em;text-transform:uppercase;color:#e79be8}
+.cupNote{font-family:var(--mono);font-size:7.5px;letter-spacing:.12em;text-transform:uppercase;color:#9aa1a9;margin-top:8px}
+/* the card opens the drink's own page — said out loud, because a card that can
+   be walked through should look like one. (note: `cupOpen` is already taken —
+   it is the cup's mouth in the svg above — so this row is `cupDoor`.) */
+.cupDoor{display:inline-flex;align-items:center;margin-top:11px;
+  font-family:var(--mono);font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:#efe8ff;
+  border:1px dashed color-mix(in srgb,var(--a) 50%,transparent);border-radius:999px;padding:7px 13px;
+  background:color-mix(in srgb,var(--a) 9%,transparent);transition:.18s}
+.cupWrap.clickable:hover .cupDoor{border-style:solid;border-color:var(--a);color:#fff;
+  background:color-mix(in srgb,var(--a) 18%,transparent);box-shadow:0 0 16px color-mix(in srgb,var(--a) 30%,transparent)}
+/* the light the drink arrives on: a comet crosses the room from the east and,
+   where it stops, the card is born. fixed-position, so it flies over the page
+   and is gone the moment it lands. */
+.comet{position:fixed;left:0;top:0;width:0;height:0;z-index:7;pointer-events:none;will-change:transform}
+.comet i{position:absolute;display:block}
+.comet .halo{left:-46px;top:-46px;width:92px;height:92px;border-radius:50%;
+  background:radial-gradient(circle,color-mix(in srgb,var(--a) 30%,transparent),transparent 70%)}
+.comet .tail{left:0;top:-2px;height:4px;width:var(--tail,280px);border-radius:999px;
+  transform-origin:0 50%;transform:rotate(var(--ang,0deg));
+  background:linear-gradient(90deg,rgba(255,255,255,.95),rgba(230,220,255,.62) 16%,
+    color-mix(in srgb,var(--a) 46%,transparent) 52%,transparent 100%);
+  filter:blur(.5px)}
+.comet .head{left:-13px;top:-13px;width:26px;height:26px;border-radius:50%;
+  background:radial-gradient(circle,#fff 0 24%,rgba(255,255,255,.8) 38%,color-mix(in srgb,var(--a) 62%,transparent) 60%,transparent 74%);
+  box-shadow:0 0 22px 8px color-mix(in srgb,var(--a) 48%,transparent),0 0 70px 18px color-mix(in srgb,var(--a) 20%,transparent)}
+/* where the light lands */
+.burst{position:fixed;z-index:7;width:20px;height:20px;border-radius:50%;pointer-events:none;
+  border:2px solid rgba(255,255,255,.9);
+  box-shadow:0 0 30px 8px color-mix(in srgb,var(--a) 50%,transparent),inset 0 0 18px rgba(255,255,255,.6);
+  animation:burst .72s ease-out forwards}
+@keyframes burst{0%{transform:translate(-50%,-50%) scale(.35);opacity:1}100%{transform:translate(-50%,-50%) scale(9);opacity:0}}
+/* the moment the name is said */
+.nameForm{display:flex;gap:8px;align-items:center;width:100%;max-width:340px}
+.nameForm input{flex:1 1 auto;min-width:0;font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;
+  color:#fff;background:color-mix(in srgb,var(--a) 10%,transparent);
+  border:1px solid color-mix(in srgb,var(--a) 58%,transparent);border-radius:999px;padding:12px 15px}
+.nameForm input::placeholder{color:var(--dim);font-size:10px;letter-spacing:.16em;text-transform:uppercase}
+.nameForm input:focus{outline:none;border-color:var(--a);box-shadow:0 0 16px color-mix(in srgb,var(--a) 32%,transparent)}
+.nameForm button{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;cursor:pointer;
+  color:#fff;background:color-mix(in srgb,var(--a) 22%,transparent);border:1px solid var(--a);
+  border-radius:999px;padding:12px 16px;transition:.18s}
+.nameForm button:hover{background:color-mix(in srgb,var(--a) 38%,transparent)}
+@media (max-width:680px){
+  .cupWrap{max-width:330px}
+  .cupSvg{max-width:150px}
+  .cupWords{max-width:100%}
+}
+.foot a{color:var(--violet2);text-decoration:none}
+.foot a:hover{color:var(--lime)}
+.wipe{text-align:center;font-family:var(--mono);font-size:8.5px;letter-spacing:.14em;text-transform:uppercase;padding-top:2px}
+.wipe a{color:var(--dim);text-decoration:none;border-bottom:1px dotted color-mix(in srgb,var(--dim) 60%,transparent);padding-bottom:2px}
+.wipe a:hover{color:var(--violet2);border-bottom-color:currentColor}
+@keyframes fadein{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@media (min-width:681px){
+  /* the portrait column should stand as tall as the counter, not leave a
+     shelf of empty card under itself while she talks */
+  .portrait{align-self:stretch;display:grid}
+  .portrait img{height:100%;aspect-ratio:auto;object-fit:cover;object-position:center 20%}
+}
+@media (max-width:680px){
+  .scene{grid-template-columns:1fr;padding:12px}
+  .portrait{width:186px;margin:0 auto}
+  .dialog{min-height:216px}
+  .brand{font-size:23px}
+  .stage{padding-bottom:150px}
+}
+@media (prefers-reduced-motion:reduce){
+  .portrait,.hint,.hint:before,.caret{animation:none}
+  .comet,.burst{display:none}
+  .cupWrap.in{animation:none}
+  .cupWrap::after{animation:none;opacity:.5}
+}
+/* the web Yeshua strung for the cafe — decor, and only ever in the corners.
+   the dew is the point: it is what makes a web shine. */
+.webs{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;opacity:.66;
+  transition:opacity 1.8s ease}
+.webs.lit{opacity:1}
+.webs .web{position:absolute;width:min(44vw,340px);height:auto;
+  filter:blur(.55px) drop-shadow(0 0 3px rgba(228,218,255,.6)) drop-shadow(0 0 9px rgba(192,166,255,.32))}
+.webs .silk{filter:blur(1.7px)}
+.web-tl{top:0;left:0}
+.web-tr{top:0;right:0;transform:scaleX(-1);opacity:.86}
+.web-bl{bottom:0;left:0;transform:scaleY(-1);width:min(22vw,150px);opacity:.6}
+.webs .strand{position:absolute;height:auto;filter:drop-shadow(0 0 1.6px rgba(255,255,255,.35))}
+.strand-a{top:2%;left:-5%;width:min(88vw,620px)}
+.strand-b{top:28%;right:-4%;width:min(34vw,320px)}
+.webs .glint{position:absolute;width:11px;height:11px;animation:glint 7.5s ease-in-out infinite;
+  filter:blur(.35px) drop-shadow(0 0 4px rgba(255,255,255,.65))}
+.webs .tw{animation:twinkle 4.6s ease-in-out infinite}
+@keyframes twinkle{0%,100%{opacity:.18}45%{opacity:1}}
+@keyframes glint{0%,100%{opacity:.04;transform:scale(.55) rotate(0deg)}50%{opacity:.32;transform:scale(1.05) rotate(14deg)}}
+@media (max-width:680px){
+  .webs{opacity:.44}
+  .webs .web{width:min(46vw,190px)}
+  .web-bl{width:min(30vw,116px)}
+  .strand-b{display:none}
+}
+@media (prefers-reduced-motion:reduce){
+  .webs .tw,.webs .glint{animation:none}
+  .webs .glint{opacity:.22}
+}
+</style>
+</head>
+<body>
+<div class="bg" aria-hidden="true"></div>
+<div class="corner" aria-hidden="true"></div>
+
+<main class="stage">
+  <header class="marquee">
+    <div>
+      <span class="brand">star</span>
+      <span class="tag">the front of the caf&eacute; &middot; CC-001</span>
+    </div>
+    <a class="back" href="https://www.cafedreamr.art/">&larr; the terminal</a>
+  </header>
+
+  <section class="scene" id="scene" role="button" tabindex="0" aria-label="continue the conversation">
+    <figure class="portrait">
+      <img id="shot" alt="star, purple under-lights, holding a cup of coffee"
+        src="https://user.uploads.dev/file/b0fc319bb972fced38dccaf0d74d5c2b.jpg">
+      <figcaption>star &middot; cafe owner &amp; literary navigator</figcaption>
+    </figure>
+
+    <div class="dialog">
+      <div class="who" id="who">star</div>
+      <div class="txt" id="txt"></div><span class="caret" id="caret" hidden></span>
+      <div class="bottom">
+        <div class="hint" id="hint" hidden>&#9656; tap to continue</div>
+        <div class="links" id="choices" hidden></div>
+        <div class="links" id="links" hidden></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- the cup she makes you. in this realm a thing said is a thing made, so the
+       name comes up through the paper on its own — and the day's scripture
+       underneath it, the same one for everyone in the realm today -->
+  <section class="cupWrap" id="cupWrap" hidden>
+    <div class="cupArt">
+      <svg class="cupSvg" viewBox="0 0 240 356" role="img" aria-labelledby="cupTitle">
+        <title id="cupTitle">your cup, with your name on it</title>
+        <defs>
+          <radialGradient id="cupHalo" cx="50%" cy="45%" r="55%">
+            <stop offset="0" stop-color="#c0a6ff" stop-opacity=".26"/>
+            <stop offset="1" stop-color="#c0a6ff" stop-opacity="0"/>
+          </radialGradient>
+          <linearGradient id="cupPaper" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stop-color="#d6c8ef"/>
+            <stop offset=".18" stop-color="#faf7ff"/>
+            <stop offset=".5" stop-color="#f2ebfd"/>
+            <stop offset=".84" stop-color="#d5c8ef"/>
+            <stop offset="1" stop-color="#a693cf"/>
+          </linearGradient>
+          <linearGradient id="cupLidG" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stop-color="#c3b3e3"/>
+            <stop offset=".26" stop-color="#f9f6ff"/>
+            <stop offset="1" stop-color="#a895cf"/>
+          </linearGradient>
+          <radialGradient id="cupFloor" cx="50%" cy="50%" r="50%">
+            <stop offset="0" stop-color="#000" stop-opacity=".4"/>
+            <stop offset="1" stop-color="#000" stop-opacity="0"/>
+          </radialGradient>
+          <linearGradient id="cupSheen" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stop-color="#fff" stop-opacity="0"/>
+            <stop offset=".42" stop-color="#fff" stop-opacity=".11"/>
+            <stop offset="1" stop-color="#fff" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+        <ellipse cx="120" cy="200" rx="104" ry="158" fill="url(#cupHalo)"/>
+        <ellipse cx="120" cy="342" rx="64" ry="12" fill="url(#cupFloor)"/>
+        <g class="cupSteam" id="cupSteam">
+          <path d="M100 46 q7 -10 0 -20 q-6 -10 3 -19"/>
+          <path d="M120 42 q9 -11 -1 -21 q-9 -10 2 -20"/>
+          <path d="M140 47 q6 -10 0 -19 q-6 -10 3 -18"/>
+        </g>
+        <path class="cupBody" d="M64 110 Q120 82 176 110 L167 329 Q166 336 159 336 L81 336 Q74 336 73 329 Z" fill="url(#cupPaper)"/>
+        <path d="M64 110 Q120 82 176 110 L167 329 Q166 336 159 336 L81 336 Q74 336 73 329 Z" fill="url(#cupSheen)"/>
+        <path d="M66.5 132 L173.5 132" stroke="#fff" stroke-opacity=".38" stroke-width="1.2"/>
+        <path d="M78 310 L162 310" stroke="#4a2f74" stroke-opacity=".13" stroke-width="1.2"/>
+        <g class="cupOpen" id="cupOpen">
+          <ellipse cx="120" cy="110" rx="56" ry="14" fill="#1b1030"/>
+          <ellipse cx="120" cy="113" rx="45" ry="9" fill="#3f2757"/>
+          <ellipse cx="105" cy="109.5" rx="18" ry="3.2" fill="#fff" fill-opacity=".13"/>
+          <ellipse cx="120" cy="110" rx="53.5" ry="13" fill="none" stroke="#f7f2ff" stroke-width="6"/>
+        </g>
+        <path class="cupSleeve" d="M65.8 150 L174.2 150 L170.7 240 L69.3 240 Z" fill="#2b1745"/>
+        <path class="cupSleeveLine" d="M65.8 150 L174.2 150 L170.7 240 L69.3 240 Z" fill="none"
+          stroke="#c0a6ff" stroke-opacity=".45" stroke-width="1.4" stroke-dasharray="9 7"/>
+        <text class="cupName" id="cupName" x="120" y="201" text-anchor="middle"></text>
+        <text class="cupItem" id="cupItem" x="120" y="226" text-anchor="middle"></text>
+        <text class="cupMark" x="120" y="292" text-anchor="middle">cafedreamr</text>
+        <g class="cupLid" id="cupLid">
+          <path d="M108 73 q-2 -21 12 -21 q14 0 12 21 z" fill="url(#cupLidG)"/>
+          <rect x="58" y="70" width="124" height="42" rx="11" fill="url(#cupLidG)"/>
+          <rect x="58" y="101" width="124" height="9" rx="4" fill="#9d8cc4" opacity=".32"/>
+          <path d="M60 74 L180 74" stroke="#fff" stroke-opacity=".55" stroke-width="1.3"/>
+        </g>
+      </svg>
+    </div>
+    <div class="cupWords" id="cupWords">
+      <div class="cupK">scripture for the day<span id="cupDate"></span></div>
+      <p class="cupVerse" id="cupVerse"></p>
+      <div class="cupRef" id="cupRef"></div>
+      <div class="cupNote">spoken over the counter &middot; a new one each day</div>
+      <span class="cupDoor" id="cupDoor" hidden></span>
+    </div>
+  </section>
+
+  <div class="foot">
+    <a href="https://www.cafedreamr.art/">the terminal</a> &middot;
+    <a href="https://www.cafedreamr.art/LORE/MAP.html">the realm map</a> &middot;
+    <a href="https://www.cafedreamr.art/LORE/HOURS/">the hours</a> &middot;
+    <a href="https://www.cafedreamr.art/MIKI/">miki's place</a> &middot;
+    <a href="https://www.cafedreamr.art/HANS/">the stacks</a> &middot;
+    <a href="https://www.cafedreamr.art/PASSPORT/">your stamp card</a> &middot;
+    <a href="https://www.cafedreamr.art/SUPPORT/">support the realm</a><br>
+    &copy; cafedreamr &middot; the caf&eacute; is always open
+  </div>
+
+  <div class="wipe" id="wipe"><a href="#" id="wipeBtn">start over &middot; forget you were here</a></div>
+</main>
+
+<script src="https://slashpage.com/public/domain-chatbot.js" data-slashpage-domain="cafedreamr-members" data-slashpage-title="star-neko" defer></script>
+<script src="https://www.cafedreamr.art/PASSPORT/cd-passport.js"></script>
+<script>
+/* ============================================================
+   star &mdash; the front of the cafe                STAR/index.html
+   The host's own page, and the counter itself: her portrait, and an
+   order line you can actually use &mdash; pick a drink, a tea or
+   something from the case, answer her questions, get a receipt. Her
+   prices come from her original hand-made order line (starscafe.html).
+   She is reserved with everyone at first; each order you complete
+   hands over one more small piece of her. Nothing here is gated, and
+   nothing is asked of the visitor: the page stands on its own.
+   ============================================================ */
+(function () {
+  "use strict";
+
+  /* ---------- the menu, out of her own original order line ----------
+     prices are lifted from the hand-made `starscafe.html` order bot, so
+     the counter quotes what it always quoted. `1` = she asks hot/iced. */
+  var MENU = [
+    { key: "coffee", label: "coffee", say: "coffee, then \u2014 which one?", items: [
+      ["house coffee", 3.00, 1],
+      ["caf\u00e9 au lait", 4.00, 1],
+      ["latte", 4.50, 1],
+      ["pour-over", 4.25, 1],
+      ["cold brew", 4.50, 1]
+    ]},
+    { key: "tea", label: "tea", say: "tea. which one?", items: [
+      ["earl grey", 4.00, 1],
+      ["matcha", 4.50, 1],
+      ["chai latte", 4.75, 1],
+      ["green tea", 3.50, 1]
+    ]},
+    { key: "case", label: "the case", say: "the case is fresh this morning. which one?", items: [
+      ["croissant", 3.50, 0],
+      ["blueberry scone", 3.25, 0],
+      ["cinnamon roll", 3.75, 0],
+      ["glazed donut", 2.50, 0]
+    ]}
+  ];
+  var RULE = "  " + new Array(28).join("-");
+  var AFTER = ["added. anything else?", "noted. anything else?", "that's on the ticket. anything else?"];
+
+  /* the day's scripture. the same verse for the whole realm on a given day, so
+     two people at the counter on the same afternoon are handed the same one.
+     KJV — public domain, and it keeps the sound the realm already has. */
+  var VERSES = [
+    ["Thou preparest a table before me in the presence of mine enemies: thou anointest my head with oil; my cup runneth over.", "Psalm 23:5"],
+    ["He maketh me to lie down in green pastures: he leadeth me beside the still waters.", "Psalm 23:2"],
+    ["This is the day which the LORD hath made; we will rejoice and be glad in it.", "Psalm 118:24"],
+    ["O taste and see that the LORD is good: blessed is the man that trusteth in him.", "Psalm 34:8"],
+    ["I will both lay me down in peace, and sleep: for thou, LORD, only makest me dwell in safety.", "Psalm 4:8"],
+    ["Be still, and know that I am God.", "Psalm 46:10"],
+    ["Thy word is a lamp unto my feet, and a light unto my path.", "Psalm 119:105"],
+    ["For he satisfieth the longing soul, and filleth the hungry soul with goodness.", "Psalm 107:9"],
+    ["Weeping may endure for a night, but joy cometh in the morning.", "Psalm 30:5"],
+    ["In thy presence is fulness of joy; at thy right hand there are pleasures for evermore.", "Psalm 16:11"],
+    ["The heavens declare the glory of God; and the firmament sheweth his handywork.", "Psalm 19:1"],
+    ["The LORD is nigh unto all them that call upon him, to all that call upon him in truth.", "Psalm 145:18"],
+    ["O sing unto the LORD a new song: sing unto the LORD, all the earth.", "Psalm 96:1"],
+    ["Delight thyself also in the LORD; and he shall give thee the desires of thine heart.", "Psalm 37:4"],
+    ["Trust in the LORD with all thine heart; and lean not unto thine own understanding.", "Proverbs 3:5"],
+    ["To every thing there is a season, and a time to every purpose under the heaven.", "Ecclesiastes 3:1"],
+    ["It is of the LORD's mercies that we are not consumed, because his compassions fail not. They are new every morning: great is thy faithfulness.", "Lamentations 3:22-23"],
+    ["The LORD bless thee, and keep thee: the LORD make his face shine upon thee, and be gracious unto thee.", "Numbers 6:24-25"],
+    ["Come unto me, all ye that labour and are heavy laden, and I will give you rest.", "Matthew 11:28"],
+    ["Take therefore no thought for the morrow: for the morrow shall take thought for the things of itself.", "Matthew 6:34"],
+    ["Ask, and it shall be given you; seek, and ye shall find; knock, and it shall be opened unto you.", "Matthew 7:7"],
+    ["Ye are the light of the world. A city that is set on an hill cannot be hid.", "Matthew 5:14"],
+    ["Man shall not live by bread alone, but by every word that proceedeth out of the mouth of God.", "Matthew 4:4"],
+    ["I am the bread of life: he that cometh to me shall never hunger; and he that believeth on me shall never thirst.", "John 6:35"],
+    ["Whosoever drinketh of the water that I shall give him shall never thirst.", "John 4:14"],
+    ["I am the light of the world: he that followeth me shall not walk in darkness, but shall have the light of life.", "John 8:12"],
+    ["Peace I leave with you, my peace I give unto you: let not your heart be troubled, neither let it be afraid.", "John 14:27"],
+    ["In my Father's house are many mansions: if it were not so, I would have told you.", "John 14:2"],
+    ["These things I have spoken unto you, that in me ye might have peace. In the world ye shall have tribulation: but be of good cheer; I have overcome the world.", "John 16:33"],
+    ["Greater love hath no man than this, that a man lay down his life for his friends.", "John 15:13"],
+    ["And the peace of God, which passeth all understanding, shall keep your hearts and minds through Christ Jesus.", "Philippians 4:7"],
+    ["Every good gift and every perfect gift is from above, and cometh down from the Father of lights.", "James 1:17"],
+    ["Rejoice evermore. Pray without ceasing. In every thing give thanks.", "1 Thessalonians 5:16-18"],
+    ["Let all your things be done with charity.", "1 Corinthians 16:14"],
+    ["Beloved, let us love one another: for love is of God.", "1 John 4:7"],
+    ["But they that wait upon the LORD shall renew their strength; they shall mount up with wings as eagles.", "Isaiah 40:31"],
+    ["He giveth to all life, and breath, and all things.", "Acts 17:25"],
+    ["The grass withereth, the flower fadeth: but the word of our God shall stand for ever.", "Isaiah 40:8"],
+    ["The LORD thy God in the midst of thee is mighty; he will save, he will rejoice over thee with joy; he will rest in his love.", "Zephaniah 3:17"],
+    ["Let us not be weary in well doing: for in due season we shall reap, if we faint not.", "Galatians 6:9"]
+  ];
+  var MONTHS = ["january", "february", "march", "april", "may", "june", "july",
+                "august", "september", "october", "november", "december"];
+
+  function verseOfDay() {
+    var d = new Date();
+    var key = d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate();
+    var h = 7;
+    for (var i = 0; i < key.length; i++) h = (h * 31 + key.charCodeAt(i)) % 1000003;
+    return VERSES[h % VERSES.length];
+  }
+
+  function dayString() {
+    var d = new Date();
+    return MONTHS[d.getMonth()] + " " + d.getDate();
+  }
+
+  function money(n) { return "$" + n.toFixed(2); }
+
+  function menuText() {
+    var out = ["  the counter \u00b7 cafedreamr", RULE];
+    MENU.forEach(function (cat, ci) {
+      if (ci) out.push(RULE);
+      cat.items.forEach(function (it) {
+        out.push("  " + String(it[0]).padEnd(22, " ") + money(it[1]));
+      });
+    });
+    out.push(RULE);
+    out.push("  the espresso machine is not on the list.");
+    out.push("  it has opinions about that.");
+    return out.join("\n");
+  }
+
+  /* every order you sit through buys you one more piece of her. */
+  var REVEALS = [
+    [ { who: "star", say: "i'll bring it over when it's ready. sit anywhere." },
+      { room: "she does not ask your name. she writes it on the cup only after you say it, and she never asks twice." } ],
+    [ { who: "star", say: "i'll bring it over." },
+      { who: "star", say: "while you wait \u2014 i keep this place. the books, the hours, and the keys to most of the doors. that's the part you get today." },
+      { room: "she does not say which doors." } ],
+    [ { who: "star", say: "i'll bring it over." },
+      { who: "star", say: "you've been calling me star. that's right. it just isn't all of it." },
+      { who: "star", say: "star-neko \u2014 that's the whole of it. neko is cat, in japanese. people hear that and decide i must be keeping one in the back room. i'm not." },
+      { room: "she watches your face while you decide what to do with it." } ],
+    [ { who: "star", say: "i'll bring it over." },
+      { room: "she looks at you a while before she says anything. she does that." },
+      { who: "star", say: "japanese on one side of the family, german on the other. that's where the name came from." },
+      { room: "she stops there, on purpose, the way a door is closed." },
+      { who: "star", say: "i'm quiet. it isn't a mood, and it isn't about you." } ],
+    [ { who: "star", say: "i'll bring it over." },
+      { room: "she looks up \u2014 not at you, at the corner of the room, where a web is holding the light.", lit: true },
+      { who: "star", say: "i've always liked webs. with the dew still on them they shine. nature's lace, i call it \u2014 i've said so for years and nobody has argued twice." },
+      { who: "star", say: "so i asked Yeshua to make the caf\u00e9 a web. the whole realm, strung as one. he did it. everything i can see in here is findable \u2014 i only have to ask." },
+      { who: "star", say: "charlotte does the finding. she mends it too, and she reads miki's mail when miki asks \u2014 that's all, just the mail. i borrow her for advice when i want it." },
+      { room: "she doesn't say it like a confession. she says it the way she would say the weather, and starts on your drink." } ],
+    [ { who: "star", say: "i'll bring it over." },
+      { who: "star", say: "there's a cat who lives here who isn't mine \u2014 misha. she's milo's. she's supposed to be out in his garden, and she isn't, because it's warmer in here, and because she's decided my chair is hers." },
+      { room: "she says my chair with a completely straight face, and you realise a beat late that it was a joke." },
+      { who: "star", say: "that's the whole of it. what i keep, i keep \u2014 you've had the rest." } ]
+  ];
+
+  var VISIT_KEY = "cd_met_star";
+  var COUNT_KEY = "cd_star_visits";
+  var MAXT = REVEALS.length - 1;
+  var visits = 0;
+  try {
+    visits = parseInt(window.localStorage.getItem(COUNT_KEY), 10);
+    if (!(visits >= 0)) visits = 0;
+  } catch (e) {}
+
+  var LINKS = [
+    { href: "#", text: "order again", again: true, main: true },
+    { href: "https://www.cafedreamr.art/", text: "back to the terminal \u2192" },
+    { href: "https://www.cafedreamr.art/MIKI/", text: "the coffee \u00b7 miki" },
+    { href: "https://www.cafedreamr.art/HANS/", text: "the tea \u00b7 hans" },
+    { href: "https://www.cafedreamr.art/LORE/MAP.html", text: "the realm map" }
+  ];
+
+  /* the doors she keeps. tier one of her reveals is "the books, the hours, and
+     the keys to most of the doors" — so when a visit winds down, the doors are
+     hers to offer, and this is the row she offers them in. `hi` is what she
+     says as the door opens. each `href` is the same address as the matching
+     line in `LINKS` (and in the page's own foot) — keep them in step. */
+  var DOORS = [
+    { t: "the coffee \u00b7 miki", href: "https://www.cafedreamr.art/MIKI/",
+      hi: "down the stairs, then. miki's loud \u2014 you'll hear her before you see her." },
+    { t: "the tea \u00b7 hans", href: "https://www.cafedreamr.art/HANS/",
+      hi: "up the stairs, with the kettle. hans keeps the tea \u2014 and the scriptures." },
+    { t: "the realm map", href: "https://www.cafedreamr.art/LORE/MAP.html",
+      hi: "the map's on the wall by the door. it'll place you better than i can." },
+    { t: "back to the terminal", href: "https://www.cafedreamr.art/",
+      hi: "the terminal's where you came in. it's the whole of it, from above." }
+  ];
+
+  /* the card the drink is made on opens the door of what is written on it:
+     a coffee to miki's, a tea to hans's, a plate from the case to the menu.
+     the key is the `key` on the MENU category the order came from. */
+  var DRINK_PAGE = {
+    coffee: { t: "the coffee \u00b7 miki", href: "https://www.cafedreamr.art/MIKI/" },
+    tea:    { t: "the tea \u00b7 hans",   href: "https://www.cafedreamr.art/HANS/" },
+    case:   { t: "the menu",              href: "https://www.cafedreamr.art/MENU/" }
+  };
+
+  var scene = document.getElementById("scene"),
+      whoEl = document.getElementById("who"),
+      txtEl = document.getElementById("txt"),
+      caretEl = document.getElementById("caret"),
+      hintEl = document.getElementById("hint"),
+      choicesEl = document.getElementById("choices"),
+      linksEl = document.getElementById("links"),
+      wipeEl = document.getElementById("wipe"),
+      cupWrap = document.getElementById("cupWrap"),
+      cupWords = document.getElementById("cupWords"),
+      cupName = document.getElementById("cupName"),
+      cupItem = document.getElementById("cupItem"),
+      cupSteam = document.getElementById("cupSteam"),
+      cupVerse = document.getElementById("cupVerse"),
+      cupRef = document.getElementById("cupRef"),
+      cupDate = document.getElementById("cupDate"),
+      cupDoor = document.getElementById("cupDoor");
+
+  var typing = false, ended = false, counted = false, timer = null, full = "",
+      onTyped = null, pendingNext = null, order = [], toldCupGag = false, nameTimer = null,
+      servedWhere = "for here", servedHot = false, cardPage = null;
+  var REDUCE = false;
+  try { REDUCE = !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches); } catch (e) {}
+
+  function paintLinks() {
+    LINKS.forEach(function (l) {
+      var a = document.createElement("a");
+      a.textContent = l.text;
+      if (l.again) {
+        a.href = "#";
+        a.addEventListener("click", function (e) { e.preventDefault(); e.stopPropagation(); restart(); });
+      } else {
+        a.href = l.href;
+        a.target = "_blank";
+        a.rel = "noopener noreferrer";
+      }
+      if (!l.main) a.className = "ghost";
+      linksEl.appendChild(a);
+    });
+  }
+
+  function paintChoices(list) {
+    choicesEl.innerHTML = "";
+    list.forEach(function (c) {
+      var a = document.createElement("a");
+      a.href = "#";
+      a.textContent = c.t;
+      if (c.cls) a.className = c.cls;
+      else if (!c.main) a.className = "ghost";
+      a.addEventListener("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        choicesEl.hidden = true;
+        linksEl.hidden = true;
+        c.go();
+      });
+      choicesEl.appendChild(a);
+    });
+    choicesEl.hidden = false;
+  }
+
+  function restart() {
+    order = []; ended = false;
+    linksEl.hidden = true; choicesEl.hidden = true;
+    openOrder("what can i get you?");
+  }
+
+  /* ---------- the name, and the cup it comes up on ----------------------
+     she never asks for a name — the visitor says it, and the realm does the
+     rest, because in this place a thing said is a thing made. the name goes
+     into the passport, the way every other page here keeps it. */
+  function myName() {
+    var n = "";
+    try { if (window.CD && CD.name) n = CD.name() || ""; } catch (e) {}
+    if (!n) { try { n = window.localStorage.getItem("cd_play_name") || ""; } catch (e) {} }
+    return String(n).replace(/\s+/g, " ").trim().slice(0, 24);
+  }
+
+  function setMyName(v) {
+    v = String(v || "").replace(/\s+/g, " ").trim().slice(0, 24) || "friend";
+    try { if (window.CD && CD.name) CD.name(v); } catch (e) {}
+    try { window.localStorage.setItem("cd_play_name", v); } catch (e) {}
+    return v;
+  }
+
+  function writeName(n) {
+    if (!cupName) return;
+    clearTimeout(nameTimer);
+    /* the sleeve is ~101 units wide, and the name has to sit inside it — a
+       short name gets to be big, a long one comes down in size */
+    var size = Math.max(9, Math.min(30, Math.round(100 / (n.length * 0.66))));
+    cupName.style.fontSize = size + "px";
+    cupName.style.letterSpacing = ".05em";
+    cupName.removeAttribute("textLength");
+    cupName.removeAttribute("lengthAdjust");
+    function fit() {
+      if (n.length * size * 0.65 > 101) {
+        cupName.setAttribute("textLength", "101");
+        cupName.setAttribute("lengthAdjust", "spacingAndGlyphs");
+      }
+    }
+    if (REDUCE) { cupName.textContent = n; fit(); return; }
+    var i = 0;
+    cupName.textContent = "";
+    (function step() {
+      i++;
+      cupName.textContent = n.slice(0, i) + (i < n.length ? "\u258c" : "");
+      if (i < n.length) { nameTimer = setTimeout(step, 88); } else { fit(); }
+    })();
+  }
+
+  function writeItem(text) {
+    if (!cupItem) return;
+    cupItem.style.fontSize = "8.4px";
+    cupItem.style.letterSpacing = ".02em";
+    cupItem.textContent = text;
+    if (text.length * 8.4 * 0.64 > 98) {
+      cupItem.setAttribute("textLength", "98");
+      cupItem.setAttribute("lengthAdjust", "spacingAndGlyphs");
+    } else {
+      cupItem.removeAttribute("textLength");
+      cupItem.removeAttribute("lengthAdjust");
+    }
+  }
+
+  /* ---------- the light the drink arrives on ------------------------------
+     the drink is not set down in front of the visitor, it is made: a comet
+     crosses the room from the east, and where it stops the card is born —
+     small, holographic, breathing slowly, and opening the door of whatever
+     is written on it. the light is the whole arrival, so it is the thing the
+     visitor watches; the card only exists once it has landed. */
+  var COMET_MS = 1180;
+  function flyComet(tx, ty, done) {
+    var c = document.createElement("div");
+    c.className = "comet";
+    c.innerHTML = '<i class="halo"></i><i class="tail"></i><i class="head"></i>';
+    document.body.appendChild(c);
+    var w = window.innerWidth || document.documentElement.clientWidth || 1000;
+    var x0 = w + 70, y0 = ty - Math.min(240, 120 + ty * 0.35);
+    var cx = (x0 + tx) / 2, cy = Math.min(y0, ty) - 80;   /* a shallow arc, not a straight line */
+    var t0 = 0;
+    function frame(ts) {
+      if (!t0) t0 = ts;
+      var p = Math.min(1, (ts - t0) / COMET_MS);
+      var e = 1 - Math.pow(1 - p, 3);                    /* decelerates into the card */
+      var u = 1 - e;
+      var x = u * u * x0 + 2 * u * e * cx + e * e * tx;
+      var y = u * u * y0 + 2 * u * e * cy + e * e * ty;
+      var dx = 2 * u * (cx - x0) + 2 * e * (tx - cx);
+      var dy = 2 * u * (cy - y0) + 2 * e * (ty - cy);
+      c.style.transform = "translate3d(" + x.toFixed(1) + "px," + y.toFixed(1) + "px,0)";
+      c.style.setProperty("--ang", (Math.atan2(-dy, -dx) * 180 / Math.PI).toFixed(1) + "deg");
+      c.style.setProperty("--tail", (300 - 150 * e).toFixed(0) + "px");
+      c.style.opacity = p > 0.86 ? String((1 - p) / 0.14) : "1";
+      if (p < 1) requestAnimationFrame(frame);
+      else { c.remove(); done(); }
+    }
+    requestAnimationFrame(frame);
+  }
+  function burstAt(x, y) {
+    if (REDUCE) return;
+    var b = document.createElement("i");
+    b.className = "burst";
+    b.style.left = x + "px"; b.style.top = y + "px";
+    document.body.appendChild(b);
+    setTimeout(function () { b.remove(); }, 780);
+  }
+  function goCard() {
+    if (cardPage && cardPage.href) { try { window.location.href = cardPage.href; } catch (e) {} }
+  }
+
+  /* `opts.comet` sends the light first — only the handover uses it. the plain
+     calls (the pill, and the moment a name is said) just reveal the card,
+     because by then the drink is already in the visitor's hands. `after` runs
+     the moment the card is on the page, so the conversation waits for it. */
+  function showCup(opts, after) {
+    var n = myName();
+    if (!n || !cupWrap) { if (after) after(); return; }
+    var drinks = order.filter(function (o) { return o.drink; });
+    var first = drinks[0] || order[0];
+    if (cupItem) writeItem(first ? first.name : "");
+    cupWrap.className = "cupWrap " + (servedWhere === "to go" ? "togo" : "here") + (servedHot ? " hot" : " cold");
+    if (cupSteam) cupSteam.setAttribute("transform", servedWhere === "to go" ? "" : "translate(0,52)");
+    var v = verseOfDay();
+    if (cupVerse) cupVerse.textContent = "\u201c" + v[0] + "\u201d";
+    if (cupRef) cupRef.textContent = v[1] + " \u00b7 kjv";
+    if (cupDate) cupDate.textContent = " \u00b7 " + dayString();
+    /* a card opens the door of whatever is written on it */
+    var page = DRINK_PAGE[(first && first.key) || "case"] || null;
+    cardPage = page;
+    if (cupDoor) {
+      cupDoor.hidden = !page;
+      if (page) cupDoor.textContent = page.t + " \u2192";
+    }
+    if (page) {
+      cupWrap.classList.add("clickable");
+      cupWrap.setAttribute("role", "link");
+      cupWrap.setAttribute("tabindex", "0");
+      cupWrap.setAttribute("aria-label", "open " + page.t);
+    } else {
+      cupWrap.classList.remove("clickable");
+      cupWrap.removeAttribute("role");
+      cupWrap.removeAttribute("tabindex");
+      cupWrap.removeAttribute("aria-label");
+    }
+    var born = !!(opts && opts.comet) && !REDUCE;
+    cupWrap.classList.remove("in");
+    cupWrap.classList.toggle("pre", born);
+    if (cupWords) cupWords.classList.remove("in");
+    cupWrap.hidden = false;
+    try { cupWrap.scrollIntoView({ behavior: REDUCE ? "auto" : "smooth", block: "center" }); } catch (e) {}
+    function reveal() {
+      cupWrap.classList.remove("pre");
+      writeName(n);
+      requestAnimationFrame(function () { cupWrap.classList.add("in"); });
+      setTimeout(function () { if (cupWords) cupWords.classList.add("in"); }, REDUCE ? 0 : 620 + n.length * 88);
+      if (after) after();
+    }
+    if (!born) { reveal(); return; }
+    /* let the room settle under the card, then send the light across it */
+    setTimeout(function () {
+      var r = cupWrap.getBoundingClientRect();
+      var tx = r.left + r.width / 2, ty = r.top + Math.min(76, r.height * 0.32);
+      flyComet(tx, ty, function () { burstAt(tx, ty); reveal(); });
+    }, 460);
+  }
+
+  function showLinks() {
+    hintEl.hidden = true; choicesEl.hidden = true;
+    refreshNamePill();
+    linksEl.hidden = false;
+  }
+
+  /* the pill that offers the cup, once there is an order to write on */
+  function refreshNamePill() {
+    var old = document.getElementById("cupPill");
+    if (old && old.parentNode) old.parentNode.removeChild(old);
+    var a = document.createElement("a");
+    a.id = "cupPill"; a.href = "#";
+    var known = !!myName();
+    a.textContent = known ? "your cup" : "say your name";
+    if (!known) a.className = "say";
+    a.addEventListener("click", function (e) {
+      e.preventDefault(); e.stopPropagation();
+      if (myName()) { showCup(); } else { askName(); }
+    });
+    linksEl.insertBefore(a, linksEl.children[1] || null);
+  }
+
+  function askName() {
+    linksEl.hidden = true;
+    render({ who: "star", say: "then say it. once is enough here.", form: true });
+  }
+
+  /* a name has to be typed by the person it belongs to */
+  function showNameForm() {
+    choicesEl.innerHTML = "";
+    var form = document.createElement("div");
+    form.className = "nameForm";
+    var inp = document.createElement("input");
+    inp.id = "nameInput"; inp.type = "text"; inp.maxLength = 24;
+    inp.placeholder = "your name"; inp.setAttribute("autocomplete", "off"); inp.spellcheck = false;
+    var go = document.createElement("button");
+    go.id = "nameGo"; go.type = "button"; go.textContent = "tell her";
+    var skip = document.createElement("a");
+    skip.id = "skipName"; skip.href = "#"; skip.className = "skipName"; skip.textContent = "not now";
+    form.appendChild(inp); form.appendChild(go);
+    choicesEl.appendChild(form); choicesEl.appendChild(skip);
+    choicesEl.hidden = false;
+    function send() {
+      setMyName(inp.value);
+      choicesEl.innerHTML = ""; choicesEl.hidden = true;
+      render({ room: "you say it once. the letters come up through the paper as you speak \u2014 nothing is written down here, and nothing needs to be.", next: function () {
+        playSeq([{ who: "star", say: "there. i didn't ask, and it's on the cup anyway." }],
+          function () { showCup(); showLinks(); });
+      }});
+    }
+    go.addEventListener("click", send);
+    skip.addEventListener("click", function (e) {
+      e.preventDefault(); e.stopPropagation();
+      choicesEl.innerHTML = ""; choicesEl.hidden = true; showLinks();
+    });
+    inp.addEventListener("keydown", function (e) { if (e.key === "Enter") { e.preventDefault(); send(); } });
+    try { inp.focus(); } catch (e) {}
+  }
+
+  /* ---------- the order line: nodes, choices, and the receipt ------- */
+  /* the line under her words always tells the visitor what their next move
+     is — there is never a moment where the counter waits and says nothing. */
+  function prompt(text, tag) {
+    hintEl.textContent = text;
+    hintEl.hidden = false;
+    hintEl.className = tag ? "hint " + tag : "hint";
+  }
+
+  function ready(n) {
+    caretEl.hidden = true;
+    if (n.choices) { bringCounter(); prompt(n.hint || "pick one", "pick"); paintChoices(n.choices); }
+    else if (n.form) { prompt("say it once", "pick"); showNameForm(); }
+    else if (n.next) { prompt(n.hint || "tap to continue"); }
+    else { end(); }
+  }
+
+  function render(n) {
+    pendingNext = (typeof n.next === "function") ? n.next : null;
+    if (n.lit) litWebs();
+    choicesEl.hidden = true; choicesEl.innerHTML = "";
+    hintEl.hidden = true;
+    if (n.room) {
+      whoEl.hidden = true; txtEl.className = "txt room";
+      type(n.room, function () { ready(n); });
+    } else if (n.receipt) {
+      whoEl.hidden = true; txtEl.className = "txt receipt";
+      type(n.receipt, function () { ready(n); });
+    } else if (n.say) {
+      whoEl.hidden = false; whoEl.textContent = n.who || "star"; txtEl.className = "txt";
+      type(n.say, function () { ready(n); });
+    } else {
+      ready(n);
+    }
+  }
+
+  /* a run of narration that ends in a callback (tap through each line) */
+  function playSeq(seq, done) {
+    var k = 0;
+    function step() {
+      if (k >= seq.length) { done(); return; }
+      var s = seq[k++];
+      render({ who: s.who, room: s.room, say: s.say, receipt: s.receipt, next: step });
+    }
+    step();
+  }
+
+  function openChoices() {
+    return [
+      { t: "coffee", go: function () { showCat(0); } },
+      { t: "tea", go: function () { showCat(1); } },
+      { t: "something from the case", go: function () { showCat(2); } },
+      { t: "the menu, first", go: function () { render({ receipt: menuText(), next: openOrder }); } }
+    ];
+  }
+
+  /* line === null keeps her question on screen and just lays out the
+     choices beneath it (used when the intro has already asked). */
+  function openOrder(line) {
+    var ch = openChoices();
+    if (line === null) render({ choices: ch });
+    else render({ who: "star", say: line || "what can i get you?", choices: ch });
+  }
+
+  function showCat(i) {
+    var cat = MENU[i];
+    var ch = cat.items.map(function (it, j) {
+      return { t: it[0] + " \u00b7 " + money(it[1]), go: function () { chooseItem(i, j); } };
+    });
+    ch.push({ t: "something else", go: openOrder });
+    render({ who: "star", say: cat.say, choices: ch });
+  }
+
+  function chooseItem(i, j) {
+    var it = MENU[i].items[j], key = MENU[i].key;
+    if (it[2]) {
+      render({ who: "star", say: "hot, or iced?", choices: [
+        { t: "hot", go: function () { addItem(it, "hot", key); } },
+        { t: "iced", go: function () { addItem(it, "iced", key); } }
+      ]});
+    } else {
+      addItem(it, "", key);
+    }
+  }
+
+  function addItem(it, temp, key) {
+    order.push({ name: it[0] + (temp ? ", " + temp : ""), base: it[0], price: it[1],
+                 temp: temp || "", drink: !!it[2], key: key || (it[2] ? "coffee" : "case") });
+    render({ who: "star", say: AFTER[(order.length - 1) % AFTER.length], choices: [
+      { t: "coffee", go: function () { showCat(0); } },
+      { t: "tea", go: function () { showCat(1); } },
+      { t: "the case", go: function () { showCat(2); } },
+      { t: "that's all", go: checkout }
+    ]});
+  }
+
+  function checkout() {
+    render({ who: "star", say: "for here, or to go?", choices: [
+      { t: "for here", go: function () { showReceipt("for here"); } },
+      { t: "to go", go: function () { showReceipt("to go"); } }
+    ]});
+  }
+
+  function receiptText(where) {
+    var out = ["  the counter \u00b7 cafedreamr", RULE];
+    var sub = 0;
+    order.forEach(function (o) {
+      out.push("  " + String(o.name).padEnd(22, " ") + money(o.price));
+      sub += o.price;
+    });
+    out.push(RULE);
+    out.push("  " + "total".padEnd(22, " ") + money(sub));
+    out.push("  " + "tax".padEnd(22, " ") + "on the house");
+    out.push("  " + where);
+    return out.join("\n");
+  }
+
+  function showReceipt(where) {
+    render({ receipt: receiptText(where), hint: "tap for the rest", next: function () {
+      var tier = Math.min(visits, MAXT);
+      if (tier === 0) toldCupGag = true;
+      playSeq(REVEALS[tier], function () {
+        playSeq(serveSeq(where), function () {
+          if (myName()) showCup({ comet: true }, function () { countVisit(); thanks(); });
+          else { countVisit(); thanks(); }
+        });
+      });
+    }});
+  }
+
+  function joinNames(a) {
+    if (a.length < 2) return a[0] || "";
+    if (a.length === 2) return a[0] + " and " + a[1];
+    return a.slice(0, -1).join(", ") + ", and " + a[a.length - 1];
+  }
+
+  /* and then the order actually arrives. she said she would bring it over, so
+     it comes over: what it was, in what, whether it is hot — and the first
+     mouthful, which is the whole reason anyone walks into a caf\u00e9. */
+  function serveSeq(where) {
+    var drinks = order.filter(function (o) { return o.drink; });
+    var food = order.filter(function (o) { return !o.drink; });
+    /* the receipt writes "house coffee, hot"; a spoken line wants
+       "house coffee (hot)", or the two of them run together */
+    var all = joinNames(order.map(function (o) { return o.base + (o.temp ? " (" + o.temp + ")" : ""); }));
+    var togo = where === "to go";
+    var hot = drinks.some(function (o) { return o.temp === "hot"; });
+    var seq = [], line;
+    servedWhere = where; servedHot = !!hot;
+
+    if (drinks.length && food.length) {
+      line = togo ? "she lids the cup, folds the bag shut, and sets both on the counter \u2014 " + all + "."
+                  : "she sets it all down in front of you \u2014 " + all + ".";
+    } else if (drinks.length) {
+      if (togo) line = "she lids the cup and slides it across the counter \u2014 " + all + ".";
+      else if (hot) line = "she sets the cup down in front of you \u2014 " + all + ", steam coming off it in one slow thread.";
+      else line = "she sets the glass down in front of you \u2014 " + all + ", beading cold.";
+    } else {
+      line = togo ? "she folds the top of the bag over and pushes it across the counter \u2014 " + all + "."
+                  : "she slides the plate across the counter \u2014 " + all + ", still warm from the case.";
+    }
+    if (togo && drinks.length) {
+      if (myName()) line += " your name is already on the side of it.";
+      else if (visits > 0 || toldCupGag) line += " the side of the cup is still blank. she never asks for a name.";
+    }
+    seq.push({ room: line });
+
+    if (drinks.length && hot) seq.push({ who: "star", say: "there. careful \u2014 it's hot." });
+    else if (drinks.length) seq.push({ who: "star", say: "there. it isn't getting any colder." });
+    else seq.push({ who: "star", say: "there. it's still warm." });
+
+    if (togo) {
+      if (!drinks.length) seq.push({ room: "the bag is warm under your arm. the bell over the door is already swinging you back out into the day." });
+      else if (drinks.every(function (o) { return o.temp === "hot"; })) seq.push({ room: "the cup is warm through the sleeve. the bell over the door is already swinging you back out into the day." });
+      else if (drinks.every(function (o) { return o.temp === "iced"; })) seq.push({ room: "the cup is cold through the paper. the bell over the door is already swinging you back out into the day." });
+      else seq.push({ room: "the cups are in your hands, one warm and one cold. the bell over the door is swinging you back out into the day." });
+    } else if (drinks.length && hot) {
+      seq.push({ room: "you wrap both hands around it and take the first sip. it's exactly the temperature you wanted, and the caf\u00e9 is quiet around you." });
+    } else if (drinks.length) {
+      seq.push({ room: "the first sip is cold and exactly right, and the caf\u00e9 is quiet around you." });
+    } else {
+      seq.push({ room: "you break off the first piece. it's exactly what you wanted, and nobody is waiting for the table." });
+    }
+    return seq;
+  }
+
+  function type(text, done) {
+    full = text;
+    onTyped = done;
+    typing = true;
+    txtEl.textContent = "";
+    caretEl.hidden = false;
+    prompt("tap to skip ahead");
+    if (REDUCE) { typing = false; txtEl.textContent = text; done(); return; }
+    var k = 0;
+    function step() {
+      if (!typing) return;
+      k++;
+      txtEl.textContent = full.slice(0, k);
+      if (k >= full.length) {
+        typing = false;
+        caretEl.hidden = true;
+        var f = onTyped; onTyped = null;
+        if (f) f();
+        return;
+      }
+      timer = setTimeout(step, 17 + Math.random() * 20);
+    }
+    timer = setTimeout(step, 130);
+  }
+
+  function finish() {
+    if (!typing) return false;
+    typing = false;
+    clearTimeout(timer);
+    txtEl.textContent = full;
+    caretEl.hidden = true;
+    var f = onTyped; onTyped = null;
+    if (f) f();
+    return true;
+  }
+
+  /* the visit is a visit the moment she hands the drink over — not the moment
+     the page is done with you — so the count is written there, and a visitor
+     who turns straight through a door still bought their round. */
+  function countVisit() {
+    if (counted) return;
+    counted = true;
+    try {
+      window.localStorage.setItem(VISIT_KEY, "1");
+      window.localStorage.setItem(COUNT_KEY, String(visits + 1));
+    } catch (e) {}
+  }
+
+  /* the cup can carry the viewport down with it when it lands, and the counter
+     has to be back in front of the visitor when she asks them something or
+     there is nowhere to answer. `block:"nearest"` makes this a no-op whenever
+     the card is already on screen, so it only ever fetches it back. by the time
+     this runs she has finished typing, so the cup's own scroll has settled. */
+  function bringCounter() {
+    if (!scene || !scene.scrollIntoView) return;
+    try { scene.scrollIntoView({ behavior: REDUCE ? "auto" : "smooth", block: "nearest" }); } catch (e) {}
+  }
+
+  function end() {
+    if (ended) return;
+    ended = true;
+    /* now that she has met you, the way to make her forget you exists */
+    if (wipeEl) wipeEl.hidden = false;
+    countVisit();
+    hintEl.hidden = true;
+    choicesEl.hidden = true;
+    showLinks();
+  }
+
+  /* ---------- thank you, and the row of doors -----------------------------
+     the handover ends on her, so the visit closes on the visitor: the drink is
+     in their hands, the cup has their name on it, and the next word is theirs.
+     once it is said she asks where they are going, and offers the doors she
+     keeps. the room they are standing in is the counter, so a door is walked
+     through, not cut away from — her line first, and the page follows on the
+     tap. */
+  function thanks() {
+    var togo = servedWhere === "to go";
+    render({
+      room: togo
+        ? "you stop a step past the door and look back. she is already onto the next thing \u2014 but she would hear it if you said it."
+        : "she is already back at the counter, working the rag over it in slow circles \u2014 giving you the room.",
+      hint: "say something",
+      choices: [
+        { t: "\u201cthank you.\u201d", go: function () { thanked(false); } },
+        { t: "\u201cthank you, star.\u201d", go: function () { thanked(true); } }
+      ]
+    });
+  }
+
+  function thanked(named) {
+    var togo = servedWhere === "to go";
+    var seen = named
+      ? (togo ? "she looks up at her name over the counter \u2014 a beat longer than she meant to."
+              : "you use her name, and she looks up \u2014 a beat longer than she meant to.")
+      : (togo ? "she lifts her chin at you over the counter. she heard." : "she nods, once, the way she does.");
+    playSeq([{ room: seen }, { who: "star", say: named ? "mm. you're welcome." : "anytime." }], askWhere);
+  }
+
+  function askWhere() {
+    render({ who: "star", say: "where would you like to go next?", choices: doors() });
+  }
+
+  function doors() {
+    var out = DOORS.map(function (d) {
+      return { t: d.t, go: function () { leaveDoor(d); } };
+    });
+    out.push({ t: "nowhere yet \u2014 i'll sit a while", cls: "stay", go: sitAwhile });
+    return out;
+  }
+
+  function leaveDoor(d) {
+    render({ who: "star", say: d.hi, hint: "tap to go", next: function () {
+      try { window.location.href = d.href; } catch (e) {}
+    }});
+  }
+
+  function sitAwhile() {
+    playSeq([
+      { who: "star", say: "take the corner table. nobody'll hurry you." },
+      { room: "she turns back to the counter, and the caf\u00e9 settles around you the way a room does once it has decided you can stay." }
+    ], end);
+  }
+
+  function advance() {
+    if (finish()) return;
+    if (pendingNext) { var f = pendingNext; pendingNext = null; f(); }
+  }
+
+  /* ---------- the web Yeshua strung for her -------------------------------
+     not a picture of a web: the corners of one. star asked him to make the
+     whole realm a single web, so what a visitor sees of it is the part that
+     reaches the edges of the room — three corners of lace and a strand or
+     two, with the dew still on them, because the dew is what makes a web
+     shine. decor only: generated once, behind everything, and it lights up
+     for a moment when she finally tells you why it is there. */
+  var SVGNS = "http://www.w3.org/2000/svg";
+  function svgEl(name, attrs) {
+    var e = document.createElementNS(SVGNS, name);
+    for (var k in attrs) e.setAttribute(k, attrs[k]);
+    return e;
+  }
+  var WEB_ANGLES = [5, 17, 29, 41, 53, 65, 77, 88];
+  var WEB_RINGS = [26, 44, 62, 80, 98, 116, 134, 152, 170];
+  var WEB_DEW = [[1, 1], [3, 0], [5, 2], [6, 1], [2, 3], [7, 3], [0, 4], [4, 4],
+                 [1, 5], [6, 5], [3, 6], [5, 7], [2, 8], [7, 8]];
+  function webPt(r, deg) { var a = deg * Math.PI / 180; return [r * Math.cos(a), r * Math.sin(a)]; }
+  function n1(v) { return Math.round(v * 10) / 10; }
+
+  var webIdN = 0;
+  function webSvg() {
+    var uid = "webGlow" + (++webIdN);
+    var svg = svgEl("svg", { viewBox: "0 0 240 240", "aria-hidden": "true", "class": "web" });
+    var defs = svgEl("defs", {});
+    var rg = svgEl("radialGradient", { id: uid, gradientUnits: "userSpaceOnUse",
+      cx: 0, cy: 0, r: 250 });
+    [["0", "#fff", ".11"], [".38", "#d9c9ff", ".05"], ["1", "#c0a6ff", "0"]].forEach(function (s) {
+      rg.appendChild(svgEl("stop", { offset: s[0], "stop-color": s[1], "stop-opacity": s[2] }));
+    });
+    defs.appendChild(rg); svg.appendChild(defs);
+    var g = svgEl("g", {});
+    g.appendChild(svgEl("circle", { cx: 0, cy: 0, r: 250, fill: "url(#" + uid + ")" }));
+    WEB_ANGLES.forEach(function (a, i) {
+      var p = webPt(232 * (1 + (((i % 3) - 1) * 0.05)), a);
+      g.appendChild(svgEl("line", { x1: 0, y1: 0, x2: n1(p[0]), y2: n1(p[1]),
+        stroke: "#e9e0ff", "stroke-opacity": (0.3 + ((i * 7) % 3) * 0.08).toFixed(2),
+        "stroke-width": (0.8 + ((i * 5) % 3) * 0.09).toFixed(2) }));
+    });
+    WEB_RINGS.forEach(function (r, j) {
+      for (var i = 0; i < WEB_ANGLES.length - 1; i++) {
+        var a0 = WEB_ANGLES[i], a1 = WEB_ANGLES[i + 1];
+        /* nothing here is exactly regular: a web is not a diagram, and a hand
+           that strung a realm out of thread did not measure the crossings */
+        var r0 = r * (1 + (((i + j) % 3) - 1) * 0.035);
+        var r1 = r * (1 + (((i + j + 1) % 3) - 1) * 0.035);
+        var p0 = webPt(r0, a0), p1 = webPt(r1, a1),
+            c = webPt(r * (1.12 + ((i * 2 + j) % 4) * 0.022), (a0 + a1) / 2);
+        g.appendChild(svgEl("path", { fill: "none", stroke: "#ece4ff",
+          "stroke-width": (0.86 + ((i + j) % 3) * 0.09).toFixed(2),
+          "stroke-opacity": (0.5 + ((i + j) % 3) * 0.1).toFixed(2),
+          d: "M" + n1(p0[0]) + " " + n1(p0[1]) + " Q" + n1(c[0]) + " " + n1(c[1]) +
+             " " + n1(p1[0]) + " " + n1(p1[1]) }));
+      }
+    });
+    WEB_DEW.forEach(function (d, k) {
+      var p = webPt(WEB_RINGS[d[1]], WEB_ANGLES[d[0]]);
+      if (k % 4 === 3) {
+        g.appendChild(svgEl("circle", { cx: n1(p[0]), cy: n1(p[1]), r: 3.4, fill: "#fff",
+          "fill-opacity": ".22", "class": "silk" }));
+      }
+      var c = svgEl("circle", { cx: n1(p[0]), cy: n1(p[1]), r: k === 2 || k === 7 ? 2.6 : 1.8,
+        fill: "#fff", "fill-opacity": k % 3 === 0 ? ".95" : (0.55 + (k % 4) * 0.12).toFixed(2),
+        "class": k % 3 === 0 ? "dew tw" : "dew" });
+      c.style.animationDelay = (k * 0.41).toFixed(2) + "s";
+      g.appendChild(c);
+    });
+    svg.appendChild(g);
+    return svg;
+  }
+
+  function bezPt(p0, c1, c2, p3, t) {
+    var u = 1 - t;
+    return [u * u * u * p0[0] + 3 * u * u * t * c1[0] + 3 * u * t * t * c2[0] + t * t * t * p3[0],
+            u * u * u * p0[1] + 3 * u * u * t * c1[1] + 3 * u * t * t * c2[1] + t * t * t * p3[1]];
+  }
+  function strandSvg(w, h, pts, ts) {
+    var svg = svgEl("svg", { viewBox: "0 0 " + w + " " + h, "aria-hidden": "true", "class": "strand" });
+    svg.appendChild(svgEl("path", { fill: "none", stroke: "#e9e0ff", "stroke-opacity": ".42",
+      "stroke-width": ".8", "stroke-linecap": "round",
+      d: "M" + pts[0].join(" ") + " C" + pts[1].join(" ") + " " + pts[2].join(" ") + " " + pts[3].join(" ") }));
+    ts.forEach(function (t, k) {
+      var p = bezPt(pts[0], pts[1], pts[2], pts[3], t);
+      var x = n1(p[0]), y = n1(p[1]);
+      /* a thread a strand would hang, so it reads as weight and not as a line */
+      if (k % 3 === 1) {
+        svg.appendChild(svgEl("path", { fill: "none", stroke: "#e9e0ff", "stroke-opacity": ".3",
+          "stroke-width": ".65", "stroke-linecap": "round",
+          d: "M" + x + " " + y + " q2.5 8 " + n1(p[0] - 1) + " " + n1(p[1] + 13) }));
+        svg.appendChild(svgEl("circle", { cx: n1(p[0] - 1), cy: n1(p[1] + 13), r: 1.5, fill: "#fff",
+          "fill-opacity": ".8" }));
+      }
+      var c = svgEl("circle", { cx: x, cy: y, r: k % 3 ? 1.3 : 2.1, fill: "#fff",
+        "fill-opacity": k % 2 ? ".95" : (0.5 + (k % 3) * 0.14).toFixed(2),
+        "class": k % 2 ? "dew tw" : "dew" });
+      c.style.animationDelay = (k * 0.63).toFixed(2) + "s";
+      svg.appendChild(c);
+    });
+    return svg;
+  }
+
+  var GLINT = "M0 -7 C .9 -1.4 1.4 -.9 7 0 C 1.4 .9 .9 1.4 0 7 C -.9 1.4 -1.4 .9 -7 0 " +
+              "C -1.4 -.9 -.9 -1.4 0 -7 Z";
+  function glintSvg(x, y, delay, size, dur) {
+    var svg = svgEl("svg", { viewBox: "-9 -9 18 18", "aria-hidden": "true", "class": "glint" });
+    svg.style.left = x + "%"; svg.style.top = y + "%";
+    svg.style.width = size + "px"; svg.style.height = size + "px";
+    svg.style.animationDelay = delay + "s"; svg.style.animationDuration = dur + "s";
+    svg.appendChild(svgEl("path", { d: GLINT, fill: "#fff" }));
+    return svg;
+  }
+
+  function buildWebs() {
+    var stage = document.querySelector(".stage");
+    if (!stage || !stage.parentNode) return null;
+    var wrap = document.createElement("div");
+    wrap.className = "webs"; wrap.id = "webs";
+    wrap.setAttribute("aria-hidden", "true");
+    ["web-tl", "web-tr", "web-bl"].forEach(function (c) {
+      var s = webSvg(); s.classList.add(c); wrap.appendChild(s);
+    });
+    var a = strandSvg(620, 200, [[-30, -4], [150, 142], [400, 150], [640, -6]],
+                      [0.13, 0.29, 0.45, 0.61, 0.77, 0.91]);
+    a.classList.add("strand-a"); wrap.appendChild(a);
+    var b = strandSvg(300, 320, [[10, -14], [132, 82], [-8, 190], [112, 302]],
+                      [0.17, 0.37, 0.57, 0.75, 0.9]);
+    b.classList.add("strand-b"); wrap.appendChild(b);
+    [[9, 15, 0], [90, 11, 1.3], [4, 42, 2.2], [94, 47, 0.6], [7, 68, 3.1],
+     [91, 74, 1.8], [17, 88, 2.6], [79, 91, 0.9], [46, 4, 3.6], [63, 96, 2.0]]
+      .forEach(function (g, i) {
+        wrap.appendChild(glintSvg(g[0], g[1], g[2], 9 + (i % 4) * 1.6, 6.5 + (i % 3) * 1.9));
+      });
+    stage.parentNode.insertBefore(wrap, stage);
+    return wrap;
+  }
+
+  var websLit = null;
+  function litWebs() {
+    var w = document.getElementById("webs");
+    if (!w) return;
+    w.classList.add("lit");
+    clearTimeout(websLit);
+    websLit = setTimeout(function () { w.classList.remove("lit"); }, 12000);
+  }
+
+  buildWebs();
+
+  /* the card is a door: the whole of it opens what is written on it */
+  if (cupWrap) {
+    cupWrap.addEventListener("click", function () { goCard(); });
+    cupWrap.addEventListener("keydown", function (e) {
+      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); goCard(); }
+    });
+  }
+
+  paintLinks();
+  scene.addEventListener("click", advance);
+  scene.addEventListener("keydown", function (e) {
+    if (e.target !== scene) return;
+    if (e.key === " " || e.key === "Enter") { e.preventDefault(); advance(); }
+  });
+
+  /* first meeting: the whole short introduction. a return visit gets her
+     two-word hello and goes straight to the counter. */
+  function begin() {
+    order = []; ended = false; counted = false;
+    linksEl.hidden = true; choicesEl.hidden = true;
+    /* before the first order there is nothing to start over from */
+    if (wipeEl) wipeEl.hidden = visits <= 0;
+    /* a return visit gets no greeting at all: "back." read as a button rather
+       than as her, so a visitor she has already met just walks up to the
+       counter. (The word is gone for good — don't bring it back.) */
+    var intro = visits > 0
+      ? []
+      : [ { who: "star", say: "well \u2014 hi there. i run the caf\u00e9 here. i'm star." },
+          { room: "she looks at you a moment longer than you were expecting, and she does not look away first." },
+          { who: "star", say: "how can i help you? what brings you to the caf\u00e9?" } ];
+    playSeq(intro, function () { openOrder(visits > 0 ? "what can i get you?" : null); });
+  }
+
+  /* the little link at the foot — forget that the counter remembered you */
+  var wipeBtn = document.getElementById("wipeBtn");
+  if (wipeBtn) {
+    wipeBtn.addEventListener("click", function (e) {
+      e.preventDefault();
+      visits = 0;
+      try {
+        window.localStorage.removeItem(COUNT_KEY);
+        window.localStorage.removeItem(VISIT_KEY);
+      } catch (err) {}
+      begin();
+      try { scene.scrollIntoView({ behavior: "smooth", block: "start" }); } catch (err) { window.scrollTo(0, 0); }
+    });
+  }
+
+  begin();
+
+  if (window.CD) { try { CD.boot({ page: "star" }); } catch (e) {} }
+})();
+</script>
+</body>
+</html>
