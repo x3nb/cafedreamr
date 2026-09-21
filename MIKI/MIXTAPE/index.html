@@ -1,0 +1,528 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0d001a">
+<title>miki's mixtape portal &middot; cafedreamr</title>
+<meta name="description" content="Five tracks that survived the rift, free to take: mikis lore, the edge version, not of this world twice, and cageless. Brew a bean first.">
+<meta property="og:title" content="miki's mixtape portal &middot; cafedreamr">
+<meta property="og:description" content="five tracks, one bean, no apologies. free downloads for cafe kin only.">
+<meta property="og:image" content="https://user.uploads.dev/file/39a82598443a617a6c6caa7255ef6812.jpg">
+<meta property="og:type" content="music.playlist">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%230d001a'/%3E%3Cpath d='M9.5 2.5 4.5 9h3l-1 4.5L11.5 7h-3z' fill='%23ccff00'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Klee+One:wght@400;600&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Vampiro+One&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+[hidden]{display:none!important}
+:root{
+  --plum:#0d001a; --ink:#0b0b0e; --ink2:#141419; --ink3:#1b1b22;
+  --lime:#ccff00; --pink:#ff2d95; --cyan:#00e5ff; --violet2:#ee82ee; --mint:#98fb98;
+  --cream:#e9e6de; --lav:#fff0f5; --dim:#7d848b;
+  --line:rgba(255,255,255,.10);
+  --mono:'Space Mono',ui-monospace,monospace;
+  --disp:'Bebas Neue',impact,sans-serif;
+  --logo:'Vampiro One',cursive;
+  --body:'Klee One',system-ui,sans-serif;
+  --a:#ccff00;
+}
+body{background:var(--plum);color:var(--lav);font-family:var(--body);text-align:left;
+  min-height:100dvh;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+.bg{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(760px 520px at 14% 4%, color-mix(in srgb,var(--a) 13%,transparent), transparent 62%),
+    radial-gradient(620px 460px at 96% 98%, rgba(0,229,255,.07), transparent 60%),
+    linear-gradient(180deg,#0d001a,#0b0b0e 55%,#0d001a)}
+.bg:after{content:"";position:absolute;inset:0;opacity:.5;
+  background:repeating-linear-gradient(0deg,rgba(255,255,255,.014) 0 1px,transparent 1px 4px)}
+.stage{position:relative;z-index:1;max-width:900px;margin:0 auto;padding:22px 14px 34px;
+  display:flex;flex-direction:column;gap:14px}
+
+.marquee{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;
+  border-bottom:1px solid var(--line);padding-bottom:10px}
+.brand{display:block;font-family:var(--logo);font-size:27px;letter-spacing:.05em;color:var(--a);
+  text-shadow:0 0 16px color-mix(in srgb,var(--a) 42%,transparent)}
+.tag{display:block;font-family:var(--mono);font-size:9px;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--dim);margin-top:4px}
+.back{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--violet2);text-decoration:none;border-bottom:1px solid transparent;padding-bottom:2px;white-space:nowrap}
+.back:hover{color:var(--lime);border-bottom-color:currentColor}
+
+/* ---------------- the cover ---------------- */
+.hero{border:1px solid var(--line);border-radius:16px;padding:16px 16px 15px;
+  background:linear-gradient(165deg,rgba(27,0,44,.6),rgba(11,11,14,.85));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.05),0 20px 60px rgba(0,0,0,.5)}
+.k{font-family:var(--mono);font-size:9px;letter-spacing:.26em;text-transform:uppercase;color:var(--cyan)}
+.ttl{font-family:var(--disp);font-size:clamp(46px,12.5vw,104px);line-height:.86;letter-spacing:.01em;
+  text-transform:uppercase;margin:6px 0 0}
+.ttl em{font-style:normal;color:var(--a);text-shadow:0 0 22px color-mix(in srgb,var(--a) 45%,transparent)}
+.lede{font-size:15px;line-height:1.72;color:var(--lav);max-width:64ch;margin-top:10px}
+.lede b{color:#fff}
+.lede.small{font-family:var(--mono);font-size:10.5px;letter-spacing:.05em;color:var(--dim);
+  text-transform:uppercase;line-height:1.9;margin-top:9px}
+.specs{display:flex;flex-wrap:wrap;gap:7px;margin-top:13px}
+.spec{font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--dim);border:1px solid var(--line);border-radius:999px;padding:5px 10px}
+.spec.hot{color:var(--a);border-color:color-mix(in srgb,var(--a) 45%,transparent)}
+
+/* ---------------- the gate ---------------- */
+.gate{border:1px solid color-mix(in srgb,var(--a) 34%,transparent);border-radius:16px;
+  padding:14px;background:rgba(10,0,20,.5);display:flex;flex-direction:column;gap:11px}
+.gaterow{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.btn{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;
+  background:var(--a);color:#0a0a0a;border:1px solid var(--a);border-radius:999px;
+  padding:12px 18px;cursor:pointer;font-weight:700;transition:.18s;text-align:left}
+.btn:hover{background:#fff;border-color:#fff;box-shadow:0 0 20px color-mix(in srgb,var(--a) 40%,transparent)}
+.btn:active{transform:scale(.985)}
+.btn[disabled]{cursor:default;opacity:.7}
+.gatenote{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+.taunt{font-size:14.5px;line-height:1.7;color:var(--lav);min-height:2.6em}
+.taunt b{color:var(--a)}
+.grind{height:5px;border:1px solid var(--line);border-radius:999px;overflow:hidden;display:none}
+.grind.on{display:block}
+.grind i{display:block;height:100%;width:0;background:var(--a);transition:width .35s linear}
+
+/* ---------------- the deck ---------------- */
+.deck{border:1px solid var(--line);border-radius:16px;padding:14px;
+  background:linear-gradient(165deg,rgba(27,0,44,.55),rgba(11,11,14,.85));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.05),0 20px 60px rgba(0,0,0,.5)}
+.nowrow{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.nowlab{font-family:var(--mono);font-size:9px;letter-spacing:.24em;text-transform:uppercase;color:var(--dim)}
+.now{font-family:var(--disp);font-size:clamp(22px,5vw,34px);letter-spacing:.02em;line-height:1;
+  text-transform:uppercase;color:var(--a)}
+.nowsub{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+.barwrap{display:flex;align-items:center;gap:10px;margin-top:13px}
+.bar{position:relative;flex:1 1 auto;height:16px;cursor:pointer;touch-action:none;display:flex;align-items:center}
+.bar:focus-visible{outline:2px solid var(--a);outline-offset:4px;border-radius:4px}
+.bar:before{content:"";position:absolute;left:0;right:0;height:4px;background:rgba(255,255,255,.14);border-radius:999px}
+.bar i{position:absolute;left:0;height:4px;width:0;background:var(--a);border-radius:999px;
+  box-shadow:0 0 12px color-mix(in srgb,var(--a) 55%,transparent)}
+.bar b{position:absolute;left:0;width:11px;height:11px;border-radius:50%;background:var(--a);
+  transform:translateX(-50%);box-shadow:0 0 12px color-mix(in srgb,var(--a) 60%,transparent)}
+.tm{font-family:var(--mono);font-size:10px;letter-spacing:.08em;color:var(--dim);min-width:82px;text-align:right}
+.ctrls{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-top:12px}
+.cbtn{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+  background:transparent;color:var(--lav);border:1px solid color-mix(in srgb,var(--a) 40%,transparent);
+  border-radius:999px;padding:9px 14px;cursor:pointer;transition:.18s}
+.cbtn:hover{border-color:var(--a);color:#fff;box-shadow:0 0 14px color-mix(in srgb,var(--a) 26%,transparent)}
+.cbtn.play{background:var(--a);color:#0a0a0a;border-color:var(--a);font-weight:700;padding:9px 20px}
+.cbtn.play:hover{background:#fff;border-color:#fff}
+.cbtn.ghost{border-color:var(--line);color:var(--dim)}
+.cbtn.ghost:hover{color:var(--violet2);border-color:currentColor;box-shadow:none}
+.say{margin-top:13px;border-radius:12px;padding:12px 13px;min-height:74px;
+  background:rgba(10,0,20,.55);border:1px solid color-mix(in srgb,var(--a) 26%,transparent)}
+.say .who{font-family:var(--disp);font-size:15px;letter-spacing:.1em;color:var(--a);text-transform:uppercase}
+.say .txt{font-size:15px;line-height:1.68;color:var(--lav);white-space:pre-wrap;margin-top:2px}
+.caret{display:inline-block;width:7px;height:14px;background:var(--a);vertical-align:-2px;
+  margin-left:2px;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+
+/* ---------------- the tracklist ---------------- */
+.listhead{display:flex;align-items:baseline;justify-content:space-between;gap:10px;
+  border-bottom:1px solid var(--line);padding-bottom:9px}
+.listhead h2{font-family:var(--disp);font-size:clamp(22px,4.4vw,32px);letter-spacing:.03em;
+  text-transform:uppercase;line-height:1}
+.listhead span{font-family:var(--mono);font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim)}
+ol.tracks,ul.bside{list-style:none;display:flex;flex-direction:column;gap:9px;margin-top:12px}
+.tk{display:grid;grid-template-columns:46px 1fr auto;gap:11px;align-items:center;
+  border:1px solid var(--line);border-radius:13px;padding:10px 12px;background:rgba(10,0,20,.4);
+  transition:.18s}
+.tk:hover{border-color:color-mix(in srgb,var(--a) 45%,transparent);background:rgba(204,255,0,.05)}
+.tk.on{border-color:var(--a);background:rgba(204,255,0,.08)}
+.tkn{font-family:var(--disp);font-size:26px;line-height:1;color:var(--dim)}
+.tk.on .tkn{color:var(--a)}
+.tkt{display:block;font-family:var(--disp);font-size:20px;letter-spacing:.02em;line-height:1.02;text-transform:uppercase}
+.tks{display:block;font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);margin-top:3px}
+.tkr{display:flex;align-items:center;gap:9px;flex-wrap:wrap;justify-content:flex-end}
+.dur{font-family:var(--mono);font-size:10px;color:var(--dim)}
+.pb{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;
+  background:transparent;color:var(--a);border:1px solid color-mix(in srgb,var(--a) 45%,transparent);
+  border-radius:999px;padding:7px 12px;transition:.18s;white-space:nowrap}
+.pb:hover{background:var(--a);color:#0a0a0a}
+.dl{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--dim);text-decoration:none;border-bottom:1px solid var(--line);padding-bottom:2px;white-space:nowrap}
+.dl:hover{color:var(--lime);border-bottom-color:currentColor}
+
+/* side b — the ones that don't exist yet */
+.bside{border:1px dashed color-mix(in srgb,var(--a) 30%,transparent);border-radius:16px;padding:14px}
+.tk.ghost{border-style:dashed;background:transparent;opacity:.86}
+.tk.ghost .tkt{color:var(--lav)}
+.tag2{font-family:var(--mono);font-size:8.5px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--violet2);border:1px dashed color-mix(in srgb,var(--violet2) 45%,transparent);
+  border-radius:999px;padding:5px 10px;white-space:nowrap}
+
+.liner{border-top:1px solid var(--line);padding-top:12px;font-family:var(--mono);font-size:10px;
+  letter-spacing:.05em;line-height:2.05;color:var(--dim)}
+.liner b{color:var(--lav)}
+.liner .hot{color:var(--a)}
+
+.foot{font-family:var(--mono);font-size:9px;letter-spacing:.1em;line-height:1.95;color:var(--dim);
+  text-align:center;padding-top:4px}
+.foot a{color:var(--violet2);text-decoration:none}
+.foot a:hover{color:var(--lime)}
+.in{animation:fadein .7s ease both}
+@keyframes fadein{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@media (max-width:680px){
+  .brand{font-size:23px}
+  .tk{grid-template-columns:34px 1fr;gap:9px}
+  .tkr{grid-column:2;justify-content:flex-start;margin-top:8px}
+  .tkn{font-size:22px}
+  .tkt{font-size:18px}
+  .tm{min-width:0}
+}
+@media (prefers-reduced-motion:reduce){ .caret,.in{animation:none} }
+</style>
+</head>
+<body>
+<div class="bg" aria-hidden="true"></div>
+
+<main class="stage">
+
+  <header class="marquee">
+    <div>
+      <span class="brand">miki</span>
+      <span class="tag">the mixtape portal &middot; five tracks, one bean</span>
+    </div>
+    <a class="back" href="https://www.cafedreamr.art/MIKI/">&larr; her door</a>
+  </header>
+
+  <section class="hero">
+    <p class="k">side a &middot; recorded in the opal cavern</p>
+    <h1 class="ttl">miki's <em>mixtape</em></h1>
+    <p class="lede">oi, runner. yellow-spiked ledger queen, reporting. these are the five that made it out of the rift: <b>mikis lore</b>, the <b>edge version</b>, <b>not of this world</b> twice, and <b>cageless</b>. they're <b>free</b>, they're <b>loud</b>, and one of them has a bridge you're going to want to apologise to me about later.</p>
+    <p class="lede small">bring your own coffee. i mean it &mdash; i am not explaining the machine to you again. one ear off, always: the left one, the one pointed at the door.</p>
+    <div class="specs">
+      <span class="spec hot">5 tracks &middot; 17 min</span>
+      <span class="spec">free downloads</span>
+      <span class="spec">one ear off, always</span>
+      <span class="spec">no tea</span>
+      <span class="spec">share the rift, not the spikes</span>
+    </div>
+  </section>
+
+  <!-- ============ the bean gate ============ -->
+  <section class="gate" id="gate">
+    <div class="gaterow">
+      <button class="btn" id="brew" type="button">bean unlock: reveal the riffs &#9788;</button>
+      <span class="gatenote" id="gatenote">portafilter down. don't rush the tamp.</span>
+    </div>
+    <div class="grind" id="grind" aria-hidden="true"><i id="grindfill"></i></div>
+    <p class="taunt" id="taunt">locked. press the bean. it isn't a riddle, it's a coffee.</p>
+  </section>
+
+  <!-- ============ the deck ============ -->
+  <section class="deck" id="deck" hidden>
+    <div class="nowrow">
+      <span class="nowlab">now playing</span>
+      <span class="now" id="now">nothing yet</span>
+      <span class="nowsub" id="nowsub">pick a track, runner</span>
+    </div>
+    <div class="barwrap">
+      <div class="bar" id="bar" role="slider" tabindex="0" aria-label="seek" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i id="fill"></i><b id="knob" style="left:0"></b></div>
+      <span class="tm" id="tm">0:00 / 0:00</span>
+    </div>
+    <div class="ctrls">
+      <button class="cbtn play" id="play" type="button">play</button>
+      <button class="cbtn" id="prev" type="button">&larr; prev</button>
+      <button class="cbtn" id="next" type="button">next &rarr;</button>
+      <button class="cbtn ghost" id="snark" type="button">press for a snark</button>
+      <span class="gatenote" id="playing-note">the amps like an audience</span>
+    </div>
+    <div class="say">
+      <div class="who" id="saywho">miki</div>
+      <div class="txt" id="saytxt">press play and i'll talk you through it. i always talk you through it.</div><span class="caret" id="caret" hidden></span>
+    </div>
+    <audio id="au" preload="metadata"></audio>
+  </section>
+
+  <!-- ============ side a ============ -->
+  <div id="sidea" hidden>
+    <div class="listhead">
+      <h2>side a</h2>
+      <span>five tracks &middot; free &middot; take them</span>
+    </div>
+    <ol class="tracks" id="tracks"></ol>
+  </div>
+
+  <!-- ============ side b ============ -->
+  <section class="bside" id="bside" hidden>
+    <div class="listhead">
+      <h2>side b</h2>
+      <span>written, not recorded &middot; the file is a rumour</span>
+    </div>
+    <p class="lede small" style="margin-top:14px">three more exist on paper. i'll record them when the rift stops eating my files and the rats sign the paperwork. the notes are real; the mp3s aren't yet.</p>
+    <ul class="bside" id="blist"></ul>
+  </section>
+
+  <p class="liner" id="liner" hidden>
+    <b>recorded:</b> the opal cavern &middot; <b>mixed:</b> one ear off, the left one, pointed at the door &middot; <b>mastered:</b> badly, at 4am, by me &middot; <b>guests:</b> nobody &mdash; the twins keep asking, the answer is not yet &middot; <b>beverage:</b> coffee. there is no tea on this page. <span class="hot">free downloads for cafe kin only. share the rift, not the spikes.</span> &copy; miki's road riffs, parallel paris.
+  </p>
+
+  <div class="foot">
+    <a href="https://www.cafedreamr.art/MIKI/">her door</a> &middot;
+    <a href="https://www.cafedreamr.art/MIKI/MikiZines.html">the editor's terminal</a> &middot;
+    <a href="https://www.cafedreamr.art/ZINE/">the zine</a> &middot;
+    <a href="https://www.cafedreamr.art/MENU/">the menu</a> &middot;
+    <a href="https://www.cafedreamr.art/CLASS/?id=bandpractice">band practice</a> &middot;
+    <a href="https://www.cafedreamr.art/PLAY/">the long day</a> &middot;
+    <a href="https://www.cafedreamr.art/">the terminal</a><br>
+    &copy; cafedreamr &middot; the gate remembers you, this browser only
+  </div>
+
+</main>
+
+<script src="https://www.cafedreamr.art/PASSPORT/cd-passport.js"></script>
+<script>
+/* ============================================================
+   miki's mixtape portal                    MIKI/MIXTAPE/index.html
+   the five tracks she actually has, with her own notes on each
+   one. the bean gate is theatre; the mp3s are real. nothing here
+   needs a server: one <audio>, one list, one running commentary.
+   ============================================================ */
+(function () {
+  "use strict";
+
+  /* the five. `u` is the hosted mp3, `dur` the measured length. */
+  var TRACKS = [
+    { n: "01", t: "mikis lore", d: "3:48",
+      u: "https://user.uploads.dev/file/d239b939d3f683a9f4a11c3123ed1521.mp3",
+      sub: "the one where i explain myself",
+      say: "the one where i explain myself \u2014 once, into a microphone, at two in the morning, with one ear off. listen to it properly and then never ask me about my childhood again. x" },
+    { n: "02", t: "mikis lore \u00b7 the edge version", d: "3:40",
+      u: "https://user.uploads.dev/file/191eee85363f3ce35b6ef198c3e4c938.mp3",
+      sub: "same song, filed sharper",
+      say: "same song, filed sharper. i kept both because they're for different people: the first one is for the ones who ask, and this one is for the ones who already knew." },
+    { n: "03", t: "not of this world", d: "1:45",
+      u: "https://user.uploads.dev/file/7e3c1c1eef3cd7cfedaea40f2a4a1bb8.mp3",
+      sub: "the anthem. played first, always",
+      say: "the anthem. i wrote it for everyone who got out and then decided to stay out \u2014 the ones who chose to live again. i don't play this one for laughs. i play it first." },
+    { n: "04", t: "not of this world 2.0", d: "3:11",
+      u: "https://user.uploads.dev/file/b647d35a5c6fab89bbdeff3c0292ca09.mp3",
+      sub: "same promise, more amps",
+      say: "the long one. same promise, more amps, better ending. i am not sorry about the last chorus and i will never be sorry about the last chorus." },
+    { n: "05", t: "cageless", d: "4:36",
+      u: "https://user.uploads.dev/file/9fef5e1ffd50189334ebacc2813cc55b.mp3",
+      sub: "contemplating's over. run.",
+      say: "contemplating's over. this is the leaving song \u2014 for anyone who ever walked out of a room they weren't allowed to be in. it's yours. i'll hold your coffee." }
+  ];
+
+  var BSIDE = [
+    { n: "b1", t: "yellow rift blues", sub: "a road ballad, no straight answers",
+      say: "a road ballad for the ones who never got a straight answer. the bridge is milo's \u2014 he said it like a proverb and i took it whole, mint and all. not recorded: the file is a rumour." },
+    { n: "b2", t: "rat riff revolution", sub: "squeaky solo, one take, no notes",
+      say: "upbeat chaos, written for chari on a bad night. crumb takes the bold squeaky solo; mochi inspects the mixing desk and finds it unacceptable. not recorded \u2014 the rats are holding out for royalties." },
+    { n: "b3", t: "violet vortex", sub: "goth-punk, violet edges, no apologies",
+      say: "a sharp little tribute to star. goth-punk, violet edges. not recorded, because star heard the demo and did the one-eyebrow thing. don't tell her i mentioned the eyebrow thing." }
+  ];
+
+  /* her, when you press the button that does nothing */
+  var SNARKS = [
+    "you're still here. good. the amps like an audience.",
+    "that's not a request form, it's a button. press it with intent.",
+    "i can hear you hovering. it's very loud.",
+    "no, you can't have the stems. the stems are mine.",
+    "the twins asked for a feature. they asked *very* politely. the answer is still not yet.",
+    "if you're going to stand there, at least hold the coffee.",
+    "hans labelled my monitor 'noise'. i have filed it. it's in the zine.",
+    "you've played track three twice. i noticed. noticing is literally my job.",
+    "yes, the bridge is out of tune. it's character.",
+    "download all five. the rift eats files when it gets bored.",
+    "tea? on my page? no.",
+    "i'd stop talking about my brother's cravat if i were you. he reads everything.",
+    "one ear off. it's not a style thing, it's a door thing."
+  ];
+
+  /* what she says while you mash the bean */
+  var GATE = [
+    "that was a press. the bean is unimpressed. go again.",
+    "closer. you've got to <b>mean</b> it.",
+    "fine. grinding. don't say i never gave you anything."
+  ];
+
+  var OPEN_KEY = "cd_mixtape_open";
+  var $ = function (id) { return document.getElementById(id); };
+  var REDUCE = false;
+  try { REDUCE = !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches); } catch (e) {}
+
+  var gate = $("gate"), brew = $("brew"), gatenote = $("gatenote"), taunt = $("taunt"),
+      grind = $("grind"), grindfill = $("grindfill"),
+      deck = $("deck"), sidea = $("sidea"), bside = $("bside"), liner = $("liner"),
+      au = $("au"), bar = $("bar"), fill = $("fill"), knob = $("knob"), tm = $("tm"),
+      play = $("play"), prev = $("prev"), next = $("next"), snark = $("snark"),
+      now = $("now"), nowsub = $("nowsub"), note = $("playing-note"),
+      saytxt = $("saytxt"), caret = $("caret");
+
+  var cur = -1, taunts = 0, opened = false, dragging = false;
+  var typer = null, typingTimer = null, full = "", onTyped = null;
+
+  try { opened = window.localStorage.getItem(OPEN_KEY) === "1"; } catch (e) {}
+
+  /* ---------------------------------------------- her voice, typed */
+  function type(text, done) {
+    clearTimeout(typingTimer);
+    full = text; onTyped = done || null;
+    saytxt.textContent = "";
+    if (REDUCE) { saytxt.innerHTML = text; caret.hidden = true; if (onTyped) { var f = onTyped; onTyped = null; f(); } return; }
+    caret.hidden = false;
+    var k = 0;
+    (function step() {
+      k++;
+      /* html-free typing: we type the plain text, then swap in the markup */
+      var plain = text.replace(/<[^>]+>/g, "");
+      saytxt.textContent = plain.slice(0, k);
+      if (k >= plain.length) {
+        caret.hidden = true;
+        saytxt.innerHTML = text;
+        var f = onTyped; onTyped = null; if (f) f();
+        return;
+      }
+      typingTimer = setTimeout(step, 13 + Math.random() * 16);
+    })();
+  }
+
+  /* ---------------------------------------------- the bean gate */
+  function reveal(instant) {
+    deck.hidden = false; sidea.hidden = false; bside.hidden = false; liner.hidden = false;
+    gate.hidden = true;
+    if (!instant) { [deck, sidea, bside, liner].forEach(function (el) { el.classList.add("in"); }); }
+    try { window.localStorage.setItem(OPEN_KEY, "1"); } catch (e) {}
+  }
+
+  function finishGrind() {
+    grindfill.style.width = "100%";
+    setTimeout(function () { reveal(false); }, 420);
+  }
+
+  brew.addEventListener("click", function () {
+    if (taunts < 2) {
+      taunt.innerHTML = GATE[taunts];
+      gatenote.textContent = taunts === 0 ? "still not a bean, but ok." : "the tamp. remember the tamp.";
+      taunts++;
+      if (taunts === 2) brew.textContent = "grind & reveal \u26a1";
+      return;
+    }
+    brew.disabled = true;
+    brew.textContent = "grinding\u2026";
+    gatenote.textContent = "eighteen grams, one ear off.";
+    taunt.innerHTML = GATE[2];
+    grind.classList.add("on");
+    grindfill.style.width = "8%";
+    if (REDUCE) { finishGrind(); return; }
+    setTimeout(function () { grindfill.style.width = "58%"; }, 260);
+    setTimeout(function () { grindfill.style.width = "92%"; }, 700);
+    finishGrind();
+  });
+
+  /* ---------------------------------------------- the deck */
+  function fmt(s) {
+    if (!isFinite(s)) s = 0;
+    var m = Math.floor(s / 60), r = Math.floor(s % 60);
+    return m + ":" + String(r).padStart(2, "0");
+  }
+  function paintBar() {
+    var p = au.duration ? (au.currentTime / au.duration) * 100 : 0;
+    fill.style.width = p + "%";
+    knob.style.left = p + "%";
+    tm.textContent = fmt(au.currentTime) + " / " + fmt(au.duration);
+    bar.setAttribute("aria-valuenow", Math.round(p));
+  }
+  function load(i, autoplay) {
+    if (i < 0 || i >= TRACKS.length) return;
+    cur = i;
+    var T = TRACKS[i];
+    au.src = T.u;
+    now.textContent = T.t;
+    nowsub.textContent = T.sub;
+    type(T.say);
+    [].forEach.call(document.querySelectorAll(".tk"), function (el) {
+      el.classList.toggle("on", +el.getAttribute("data-i") === i);
+    });
+    paintBar();
+    if (autoplay) au.play().catch(function () {});
+  }
+  function toggle() {
+    if (cur < 0) { load(0, true); return; }
+    if (au.paused) au.play().catch(function () {}); else au.pause();
+  }
+
+  play.addEventListener("click", toggle);
+  prev.addEventListener("click", function () { load((cur <= 0 ? TRACKS.length : cur) - 1, true); });
+  next.addEventListener("click", function () { load((cur + 1) % TRACKS.length, true); });
+
+  au.addEventListener("play", function () { play.textContent = "pause"; note.textContent = "playing \u00b7 one ear off"; });
+  au.addEventListener("pause", function () { play.textContent = "play"; note.textContent = au.currentTime > 0 ? "held there. the amps are waiting." : "the amps like an audience"; });
+  au.addEventListener("timeupdate", paintBar);
+  au.addEventListener("loadedmetadata", paintBar);
+  au.addEventListener("ended", function () {
+    note.textContent = "that was the last one \u2014 or press next";
+    type("that's the whole of side a. side b doesn't exist yet \u2014 go and hurry her up about it. or don't. she'll do it when the rift stops eating files.");
+  });
+
+  function seekFrom(e) {
+    var r = bar.getBoundingClientRect();
+    var p = Math.min(1, Math.max(0, (e.clientX - r.left) / r.width));
+    if (au.duration) au.currentTime = p * au.duration;
+    paintBar();
+  }
+  bar.addEventListener("pointerdown", function (e) { dragging = true; try { bar.setPointerCapture(e.pointerId); } catch (x) {} seekFrom(e); });
+  bar.addEventListener("pointermove", function (e) { if (dragging) seekFrom(e); });
+  bar.addEventListener("pointerup", function (e) { dragging = false; try { bar.releasePointerCapture(e.pointerId); } catch (x) {} });
+  bar.addEventListener("keydown", function (e) {
+    if (!au.duration) return;
+    if (e.key === "ArrowRight") { au.currentTime = Math.min(au.duration, au.currentTime + 5); e.preventDefault(); }
+    if (e.key === "ArrowLeft") { au.currentTime = Math.max(0, au.currentTime - 5); e.preventDefault(); }
+  });
+
+  /* ---------------------------------------------- the snark button */
+  var lastSnark = -1;
+  snark.addEventListener("click", function () {
+    var i = Math.floor(Math.random() * SNARKS.length);
+    if (i === lastSnark) i = (i + 1) % SNARKS.length;
+    lastSnark = i;
+    type(SNARKS[i]);
+  });
+
+  /* ---------------------------------------------- paint the lists */
+  var tracksEl = $("tracks"), blistEl = $("blist");
+  TRACKS.forEach(function (T, i) {
+    var li = document.createElement("li");
+    li.className = "tk";
+    li.setAttribute("data-i", i);
+    li.innerHTML =
+      '<span class="tkn">' + T.n + '</span>' +
+      '<span><span class="tkt">' + T.t + '</span><span class="tks">' + T.sub + '</span></span>' +
+      '<span class="tkr"><span class="dur">' + T.d + '</span>' +
+      '<button class="pb" type="button">play</button>' +
+      '<a class="dl" href="' + T.u + '" download>' + T.t.split(" ")[0] + '.mp3 \u2193</a></span>';
+    li.querySelector(".pb").addEventListener("click", function () {
+      if (cur === i && !au.paused) { au.pause(); } else { load(i, true); }
+    });
+    tracksEl.appendChild(li);
+  });
+
+  BSIDE.forEach(function (T) {
+    var li = document.createElement("li");
+    li.className = "tk ghost";
+    li.innerHTML =
+      '<span class="tkn">' + T.n + '</span>' +
+      '<span><span class="tkt">' + T.t + '</span><span class="tks">' + T.sub + '</span></span>' +
+      '<span class="tkr"><span class="tag2">not recorded yet</span>' +
+      '<button class="pb" type="button">her notes</button></span>';
+    li.querySelector(".pb").addEventListener("click", function () { type(T.say); });
+    blistEl.appendChild(li);
+  });
+
+  /* a returning visitor doesn't grind twice */
+  if (opened) {
+    reveal(true);
+    taunt.innerHTML = "already brewed, earlier. the riffs are yours \u2014 go on.";
+  }
+
+  if (window.CD) { try { CD.boot({ page: "mixtape" }); } catch (e) {} }
+})();
+</script>
+</body>
+</html>
