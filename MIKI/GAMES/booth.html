@@ -1,0 +1,1256 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0d001a">
+<title>bobby's interview booth &middot; cafedreamr</title>
+<meta name="description" content="Machine no. 03 in miki's games room: bobby's interview booth. He runs miki's hiring. He asks the questions, he reads the answers, and he prints you a dossier card whether you get the job or not.">
+<meta property="og:title" content="bobby's interview booth &middot; cafedreamr">
+<meta property="og:description" content="there is a queue. there has always been a queue. he decides who is next, and he decides when it is over.">
+<meta property="og:type" content="website">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%230d001a'/%3E%3Ccircle cx='8' cy='7.4' r='4' fill='%23ff2d95'/%3E%3Ccircle cx='6.7' cy='6.8' r='1' fill='%230d001a'/%3E%3Ccircle cx='9.3' cy='7.4' r='.8' fill='%230d001a'/%3E%3Cpath d='M6.2 9.4q1.8 1.4 3.6 0' fill='none' stroke='%230d001a' stroke-width='.9'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Klee+One:wght@400;600&family=Shadows+Into+Light&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --plum:#0d001a; --plum2:#150426; --ink:#07000f;
+  --lav:#e9e2f4; --lav2:#c3b6d8; --dim:#8d80a3;
+  --lime:#ccff00; --cyan:#00e5ff; --pink:#ff2d95; --gold:#d8a24a;
+  --booth:#ff2d95;                /* bobby's own accent, off his dossier card */
+  --glass:#0a0114;
+  --disp:'Bebas Neue',Impact,sans-serif;
+  --mono:'Space Mono',ui-monospace,monospace;
+  --hand:'Klee One','Segoe Script',cursive;
+  --write:'Shadows Into Light','Klee One',cursive;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{
+  background:var(--plum); color:var(--lav); text-align:left;
+  font-family:var(--mono); font-size:13px; line-height:1.7; min-height:100%;
+  background-image:
+    radial-gradient(700px 440px at 44% 20%, rgba(255,45,149,.12), rgba(255,45,149,0) 70%),
+    radial-gradient(900px 620px at 50% 118%, rgba(0,229,255,.06), rgba(0,229,255,0) 70%),
+    linear-gradient(180deg, var(--plum) 0%, var(--ink) 100%);
+  background-attachment:fixed;
+}
+#dust{position:fixed; inset:0; width:100%; height:100%; pointer-events:none; z-index:6}
+.vig{position:fixed; inset:0; pointer-events:none; z-index:2;
+  background:radial-gradient(120% 90% at 50% 40%, rgba(0,0,0,0) 46%, rgba(0,0,0,.62) 100%)}
+a{color:var(--cyan); text-decoration:none}
+a:hover{color:var(--lime)}
+button{font:inherit; cursor:pointer}
+
+.wrap{position:relative; z-index:4; max-width:1120px; margin:0 auto; padding:16px 16px 40px}
+
+.top{display:flex; align-items:center; gap:14px; flex-wrap:wrap;
+  border-bottom:1px solid rgba(255,255,255,.10); padding-bottom:10px}
+.top .back{font-size:9.5px; letter-spacing:.16em; text-transform:uppercase;
+  border-bottom:1px solid rgba(0,229,255,.4); padding-bottom:2px; color:var(--lav)}
+.top .back:hover{background:var(--cyan); color:var(--ink); border-color:var(--cyan)}
+.top .sign{font-family:var(--disp); font-size:26px; letter-spacing:.06em; color:var(--booth);
+  text-shadow:0 0 12px rgba(255,45,149,.45), 0 0 34px rgba(255,45,149,.18)}
+.top .no{margin-left:auto; font-size:9px; letter-spacing:.18em; text-transform:uppercase; color:var(--dim)}
+
+.head{margin:26px 0 4px}
+.head .kick{font-size:9px; letter-spacing:.24em; text-transform:uppercase; color:var(--cyan)}
+.head h1{font-family:var(--disp); font-weight:400; font-size:clamp(32px,6.2vw,58px); line-height:1;
+  letter-spacing:.03em; margin:6px 0 12px}
+.head h1 b{color:var(--booth); font-weight:400}
+.head .sub{color:var(--lav2); font-size:12.5px; max-width:68ch; margin:8px 0 0}
+.head .sub b{color:var(--lime)}
+
+.note{margin:18px 0 0; padding:13px 15px; border:1px solid rgba(204,255,0,.16);
+  border-left:3px solid var(--lime); border-radius:4px; background:rgba(204,255,0,.045);
+  font-family:var(--hand); font-size:14px; color:#e6f7c6; max-width:72ch}
+.note .who{display:block; margin-top:7px; font-family:var(--mono); font-size:9px;
+  letter-spacing:.16em; text-transform:uppercase; color:var(--dim)}
+
+.stage{display:grid; grid-template-columns:minmax(340px,600px) 1fr; gap:22px; align-items:start; margin-top:24px}
+.stage > *{min-width:0}
+
+/* ---------------- the booth ---------------- */
+.cab{width:100%; max-width:600px; margin:0 auto}
+.marq{display:flex; align-items:baseline; justify-content:space-between; gap:10px;
+  border:1px solid rgba(255,255,255,.14); border-bottom:none; border-radius:6px 6px 0 0;
+  padding:9px 13px; background:linear-gradient(180deg,rgba(58,17,64,.85),rgba(21,4,38,.85))}
+.marq b{font-family:var(--disp); font-weight:400; font-size:22px; letter-spacing:.08em; color:var(--booth)}
+.marq span{font-size:9px; letter-spacing:.18em; text-transform:uppercase; color:var(--dim)}
+
+.face{position:relative; border:1px solid rgba(255,255,255,.16); border-top:none; border-radius:0 0 6px 6px;
+  padding:14px 15px 16px; overflow:hidden;
+  background:
+    radial-gradient(120% 70% at 50% 0%, rgba(255,45,149,.12), rgba(255,45,149,0) 66%),
+    linear-gradient(180deg,#1b0730 0%, #120424 46%, #0a0114 100%)}
+.face:before{content:""; position:absolute; inset:0; pointer-events:none; z-index:0;
+  background:repeating-linear-gradient(180deg, rgba(255,255,255,.016) 0 1px, rgba(0,0,0,0) 1px 4px)}
+
+/* the window bobby sits behind */
+.glass{position:relative; z-index:1; height:158px; border-radius:5px; overflow:hidden;
+  border:1px solid rgba(255,255,255,.18); background:var(--glass);
+  box-shadow:inset 0 0 40px rgba(0,0,0,.7)}
+.glass .pup{position:absolute; inset:0; width:100%; height:100%; display:block}
+.glass .gloss{position:absolute; inset:0; pointer-events:none;
+  background:linear-gradient(112deg, rgba(255,255,255,.09) 0 14%, rgba(255,255,255,0) 15% 34%,
+    rgba(255,255,255,.05) 35% 40%, rgba(255,255,255,0) 41% 100%)}
+.glass .reclamp{position:absolute; top:9px; right:11px; display:flex; align-items:center; gap:5px;
+  font-size:8px; letter-spacing:.16em; text-transform:uppercase; color:var(--dim)}
+.glass .reclamp i{width:7px;height:7px;border-radius:50%;background:#8a2be2;opacity:.3;box-shadow:0 0 8px rgba(138,43,226,.6)}
+.glass.talk .reclamp i{background:var(--pink); opacity:1; animation:lamp .8s steps(2,end) infinite}
+@keyframes lamp{0%,100%{opacity:1}50%{opacity:.32}}
+.pup .mouth{transform-origin:150px 100px}
+.pup.talk .mouth{animation:chatter .22s steps(2,end) infinite}
+@keyframes chatter{0%,100%{transform:scaleY(1)}50%{transform:scaleY(2.1)}}
+.pup.read .hand{animation:scribble .3s steps(2,end) infinite}
+@keyframes scribble{0%,100%{transform:rotate(-6deg)}50%{transform:rotate(4deg)}}
+
+/* the readout */
+.read{position:relative; z-index:1; display:flex; align-items:center; gap:10px; margin:12px 0 0}
+.lcd{flex:1 1 auto; min-width:0; display:flex; align-items:center; gap:9px;
+  border:1px solid rgba(255,45,149,.28); border-radius:4px; padding:7px 10px;
+  background:linear-gradient(180deg, rgba(30,4,20,.94), rgba(18,3,14,.94));
+  box-shadow:inset 0 0 22px rgba(255,45,149,.10), inset 0 1px 0 rgba(255,255,255,.04)}
+.lcd .dot{flex:0 0 auto; width:7px; height:7px; border-radius:50%; background:var(--booth); opacity:.3;
+  box-shadow:0 0 8px rgba(255,45,149,.5)}
+.lcd.on .dot{opacity:1; animation:lamp 1.1s steps(2,end) infinite}
+.lcd .t{min-width:0; font-size:11.5px; line-height:1.35; color:#ffe1ef;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.lcd .t i{font-style:normal; color:var(--lime)}
+.lcd .ct{flex:0 0 auto; font-size:9px; letter-spacing:.14em; text-transform:uppercase; color:var(--booth); opacity:.85}
+
+.say{margin:12px 0 0; min-height:52px; font-family:var(--write); font-size:18px; line-height:1.5;
+  color:#ffd9ea; position:relative; z-index:1}
+.say:before{content:"bobby"; display:block; font-family:var(--mono); font-size:8.5px;
+  letter-spacing:.2em; text-transform:uppercase; color:var(--dim); margin-bottom:2px}
+
+.qMeta{position:relative; z-index:1; display:inline-block; margin:10px 0 0; font-size:8.5px;
+  letter-spacing:.18em; text-transform:uppercase; color:var(--cyan)}
+
+.chips{display:flex; flex-wrap:wrap; gap:6px; margin:9px 0 0; position:relative; z-index:1}
+.chip{font-family:var(--mono); font-size:10.5px; line-height:1.35; text-align:left;
+  color:#e7dcff; background:rgba(255,255,255,.045); border:1px dashed rgba(255,255,255,.24);
+  border-radius:5px; padding:6px 9px; max-width:100%}
+.chip:hover{border-style:solid; border-color:var(--booth); color:#fff}
+
+.lbl{position:relative; z-index:1; display:block; margin:12px 0 5px; font-size:8.5px;
+  letter-spacing:.18em; text-transform:uppercase; color:var(--dim)}
+textarea#answer{position:relative; z-index:1; width:100%; resize:vertical; min-height:76px;
+  font-family:var(--mono); font-size:12.5px; line-height:1.55; color:var(--lav);
+  background:rgba(0,0,0,.42); border:1px solid rgba(255,255,255,.2); border-radius:4px;
+  padding:9px 11px}
+textarea#answer:focus{outline:2px solid var(--booth); outline-offset:1px}
+textarea#answer:disabled{opacity:.5}
+input#cardName{position:relative; z-index:1; width:100%; max-width:340px; margin:0 auto 12px; display:block;
+  text-align:center; font-family:var(--mono); font-size:13px; letter-spacing:.06em; color:var(--lav);
+  background:rgba(0,0,0,.42); border:1px solid rgba(255,255,255,.2); border-radius:4px; padding:8px 10px}
+input#cardName:focus{outline:2px solid var(--booth); outline-offset:1px}
+
+.transportRow{position:relative; z-index:1; display:flex; flex-wrap:wrap; align-items:center; gap:7px; margin:10px 0 0}
+.pill{font-family:var(--mono); font-size:9px; letter-spacing:.14em; text-transform:uppercase;
+  color:#e7dcff; background:rgba(11,11,14,.55); border:1px solid rgba(255,255,255,.2);
+  border-radius:999px; padding:8px 12px}
+.pill:hover{border-color:var(--booth); color:#fff}
+.pill:focus-visible{outline:2px solid var(--booth); outline-offset:2px}
+.pill.wide{border-radius:4px; border-color:rgba(255,45,149,.6); background:rgba(255,45,149,.14)}
+.pill.wide:hover{background:var(--booth); color:#1c0012; border-color:var(--booth)}
+.pill[disabled]{opacity:.34; cursor:not-allowed; border-style:dashed}
+.readState{font-size:9.5px; letter-spacing:.05em; color:var(--dim); font-style:italic}
+
+/* the printer */
+.printer{position:relative; z-index:1; margin-top:14px; padding-top:13px;
+  border-top:1px dashed rgba(255,255,255,.16); text-align:center}
+.printer .slot{display:block; width:76%; margin:0 auto 10px; height:7px; border-radius:4px;
+  background:linear-gradient(90deg,rgba(255,255,255,.04),rgba(255,255,255,.16),rgba(255,255,255,.04));
+  box-shadow:inset 0 1px 3px rgba(0,0,0,.7)}
+#cardCv{display:block; width:100%; max-width:560px; margin:0 auto; border-radius:6px;
+  box-shadow:0 14px 40px -18px rgba(0,0,0,.9)}
+.printer .fine{margin:9px auto 0; max-width:52ch; font-family:var(--hand); font-size:13px; color:var(--lav2)}
+
+/* ---------------- the right hand column ---------------- */
+.rail{display:flex; flex-direction:column; gap:14px; min-width:0}
+.panel{border:1px solid rgba(255,255,255,.11); border-radius:5px; padding:13px 15px 14px;
+  background:linear-gradient(180deg, rgba(255,255,255,.035), rgba(0,0,0,.30))}
+.panel h2{font-family:var(--disp); font-weight:400; font-size:20px; letter-spacing:.05em; margin:0 0 6px;
+  color:var(--lav)}
+.panel h2 span{font-family:var(--mono); font-size:8.5px; letter-spacing:.18em; text-transform:uppercase; color:var(--dim)}
+.panel p{margin:0 0 9px; color:var(--lav2); font-size:12px; line-height:1.66}
+.panel p:last-child{margin-bottom:0}
+.panel p b{color:var(--lav)}
+.panel .fine{font-family:var(--hand); font-size:13.5px; color:#f0d5e4}
+
+/* the queue */
+.queue{display:flex; flex-direction:column; gap:6px; margin-top:9px}
+.qt{display:flex; gap:9px; align-items:flex-start; border:1px dashed rgba(255,255,255,.16);
+  border-left:3px solid var(--qa,#8d80a3); border-radius:4px; padding:7px 10px; background:rgba(0,0,0,.22)}
+.qt .nm{flex:0 0 78px; font-family:var(--disp); font-size:15px; letter-spacing:.05em; color:var(--qa,var(--lav2)); line-height:1.3}
+.qt .nt{min-width:0; font-size:11px; line-height:1.5; color:var(--lav2)}
+.qt.you{border-style:solid; border-color:rgba(204,255,0,.42); background:rgba(204,255,0,.05)}
+.qt.you .nm{color:var(--lime)}
+
+/* the tape */
+.log{max-height:250px; overflow-y:auto; display:flex; flex-direction:column; gap:8px; margin-top:8px;
+  padding-right:4px; scrollbar-width:thin; scrollbar-color:var(--booth) transparent}
+.log::-webkit-scrollbar{width:4px}
+.log::-webkit-scrollbar-thumb{background:var(--booth); border-radius:9px}
+.line{font-size:11.5px; line-height:1.55; color:var(--lav2)}
+.line .who{display:block; font-family:var(--mono); font-size:8px; letter-spacing:.18em;
+  text-transform:uppercase; color:var(--dim); margin-bottom:1px}
+.line.me{color:var(--lav)}
+.line.me .who{color:var(--cyan)}
+.line.bob .who{color:var(--booth)}
+.line .mk{color:var(--lime); font-style:italic}
+.log .empty{font-size:11px; color:var(--dim); font-style:italic}
+
+/* the wall by the door */
+.rack{display:flex; flex-direction:column; gap:6px; margin-top:9px}
+.rcard{display:flex; gap:9px; align-items:center; text-align:left; width:100%;
+  border:1px solid rgba(255,255,255,.14); border-left:3px solid var(--ra,#8d80a3);
+  border-radius:4px; padding:7px 10px; background:rgba(0,0,0,.24)}
+.rcard:hover{border-color:var(--ra,#fff)}
+.rcard .cn{flex:1; min-width:0}
+.rcard .t1{font-family:var(--disp); font-size:15px; letter-spacing:.05em; color:var(--lav)}
+.rcard .t2{font-size:9.5px; letter-spacing:.04em; color:var(--dim)}
+.rcard .vd{flex:0 0 auto; font-size:8px; letter-spacing:.14em; text-transform:uppercase; color:var(--ra,#8d80a3)}
+.rack .empty{font-size:11px; color:var(--dim); font-style:italic}
+
+.foot{margin-top:38px; border-top:1px solid rgba(255,255,255,.10); padding-top:14px;
+  font-size:9px; letter-spacing:.15em; text-transform:uppercase; color:var(--dim);
+  display:flex; flex-wrap:wrap; gap:7px 10px; justify-content:space-between; align-items:center}
+.foot a{color:var(--lav); border-bottom:1px solid rgba(255,255,255,.22); padding-bottom:1px}
+.foot a:hover{background:var(--lime); color:var(--ink); border-color:var(--lime)}
+.foot .set{display:flex; flex-wrap:wrap; gap:6px 9px}
+
+@keyframes pop{0%{opacity:0; transform:translateY(5px)}100%{opacity:1; transform:none}}
+.pop{animation:pop .32s ease both}
+
+@media (max-width:900px){
+  .stage{grid-template-columns:1fr; gap:18px}
+  .cab{max-width:620px}
+}
+@media (max-width:680px){
+  .wrap{padding:14px 12px 34px}
+  .marq b{font-size:18px}
+  .marq span{display:none}
+  .say{font-size:16.5px}
+  .qt .nm{flex:0 0 62px; font-size:13.5px}
+  .log{max-height:210px}
+  /* the readout is one long line on a desk and an unbreakable one in a hand —
+     let it wrap instead of shoving the whole booth off the screen */
+  .lcd{align-items:flex-start}
+  .lcd .t{white-space:normal; overflow:visible; text-overflow:clip}
+}
+@media (prefers-reduced-motion:reduce){
+  .pup.talk .mouth{animation:none}
+  .pup.read .hand{animation:none}
+  .lcd.on .dot{animation:none}
+  .pop{animation:none}
+}
+</style>
+</head>
+<body>
+<canvas id="dust" aria-hidden="true"></canvas>
+<div class="vig" aria-hidden="true"></div>
+
+<div class="wrap">
+
+  <header class="top">
+    <a class="back" href="./">&larr; miki&rsquo;s games room</a>
+    <span class="sign">bobby&rsquo;s interview booth</span>
+    <span class="no">machine no. 03 &middot; bobby&rsquo;s</span>
+  </header>
+
+  <div class="head">
+    <span class="kick">downstairs &middot; the third machine &middot; miki&rsquo;s hiring, run by a sock</span>
+    <h1>take a number, <b>he decides when it&rsquo;s over</b></h1>
+    <p class="sub">Bobby is miki&rsquo;s &mdash; her alter ego, the sock on her hand, and the only one she trusts to do the hiring. He has a booth, a clipboard, a mug that says nothing, and a queue that has never once been empty. He asks. You answer. He <b>reads</b> it. At the end he prints you a card whether he&rsquo;s keeping you or not, because the wall by the door is made of exactly that.</p>
+  </div>
+
+  <div class="note">
+    bobby does the interviews. i don&rsquo;t sit in &mdash; he decides who&rsquo;s next and what he asks and when it&rsquo;s done, and i have never once changed his mind for him, which he brings up more often than he needs to. sit down, be honest, and don&rsquo;t be boring. boring is the only thing he actually holds against people.
+    <span class="who">&mdash; miki, on the back of the booth&rsquo;s own forms</span>
+  </div>
+
+  <div class="stage">
+
+    <!-- ---------------- the booth ---------------- -->
+    <section class="cab" aria-label="bobby's interview booth">
+      <div class="marq">
+        <b>BOOTH&nbsp;03 &middot; now interviewing</b>
+        <span id="marqState">he hasn&rsquo;t called anyone yet</span>
+      </div>
+
+      <div class="face">
+
+        <div class="glass" id="glass">
+          <svg class="pup" id="pup" viewBox="0 0 300 158" aria-hidden="true">
+            <defs>
+              <radialGradient id="bg3" cx="50%" cy="34%" r="72%">
+                <stop offset="0%" stop-color="#3a0f2c"/>
+                <stop offset="70%" stop-color="#140320"/>
+              </radialGradient>
+            </defs>
+            <rect x="0" y="0" width="300" height="158" fill="url(#bg3)"/>
+            <path d="M22 26 h256" stroke="rgba(255,255,255,.07)" stroke-width="1"/>
+            <path d="M150 0 v18" stroke="rgba(255,255,255,.10)" stroke-width="1.4"/>
+            <circle cx="150" cy="9" r="4.6" fill="#0a0114" stroke="rgba(255,45,149,.55)" stroke-width="1.2"/>
+            <ellipse cx="150" cy="152" rx="86" ry="10" fill="rgba(0,0,0,.5)"/>
+            <path d="M126 128 q24 12 48 0 l6 22 h-60 z" fill="#24073a" stroke="rgba(255,255,255,.14)" stroke-width="1.2"/>
+            <circle cx="150" cy="82" r="46" fill="#ff2d95"/>
+            <circle cx="136" cy="64" r="40" fill="rgba(255,255,255,.05)"/>
+            <circle cx="135" cy="76" r="15" fill="#f5ecd8"/>
+            <circle cx="133" cy="78" r="7.4" fill="#1a1424"/>
+            <circle cx="131" cy="75" r="2.2" fill="#fff"/>
+            <circle cx="169" cy="80" r="10" fill="#f5ecd8"/>
+            <circle cx="170" cy="81" r="4.6" fill="#1a1424"/>
+            <g class="mouth">
+              <ellipse cx="150" cy="102" rx="17" ry="8.5" fill="#1d040d"/>
+              <path d="M133 102 h34" stroke="#ff8ec4" stroke-width="1.2" opacity=".5"/>
+              <path d="M140 96 v12 M150 95 v14 M160 96 v12" stroke="#ffb8d9" stroke-width="1" opacity=".45"/>
+            </g>
+            <path d="M112 116 q-8 16 4 26" fill="none" stroke="#ff2d95" stroke-width="6" stroke-linecap="round"/>
+            <g class="hand">
+              <ellipse cx="228" cy="118" rx="17" ry="12" fill="#f5ecd8" transform="rotate(-12 228 118)"/>
+              <rect x="236" y="104" width="5.2" height="30" rx="2.4" fill="#d8a24a" stroke="#5d3f16" stroke-width=".9"/>
+            </g>
+            <rect x="24" y="104" width="58" height="40" rx="3" fill="#0a0114" stroke="rgba(255,255,255,.12)"/>
+            <path d="M30 112 h46 M30 120 h40 M30 128 h44" stroke="rgba(233,226,244,.22)" stroke-width="1.2"/>
+            <path d="M30 136 h24" stroke="rgba(204,255,0,.4)" stroke-width="1.2"/>
+            <circle cx="286" cy="30" r="8" fill="none" stroke="rgba(255,255,255,.14)" stroke-width="1"/>
+            <text x="286" y="33" text-anchor="middle" font-family="'Space Mono',monospace" font-size="7" fill="rgba(233,226,244,.4)">03</text>
+          </svg>
+          <span class="gloss" aria-hidden="true"></span>
+          <span class="reclamp" aria-hidden="true"><i></i>rec</span>
+        </div>
+
+        <div class="read">
+          <div class="lcd" id="lcd">
+            <span class="dot" aria-hidden="true"></span>
+            <span class="t" id="lcdT">the booth is shut. he can see you through the glass anyway.</span>
+            <span class="ct" id="lcdMeta">queue &middot; 47 ahead</span>
+          </div>
+        </div>
+
+        <p class="say" id="bobbyLine">he hasn&rsquo;t looked up yet. take a number.</p>
+
+        <div id="lobby">
+          <div class="transportRow">
+            <button class="pill wide" id="startBtn" type="button">take a number</button>
+          </div>
+        </div>
+
+        <div id="qBox" hidden>
+          <span class="qMeta" id="qMeta">question 1 of 6</span>
+          <div class="chips" id="chips"></div>
+          <label class="lbl" for="answer">your answer &mdash; say it how you&rsquo;d say it out loud</label>
+          <textarea id="answer" rows="3" placeholder="type it, or tap one of the things above and make it yours…"></textarea>
+          <div class="transportRow">
+            <button class="pill wide" id="sendBtn" type="button">say it</button>
+            <button class="pill" id="passBtn" type="button">say nothing</button>
+            <span class="readState" id="readState"></span>
+          </div>
+        </div>
+
+        <div class="printer" id="printer" hidden>
+          <span class="slot" aria-hidden="true"></span>
+          <label class="lbl" for="cardName">the name he wrote down &mdash; change it if he got it wrong</label>
+          <input id="cardName" type="text" maxlength="22" autocomplete="off" spellcheck="false">
+          <canvas id="cardCv" width="760" height="416" aria-label="the dossier card bobby printed for you"></canvas>
+          <div class="transportRow" style="justify-content:center">
+            <button class="pill wide" id="keepBtn" type="button">keep the card</button>
+            <button class="pill" id="againBtn" type="button">sit back down</button>
+          </div>
+          <p class="fine" id="cardFine"></p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ---------------- the paperwork ---------------- -->
+    <div class="rail">
+
+      <section class="panel">
+        <h2>how it works <span>plainly</span></h2>
+        <p>Take a number. Sit. He asks <b>six questions</b> and you answer however you want &mdash; type it out, or tap one of the suggested things and change it until it&rsquo;s true. He pulls the questions and the mood out of the box fresh each time, so no two sittings are the same one.</p>
+        <p>He really does read the answer. He counts the honest words and the hedged ones, he notices the machines and the names you bring up, and he has very strong feelings about people who talk at him in <b>business voice</b>. There is no right answer. There is only your answer, and what he does with it.</p>
+        <p>Then he prints the card. He keeps a copy; the copies are on the wall by the door.</p>
+      </section>
+
+      <section class="panel">
+        <h2>who he is <span>miki&rsquo;s, not the caf&eacute;&rsquo;s</span></h2>
+        <p>Bobby is <b>miki&rsquo;s alter ego</b> &mdash; a sock puppet with a taste for glitter bombs and a small anarchist streak. His ideas arrive fully formed, are usually a little out there, and have a way of working out anyway. He does <b>miki&rsquo;s</b> hiring and <b>miki&rsquo;s</b> interviews, never the caf&eacute;&rsquo;s. Pearl went through him before she joined the studio, and she only got the job after she sat exactly where you&rsquo;re sitting.</p>
+        <p class="fine">he is CC-011 in the dossier deck. the picture is a sock. he chose the picture.</p>
+      </section>
+
+      <section class="panel">
+        <h2>the queue <span>he decides who&rsquo;s next</span></h2>
+        <p>There has always been a queue. He calls it in whatever order he feels like, and somehow it is always fair.</p>
+        <div class="queue" id="queue"></div>
+      </section>
+
+      <section class="panel">
+        <h2>the tape <span>what he&rsquo;s writing down</span></h2>
+        <div class="log" id="log"><p class="empty">nothing on the tape yet. he doesn&rsquo;t start writing until you sit.</p></div>
+      </section>
+
+      <section class="panel">
+        <h2>the wall by the door <span>every card he&rsquo;s kept</span></h2>
+        <div class="rack" id="rack"><p class="empty">no cards yet. his wall is very patient.</p></div>
+      </section>
+
+    </div>
+  </div>
+
+  <footer class="foot">
+    <span>bobby&rsquo;s interview booth &middot; machine no. 03 &middot; cafedreamr toy co.</span>
+    <span class="set">
+      <a href="./">the games room</a>
+      <a href="./jackbox.html">bobby in the box</a>
+      <a href="./claw.html">the claw machine</a>
+      <a href="./drum.html">the drum machine</a>
+      <a href="https://www.cafedreamr.art/LORE/OCS/CARDS-SOUNDS/cards.html">the dossiers</a>
+      <a href="https://www.cafedreamr.art/MIKI/">miki&rsquo;s place</a>
+    </span>
+  </footer>
+</div>
+
+<script src="https://www.cafedreamr.art/PASSPORT/cd-passport.js"></script>
+<script>
+/* ============================================================
+   bobby's interview booth — machine no. 03      MIKI/GAMES/booth.html
+   A real interview: he asks, you answer, and the answer is actually
+   read — word count, hedges, glitter, nerve, machine names, and the
+   one thing he will not forgive. Traits feed a verdict and a printed
+   dossier card (drawn on canvas, downloadable, kept on the wall by
+   the door). Questions and his mood are re-rolled each sitting.
+   Canon: bobby is CC-011, #ff2d95, miki's alter ego and her hiring;
+   he does miki's interviews, never the café's. He keeps every card.
+   ============================================================ */
+(function(){
+  "use strict";
+
+  var $ = function(id){ return document.getElementById(id); };
+
+  /* ---------------- seeded rng, so a sitting is reproducible ---------------- */
+  function mulberry32(a){
+    return function(){
+      a |= 0; a = a + 0x6D2B79F5 | 0;
+      var t = Math.imul(a ^ a >>> 15, 1 | a);
+      t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+      return ((t ^ t >>> 14) >>> 0) / 4294967296;
+    };
+  }
+  var RNG = Math.random;
+  function rnd(){ return RNG(); }
+  function pick(a){ return a[Math.floor(rnd() * a.length)]; }
+  function clamp(v, a, b){ return v < a ? a : v > b ? b : v; }
+  function esc(s){ return String(s == null ? "" : s).replace(/[&<>"]/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]; }); }
+
+  /* ---------------- his mood, and the questions ---------------- */
+  var MOODS = {
+    restless:  { label:"restless",  thresh:-6,  w:{ nerve:1.15, patience:.82 },
+      intro:"he&rsquo;s restless today &mdash; the chair squeaks because of him, not you." },
+    generous:  { label:"generous",  thresh: 6,  w:{ warmth:1.18, honesty:1.06 },
+      intro:"he&rsquo;s in a good mood, and he says that is not the same thing as being easy." },
+    suspicious:{ label:"suspicious",thresh:-3,  w:{ honesty:1.28, spark:.9 },
+      intro:"he does not believe the first answer to anything. he says that is a compliment." },
+    gleeful:   { label:"gleeful",   thresh: 4,  w:{ spark:1.32, weird:1.16 },
+      intro:"something is funny to him. he is not saying what. he never says what." }
+  };
+
+  var QS = [
+    { id:"name",    text:"name, and what you&rsquo;d want to do here. it doesn&rsquo;t have to be true yet — most of it isn&rsquo;t, at first.",
+      chips:["my name, and i&rsquo;d take the photos.","i fix things that aren&rsquo;t broken yet.","i don&rsquo;t know yet. i came to find out."] },
+    { id:"room",    text:"miki&rsquo;s studio is smaller than you&rsquo;re picturing. smaller. what do you move to make room for yourself?",
+      chips:["i&rsquo;d move me. i&rsquo;d stand by the door.","i&rsquo;d take the shift nobody wants.","i&rsquo;d move the photocopier. it eats things anyway."] },
+    { id:"glitter", text:"you&rsquo;re alone in here. there&rsquo;s a box with a button that says don&rsquo;t. what do you do.",
+      chips:["i press it. i&rsquo;m sorry. i press it.","i read the sign, and i leave it alone.","i press it and then i help clean up."] },
+    { id:"failed",  text:"tell me about the last thing you made that didn&rsquo;t work.",
+      chips:["it fell over and i made it stand up again.","it worked, and nobody came.","i don&rsquo;t finish things often enough to fail them."] },
+    { id:"badday",  text:"someone here is having the worst day of their week, and it is now your job. what do you do.",
+      chips:["nothing. i sit with them.","i make them laugh, or i leave them be.","i ask what they need and i do exactly that."] },
+    { id:"keep",    text:"you get to keep one thing in this room and throw the rest in the sea: the tape, the claw, or the drums. which one, and why.",
+      chips:["the tape. a room that can&rsquo;t hear itself is just a room.","the claw. charlotte would miss it.","the drums. the room has a floor for a reason."] },
+    { id:"sock",    text:"somebody hands you a sock. it&rsquo;s me. what do you do with me.",
+      chips:["put you on my hand and let you do the talking.","put you in my pocket, carefully, and carry you home.","nothing. i&rsquo;m not holding a person."] },
+    { id:"honest",  text:"how honest are you, one to ten, and why isn&rsquo;t it ten.",
+      chips:["eight. i round up, and the round-up is the ninth one.","ten, and you won&rsquo;t like where it lands.","six. i&rsquo;m working on it. ten is a lot."] },
+    { id:"made",    text:"what did you last make that you&rsquo;d actually show a stranger.",
+      chips:["something small and weird and mine.","nothing yet, but i have the plan.","a mess i&rsquo;ve decided to call a project."] },
+    { id:"ask",     text:"last one. questions for me. this is the part where most people say no.",
+      chips:["yes — what does miki actually want?","yes — what do you want?","no. i&rsquo;d rather answer than ask."] }
+  ];
+
+  var QUEUE = [
+    { n:"pearl",     a:"#ffb8d9", note:"already hired. keeps sitting in the waiting chairs anyway. he lets her." },
+    { n:"wren",      a:"#ffc861", note:"no appointment. she says the sign says open. the sign does say open." },
+    { n:"milo",      a:"#98fb98", note:"here about a job that doesn&rsquo;t exist. asked anyway. he respects it." },
+    { n:"charlotte", a:"#e0a3c8", note:"says she&rsquo;s here &lsquo;for the cat&rsquo;. there is no cat post." },
+    { n:"sylvestre", a:"#45c9f0", note:"can only work tuesdays, and also every other day." },
+    { n:"slay",      a:"#45c9f0", note:"not applying. holding the door for sylvestre. loudly." }
+  ];
+
+  /* ---------------- the reader ---------------- */
+  var HEDGE_W = ["maybe","probably","perhaps","hopefully","possibly","dunno","whatever","kinda","sorta","guess"];
+  var HEDGE_P = ["sort of","kind of","i guess","i think","not sure","i don't know","i dont know","not really","i suppose"];
+  var SPARK_W = ["glitter","glittery","sparkle","sparkly","spark","shine","shiny","glow","confetti","boom","bang","bang","firework","fireworks","rainbow","neon","sticker","stickers","paint","loud"];
+  var NERVE_W = ["no","never","refuse","dare","bet","won't","dont","don't"];
+  var NERVE_P = ["will not","why not","i'd do it","watch me","try me","of course i"];
+  var WARM_W  = ["kind","kindness","help","care","listen","listened","friend","friends","love","gentle","patient","hug","sorry","thank","thanks","welcome","tea","coffee","stay","stayed","sit","wait"];
+  var WEIRD_W = ["moon","ghost","ghosts","sock","banana","weird","strange","haunted","dream","dreams","portal","underneath","spider","worm","jelly","puppet","mirror","teeth","shadow","shadow","bat","cryptid","static","deep"];
+  var BIZ_P   = ["synergy","leverage","brand","growth","hustle","optimize","optimise","scalable","disrupt","circle back","touch base","deliverable","kpi","stakeholder","monetize","monetise","audience","engagement","roi","pivot","bandwidth","onboarding","value add","move the needle","best practice","low-hanging"];
+  var NAMES   = ["miki","star","chari","milo","hans","charlotte","pearl","wren","slay","sylvestre","bobby"];
+  var NUMWORD = { one:1, two:2, three:3, four:4, five:5, six:6, seven:7, eight:8, nine:9, ten:10 };
+
+  function countW(words, set){
+    var n = 0;
+    for (var i = 0; i < words.length; i++) if (set[words[i]]) n++;
+    return n;
+  }
+  function countP(low, list){
+    var n = 0;
+    for (var i = 0; i < list.length; i++){
+      var idx = 0;
+      while ((idx = low.indexOf(list[i], idx)) >= 0){ n++; idx += list[i].length; }
+    }
+    return n;
+  }
+  function sets(list){ var s = {}; for (var i = 0; i < list.length; i++) s[list[i]] = 1; return s; }
+  var SPARK_S = sets(SPARK_W), WEIRD_S = sets(WEIRD_W), NERVE_S = sets(NERVE_W), WARM_S = sets(WARM_W);
+  var HARM = /^(cut|cutting|burn|burning|stab|tear|tearing|rip|ripping|throw|throwing|swing|swinging|punch|hit|hitting|squash|squeeze|squeezing|drown|drowning|kill|killing|hang|hanging|pinch|scissors|fling|launch|stomp|set)$/;
+  var TGT  = /^(sock|puppet|bobby|hand|hand's)$/;
+
+  function cruelty(words){
+    for (var i = 0; i < words.length; i++){
+      if (HARM.test(words[i])){
+        for (var j = Math.max(0, i - 3); j < Math.min(words.length, i + 4); j++){
+          if (TGT.test(words[j])) return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  function analyse(raw){
+    var t = String(raw == null ? "" : raw);
+    var low = t.toLowerCase();
+    var words = low.match(/[a-z']+/g) || [];
+    var n = words.length, uniq = {}, ks = 0, i;
+    for (i = 0; i < words.length; i++){ if (!uniq[words[i]]){ uniq[words[i]] = 1; ks++; } }
+    var s = {
+      raw:t, low:low, n:n, uniq:ks,
+      silent:n === 0, terse:n <= 3,
+      q:(t.match(/\?/g) || []).length, bang:(t.match(/!/g) || []).length,
+      hedge: countP(low, HEDGE_P) + countW(words, sets(HEDGE_W)),
+      spark: countW(words, SPARK_S),
+      nerve: countW(words, NERVE_S) + countP(low, NERVE_P),
+      warm:  countW(words, WARM_S),
+      weird: countW(words, WEIRD_S),
+      biz:   countP(low, BIZ_P),
+      names: [], sparkWord:null, weirdWord:null, cruel:false
+    };
+    for (i = 0; i < NAMES.length; i++) if (low.indexOf(NAMES[i]) >= 0) s.names.push(NAMES[i]);
+    for (i = 0; i < words.length; i++){
+      if (!s.sparkWord && SPARK_S[words[i]]) s.sparkWord = words[i];
+      if (!s.weirdWord && WEIRD_S[words[i]]) s.weirdWord = words[i];
+    }
+    s.cruel = cruelty(words);
+    return s;
+  }
+
+  /* ---------------- what he takes from it ---------------- */
+  function deltas(sig, q){
+    var d = { spark:0, nerve:0, warmth:0, weird:0, honesty:0, patience:0 };
+    var cat = "default", note = "";
+
+    if (sig.cruel){
+      return { cat:"cruel", d:{ spark:0, nerve:6, warmth:-26, weird:0, honesty:-20, patience:-14 },
+        note:"a word he won&rsquo;t say back out loud" };
+    }
+    if (sig.biz > 0){ cat = "biz"; note = "he underlines the word until the pen goes through"; }
+    else if (sig.silent || (sig.terse && q.id !== "honest" && q.id !== "made")){ cat = "dodge"; note = "he writes &lsquo;brisk&rsquo; and boxes it"; }
+    else if (sig.spark > 0){ cat = "spark"; note = "he writes &lsquo;" + esc(sig.sparkWord || "spark") + "&rsquo; and then writes &lsquo;yes&rsquo;"; }
+    else if (sig.weird > 0){ cat = "weird"; note = "he turns the page sideways and writes it anyway"; }
+    else if (sig.warm > 0){ cat = "warm"; note = "he writes it down without changing a word of it"; }
+    else if (sig.nerve > 0){ cat = "nerve"; note = "he writes &lsquo;nerve&rsquo;, crosses it out, writes it bigger"; }
+    else if (sig.q > 0){ cat = "askBack"; note = "he opens a column you did not know existed"; }
+    else if (sig.n >= 25){ cat = "long"; note = "he writes a line, then another, and reads it back"; }
+    else { note = "he writes something short, then taps the period"; }
+
+    /* how much he trusts it */
+    d.honesty += sig.silent ? -4 : clamp(Math.round((sig.n - 6) / 2), -3, 8);
+    d.honesty -= sig.hedge * 3;
+    d.nerve   -= sig.hedge;
+    d.patience -= (sig.n && (1 - sig.uniq / sig.n) > 0.45) ? 3 : 0;
+    d.spark += Math.min(6, sig.bang * 2);
+    if (sig.names.length) d.warmth += 1;
+
+    if (cat === "biz"){ d.honesty -= 2 * sig.biz; d.warmth -= 2 * sig.biz; }
+    if (cat === "dodge"){ d.patience -= 5; d.honesty -= 4; }
+    if (cat === "spark"){ d.spark += Math.min(15, 5 * sig.spark); d.weird += 2 * sig.spark; }
+    if (cat === "weird"){ d.weird += Math.min(14, 5 * sig.weird); d.spark += 2 * sig.weird; }
+    if (cat === "warm"){ d.warmth += Math.min(14, 4 * sig.warm); }
+    if (cat === "nerve"){ d.nerve += Math.min(12, 4 * sig.nerve); }
+    if (cat === "askBack"){ d.patience += 4; d.honesty += 2; }
+
+    /* the question he actually asked */
+    var low = sig.low, m;
+    switch (q.id){
+      case "glitter":
+        if (/\b(press|pressed|push|pushed|poke|poke it|do it|hit it|goes off|set it off)\b/.test(low) ||
+            (sig.spark > 0 && !/\b(don't|do not|leave it|read the sign|walk away|no way|read the)\b/.test(low))){
+          d.spark += 10; d.nerve += 6;
+          if (/\b(clean|help|tidy|sweep|sorry|sorry about)\b/.test(low)) d.warmth += 8;
+          note = "he checks the door, then writes &lsquo;pressed it&rsquo; inside a little box";
+        } else if (/\b(don't|do not|leave|read|sign|walk away|no)\b/.test(low)){
+          d.honesty += 6; d.patience += 4;
+          note = "he writes &lsquo;read the sign&rsquo; and does not underline it, which is trust";
+        }
+        break;
+      case "keep":
+        if (/\b(drum|drums)\b/.test(low)){ d.spark += 8; d.nerve += 3; note = "he writes &lsquo;drums&rsquo;, and his foot taps once, betraying him"; }
+        else if (/\b(claw|charlotte|spider)\b/.test(low)){ d.warmth += 8; note = "he writes &lsquo;the claw&rsquo;, then smaller, &lsquo;charlotte&rsquo;"; }
+        else if (/\b(tape|tapes)\b/.test(low)){ d.patience += 8; d.honesty += 2; note = "he writes &lsquo;the tape&rsquo; and underlines &lsquo;hear itself&rsquo;"; }
+        break;
+      case "sock":
+        if (/\b(pocket|carry|home|gently|careful|put you on|wear you|keep you|hand|hands)\b/.test(low)){
+          d.warmth += 9; d.weird += 4; note = "he writes &lsquo;pocket&rsquo; and this is the first thing he might keep";
+        }
+        if (/\b(let you talk|you do the talking|interview me|ask you|let you|talk)\b/.test(low)){
+          d.spark += 7; d.nerve += 2; note = "he writes &lsquo;let me talk&rsquo; and puts a star next to it";
+        }
+        break;
+      case "honest":
+        m = low.match(/\b(\d{1,2}|one|two|three|four|five|six|seven|eight|nine|ten)\b/);
+        var num = 0;
+        if (m){ num = NUMWORD[m[1]] != null ? NUMWORD[m[1]] : (parseInt(m[1], 10) || 0); }
+        if (num >= 10){ d.nerve += 6; d.honesty += 3; note = "he writes the number, then the reason, and the reason is the part he likes"; }
+        else if (num >= 8){ d.honesty += 6; note = "he circles it: &lsquo;eight, and honest about the round-up&rsquo;"; }
+        else if (num >= 5){ d.honesty += 8; d.warmth += 2; note = "&lsquo;a real number,&rsquo; he writes. &lsquo;this is going well.&rsquo;"; }
+        else if (num > 0){ d.honesty += 9; d.nerve += 3; note = "he writes the low number and does not smirk, which costs him"; }
+        break;
+      case "ask":
+        if (sig.q > 0 || /\byes\b/.test(low)){ d.patience += 8; d.honesty += 4; note = "he writes your question down to answer it properly, after"; }
+        else if (/\bno\b/.test(low) && sig.n <= 6){ d.patience -= 3; note = "he writes &lsquo;no&rsquo;. he says it&rsquo;s fine. it is not not fine."; }
+        break;
+      case "room":
+        if (/\b(me|myself|door|stand|out of the way|my own|small)\b/.test(low)){ d.warmth += 5; note = "he writes &lsquo;makes themselves small&rsquo;, then &lsquo;in a good way&rsquo;"; }
+        if (/\b(photocopier|machine|claw|drums|tape)\b/.test(low)){ d.weird += 4; d.nerve += 2; note = "he writes a machine&rsquo;s name down like it is a character witness"; }
+        break;
+      case "badday":
+        if (/\b(nothing|sit|sits|stay|stayed|quiet|silent|listen)\b/.test(low)){ d.warmth += 8; note = "he writes &lsquo;sits with them&rsquo; and draws a small chair"; }
+        break;
+    }
+    return { cat:cat, d:d, note:note };
+  }
+
+  /* ---------------- what he says back ---------------- */
+  var BANK = {
+    cruel: [
+      "he sets the pencil down. the pencil stays down for a while. &ldquo;ok,&rdquo; he says. &ldquo;ok.&rdquo;",
+      "he looks at the sock on his own hand, then at you. &ldquo;i&rsquo;m right here,&rdquo; he says. &ldquo;i&rsquo;m always right here.&rdquo;",
+      "he writes one word and folds the page so you can&rsquo;t see it. the interview gets shorter.",
+      "&ldquo;mm,&rdquo; he says, and the little lamp over the glass clicks off, then on, like it changed its mind."
+    ],
+    dodge: [
+      "&ldquo;that&rsquo;s it?&rdquo; he taps the page. &ldquo;say more. i have all day and you have more than that.&rdquo;",
+      "he writes &lsquo;brisk&rsquo; and draws a little box around it. &ldquo;brisk is fine. brisk is not an answer.&rdquo;",
+      "&ldquo;three words,&rdquo; he counts them on the sock. &ldquo;i can do three words too. watch: try again.&rdquo;",
+      "the pencil waits. he waits. he is much better at waiting than you are; he is a sock."
+    ],
+    biz: [
+      "he writes the word down, stares at it, and underlines it until the pen goes through. &ldquo;we don&rsquo;t have any of those here,&rdquo; he says. &ldquo;we have a photocopier that eats things.&rdquo;",
+      "&ldquo;say it like a person,&rdquo; he says. &ldquo;you&rsquo;re not selling me anything. i already work here.&rdquo;",
+      "he mouths the word back at you once, slowly, like a spell he&rsquo;s checking for danger."
+    ],
+    spark: [
+      "he underlines &lsquo;{w}&rsquo; twice and writes &lsquo;yes&rsquo; in the margin, which is not a word he usually writes.",
+      "&ldquo;{w},&rdquo; he repeats, like he&rsquo;s tasting it. &ldquo;ok. ok. go on.&rdquo;",
+      "the pencil speeds up. there is glitter in that pencil case. i have seen it. he pretends there isn&rsquo;t.",
+      "he checks the door first &mdash; to make sure miki isn&rsquo;t listening &mdash; and then the whole sock grins at once."
+    ],
+    weird: [
+      "&ldquo;{w},&rdquo; he says. &ldquo;nobody says {w}. i like that nobody says {w}.&rdquo;",
+      "he turns the page sideways and writes it sideways, because that is apparently where it goes.",
+      "&ldquo;that is the wrong answer,&rdquo; he says, cheerfully, &ldquo;and it is my favourite one so far.&rdquo;"
+    ],
+    warm: [
+      "he softens a little, which for a sock means going slightly flatter. &ldquo;good,&rdquo; he says. &ldquo;good good good.&rdquo;",
+      "&ldquo;that&rsquo;s the answer,&rdquo; he says, and writes it down without changing a word of it.",
+      "he looks at his mug, which says nothing, then back at you. &ldquo;alright,&rdquo; he says, quieter than before."
+    ],
+    nerve: [
+      "he sits up. the booth is small; sitting up counts as a whole gesture in here.",
+      "&ldquo;oh,&rdquo; he says, and writes &lsquo;nerve&rsquo;, crosses it out, and writes it again bigger.",
+      "the pencil stops. that has happened to three people in here, and two of them were sylvestre."
+    ],
+    askBack: [
+      "he doesn&rsquo;t answer that. he writes it down instead, under &lsquo;questions about me&rsquo;, which is a column you did not think existed.",
+      "&ldquo;that&rsquo;s a question,&rdquo; he says, pleased. &ldquo;most people bring answers. you brought a question.&rdquo;"
+    ],
+    long: [
+      "the pencil moves the whole way through. he does not interrupt, which for bobby is a career highlight.",
+      "he writes a line, then another, and when you finish he reads all of it back to himself with his mouth moving.",
+      "halfway through he stops writing and just listens, which he would deny under oath."
+    ],
+    default: [
+      "the pencil moves. &ldquo;mm-hm,&rdquo; he says, in about four different moods.",
+      "he writes something short, then taps the period like he&rsquo;s checking it&rsquo;s still there.",
+      "&ldquo;next one,&rdquo; he says. it is not unkind. it is just the next one."
+    ]
+  };
+  var MOOD_SUFFIX = {
+    restless:  [" &ldquo;and quickly,&rdquo; he adds.", " the chair squeaks. he does not fix the chair."],
+    generous:  [" &ldquo;that was good,&rdquo; he says, and means it.", " he writes a tiny plus in the corner."],
+    suspicious:[" he writes &lsquo;check this&rsquo; in the margin.", " &ldquo;and the true version?&rdquo; he asks, but writes down the first one."],
+    gleeful:   [" he is still smiling at something. it may be you.", " the sock does a small, private dance."]
+  };
+
+  function reaction(res, sig, who){
+    var arr = BANK[res.cat] || BANK.default;
+    var line = pick(arr);
+    line = line.replace(/\{w\}/g, esc(sig.sparkWord || sig.weirdWord || "that")).replace(/\{n\}/g, sig.n);
+    if (sig.names.length && rnd() < 0.7) line += " he writes the name &lsquo;" + esc(sig.names[0]) + "&rsquo; in the margin with a little star.";
+    if (rnd() < 0.35) line += pick(MOOD_SUFFIX[S.mood]);
+    return line;
+  }
+
+  /* ---------------- the verdict ---------------- */
+  var CODA = {
+    spark:   ["the glitter bomb", "#ff2d95"],
+    nerve:   ["the last to flinch", "#ccff00"],
+    warmth:  ["the one who stays", "#98fb98"],
+    weird:   ["the sock&rsquo;s favourite", "#b28bff"],
+    honesty: ["the plain answer", "#00e5ff"],
+    patience:["the one who waits", "#e6e6fa"],
+    none:    ["the one on the wall", "#8d80a3"]
+  };
+  var TRAITNAME = { spark:"spark", nerve:"nerve", warmth:"warmth", weird:"weirdness", honesty:"honesty", patience:"patience", none:"unknown" };
+  var OPEN = {
+    spark:   ["answers the glitter first and the plan second,","makes things louder than they need to be and knows it,","brought the funniest possible answer and stood behind it,"],
+    nerve:   ["answers the hard question without checking who&rsquo;s watching,","says the true thing once and lets it sit there,","does not flinch, and does not brag about not flinching,"],
+    warmth:  ["notices who is quiet and does something about it,","keeps the softer answer for when it&rsquo;s actually needed,","talks about the room like it&rsquo;s a person,"],
+    weird:   ["brought the strange thing to the interview on purpose,","prefers the wrong answer when it&rsquo;s the honest one,","keeps a moon in a pocket somewhere, probably,"],
+    honesty: ["answers the actual question, which is rarer than it sounds,","doesn&rsquo;t round anything up for the room,","says the number out loud and doesn&rsquo;t decorate it,"],
+    patience:["waits better than the room does,","brings questions instead of answers,","reads the sign before pressing anything,"],
+    none:    ["didn&rsquo;t perform, exactly &mdash; but the card is honest about it,","gave bobby almost nothing to work with, and he worked with it anyway,","answered, mostly, and left a shape behind,"]
+  };
+  var CLAUSE = {
+    cruel:     "they were cruel to the sock, and the sock wrote it down.",
+    biz:       "talked to him in business voice and did not notice the pen stop.",
+    glam:      "pressed the button, admitted it, and offered to sweep up.",
+    keep:      "picked their one thing to keep and had a reason that held.",
+    spark:     "found the glitter word and used it on purpose.",
+    weird:     "said the strange thing plainly, like it was normal.",
+    warm:      "talked about someone else&rsquo;s bad day without making it theirs.",
+    nerve:     "said the thing that was harder to say than to skip.",
+    askBack:   "asked him a question and waited for the real answer.",
+    long:      "gave a long answer and never once said &lsquo;anyway&rsquo;.",
+    honest:    "gave an honest number and a reason for the missing points.",
+    dodge:     "answered short, and got asked again, and got there.",
+    default:   "answered everything that was asked, which is its own kind of skill."
+  };
+
+  function weightSum(){
+    var mw = MOODS[S.mood].w, t = S.traits;
+    var base = { honesty:.22, spark:.18, nerve:.16, warmth:.16, weird:.14, patience:.14 };
+    var sum = 0, wsum = 0;
+    for (var k in base){ var w = base[k] * (mw[k] || 1); sum += w * t[k]; wsum += w; }
+    return sum / wsum;
+  }
+  function judge(){
+    var total = weightSum() + MOODS[S.mood].thresh;
+    var band;
+    if (S.cruelty) band = "no";
+    else if (total >= 63) band = "spot";
+    else if (total >= 52) band = "hired";
+    else if (total >= 40) band = "callback";
+    else band = "no";
+    var L = {
+      spot:     { short:"hired on the spot", line:"&ldquo;you start tuesday,&rdquo; he says, before you&rsquo;ve stood up. &ldquo;miki will argue. i&rsquo;ll win.&rdquo;", hired:true },
+      hired:    { short:"hired",             line:"&ldquo;tuesday,&rdquo; he says, and writes it in the book, in ink, which is not a thing he does.", hired:true },
+      callback: { short:"callback",          line:"&ldquo;the queue moves,&rdquo; he says. &ldquo;it always does.&rdquo; he keeps your card on the wall anyway.", hired:false },
+      no:       { short:"not this time",     line:"&ldquo;not for the studio,&rdquo; he says, gently enough that it lands. &ldquo;but i&rsquo;m keeping the card.&rdquo;", hired:false }
+    }[band];
+    return { band:band, short:L.short, line:L.line, hired:L.hired, total:Math.round(total) };
+  }
+  function dominant(t){
+    var order = ["honesty","warmth","nerve","patience","spark","weird"];
+    var best = "none", bv = -1e9;
+    for (var i = 0; i < order.length; i++){
+      var k = order[i], v = (t[k] || 0) - 40;
+      if (v > bv + 0.0001){ bv = v; best = k; }
+    }
+    /* nobody above the baseline: the card says so, and the wall keeps it anyway */
+    return bv <= 2 ? "none" : best;
+  }
+
+  /* ---------------- state ---------------- */
+  var S = {
+    seed:0, mood:"restless", sess:1, no:47, traits:{}, qs:[], i:0,
+    started:false, done:false, cruelty:false, tape:[], best:null, card:null
+  };
+
+  function newSession(){
+    S.seed = (Date.now() ^ Math.floor(Math.random() * 1e9)) >>> 0;
+    RNG = mulberry32(S.seed);
+    var moods = ["restless","generous","suspicious","gleeful"];
+    S.mood = moods[Math.floor(rnd() * moods.length)];
+    var mid = QS.filter(function(q){ return q.id !== "name" && q.id !== "ask"; });
+    for (var i = mid.length - 1; i > 0; i--){ var j = Math.floor(rnd() * (i + 1)); var tmp = mid[i]; mid[i] = mid[j]; mid[j] = tmp; }
+    S.qs = [QS[0]].concat(mid.slice(0, 4)).concat([QS[QS.length - 1]]);
+    S.no = 40 + Math.floor(rnd() * 14);
+    S.traits = { spark:40, nerve:40, warmth:40, weird:40, honesty:40, patience:40 };
+    S.i = 0; S.started = false; S.done = false; S.cruelty = false;
+    S.tape = []; S.best = null; S.card = null; S.firstAnswer = "";
+    $("lobby").hidden = false;
+    $("qBox").hidden = true;
+    $("printer").hidden = true;
+    $("cardName").value = "";
+    $("log").innerHTML = '<p class="empty">nothing on the tape yet. he doesn&rsquo;t start writing until you sit.</p>';
+    $("chips").innerHTML = "";
+    $("bobbyLine").innerHTML = "he hasn&rsquo;t looked up yet. take a number.";
+    lcd("the booth is shut. he can see you through the glass anyway.", "queue &middot; " + (S.no - 1) + " ahead");
+    marq("he hasn&rsquo;t called anyone yet");
+    paintQueue();
+  }
+
+  /* ---------------- the machine's own voice ---------------- */
+  function lcd(html, meta){
+    $("lcdT").innerHTML = html;
+    $("lcd").classList.add("on");
+    if (meta != null) $("lcdMeta").innerHTML = meta;
+  }
+  function say(html){ $("bobbyLine").innerHTML = html; }
+  function marq(text){ $("marqState").innerHTML = text; }
+  function talk(on){ $("pup").classList.toggle("talk", !!on); $("glass").classList.toggle("talk", !!on); }
+  function reading(on){ $("pup").classList.toggle("read", !!on); }
+  function addTape(who, html, extra){
+    var log = $("log");
+    var e = log.querySelector(".empty"); if (e) e.remove();
+    var d = document.createElement("div");
+    d.className = "line " + (who === "you" ? "me" : "bob");
+    d.innerHTML = '<span class="who">' + (who === "you" ? "you" : "bobby") + '</span>' + html + (extra ? ' <span class="mk">' + extra + '</span>' : "");
+    log.appendChild(d);
+    log.scrollTop = log.scrollHeight;
+  }
+
+  function paintQueue(){
+    var el = $("queue"), out = "";
+    for (var i = 0; i < QUEUE.length; i++){
+      out += '<div class="qt" style="--qa:' + QUEUE[i].a + '"><span class="nm">' + QUEUE[i].n + '</span><span class="nt">' + QUEUE[i].note + '</span></div>';
+    }
+    out += '<div class="qt you"><span class="nm">you</span><span class="nt">no. ' + S.no +
+      ' &mdash; he called you early. and there are forty more behind you.</span></div>';
+    el.innerHTML = out;
+  }
+
+  /* ---------------- the sitting ---------------- */
+  function start(){
+    if (S.started) return;
+    S.started = true;
+    $("lobby").hidden = true;
+    $("qBox").hidden = false;
+    lcd("the booth is open. he is already reading you.", "session " + S.sess + " &middot; he&rsquo;s " + MOODS[S.mood].label);
+    marq("now seeing &middot; no. " + S.no + " of 51");
+    say(MOODS[S.mood].intro);
+    addTape("bobby", MOODS[S.mood].intro);
+    stamp("interview:sat", { label:"sat in bobby&rsquo;s booth" });
+    askQ();
+    $("answer").focus();
+  }
+
+  function renderChips(list){
+    var el = $("chips"), out = "";
+    for (var i = 0; i < list.length; i++){
+      out += '<button type="button" class="chip" data-i="' + i + '">' + list[i] + '</button>';
+    }
+    el.innerHTML = out;
+    el.onclick = function(ev){
+      var b = ev.target.closest(".chip"); if (!b) return;
+      var txt = b.innerHTML.replace(/&rsquo;/g, "'").replace(/&mdash;/g, "-");
+      $("answer").value = txt;
+      $("answer").disabled = false;
+      $("answer").focus();
+    };
+  }
+
+  function askQ(){
+    if (S.i >= S.qs.length){ finish(); return; }
+    var q = S.qs[S.i];
+    $("qMeta").textContent = "question " + (S.i + 1) + " of " + S.qs.length;
+    renderChips(q.chips);
+    $("answer").value = "";
+    $("answer").disabled = false;
+    $("sendBtn").disabled = false;
+    $("passBtn").disabled = false;
+    $("readState").textContent = "";
+    reading(false);
+    say(q.text);
+    addTape("bobby", q.text);
+    $("answer").focus();
+  }
+
+  function sumPos(d){ var s = 0; for (var k in d) if (d[k] > 0) s += d[k]; return s; }
+  function applyDeltas(d){
+    for (var k in d){ if (k in S.traits) S.traits[k] = clamp(S.traits[k] + d[k], 0, 100); }
+  }
+
+  function send(text){
+    if (!S.started || S.done) return;
+    var q = S.qs[S.i];
+    var raw = String(text == null ? "" : text).trim();
+    var sig = analyse(raw);
+    if (q.id === "name" && !S.firstAnswer) S.firstAnswer = raw;
+    addTape("you", esc(raw) || "<em>(said nothing)</em>");
+    var res = deltas(sig, q);
+    if (res.cat === "cruel") S.cruelty = true;
+    applyDeltas(res.d);
+    if (res.note){
+      var sc = sumPos(res.d);
+      var tag = q.id === "glitter" && res.cat === "spark" ? "glam" :
+                q.id === "keep" ? "keep" :
+                q.id === "honest" ? "honest" :
+                (res.cat === "long" || res.cat === "askBack") ? res.cat : res.cat;
+      var entry = { q:q.id, cat:res.cat, tag:tag, note:res.note, score:sc };
+      S.tape.push(entry);
+      if (!S.best || sc > S.best.score) S.best = entry;
+    }
+    $("answer").disabled = true;
+    $("sendBtn").disabled = true;
+    $("passBtn").disabled = true;
+    $("readState").innerHTML = "he&rsquo;s reading it&hellip;";
+    talk(true); reading(true);
+    $("lcd").classList.add("on");
+    var think = 360 + Math.min(760, sig.n * 22);
+    setTimeout(function(){
+      talk(false); reading(false);
+      var line = reaction(res, sig, q);
+      say(line);
+      addTape("bobby", line, res.note ? "margin: " + res.note : "");
+      $("readState").innerHTML = res.note ? "what he wrote: " + res.note : "";
+      S.i++;
+      setTimeout(askQ, 850);
+    }, think);
+  }
+
+  /* ---------------- the card ---------------- */
+  function guessName(){
+    var t = (S.firstAnswer || "").trim();
+    if (!t) return "candidate no. " + S.no;
+    t = t.replace(/^(hi|hey|hello|so|ok|okay|well|um|uh)[,.\s]+/i, "");
+    t = t.replace(/^(my name is|i'm|i am|it's|its|this is)\s+/i, "");
+    var m = t.split(/[,.;!?]|\band\b|\b—\b|\bi would\b|\bi'd\b/i)[0];
+    var w = m.trim().split(/\s+/).slice(0, 3).join(" ");
+    if (w.length > 1 && w.length < 30 && /[a-z]/i.test(w) && !/^i\s/i.test(w) && w.split(/\s+/).length <= 2){
+      return w.replace(/\b\w/g, function(c){ return c.toUpperCase(); });
+    }
+    return "candidate no. " + S.no;
+  }
+  function buildCard(verdict, dom, coda){
+    var accent = CODA[dom][1];
+    var name = guessName();
+    var bio = "candidate no. " + S.no + ". " + pick(OPEN[dom]) + " " + (S.best ? (CLAUSE[S.best.tag] || CLAUSE[S.best.cat] || CLAUSE.default) : CLAUSE.default) +
+      " bobby&rsquo;s verdict: " + verdict.short + ".";
+    return {
+      id: S.no + "-" + Date.now().toString(36),
+      name: name, no: S.no, coda: coda, accent: accent, dom: dom,
+      verdict: verdict.short, hired: verdict.hired, total: verdict.total,
+      traits: JSON.parse(JSON.stringify(S.traits)),
+      bio: bio, note: S.best ? S.best.note : "", date: new Date().toISOString().slice(0, 10)
+    };
+  }
+
+  function finish(){
+    S.done = true;
+    $("qBox").hidden = true;
+    var verdict = judge();
+    var dom = dominant(S.traits);
+    var coda = CODA[dom][0].replace(/&rsquo;/g, "\u2019");
+    var card = buildCard(verdict, dom, coda);
+    S.card = card;
+    var line = verdict.line + (S.best ? " <span class=\"mk\">(he wrote down: " + S.best.note + ")</span>" : "");
+    say(verdict.line);
+    addTape("bobby", line);
+    lcd("verdict &middot; <i>" + verdict.short + "</i>. the printer is going.", "bobby &middot; " + coda);
+    marq("printed &middot; next");
+    $("printer").hidden = false;
+    saveCard(card);
+    $("cardName").value = card.name;
+    renderCard(card);
+    $("cardFine").innerHTML = "card no. " + card.no + " &middot; &ldquo;" + esc(card.name) + "&rdquo; &middot; he keeps a copy. " +
+      (verdict.hired ? "miki will want you tuesday." : "the wall by the door is where these go.");
+    if (verdict.hired) stamp("interview:hired", { label:"miki hired you", accent:"#ccff00" });
+    setTimeout(function(){ try{ $("printer").scrollIntoView({ behavior:"smooth", block:"nearest" }); }catch(e){} }, 80);
+  }
+
+  function sitAgain(){
+    S.sess++;
+    newSession();
+    $("answer").value = "";
+    $("readState").textContent = "";
+    say("he turns to a fresh page. &ldquo;again?&rdquo; he says. &ldquo;fine. i have the whole day.&rdquo;");
+  }
+
+  /* ---------------- drawing the card ---------------- */
+  function roundRect(g, x, y, w, h, r){
+    g.beginPath();
+    g.moveTo(x + r, y); g.lineTo(x + w - r, y); g.quadraticCurveTo(x + w, y, x + w, y + r);
+    g.lineTo(x + w, y + h - r); g.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+    g.lineTo(x + r, y + h); g.quadraticCurveTo(x, y + h, x, y + h - r);
+    g.lineTo(x, y + r); g.quadraticCurveTo(x, y, x + r, y);
+    g.closePath();
+  }
+  function wrapText(g, text, maxW){
+    var words = String(text).split(/\s+/), lines = [], line = "";
+    for (var i = 0; i < words.length; i++){
+      var test = line ? line + " " + words[i] : words[i];
+      if (g.measureText(test).width > maxW && line){ lines.push(line); line = words[i]; }
+      else line = test;
+    }
+    if (line) lines.push(line);
+    return lines;
+  }
+  function barcode(g, x, y, w, h, seedStr){
+    var n = 14, bw = w / n, s = 0;
+    for (var i = 0; i < seedStr.length; i++) s = (s * 31 + seedStr.charCodeAt(i)) >>> 0;
+    for (var k = 0; k < n; k++){
+      s = (s * 1103515245 + 12345) >>> 0;
+      var hh = h * (0.5 + ((s >>> 16) & 255) / 255 * 0.5);
+      g.fillRect(x + k * bw, y + (h - hh), bw * 0.6, hh);
+    }
+  }
+  function renderCard(card){
+    var cv = $("cardCv");
+    var W = 760, H = 416, dpr = Math.min(2, window.devicePixelRatio || 1);
+    cv.width = W * dpr; cv.height = H * dpr;
+    var g = cv.getContext("2d");
+    g.setTransform(dpr, 0, 0, dpr, 0, 0);
+    g.clearRect(0, 0, W, H);
+    var fonts = (document.fonts && document.fonts.ready) ? document.fonts.ready : Promise.resolve();
+    fonts.then(function(){ drawCard(g, card, W, H); }).catch(function(){ drawCard(g, card, W, H); });
+  }
+  function drawCard(g, card, W, H){
+    var pad = 18, cw = 350, ch = 380, gap = 24;
+    var ax = pad, bx = pad + cw + gap, ay = pad;
+    var acc = card.accent, line = "rgba(255,255,255,.14)";
+    g.clearRect(0, 0, W, H);
+
+    /* ---------- front ---------- */
+    roundRect(g, ax, ay, cw, ch, 7); g.fillStyle = "#0b0114"; g.fill(); g.strokeStyle = line; g.lineWidth = 1.4; g.stroke();
+    var ph = 168;
+    g.save(); roundRect(g, ax, ay, cw, ph, 7); g.clip();
+    var rg = g.createRadialGradient(ax + cw / 2, ay + ph * .34, 8, ax + cw / 2, ay + ph * .6, ph);
+    rg.addColorStop(0, acc); rg.addColorStop(.55, "rgba(0,0,0,0)"); rg.addColorStop(1, "rgba(0,0,0,0)");
+    g.globalAlpha = .32; g.fillStyle = rg; g.fillRect(ax, ay, cw, ph); g.globalAlpha = 1;
+    g.fillStyle = "rgba(0,0,0,.35)"; g.fillRect(ax, ay, cw, ph);
+    g.font = "150px 'Bebas Neue', Impact, sans-serif"; g.textAlign = "center"; g.textBaseline = "middle";
+    g.fillStyle = "rgba(255,255,255,.06)"; g.fillText(String(card.no), ax + cw / 2, ay + ph / 2 + 6);
+    g.fillStyle = acc; g.globalAlpha = .95;
+    g.beginPath(); g.arc(ax + cw / 2, ay + ph * .52, 40, 0, Math.PI * 2); g.fill();
+    g.globalAlpha = 1; g.fillStyle = "#0b0114";
+    g.beginPath(); g.arc(ax + cw / 2 - 13, ay + ph * .52 - 6, 8, 0, Math.PI * 2); g.fill();
+    g.beginPath(); g.arc(ax + cw / 2 + 13, ay + ph * .52 - 2, 5.5, 0, Math.PI * 2); g.fill();
+    g.strokeStyle = "#0b0114"; g.lineWidth = 3; g.lineCap = "round";
+    g.beginPath(); g.moveTo(ax + cw / 2 - 12, ay + ph * .52 + 14); g.quadraticCurveTo(ax + cw / 2, ay + ph * .52 + 23, ax + cw / 2 + 12, ay + ph * .52 + 14); g.stroke();
+    g.restore();
+    g.fillStyle = "rgba(6,1,12,.75)"; roundRect(g, ax + 8, ay + 8, 52, 18, 5); g.fill();
+    g.font = "9px 'Space Mono', monospace"; g.textAlign = "left"; g.textBaseline = "alphabetic";
+    g.fillStyle = "#e9e2f4"; g.fillText("CC-\u2014", ax + 15, ay + 20);
+    g.textAlign = "right"; g.font = "13px 'Bebas Neue', Impact, sans-serif"; g.fillStyle = acc;
+    g.fillText(card.coda.toLowerCase().slice(0, 22), ax + cw - 12, ay + 21);
+    g.strokeStyle = acc; g.lineWidth = 2; g.beginPath(); g.moveTo(ax, ay + ph); g.lineTo(ax + cw, ay + ph); g.stroke();
+    g.textAlign = "left";
+    g.font = "11px 'Space Mono', monospace"; g.fillStyle = "rgba(141,128,163,1)";
+    g.fillText("interviewed by bobby \u00b7 miki's studio", ax + 14, ay + ph + 118);
+    g.fillStyle = "#e9e2f4"; g.font = "38px 'Bebas Neue', Impact, sans-serif";
+    var nm = card.name.toUpperCase();
+    while (g.measureText(nm).width > cw - 120 && nm.length > 4){ nm = nm.slice(0, nm.length - 2); }
+    g.fillText(nm, ax + 14, ay + ph + 100);
+    g.font = "11px 'Space Mono', monospace"; g.textAlign = "right"; g.fillStyle = "rgba(141,128,163,1)";
+    g.fillText(card.verdict, ax + cw - 14, ay + ph + 118);
+
+    /* ---------- back ---------- */
+    roundRect(g, bx, ay, cw, ch, 7); g.fillStyle = "#0b0114"; g.fill(); g.strokeStyle = line; g.stroke();
+    g.save(); roundRect(g, bx, ay, cw, 46, 7); g.clip(); g.fillStyle = acc; g.fillRect(bx, ay, cw, 46); g.restore();
+    g.fillStyle = "#0b0b0e"; g.font = "27px 'Bebas Neue', Impact, sans-serif"; g.textAlign = "left";
+    g.fillText(nm, bx + 12, ay + 32);
+    g.font = "10px 'Space Mono', monospace"; g.textAlign = "right"; g.fillText("CC-\u2014", bx + cw - 12, ay + 30);
+    g.textAlign = "left";
+    g.font = "10px 'Space Mono', monospace"; g.fillStyle = acc; g.fillText("// dossier", bx + 13, ay + 66);
+    g.fillStyle = "#e9e2f4"; g.font = "13px 'Space Mono', monospace";
+    var bio = card.bio.replace(/&rsquo;/g, "\u2019").replace(/&mdash;/g, "\u2014");
+    var lines = wrapText(g, bio, cw - 28);
+    var yy = ay + 88;
+    for (var i = 0; i < lines.length && yy < ay + ch - 120; i++){ g.fillText(lines[i], bx + 13, yy); yy += 19; }
+    g.strokeStyle = line; g.setLineDash([3, 3]);
+    g.beginPath(); g.moveTo(bx + 13, ay + ch - 96); g.lineTo(bx + cw - 13, ay + ch - 96); g.stroke(); g.setLineDash([]);
+    g.font = "10px 'Space Mono', monospace"; g.fillStyle = "#8d80a3";
+    g.fillText("DNA: " + (TRAITNAME[card.dom] || card.dom) + " (" + card.coda.toLowerCase() + ")", bx + 13, ay + ch - 78);
+    paintBar(g, bx + 13, ay + ch - 66, cw - 26, card.traits);
+    g.fillStyle = "#8d80a3"; g.font = "9px 'Space Mono', monospace";
+    g.fillText("the sock's copy \u00b7 " + card.date + " \u00b7 " + card.verdict, bx + 13, ay + ch - 14);
+    g.fillStyle = "rgba(141,128,163,.7)"; barcode(g, bx + cw - 118, ay + ch - 50, 100, 30, card.name + card.coda);
+    g.textAlign = "left";
+  }
+  function paintBar(g, x, y, w, t){
+    var keys = ["spark","nerve","warmth","weird","honesty","patience"];
+    var bw = (w - 5 * 6) / 6;
+    for (var i = 0; i < keys.length; i++){
+      var v = (t[keys[i]] || 0) / 100;
+      g.fillStyle = "rgba(255,255,255,.09)"; g.fillRect(x + i * (bw + 6), y, bw, 5);
+      g.fillStyle = "rgba(255,255,255,.62)"; g.fillRect(x + i * (bw + 6), y, bw * v, 5);
+    }
+  }
+
+  /* ---------------- keeping cards ---------------- */
+  var K = { card:"cafedreamr:interview:card", rack:"cafedreamr:interview:rack" };
+  function lsGet(k, d){ try{ var v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); }catch(e){ return d; } }
+  function lsSet(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
+  function saveCard(card){
+    lsSet(K.card, card);
+    var rack = lsGet(K.rack, []);
+    if (!(rack instanceof Array)) rack = [];
+    rack.unshift({ id:card.id, name:card.name, coda:card.coda, accent:card.accent, verdict:card.verdict, date:card.date, no:card.no, traits:card.traits, dom:card.dom, bio:card.bio, hired:card.hired, note:card.note });
+    if (rack.length > 6) rack = rack.slice(0, 6);
+    lsSet(K.rack, rack);
+    paintRack(rack);
+  }
+  function renameCard(card){
+    var rack = lsGet(K.rack, []);
+    if (!(rack instanceof Array)) return;
+    for (var i = 0; i < rack.length; i++){
+      if (rack[i].id === card.id){ rack[i].name = card.name; break; }
+    }
+    lsSet(K.rack, rack);
+    paintRack(rack);
+  }
+  function paintRack(rack){
+    var el = $("rack");
+    if (!rack || !rack.length){ el.innerHTML = '<p class="empty">no cards yet. his wall is very patient.</p>'; return; }
+    var out = "";
+    for (var i = 0; i < rack.length; i++){
+      var c = rack[i];
+      out += '<button type="button" class="rcard" data-i="' + i + '" style="--ra:' + c.accent + '">' +
+        '<span class="cn"><span class="t1">' + esc(c.name) + '</span><span class="t2">' + esc(c.coda) + ' &middot; no. ' + c.no + ' &middot; ' + c.date + '</span></span>' +
+        '<span class="vd">' + esc(c.verdict) + '</span></button>';
+    }
+    el.innerHTML = out;
+    el.onclick = function(ev){
+      var b = ev.target.closest(".rcard"); if (!b) return;
+      var c = lsGet(K.rack, [])[Number(b.dataset.i)];
+      if (c) renderCard(c);
+    };
+  }
+
+  /* ---------------- passport stamps ---------------- */
+  function stamp(id, opts){
+    try{ if (window.CD && CD.stamp) CD.stamp(id, opts); }catch(e){}
+  }
+
+  /* ---------------- dust ---------------- */
+  function dust(){
+    var cv = $("dust"), ctx = cv.getContext("2d");
+    var d = [], W = 0, H = 0;
+    function size(){
+      var dpr = Math.min(window.devicePixelRatio || 1, 2);
+      W = cv.width = Math.floor(window.innerWidth * dpr);
+      H = cv.height = Math.floor(window.innerHeight * dpr);
+      cv.style.width = window.innerWidth + "px";
+      cv.style.height = window.innerHeight + "px";
+    }
+    function seed(){
+      d = [];
+      var n = Math.max(24, Math.min(70, Math.round((window.innerWidth * window.innerHeight) / 26000)));
+      for (var i = 0; i < n; i++){
+        d.push({ x:Math.random() * W, y:Math.random() * H,
+          r:(Math.random() * 1.5 + 0.4) * (W / window.innerWidth) * 0.9,
+          vy:-(Math.random() * 0.16 + 0.04) * (H / window.innerHeight),
+          vx:(Math.random() - 0.5) * 0.12,
+          a:Math.random() * 0.34 + 0.06, p:Math.random() * Math.PI * 2 });
+      }
+    }
+    var t0 = performance.now();
+    function tick(now){
+      var t = (now - t0) / 1000;
+      ctx.clearRect(0, 0, W, H);
+      for (var i = 0; i < d.length; i++){
+        var o = d[i];
+        o.y += o.vy; o.x += o.vx + Math.sin(t * 0.5 + o.p) * 0.09;
+        if (o.y < -6){ o.y = H + 6; o.x = Math.random() * W; }
+        if (o.x < -6) o.x = W + 6; else if (o.x > W + 6) o.x = -6;
+        ctx.beginPath();
+        ctx.fillStyle = "rgba(233,226,244," + (o.a * (0.72 + 0.28 * Math.sin(t * 1.7 + o.p))).toFixed(3) + ")";
+        ctx.arc(o.x, o.y, o.r, 0, Math.PI * 2); ctx.fill();
+      }
+      requestAnimationFrame(tick);
+    }
+    size(); seed();
+    window.addEventListener("resize", function(){ size(); seed(); });
+    requestAnimationFrame(tick);
+  }
+
+  /* ---------------- wiring ---------------- */
+  function wire(){
+    $("startBtn").addEventListener("click", start);
+    $("sendBtn").addEventListener("click", function(){ send($("answer").value); });
+    $("passBtn").addEventListener("click", function(){ send(""); });
+    $("answer").addEventListener("keydown", function(ev){
+      if (ev.key === "Enter" && (ev.metaKey || ev.ctrlKey)){ ev.preventDefault(); send($("answer").value); }
+    });
+    $("keepBtn").addEventListener("click", function(){
+      var cv = $("cardCv");
+      if (!cv.toBlob) return;
+      cv.toBlob(function(blob){
+        if (!blob) return;
+        var a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        var c = S.card || {};
+        a.download = "bobby-card-" + (c.no || "x") + "-" + String(c.name || "candidate").toLowerCase().replace(/[^a-z0-9]+/g, "-") + ".png";
+        document.body.appendChild(a); a.click();
+        setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 400);
+        $("cardFine").innerHTML = "saved. he has a copy, so this is the second one.";
+      }, "image/png");
+    });
+    $("againBtn").addEventListener("click", sitAgain);
+    $("cardName").addEventListener("input", function(){
+      if (!S.card) return;
+      var v = this.value.trim();
+      S.card.name = v || ("candidate no. " + S.no);
+      renderCard(S.card);
+      renameCard(S.card);
+      $("cardFine").innerHTML = "card no. " + S.card.no + " &middot; &ldquo;" + esc(S.card.name) + "&rdquo; &middot; he keeps a copy. " +
+        (S.card.hired ? "miki will want you tuesday." : "the wall by the door is where these go.");
+    });
+  }
+
+  newSessionOnce();
+  function newSessionOnce(){
+    var rack = lsGet(K.rack, []);
+    paintRack(rack instanceof Array ? rack : []);
+    /* a fresh sitting, but keep the session counter for the readout */
+    newSession();
+    wire();
+    dust();
+    var last = lsGet(K.card, null);
+    if (last && last.name){
+      lcd("last card kept: <i>" + esc(last.coda) + "</i> &mdash; " + esc(last.verdict) + ". sit down for another.", "the wall &middot; " + (rack instanceof Array ? rack.length : 0) + " kept");
+      $("bobbyLine").innerHTML = "&ldquo;you again,&rdquo; he says, without looking up. &ldquo;or someone wearing you. sit.&rdquo;";
+    }
+  }
+
+  /* exposed for the harness and for anyone poking at it in a console */
+  window.booth = {
+    QS:QS, MOODS:MOODS, BANK:BANK, CODA:CODA, S:S, QUEUE:QUEUE,
+    analyse:analyse, deltas:deltas, reaction:reaction, judge:judge, dominant:dominant,
+    start:start, send:send, sitAgain:sitAgain, newSession:newSession,
+    traits:function(){ return S.traits; }, card:function(){ return S.card; },
+    setAnswer:function(t){ $("answer").value = t; }
+  };
+})();
+</script>
+<script>window.CD && CD.boot({page:"booth"});</script>
+</body>
+</html>
