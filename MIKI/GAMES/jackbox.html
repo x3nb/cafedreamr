@@ -1,0 +1,1634 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0d001a">
+<title>Bobby in the box &middot; cafedreamr</title>
+<meta name="description" content="Machine no. 01 in miki's games room: a vintage order box with bobby's head on it. wind the crank and it plays one of the twins' takes; push the intercom and he takes your order.">
+<meta property="og:title" content="Bobby in the box &middot; cafedreamr">
+<meta property="og:description" content="wind him up, push to talk, and bobby will get your order started.">
+<meta property="og:image" content="https://user.uploads.dev/file/39a82598443a617a6c6caa7255ef6812.jpg">
+<meta property="og:type" content="website">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%230d001a'/%3E%3Crect x='3' y='10' width='10' height='4' rx='1' fill='%23ccff00'/%3E%3Cpath d='M8 10V6' stroke='%23ccff00' stroke-width='1'/%3E%3Ccircle cx='8' cy='4.2' r='2.4' fill='%23ff2d95'/%3E%3Ccircle cx='7.2' cy='3.9' r='.45' fill='%230d001a'/%3E%3Ccircle cx='8.8' cy='4.4' r='.5' fill='%230d001a'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Klee+One:wght@400;600&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --plum:#0d001a; --plum2:#150426; --ink:#07000f;
+  --lav:#e9e2f4; --lav2:#c3b6d8; --dim:#8d80a3;
+  --lime:#ccff00; --cyan:#00e5ff; --pink:#ff2d95; --gold:#d8a24a;
+  --wood:#3a1140; --wood2:#24073a;
+  --disp:'Bebas Neue',Impact,sans-serif;
+  --mono:'Space Mono',ui-monospace,monospace;
+  --hand:'Klee One','Segoe Script',cursive;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{
+  background:var(--plum); color:var(--lav); text-align:left;
+  font-family:var(--mono); font-size:13px; line-height:1.7;
+  min-height:100%;
+  background-image:
+    radial-gradient(680px 420px at 46% 30%, rgba(216,162,74,.13), rgba(216,162,74,0) 70%),
+    radial-gradient(900px 620px at 50% 118%, rgba(204,255,0,.07), rgba(204,255,0,0) 70%),
+    linear-gradient(180deg, var(--plum) 0%, var(--ink) 100%);
+  background-attachment:fixed;
+}
+#dust{position:fixed; inset:0; width:100%; height:100%; pointer-events:none; z-index:6}
+.vig{position:fixed; inset:0; pointer-events:none; z-index:2;
+  background:radial-gradient(120% 90% at 50% 40%, rgba(0,0,0,0) 46%, rgba(0,0,0,.62) 100%)}
+a{color:var(--cyan); text-decoration:none}
+a:hover{color:var(--lime)}
+
+.wrap{position:relative; z-index:4; max-width:1180px; margin:0 auto; padding:16px 16px 40px}
+
+.top{display:flex; align-items:center; gap:14px; flex-wrap:wrap;
+  border-bottom:1px solid rgba(255,255,255,.10); padding-bottom:10px}
+.top .back{font-size:9.5px; letter-spacing:.16em; text-transform:uppercase;
+  border-bottom:1px solid rgba(0,229,255,.4); padding-bottom:2px; color:var(--lav)}
+.top .back:hover{background:var(--cyan); color:var(--ink); border-color:var(--cyan)}
+.top .sign{font-family:var(--disp); font-size:26px; letter-spacing:.06em; color:var(--lime);
+  text-shadow:0 0 12px rgba(204,255,0,.45), 0 0 34px rgba(204,255,0,.18)}
+.top .no{margin-left:auto; font-size:9px; letter-spacing:.18em; text-transform:uppercase; color:var(--dim)}
+
+.head{margin:26px 0 4px}
+.head .kick{font-size:9px; letter-spacing:.24em; text-transform:uppercase; color:var(--pink)}
+.head h1{font-family:var(--disp); font-weight:400; font-size:clamp(34px,6.4vw,60px); line-height:.95;
+  letter-spacing:.03em; margin:6px 0 2px}
+.head h1 b{color:var(--pink)}
+.head .sub{color:var(--lav2); max-width:62ch; font-size:12.5px}
+
+.layout{display:grid; grid-template-columns:minmax(0,1.35fr) minmax(300px,.85fr); gap:26px; align-items:start; margin-top:18px}
+@media (max-width:900px){ .layout{grid-template-columns:1fr} }
+
+.stage{position:relative; touch-action:none; user-select:none; -webkit-user-select:none;
+  display:flex; justify-content:center; padding:6px 0 0; cursor:grab}
+.stage.dragging{cursor:grabbing}
+#toy{width:100%; max-width:600px; height:auto; display:block; filter:drop-shadow(0 26px 44px rgba(0,0,0,.55))}
+.stage .hint{position:absolute; left:50%; bottom:2px; transform:translateX(-50%);
+  font-size:9.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--lime);
+  background:rgba(7,0,15,.72); border:1px solid rgba(204,255,0,.35); border-radius:99px;
+  padding:6px 13px; white-space:nowrap; transition:opacity .5s, transform .5s}
+.stage .hint.gone{opacity:0; transform:translateX(-50%) translateY(8px)}
+.stage .flash{position:absolute; inset:0; pointer-events:none; background:radial-gradient(46% 40% at 50% 44%, rgba(255,45,149,.34), rgba(255,45,149,0) 70%);
+  opacity:0; transition:opacity .28s}
+.stage .flash.on{opacity:1}
+
+.panel{display:grid; gap:14px}
+.card{border:1px solid rgba(255,255,255,.12); border-radius:14px; background:rgba(10,0,20,.62);
+  padding:13px 14px}
+.card .k{font-size:8.5px; letter-spacing:.2em; text-transform:uppercase; color:var(--dim); display:block}
+.card .k.hot{color:var(--pink)}
+
+.bubble{border:1px solid rgba(255,45,149,.4); border-radius:14px; background:linear-gradient(180deg, rgba(255,45,149,.14), rgba(10,0,20,.72));
+  padding:12px 14px 14px}
+.bubble .from{display:flex; align-items:center; gap:7px; font-size:8.5px; letter-spacing:.2em;
+  text-transform:uppercase; color:var(--pink)}
+.bubble .from i{width:7px; height:7px; border-radius:50%; background:var(--pink); display:inline-block;
+  box-shadow:0 0 9px rgba(255,45,149,.9); animation:pulse 1.6s infinite}
+@keyframes pulse{0%,100%{opacity:1} 50%{opacity:.35}}
+.bubble p{margin:7px 0 0; font-family:var(--hand); font-size:19px; line-height:1.45; min-height:2.6em}
+.bubble p .caret{color:var(--lime); animation:pulse .9s infinite}
+
+.intercom{border:1px solid rgba(255,255,255,.14); border-radius:14px; background:rgba(10,0,20,.6); padding:13px}
+.intercom .row1{display:flex; align-items:center; gap:10px}
+.grille{flex:1; height:44px; border-radius:8px; border:1px solid rgba(255,255,255,.14);
+  background:repeating-linear-gradient(180deg, rgba(255,255,255,.16) 0 2px, rgba(0,0,0,0) 2px 7px), rgba(0,0,0,.45)}
+.rec{width:9px; height:9px; border-radius:50%; background:#5b4550; flex:0 0 auto}
+.rec.on{background:#ff3b3b; box-shadow:0 0 10px rgba(255,59,59,.9)}
+.push{width:100%; margin-top:11px; font-family:var(--disp); font-size:27px; letter-spacing:.06em;
+  color:#2a0716; background:linear-gradient(180deg,#ff6fb2,#e11b7c);
+  border:0; border-radius:12px; padding:13px 10px 15px; cursor:pointer;
+  box-shadow:0 6px 0 #8a0c4c, 0 12px 22px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.5);
+  transition:transform .06s, box-shadow .06s}
+.push:hover{filter:brightness(1.07)}
+.push:active{transform:translateY(5px); box-shadow:0 1px 0 #8a0c4c, 0 6px 14px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.35)}
+.push:disabled{opacity:.4; cursor:not-allowed; transform:none; box-shadow:0 6px 0 #3a1027}
+.push:focus-visible{outline:2px solid var(--lime); outline-offset:3px}
+
+.tools{display:flex; gap:9px; flex-wrap:wrap; align-items:center; margin-top:11px}
+.pill{font-family:var(--mono); font-size:9.5px; letter-spacing:.13em; text-transform:uppercase;
+  color:var(--lav); background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.18);
+  border-radius:99px; padding:7px 13px; cursor:pointer}
+.pill:hover{border-color:var(--lime); color:var(--lime)}
+.pill:focus-visible{outline:2px solid var(--lime); outline-offset:2px}
+.pill.off{color:var(--dim); border-color:rgba(255,255,255,.1)}
+.pill:disabled{opacity:.42; cursor:not-allowed}
+.pill:disabled:hover{border-color:rgba(255,255,255,.2); color:inherit}
+.loadstate{font-size:8.5px; letter-spacing:.16em; text-transform:uppercase; color:var(--dim)}
+
+/* bobby's menu — swings open to his left */
+.menuPop{position:absolute; left:0; top:0; bottom:9px; width:min(320px,46%); z-index:9;
+  transform-origin:left center; opacity:0; visibility:hidden; pointer-events:none;
+  transform:perspective(1100px) rotateY(-84deg) translateX(-10px);
+  transition:transform .52s cubic-bezier(.22,.9,.25,1), opacity .22s ease, visibility 0s linear .52s}
+.menuPop.open{opacity:1; visibility:visible; pointer-events:auto;
+  transform:perspective(1100px) rotateY(0deg) translateX(0);
+  transition:transform .58s cubic-bezier(.22,.9,.25,1), opacity .2s ease, visibility 0s}
+.mpInner{position:relative; display:flex; flex-direction:column; height:100%; max-height:100%; overflow:hidden;
+  background:linear-gradient(180deg,#fdf8ec 0%, #f4ead2 62%, #eadfc3 100%);
+  color:#33112b; border-radius:4px 7px 7px 4px; font-family:var(--mono);
+  box-shadow:14px 0 34px -14px rgba(0,0,0,.85), 0 26px 56px -20px rgba(0,0,0,.85),
+    0 0 0 1px rgba(60,20,60,.35), 0 2px 0 rgba(255,255,255,.5) inset}
+.mpInner::before{content:""; position:absolute; left:0; top:0; bottom:0; width:9px; pointer-events:none;
+  background:linear-gradient(90deg, rgba(60,20,60,.32), rgba(60,20,60,.05) 62%, rgba(255,255,255,.20))}
+.mpHead{display:flex; align-items:baseline; gap:8px; padding:12px 12px 9px 20px; flex:0 0 auto;
+  border-bottom:2px solid rgba(60,20,60,.72)}
+.mpHead .mpT{font-family:var(--disp); font-size:26px; letter-spacing:.06em; color:#2b0a2c; line-height:1}
+.mpHead .mpS{font-size:8px; letter-spacing:.15em; text-transform:uppercase; color:#8a5a7e}
+.mpClose{margin-left:auto; border:0; background:none; cursor:pointer; color:#8a5a7e;
+  font-family:var(--mono); font-size:16px; line-height:1; padding:2px 3px}
+.mpClose:hover{color:#c20964}
+.mpBody{flex:1 1 auto; min-height:0; overflow:auto; overscroll-behavior:contain; padding:8px 12px 4px 20px;
+  scrollbar-width:thin; scrollbar-color:rgba(60,20,60,.35) rgba(60,20,60,.08)}
+.mpBody::-webkit-scrollbar{width:8px}
+.mpBody::-webkit-scrollbar-track{background:rgba(60,20,60,.07)}
+.mpBody::-webkit-scrollbar-thumb{background:rgba(60,20,60,.26); border-radius:99px}
+.mpBody::-webkit-scrollbar-thumb:hover{background:rgba(60,20,60,.4)}
+.mpBody h4{font-family:var(--disp); font-weight:400; font-size:14px; letter-spacing:.22em;
+  text-transform:uppercase; color:#8a1259; margin:10px 0 4px; display:flex; align-items:center; gap:8px}
+.mpBody h4::after{content:""; flex:1; height:1px; background:rgba(60,20,60,.3)}
+.mpWrap{border-top:1px solid rgba(60,20,60,.15)}
+.mpWrap:first-of-type{border-top:0}
+.mpItem{display:block; width:100%; text-align:left; background:none; border:0; padding:6px 0 4px;
+  cursor:pointer; color:inherit; font-family:var(--mono)}
+.mpItem .row{display:flex; align-items:baseline; gap:7px}
+.mpItem .nm{font-size:12px; color:#2b0a2c}
+.mpItem .dots{flex:1; border-bottom:1px dotted rgba(60,20,60,.45); transform:translateY(-3px)}
+.mpItem .pr{font-size:10px; color:#c20964; white-space:nowrap}
+.mpItem .caret2{flex:0 0 auto; width:9px; font-size:9px; color:#b08aa4; transition:transform .25s}
+.mpWrap.open .caret2{transform:rotate(90deg); color:#c20964}
+.mpItem:hover .nm{color:#8a1259}
+.mpItem:focus-visible{outline:2px solid #c20964; outline-offset:2px; border-radius:3px}
+.mpWrap .more{display:block; max-height:0; overflow:hidden; opacity:0;
+  transition:max-height .36s ease, opacity .3s ease}
+.mpWrap.open .more{max-height:300px; opacity:1; padding-bottom:5px}
+.mpWrap .desc{display:block; margin:6px 0 0; font-size:10.5px; line-height:1.5; color:#5c3a53}
+.mpWrap .q{display:block; margin:6px 0 1px; font-family:var(--hand); font-size:14px; line-height:1.4; color:#8a1259}
+.mpFine{margin:0; flex:0 0 auto; padding:10px 14px 15px 20px; border-top:1px dashed rgba(60,20,60,.35);
+  font-family:var(--hand); font-size:13.5px; line-height:1.45; color:#6b4560}
+.mpFine b{color:#8a1259}
+
+/* the order tray inside the menu */
+.mpTray{flex:0 0 auto; display:flex; align-items:center; gap:8px; flex-wrap:wrap;
+  padding:8px 13px 8px 20px; background:rgba(60,20,60,.055);
+  border-top:1px dashed rgba(60,20,60,.3)}
+.mpTray .lb{font-size:8px; letter-spacing:.16em; text-transform:uppercase; color:#8a5a7e}
+.mpChips{display:flex; flex-wrap:wrap; gap:5px; flex:1 1 60px; min-width:0;
+  font-size:9px; color:#9a7b91; font-family:var(--mono)}
+.mpChip{font-family:var(--mono); font-size:9px; color:#6b1f52; cursor:pointer;
+  background:rgba(138,18,89,.09); border:1px solid rgba(138,18,89,.35); border-radius:99px;
+  padding:2px 8px}
+.mpChip:hover{background:rgba(194,9,100,.16); border-color:#c20964; text-decoration:line-through}
+.mpPlace{font-family:var(--disp); font-size:15px; letter-spacing:.07em; cursor:pointer;
+  background:#c20964; color:#fff2f8; border:0; border-radius:3px; padding:5px 11px 6px}
+.mpPlace:hover{background:#8a1259}
+.mpPlace:disabled{opacity:.3; cursor:not-allowed}
+.mpAdd{margin:7px 0 2px; font-family:var(--mono); font-size:9px; letter-spacing:.1em;
+  text-transform:uppercase; cursor:pointer; color:#8a1259;
+  background:none; border:1px solid rgba(138,18,89,.42); border-radius:99px; padding:3px 9px}
+.mpAdd:hover{background:#8a1259; color:#fdf8ec; border-color:#8a1259}
+
+/* the spike: printed order slips */
+.tktStack{position:absolute; right:1.5%; bottom:3%; width:236px; height:200px; z-index:7;
+  pointer-events:none}
+.tktStack .tkLab{position:absolute; left:0; top:0; text-align:left; line-height:1.7;
+  font-size:8.5px; letter-spacing:.15em; text-transform:uppercase; color:var(--dim)}
+.tktStack .tkLab b{color:var(--lime)}
+.ticket{position:absolute; right:0; bottom:0; width:216px; font-size:10px; cursor:pointer;
+  pointer-events:auto; transform-origin:top left; font-family:var(--mono); line-height:1.35;
+  color:#2b1a3a; border-radius:2px; padding:.75em .85em .7em;
+  background:linear-gradient(180deg,#fffdf6 0%, #f8f0dc 70%, #f1e6cd 100%);
+  box-shadow:-9px 9px 20px -4px rgba(0,0,0,.55), 0 14px 26px -12px rgba(0,0,0,.9),
+    0 1px 0 rgba(255,255,255,.6) inset, 0 0 0 1px rgba(60,20,60,.2);
+  transition:transform .95s cubic-bezier(.2,.88,.22,1), opacity .4s ease}
+.ticket .tkTop{display:flex; justify-content:space-between; gap:.5em; font-size:.76em;
+  letter-spacing:.12em; text-transform:uppercase; color:#8a5a7e;
+  border-bottom:1px dashed rgba(60,20,60,.42); padding-bottom:.4em}
+.ticket .tkTop b{color:#c20964}
+.ticket .tkMeta{font-size:.7em; color:#6b4560; margin-top:.45em}
+.ticket .tkItems{list-style:none; margin:.55em 0 .3em; padding:0; font-size:.9em}
+.ticket .tkItems li{display:flex; justify-content:space-between; gap:.6em; padding:.1em 0}
+.ticket .tkItems li i{font-style:normal; color:#7d5f76; font-size:.85em; white-space:nowrap}
+.ticket .tkTot{display:flex; justify-content:space-between; font-size:.88em; margin-top:.25em;
+  border-top:1px solid rgba(60,20,60,.45); padding-top:.35em}
+.ticket .tkTot em{font-style:normal; font-weight:700; color:#c20964; letter-spacing:.04em}
+.ticket .tkFoot{display:flex; align-items:flex-end; justify-content:space-between; gap:.4em; margin-top:.5em}
+.ticket .tkWhen{font-size:.66em; color:#8a5a7e; letter-spacing:.05em; text-transform:uppercase}
+.ticket .tkStamp{transform:rotate(-7deg); border:2px solid rgba(194,9,100,.5); border-radius:2px;
+  color:rgba(194,9,100,.72); font-size:.64em; letter-spacing:.16em; text-transform:uppercase;
+  padding:.1em .35em; white-space:nowrap; pointer-events:none}
+.ticket .tkSig{width:5.2em; height:2.1em; display:block; flex:0 0 auto; opacity:.92}
+@media (max-width:900px){
+  .stage{padding-bottom:104px}
+  .stage .hint{top:10px; bottom:auto}
+  .tktStack{width:176px; height:148px; right:2.5%; bottom:2%}
+  .ticket{width:158px; font-size:7.9px}
+  .tktStack .tkLab .w{display:none}
+}
+@media (max-width:900px){
+  .menuPop{left:1%; right:1%; top:1%; bottom:4%; width:auto}
+}
+
+.board p, .plate p{margin:6px 0 0}
+.board p{font-family:var(--hand); font-size:18px; line-height:1.4}
+.board .reroll{margin-top:8px; font-size:9px; letter-spacing:.13em; text-transform:uppercase; color:var(--dim);
+  background:none; border:0; border-bottom:1px solid rgba(255,255,255,.25); padding:0 0 1px; cursor:pointer}
+.board .reroll:hover{color:var(--lime); border-color:var(--lime)}
+.plate .take{font-family:var(--disp); font-size:19px; letter-spacing:.04em}
+.plate .who{color:var(--cyan)}
+.plate .meter{height:6px; border-radius:99px; background:rgba(255,255,255,.09); overflow:hidden; margin-top:9px}
+.plate .meter i{display:block; height:100%; width:0%; background:linear-gradient(90deg,var(--cyan),var(--lime));
+  transition:width .12s linear}
+.plate .pct{font-size:8.5px; letter-spacing:.16em; text-transform:uppercase; color:var(--dim); margin-top:5px}
+
+.note{font-family:var(--hand); font-size:17px; line-height:1.5; color:var(--lav2)}
+.note b{color:var(--lime)}
+.foot{margin-top:34px; border-top:1px solid rgba(255,255,255,.10); padding-top:14px;
+  font-size:9px; letter-spacing:.15em; text-transform:uppercase; color:var(--dim);
+  display:flex; flex-wrap:wrap; gap:7px 10px; justify-content:space-between; align-items:center}
+.foot a{color:var(--lav); border-bottom:1px solid rgba(255,255,255,.22); padding-bottom:1px}
+.foot a:hover{background:var(--lime); color:var(--ink); border-color:var(--lime)}
+.foot .set{display:flex; flex-wrap:wrap; gap:6px 9px}
+</style>
+</head>
+<body class="gjack">
+<canvas id="dust" aria-hidden="true"></canvas>
+<div class="vig" aria-hidden="true"></div>
+
+<div class="wrap">
+
+  <header class="top">
+    <a class="back" href="./">&larr; the games room</a>
+    <span class="sign">Bobby in the box</span>
+    <span class="no">machine no. 01 &middot; working</span>
+  </header>
+
+  <div class="head">
+    <span class="kick">the order box &middot; bobby, on a spring</span>
+    <h1>Wind it up and <b>bobby</b> starts taking orders</h1>
+    <p class="sub">A vintage order box, found in the back of the machines with the handle already half turned. Bobby's head is on it. Turn the crank and the box plays one of the twins' takes from the desk; keep turning and the lid gives up entirely. Then push the intercom. He has opinions about the special, and a menu he wrote himself.</p>
+  </div>
+
+  <div class="layout">
+
+    <div class="stage" id="stage">
+      <svg id="toy" viewBox="0 0 720 820" role="img" aria-labelledby="toyTitle toyDesc">
+        <title id="toyTitle">a vintage order box with a pink sock puppet head on a spring &mdash; bobby in the box</title>
+        <desc id="toyDesc">turn the crank to wind the box; the lid pops open and bobby springs out on a coiled spring.</desc>
+        <defs>
+          <linearGradient id="gBody" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#4b1553"/><stop offset=".55" stop-color="#33093c"/><stop offset="1" stop-color="#1d0327"/>
+          </linearGradient>
+          <linearGradient id="gTop" x1="0" y1="1" x2="1" y2="0">
+            <stop offset="0" stop-color="#57185f"/><stop offset="1" stop-color="#6d2170"/>
+          </linearGradient>
+          <linearGradient id="gSide" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stop-color="#250638"/><stop offset="1" stop-color="#150122"/>
+          </linearGradient>
+          <linearGradient id="gLid" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#7a2a7c"/><stop offset="1" stop-color="#41104c"/>
+          </linearGradient>
+          <linearGradient id="gLabel" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#fbf4e4"/><stop offset="1" stop-color="#e6d9bf"/>
+          </linearGradient>
+          <linearGradient id="gBrass" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#f0cd84"/><stop offset=".5" stop-color="#c99441"/><stop offset="1" stop-color="#7d5620"/>
+          </linearGradient>
+          <radialGradient id="gPink" cx=".34" cy=".28" r=".86">
+            <stop offset="0" stop-color="#ff86c0"/><stop offset=".5" stop-color="#ff2d95"/><stop offset="1" stop-color="#c20964"/>
+          </radialGradient>
+          <radialGradient id="gKnob" cx=".35" cy=".3" r=".8">
+            <stop offset="0" stop-color="#ffd79a"/><stop offset="1" stop-color="#8a5a22"/>
+          </radialGradient>
+          <filter id="soft" x="-40%" y="-40%" width="180%" height="180%">
+            <feGaussianBlur stdDeviation="7"/>
+          </filter>
+          <filter id="soft2" x="-40%" y="-40%" width="180%" height="180%">
+            <feGaussianBlur stdDeviation="2.4"/>
+          </filter>
+          <pattern id="knit" width="17" height="14" patternUnits="userSpaceOnUse">
+            <path d="M2 2 L8.5 10.5 L15 2" fill="none" stroke="rgba(40,0,22,.20)" stroke-width="1.7"/>
+            <path d="M2 9 L8.5 1.5 L15 9" fill="none" stroke="rgba(255,255,255,.07)" stroke-width="1.2"/>
+          </pattern>
+          <clipPath id="headClip">
+            <path d="M0,-108 C62,-108 108,-60 108,2 C108,62 64,100 -2,100 C-70,100 -108,58 -108,0 C-108,-62 -58,-108 0,-108 Z"/>
+          </clipPath>
+          <radialGradient id="gGlow" cx=".5" cy=".5" r=".5">
+            <stop offset="0" stop-color="#ffe6a0" stop-opacity=".55"/><stop offset="1" stop-color="#ffe6a0" stop-opacity="0"/>
+          </radialGradient>
+          <radialGradient id="headShade" cx=".36" cy=".3" r=".78">
+            <stop offset="0" stop-color="#ffffff" stop-opacity=".20"/>
+            <stop offset=".42" stop-color="#ff7ec2" stop-opacity=".05"/>
+            <stop offset=".76" stop-color="#7a0042" stop-opacity=".26"/>
+            <stop offset="1" stop-color="#54002e" stop-opacity=".52"/>
+          </radialGradient>
+        </defs>
+
+        <ellipse cx="372" cy="708" rx="236" ry="28" fill="rgba(0,0,0,.62)" filter="url(#soft)"/>
+        <ellipse cx="372" cy="700" rx="150" ry="18" fill="url(#gGlow)" opacity=".5"/>
+
+        <g id="rig">
+
+          <polygon points="205,470 515,470 565,430 255,430" fill="url(#gTop)"/>
+          <polygon points="515,470 565,430 565,645 515,685" fill="url(#gSide)"/>
+          <rect x="205" y="470" width="310" height="215" rx="7" fill="url(#gBody)"/>
+          <rect x="205" y="470" width="310" height="215" rx="7" fill="none" stroke="rgba(204,255,0,.20)" stroke-width="1.4"/>
+          <polygon points="205,470 515,470 565,430 255,430" fill="none" stroke="rgba(204,255,0,.16)" stroke-width="1.2"/>
+          <path d="M215 500 L215 660" stroke="rgba(255,255,255,.06)" stroke-width="10"/>
+          <path d="M505 500 L505 660" stroke="rgba(255,255,255,.05)" stroke-width="10"/>
+
+          <polygon id="open" points="252,466 288,438 536,438 500,466" fill="#0a0110"/>
+          <polygon points="252,466 288,438 536,438 500,466" fill="none" stroke="rgba(204,255,0,.22)" stroke-width="1.2"/>
+
+          <g id="lid" transform="translate(0,0)">
+            <polygon id="lidQuad" points="255,430 565,430 515,470 205,470" fill="url(#gLid)" stroke="rgba(204,255,0,.22)" stroke-width="1.2"/>
+            <path id="lidLip" d="M255 430 L565 430" stroke="rgba(255,255,255,.18)" stroke-width="2"/>
+          </g>
+
+          <g id="springWrap" opacity="0">
+            <path id="springShade" d="M394 452 L394 452" fill="none" stroke="rgba(0,0,0,.55)" stroke-width="14" stroke-linecap="round"/>
+            <path id="springDark" d="M394 452 L394 452" fill="none" stroke="#4b4358" stroke-width="11.5" stroke-linecap="round"/>
+            <path id="springLite" d="M394 452 L394 452" fill="none" stroke="#cfe0ff" stroke-width="3.6" stroke-linecap="round" opacity=".85"/>
+            <ellipse cx="394" cy="452" rx="46" ry="12" fill="#0a0110" opacity=".9"/>
+          </g>
+
+          <g id="bobby" opacity="0" transform="translate(394,512)">
+            <g clip-path="url(#headClip)">
+              <rect x="-120" y="-120" width="240" height="240" fill="url(#gPink)"/>
+              <rect x="-120" y="-120" width="240" height="240" fill="url(#knit)"/>
+              <ellipse cx="24" cy="40" rx="82" ry="62" fill="rgba(120,0,60,.30)" filter="url(#soft)"/>
+              <ellipse cx="-40" cy="-52" rx="46" ry="27" fill="rgba(255,255,255,.20)" filter="url(#soft)"/>
+              <rect x="-120" y="-120" width="240" height="240" fill="url(#headShade)"/>
+            </g>
+            <path d="M0,-108 C7,-72 5,-22 3,40 C2,70 -2,88 -6,100" fill="none" stroke="rgba(120,6,60,.42)" stroke-width="3.4" stroke-dasharray="8 7"/>
+            <path d="M0,-108 C62,-108 108,-60 108,2 C108,62 64,100 -2,100 C-70,100 -108,58 -108,0 C-108,-62 -58,-108 0,-108 Z" fill="none" stroke="rgba(120,4,58,.5)" stroke-width="2.2"/>
+            <g clip-path="url(#headClip)">
+              <ellipse cx="-6" cy="74" rx="86" ry="34" fill="rgba(255,150,205,.30)" filter="url(#soft)"/>
+            </g>
+            <g id="eyes">
+              <g id="eyeL" transform="translate(-41,-17) rotate(-7)">
+                <circle r="25" fill="#1a1424" stroke="#443c57" stroke-width="2"/>
+                <circle cx="-7" cy="-7" r="3.1" fill="#08060e"/><circle cx="7" cy="-7" r="3.1" fill="#08060e"/>
+                <circle cx="-7" cy="7" r="3.1" fill="#08060e"/><circle cx="7" cy="7" r="3.1" fill="#08060e"/>
+                <path d="M-7,-7 L7,7 M7,-7 L-7,7" stroke="#7e6f8f" stroke-width="2.1" stroke-linecap="round"/>
+                <circle cx="-11" cy="-12" r="5" fill="rgba(255,255,255,.20)"/>
+              </g>
+              <g id="eyeR" transform="translate(41,0) rotate(6)">
+                <circle r="29" fill="#f5ecd8" stroke="#b7a486" stroke-width="2"/>
+                <circle cx="-9" cy="0" r="3.6" fill="#6b5a3f"/><circle cx="9" cy="0" r="3.6" fill="#6b5a3f"/>
+                <path d="M-9,0 L9,0" stroke="#c9b898" stroke-width="2.2" stroke-linecap="round"/>
+                <circle cx="-12" cy="-14" r="6" fill="rgba(255,255,255,.55)"/>
+              </g>
+              <path id="browL" d="M-72,-54 q27,-17 54,-4" fill="none" stroke="#20060f" stroke-width="5.6" stroke-linecap="round"/>
+              <path id="browR" d="M16,-62 q28,-13 52,5" fill="none" stroke="#20060f" stroke-width="5.6" stroke-linecap="round"/>
+            </g>
+            <g transform="translate(64,54) rotate(-11)">
+              <rect x="-19" y="-19" width="38" height="38" rx="8" fill="#ff86c0" stroke="rgba(120,6,60,.5)" stroke-width="2"/>
+              <path d="M-15,-11 L-7,-3 M-11,-15 L-3,-7 M11,11 L19,19 M7,15 L15,23" stroke="#7d0b46" stroke-width="2.4" stroke-linecap="round"/>
+            </g>
+            <g id="mouthG">
+              <path d="M-48,42 Q0,58 48,42" fill="none" stroke="#1d040d" stroke-width="5" stroke-linecap="round"/>
+              <g stroke="#1d040d" stroke-width="2.6" stroke-linecap="round">
+                <path d="M-40,42 l-3,-6"/><path d="M-22,47 l-2,-7"/><path d="M-4,49 l0,-7"/>
+                <path d="M14,47 l2,-7"/><path d="M32,43 l3,-6"/>
+              </g>
+              <ellipse id="mouthOpen" cx="0" cy="47" rx="38" ry="3" fill="#1c050d"/>
+              <ellipse id="tongue" cx="2" cy="51" rx="21" ry="2" fill="#ff5a91" opacity=".95"/>
+            </g>
+            <g opacity=".95">
+              <path d="M-2,-108 C-14,-130 -12,-146 -26,-150" fill="none" stroke="#ff5fae" stroke-width="7" stroke-linecap="round"/>
+              <path d="M1,-108 C8,-132 4,-142 20,-152" fill="none" stroke="#ff2d95" stroke-width="6" stroke-linecap="round"/>
+              <path d="M4,-106 C22,-120 34,-118 44,-130" fill="none" stroke="#ff9fce" stroke-width="5" stroke-linecap="round"/>
+            </g>
+            <path id="twinkle" d="M84,68 l4,10 l10,4 l-10,4 l-4,10 l-4,-10 l-10,-4 l10,-4 z" fill="#ccff00"/>
+          </g>
+
+          <g id="crankWrap">
+            <circle cx="540" cy="545" r="30" fill="#150222" stroke="rgba(216,162,74,.55)" stroke-width="2"/>
+            <circle cx="540" cy="545" r="24" fill="url(#gBrass)" opacity=".9"/>
+            <g id="crank" transform="translate(540,545) scale(.66,.86) rotate(-24)">
+              <circle r="17" fill="url(#gBrass)" stroke="#5d3f16" stroke-width="2"/>
+              <rect x="-6" y="-52" width="12" height="40" rx="5" fill="url(#gBrass)" stroke="#5d3f16" stroke-width="1.4"/>
+              <circle cy="-56" r="14" fill="url(#gKnob)" stroke="#6b4318" stroke-width="1.6"/>
+              <circle cy="-56" r="5" fill="rgba(255,255,255,.35)"/>
+            </g>
+          </g>
+          <g id="spinArrow" opacity=".9">
+            <path d="M628,505 A92,92 0 0 1 628,585" fill="none" stroke="rgba(204,255,0,.75)" stroke-width="3"
+              stroke-linecap="round" stroke-dasharray="9 11"/>
+            <path d="M628,585 l-9,-9 l15,-3 z" fill="rgba(204,255,0,.9)"/>
+          </g>
+
+          <g id="gauge">
+            <circle cx="252" cy="514" r="31" fill="#12081c" stroke="rgba(216,162,74,.6)" stroke-width="2"/>
+            <circle cx="252" cy="514" r="25" fill="none" stroke="rgba(255,255,255,.10)" stroke-width="1"/>
+            <g id="gaugeTicks" stroke="#5a4a6b" stroke-width="3" stroke-linecap="round"></g>
+            <g id="needle" transform="rotate(-68 252 514)">
+              <line x1="252" y1="514" x2="252" y2="492" stroke="#ccff00" stroke-width="3.4" stroke-linecap="round"/>
+            </g>
+            <circle cx="252" cy="514" r="4.6" fill="url(#gBrass)"/>
+          </g>
+          <text x="252" y="562" text-anchor="middle" font-family="'Space Mono',monospace" font-size="8.5"
+            letter-spacing="2.4" fill="rgba(233,226,244,.55)">WIND</text>
+
+          <g id="label">
+            <rect x="296" y="490" width="206" height="104" rx="7" fill="url(#gLabel)" stroke="rgba(60,20,60,.5)" stroke-width="1.6"/>
+            <rect x="303" y="497" width="192" height="90" rx="4" fill="none" stroke="rgba(120,10,80,.35)" stroke-width="1"/>
+            <text x="399" y="541" text-anchor="middle" font-family="'Bebas Neue',Impact,sans-serif" font-size="45"
+              letter-spacing="2" fill="#2b0a2c">BOBBY</text>
+            <text x="399" y="558" text-anchor="middle" font-family="'Space Mono',monospace" font-size="8.4"
+              letter-spacing="2.2" fill="#7a4470">THE ORDER BOX &middot; NO. 001</text>
+            <text id="labelTake" x="399" y="575" text-anchor="middle" font-family="'Space Mono',monospace" font-size="8"
+              letter-spacing="1.4" fill="#a04b8a">TAKE 10 LOADED</text>
+            <path d="M330 582 h138" stroke="rgba(120,10,80,.3)" stroke-width="1"/>
+            <text x="399" y="592" text-anchor="middle" font-family="'Klee One',cursive" font-size="11.5"
+              fill="#5c2a56">wind me. i&rsquo;ll do the rest.</text>
+          </g>
+
+          <g id="slot" aria-hidden="true">
+            <rect x="362" y="605" width="144" height="6.2" rx="3.1" fill="url(#gBrass)" stroke="#5d3f16" stroke-width="1"/>
+            <rect x="366" y="611" width="136" height="15" rx="2.6" fill="#07000d"/>
+            <rect x="366" y="611" width="136" height="4.6" rx="2.3" fill="rgba(0,0,0,.88)"/>
+            <path d="M368 628.5 h132" stroke="rgba(255,255,255,.10)" stroke-width="1.8"/>
+            <circle cx="371.5" cy="618.5" r="1.9" fill="rgba(216,162,74,.7)"/>
+            <circle cx="496.5" cy="618.5" r="1.9" fill="rgba(216,162,74,.7)"/>
+            <rect id="slotSlip" x="407" y="610" width="54" height="3.2" rx="1.4" fill="#f7f0de"/>
+          </g>
+
+          <g id="grille">
+            <rect x="216" y="636" width="112" height="30" rx="6" fill="rgba(0,0,0,.55)" stroke="rgba(204,255,0,.5)" stroke-width="1.4"/>
+            <g stroke="rgba(204,255,0,.62)" stroke-width="2.4">
+              <path d="M226 645 h92"/><path d="M226 651 h92"/><path d="M226 657 h92"/>
+            </g>
+          </g>
+          <text x="398" y="648" text-anchor="middle" font-family="'Space Mono',monospace" font-size="8"
+            letter-spacing="1.6" fill="rgba(233,226,244,.55)">CAFEDREAMR TOY CO.</text>
+          <text x="398" y="661" text-anchor="middle" font-family="'Space Mono',monospace" font-size="8"
+            letter-spacing="1.6" fill="rgba(233,226,244,.42)">NOT A REAL INTERCOM</text>
+          <g id="hasp" transform="translate(360,470)">
+            <rect x="-32" y="-13" width="64" height="26" rx="5" fill="url(#gBrass)" stroke="#6b4318" stroke-width="1.6"/>
+            <circle r="5" fill="#2a1408"/>
+          </g>
+        </g>
+      </svg>
+      <div class="flash" id="flash" aria-hidden="true"></div>
+      <div class="hint" id="hint">grab the box and turn it &rarr;</div>
+
+      <div class="tktStack" id="tktStack">
+        <span class="tkLab" id="tkCount">the spike &middot; bobby keeps a copy</span>
+      </div>
+
+      <div class="menuPop" id="menuPop" aria-hidden="true" aria-label="bobby&rsquo;s menu">
+        <div class="mpInner">
+          <div class="mpHead">
+            <span class="mpT">bobby&rsquo;s</span>
+            <span class="mpS" id="menuCount"></span>
+            <button class="mpClose" id="menuClose" type="button" aria-label="close the menu">&times;</button>
+          </div>
+          <div class="mpBody" id="mcols"></div>
+          <div class="mpTray">
+            <span class="lb">your order</span>
+            <span class="mpChips" id="mpChips">nothing yet</span>
+            <button class="mpPlace" id="mpPlace" type="button" disabled>place it</button>
+          </div>
+          <p class="mpFine" id="mfine"></p>
+        </div>
+      </div>
+    </div>
+
+    <aside class="panel">
+      <div class="bubble">
+        <span class="from"><i></i> bobby</span>
+        <p id="line">he is not out yet. turn the handle.</p>
+      </div>
+
+      <div class="intercom">
+        <div class="row1">
+          <div class="grille" aria-hidden="true"></div>
+          <span class="rec" id="rec" aria-hidden="true"></span>
+        </div>
+        <button class="push" id="talkBtn" disabled>push to talk</button>
+        <div class="tools">
+          <button class="pill" id="menuBtn">read his menu</button>
+          <button class="pill" id="soundBtn" aria-pressed="true">sound: on</button>
+          <button class="pill" id="backBtn" hidden>wind him back in</button>
+          <span class="loadstate" id="loadState"></span>
+        </div>
+      </div>
+
+      <div class="card plate">
+        <span class="k">on the turntable</span>
+        <p class="take" id="takeName">take 10 &middot; <span class="who">sylvestre</span> &mdash; &ldquo;the ground twin&rdquo;</p>
+        <div class="meter" aria-hidden="true"><i id="meterFill"></i></div>
+        <span class="pct" id="pct">wound 0 of 6 turns</span>
+      </div>
+
+      <div class="card board">
+        <span class="k hot">today&rsquo;s special</span>
+        <p id="special">&nbsp;</p>
+        <button class="reroll" id="rerollBtn">ask the board again</button>
+      </div>
+
+      <div class="card">
+        <span class="k">miki&rsquo;s note, taped to the lid</span>
+        <p class="note">found it in the back of the machines with the crank half turned, so obviously i finished the winding and put bobby&rsquo;s head on it. it plays whatever you have the patience to turn: <b>take 10 is sylvestre</b>, <b>take 11 is slay</b>. put him back in and he swaps. the handle only goes one way. that is not a fault, that is the joke.</p>
+      </div>
+
+      <div class="card">
+        <span class="k">how to work it</span>
+        <p class="note">grab the box and turn it. the handle is on the right, but the whole box will do &mdash; he does not care how the winding gets done, only that it gets done. six turns and the lid gives up. after that, the button. he hands you his menu too &mdash; <b>read his menu</b> &mdash; and it opens up on his left. tap a thing and he will tell you about it. add it to the order, press <b>place it</b>, and a slip comes out of the slot on the box with your order on it. he keeps a copy. the copies are on the spike.</p>
+      </div>
+    </aside>
+  </div>
+
+  <footer class="foot">
+    <span>the games room &middot; machine no. 01 &middot; cafedreamr toy co.</span>
+    <span class="set">
+      <a href="./">the games room</a>
+      <a href="https://www.cafedreamr.art/MIKI/">miki&rsquo;s place</a>
+      <a href="https://www.cafedreamr.art/MIKI/ZINE/">the zine</a>
+      <a href="https://www.cafedreamr.art/MIKI/MIXTAPE/">the mixtape</a>
+      <a href="https://www.cafedreamr.art/LORE/BOBBY/cards.html">the dossiers</a>
+      <a href="https://www.cafedreamr.art/">the terminal</a>
+    </span>
+  </footer>
+</div>
+
+<script src="https://www.cafedreamr.art/PASSPORT/cd-passport.js"></script>
+<script>window.CD && CD.boot({page:"jackbox"});</script>
+<script>
+(function(){
+  "use strict";
+
+  var $ = function(s){ return document.querySelector(s); };
+  var stage = $("#stage"), toy = $("#toy"), hint = $("#hint"), flash = $("#flash");
+  var rig = $("#rig"), lidQuad = $("#lidQuad"), lid = $("#lid"), hasp = $("#hasp");
+  var springWrap = $("#springWrap"), springDark = $("#springDark"), springLite = $("#springLite"), springShade = $("#springShade");
+  var bobby = $("#bobby"), needle = $("#needle"), gaugeTicks = $("#gaugeTicks");
+  var mouthOpen = $("#mouthOpen"), tongue = $("#tongue"), rec = $("#rec"), twinkle = $("#twinkle");
+  var lineEl = $("#line"), talkBtn = $("#talkBtn"), backBtn = $("#backBtn"), soundBtn = $("#soundBtn");
+  var meterFill = $("#meterFill"), pctEl = $("#pct"), takeName = $("#takeName"), labelTake = $("#labelTake");
+  var specialEl = $("#special"), rerollBtn = $("#rerollBtn"), loadState = $("#loadState");
+  var mcolsEl = $("#mcols"), menuCountEl = $("#menuCount"), mfineEl = $("#mfine"), menuBtn = $("#menuBtn");
+  var menuPop = $("#menuPop"), menuClose = $("#menuClose");
+  var tktStack = $("#tktStack"), tkCountEl = $("#tkCount"), chipsEl = $("#mpChips"), placeBtn = $("#mpPlace");
+
+  var NEED = 6;
+  var TURNS_LABEL = "6";
+
+  var TAKES = [
+    { who:"sylvestre", n:10, title:"the ground twin",
+      url:"https://user.uploads.dev/file/7a9a35dac9934ed0ff2aec6f159a8f5d.mp3" },
+    { who:"slay", n:11, title:"the storm twin",
+      url:"https://user.uploads.dev/file/109046f5195c66c2d11e020ce1be42c6.mp3" }
+  ];
+
+  var SPECIALS = [
+    "a candy apple made of light",
+    "mint and lavender tea, picked in the dark",
+    "the dusk recipe, made at dusk and not a minute after",
+    "a cup of star's coffee, brewed wrong on purpose",
+    "one of milo's pears, still warm off the row",
+    "hans's properly-steeped earl grey, in the correct cup",
+    "whatever chari is asking questions about",
+    "supper at half six, eaten far too fast",
+    "a plate from the second batch",
+    "toast, and one very strong opinion about toast"
+  ];
+
+  var MENU = [
+    { name: "mains", items: [
+      { name: "cork and screw pie", price: "two screws and a cork",
+        say: "cork and screw pie! two screws and a cork! the pastry's fine \u2014 the pastry's always fine!",
+        desc: "the pastry is fine. the pastry is always fine. the filling is the filling, and you will want a fork you brought on purpose." },
+      { name: "worm on a string pasta", price: "extra string: no",
+        say: "worm on a string pasta! the string IS the pasta! do not ask for extra string \u2014 there has never once been extra string!",
+        desc: "the string is the pasta. that is the dish. do not ask for extra string; there is no extra string, and there has never once been extra string." },
+      { name: "mud pie", price: "from the yard",
+        say: "mud pie! from the yard! we say the yard, so it's the yard!",
+        desc: "they say the yard, so we say the yard. nobody has ever gone and checked whether there is a yard." },
+      { name: "snake in a can", price: "opens on its own",
+        say: "snake in a can! you don't open the can \u2014 the can opens. that's the arrangement!",
+        desc: "you do not open the can. the can opens. that is the whole arrangement, and so far it has suited both of us." }
+    ]},
+    { name: "drinks", items: [
+      { name: "battery acid", price: "nine volts",
+        say: "battery acid! nine volts! sharp on the way down, bright on the way back up!",
+        desc: "sharp on the way down, bright on the way back up. served cold, in the cup that does not mind." },
+      { name: "the vanilla milkshake", price: "stays inside",
+        say: "the vanilla milkshake! the liquid stays inside! it always stays inside \u2014 we check it every morning!",
+        desc: "a real toy milkshake, and the liquid stays inside the little glass where it belongs. it has never once come out. we check it every morning. it stays inside." }
+    ]},
+    { name: "desserts", items: [
+      { name: "glitter stew", price: "do not stir",
+        say: "glitter stew! do not stir! the glitter is not food \u2014 that is the entire point of the glitter!",
+        desc: "served warm, in a bowl you will be finding glitter in for the rest of your life. the glitter is not food. that is the point of the glitter." },
+      { name: "dessert surprise", price: "it's sand",
+        say: "dessert surprise! it's sand! it's a plate, and on the plate is sand, and that is the whole surprise!",
+        desc: "a plate, and on the plate, sand. the surprise is that it is sand, and then the surprise is over immediately. you're welcome." },
+      { name: "miki's mystery journal entry", price: "one secret",
+        say: "miki's mystery journal entry! one secret, served face-down! miki has asked me, formally, to stop offering it!",
+        desc: "one page, hand-written, served face-down. it is on the menu, so it is available. miki has asked, formally, that it not be on the menu." }
+    ]}
+  ];
+
+  var GREETS = [
+    "oy! let's get your order started, mate!",
+    "right then \u2014 what are we having?",
+    "oy! you wound me up. that's on you, that is.",
+    "hello hello \u2014 bobby speaking, bobby always speaking!",
+    "there you are! i've been in that box since tuesday.",
+    "oy oy! counter's open and i've got the clipboard."
+  ];
+
+  var LINES = [
+    "try today's special \u2014 it's on the house!",
+    "no, i don't take tips. i take glitter.",
+    "the twins are on in ten. stand there and look like you mean it.",
+    "tea's hans's department. i only do the shouting.",
+    "you want it boxed? say yes. the box is the whole point of me.",
+    "one of everything then. anarchy's easier to ring up.",
+    "hired pearl myself, you know. best interview i've ever conducted.",
+    "charlotte's door? shut. don't ask. not even for a lolly.",
+    "if it's the koi hour you're after, milo's already at the pond.",
+    "keep the receipt \u2014 that's a joke, there is no receipt.",
+    "you look like you could use a candy apple made of light.",
+    "mind the glitter. it's on everything now. including me.",
+    "welcome to the counter. mind the counter \u2014 miki's under it.",
+    "i'm a sock. i contain multitudes and also one spare button.",
+    "hans says i'm not on the roster. hans, i'm on the intercom.",
+    "take a number. we don't have numbers. take the day off instead.",
+    "star's at the window with the bible. she is not to be disturbed, or she is. her call.",
+    "chari's got the till and the rats have got chari. all is well.",
+    "hear drumming, that's sylvestre. hear flute, that's slay. hear both, run toward it.",
+    "grab a zine while you're here. miki will pretend not to notice.",
+    "the special's free. the guilt is optional.",
+    "one of the machines is humming the wrong tune. it's fine. it's always fine.",
+    "the milkshake's still in the glass. it's staying in the glass. we check.",
+    "don't stir the glitter stew. i've said it in writing. there's a sign.",
+    "the dessert surprise is sand. there. i've saved you the trip.",
+    "miki's journal entry is on the board. miki is aware. miki is not happy.",
+    "one of everything off the board, then. it's on the house. it's all on the house."
+  ];
+
+  var state = {
+    wind: 0, popping: false, popped: false, winding: false, windingKey: false,
+    speed: 0, lastAngle: null, lastT: 0, take: 0, talking: false,
+    soundOn: true, voiceOn: true, speakUntil: 0, deck: [], lastBlink: 0, blinkUntil: 0, rot: 0
+  };
+
+  function clamp(v, a, b){ return v < a ? a : v > b ? b : v; }
+  function lerp(a, b, t){ return a + (b - a) * t; }
+  function rnd(a, b){ return a + Math.random() * (b - a); }
+
+  /* ---------------- audio ---------------- */
+
+  var A = { ctx:null, master:null, chainIn:null, noise:null, ready:[false, false],
+            mode:"none", src:null, started:false, gain:null, filterOpen:600 };
+
+  function softClip(){
+    var n = 1024, c = new Float32Array(n);
+    for (var i = 0; i < n; i++){
+      var x = i * 2 / n - 1;
+      c[i] = Math.tanh(x * 2.4) * 0.78;
+    }
+    return c;
+  }
+
+  function audioInit(){
+    if (A.ctx) return A.ctx;
+    var C = window.AudioContext || window.webkitAudioContext;
+    if (!C) return null;
+    try {
+      A.ctx = new C();
+      A.master = A.ctx.createGain();
+      A.master.gain.value = 0.0001;
+      var hp = A.ctx.createBiquadFilter(); hp.type = "highpass"; hp.frequency.value = 380;
+      var lp = A.ctx.createBiquadFilter(); lp.type = "lowpass"; lp.frequency.value = 2700;
+      var tin = A.ctx.createBiquadFilter(); tin.type = "peaking"; tin.frequency.value = 1750; tin.Q.value = 1.1; tin.gain.value = 8.5;
+      var shaper = A.ctx.createWaveShaper(); shaper.curve = softClip(); shaper.oversample = "2x";
+      A.gain = A.ctx.createGain(); A.gain.gain.value = 0.0;
+      var trem = A.ctx.createGain();
+      var lfo = A.ctx.createOscillator(); lfo.frequency.value = 5.4;
+      var lfoG = A.ctx.createGain(); lfoG.gain.value = 0.07;
+      lfo.connect(lfoG); lfoG.connect(trem.gain); lfo.start();
+      A.gain.connect(hp); hp.connect(lp); lp.connect(tin); tin.connect(shaper); shaper.connect(trem);
+      trem.connect(A.master); A.master.connect(A.ctx.destination);
+      A.chainIn = A.gain;
+      var len = Math.floor(A.ctx.sampleRate * 0.6);
+      A.noise = A.ctx.createBuffer(1, len, A.ctx.sampleRate);
+      var d = A.noise.getChannelData(0);
+      for (var j = 0; j < len; j++) d[j] = Math.random() * 2 - 1;
+      if (A.ctx.state === "suspended" && A.ctx.resume) A.ctx.resume();
+    } catch (e) { A.ctx = null; }
+    return A.ctx;
+  }
+
+  function loadTake(i){
+    var ctx = audioInit();
+    if (!ctx || A.ready[i]) return;
+    loadState.textContent = "winding in take " + TAKES[i].n + "\u2026";
+    fetch(TAKES[i].url).then(function(r){ return r.arrayBuffer(); }).then(function(ab){
+      return new Promise(function(res, rej){
+        ctx.decodeAudioData(ab, res, function(){ rej(new Error("decode")); });
+      });
+    }).then(function(buf){
+      A.buf = A.buf || [];
+      A.buf[i] = buf;
+      A.ready[i] = true;
+      A.mode = "web";
+      loadState.textContent = "take " + TAKES[i].n + " loaded";
+      if (state.winding) startTake();
+    }).catch(function(){
+      A.mode = "plain";
+      A.ready[i] = true;
+      loadState.textContent = "playing through the tin speaker";
+      if (state.winding) startTake();
+    });
+  }
+
+  function startTake(){
+    if (!state.soundOn) return;
+    var ctx = A.ctx;
+    if (!ctx) return;
+    if (A.mode === "plain"){
+      if (!A.el){
+        A.el = new Audio(TAKES[state.take].url);
+        A.el.loop = true;
+      }
+      if (A.el.src.indexOf(TAKES[state.take].url) === -1) A.el.src = TAKES[state.take].url;
+      A.el.playbackRate = clamp(0.6 + state.speed * 0.42, 0.55, 1.5);
+      A.el.volume = 0.5;
+      A.el.play().catch(function(){});
+      A.started = true;
+      return;
+    }
+    if (!A.ready[state.take] || !A.buf || !A.buf[state.take]) { loadTake(state.take); return; }
+    if (A.src) return;
+    try {
+      A.src = ctx.createBufferSource();
+      A.src.buffer = A.buf[state.take];
+      A.src.loop = true;
+      A.src.playbackRate.value = 0.7;
+      A.src.connect(A.chainIn);
+      A.src.start(0);
+      A.master.gain.cancelScheduledValues(ctx.currentTime);
+      A.master.gain.setTargetAtTime(0.5, ctx.currentTime, 0.05);
+      A.started = true;
+    } catch (e) { A.src = null; }
+  }
+
+  function stopTake(fast){
+    var ctx = A.ctx;
+    if (A.mode === "plain" && A.el){
+      var el = A.el, t0 = Date.now();
+      if (fast){
+        el.pause(); el.currentTime = 0;
+      } else {
+        var iv = setInterval(function(){
+          el.volume = Math.max(0, el.volume - 0.06);
+          if (el.volume <= 0.02 || Date.now() - t0 > 600){ clearInterval(iv); el.pause(); el.volume = 0.5; }
+        }, 25);
+      }
+    }
+    if (A.src && ctx){
+      var src = A.src;
+      A.src = null;
+      try {
+        if (fast){
+          src.playbackRate.setTargetAtTime(0.06, ctx.currentTime, 0.05);
+        }
+        A.master.gain.setTargetAtTime(0.0001, ctx.currentTime, fast ? 0.05 : 0.25);
+        setTimeout(function(){ try { src.stop(); } catch (e) {} }, fast ? 260 : 700);
+      } catch (e) { try { src.stop(); } catch (e2) {} }
+    }
+  }
+
+  function noiseBurst(o){
+    var ctx = A.ctx; if (!ctx || !A.noise) return;
+    var s = ctx.createBufferSource(); s.buffer = A.noise;
+    var f = ctx.createBiquadFilter(); f.type = o.type || "bandpass";
+    f.frequency.value = o.f || 1200; f.Q.value = o.q || 3;
+    var g = ctx.createGain(); g.gain.value = 0;
+    s.connect(f); f.connect(g); g.connect(ctx.destination);
+    var t = ctx.currentTime, d = o.d || 0.12, v = (o.v || 0.2) * (state.soundOn ? 1 : 0);
+    g.gain.setValueAtTime(0, t);
+    g.gain.linearRampToValueAtTime(v, t + d * 0.12);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + d);
+    if (o.sweep) f.frequency.linearRampToValueAtTime(o.sweep, t + d);
+    s.start(t); s.stop(t + d + 0.02);
+  }
+
+  function bell(freq, v, d){
+    var ctx = A.ctx; if (!ctx || !state.soundOn) return;
+    var t = ctx.currentTime;
+    [1, 2.02, 2.76, 4.1].forEach(function(m, i){
+      var o = ctx.createOscillator(); o.type = "sine"; o.frequency.value = freq * m;
+      var g = ctx.createGain(); g.gain.value = 0;
+      o.connect(g); g.connect(ctx.destination);
+      var amp = (v || 0.12) / (i + 1.6), dd = (d || 0.4) / (1 + i * 0.7);
+      g.gain.setValueAtTime(0, t);
+      g.gain.linearRampToValueAtTime(amp, t + 0.004);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + dd);
+      o.start(t); o.stop(t + dd + 0.03);
+    });
+  }
+
+  function tick(power){
+    noiseBurst({ f: rnd(1500, 2600), q: 6, d: 0.045, v: 0.05 + 0.07 * (power || 0) });
+  }
+
+  function paperShhk(){
+    noiseBurst({ f: 2600, sweep: 1200, q: 0.9, d: 0.34, v: 0.075, type: "highpass" });
+  }
+
+  function thunk(){
+    var ctx = A.ctx; if (!ctx || !state.soundOn) return;
+    var t = ctx.currentTime;
+    var o = ctx.createOscillator(); o.type = "sine";
+    o.frequency.setValueAtTime(190, t);
+    o.frequency.exponentialRampToValueAtTime(72, t + 0.13);
+    var g = ctx.createGain(); g.gain.setValueAtTime(0, t);
+    g.gain.linearRampToValueAtTime(0.14, t + 0.012);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + 0.2);
+    o.connect(g); g.connect(ctx.destination);
+    o.start(t); o.stop(t + 0.22);
+    noiseBurst({ f: 700, q: 1.1, d: 0.05, v: 0.05 });
+  }
+
+  function boing(){
+    var ctx = A.ctx; if (!ctx || !state.soundOn) return;
+    var t = ctx.currentTime;
+    var o = ctx.createOscillator(); o.type = "sine";
+    var g = ctx.createGain();
+    var lfo = ctx.createOscillator(); lfo.type = "sine"; lfo.frequency.value = 16;
+    var lg = ctx.createGain(); lg.gain.value = 44;
+    lfo.connect(lg); lg.connect(o.frequency);
+    o.frequency.setValueAtTime(520, t);
+    o.frequency.exponentialRampToValueAtTime(120, t + 0.42);
+    g.gain.setValueAtTime(0, t);
+    g.gain.linearRampToValueAtTime(0.3, t + 0.02);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + 0.5);
+    o.connect(g); g.connect(ctx.destination);
+    o.start(t); lfo.start(t); o.stop(t + 0.52); lfo.stop(t + 0.52);
+    noiseBurst({ f: 900, sweep: 2600, q: 1.4, d: 0.16, v: 0.14 });
+  }
+
+  function squawk(){
+    noiseBurst({ f: 900, sweep: 2100, q: 2.4, d: 0.13, v: 0.17 });
+    var ctx = A.ctx; if (!ctx || !state.soundOn) return;
+    var t = ctx.currentTime;
+    var o = ctx.createOscillator(); o.type = "square"; o.frequency.setValueAtTime(760, t);
+    o.frequency.linearRampToValueAtTime(1180, t + 0.07);
+    var g = ctx.createGain(); g.gain.value = 0;
+    g.gain.linearRampToValueAtTime(0.06, t + 0.01);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + 0.12);
+    o.connect(g); g.connect(ctx.destination); o.start(t); o.stop(t + 0.14);
+  }
+
+  /* ---------------- speech ---------------- */
+
+  var voices = [];
+  function pickVoice(){
+    if (!("speechSynthesis" in window)) return null;
+    voices = window.speechSynthesis.getVoices() || [];
+    var want = ["en-GB", "en-IE", "en-AU", "en-NZ", "en"];
+    for (var w = 0; w < want.length; w++){
+      for (var i = 0; i < voices.length; i++){
+        var v = voices[i];
+        if (v.lang && v.lang.replace("_", "-").toLowerCase().indexOf(want[w]) === 0){
+          if (/male|daniel|arthur|george|oliver|tom|ryan|gordon|guy|alex/i.test(v.name)) return v;
+        }
+      }
+      for (var k = 0; k < voices.length; k++){
+        var v2 = voices[k];
+        if (v2.lang && v2.lang.replace("_", "-").toLowerCase().indexOf(want[w]) === 0) return v2;
+      }
+    }
+    return voices[0] || null;
+  }
+  if ("speechSynthesis" in window){
+    window.speechSynthesis.onvoiceschanged = function(){ voices = window.speechSynthesis.getVoices() || []; };
+  }
+
+  var typeTimer = null;
+  function typeLine(text, done){
+    clearInterval(typeTimer);
+    lineEl.textContent = "";
+    var i = 0;
+    typeTimer = setInterval(function(){
+      i++;
+      lineEl.textContent = text.slice(0, i);
+      if (i >= text.length){ clearInterval(typeTimer); if (done) done(); }
+    }, 17);
+    lineEl.textContent = "";
+  }
+
+  function say(text, opts){
+    opts = opts || {};
+    typeLine(text);
+    var dur = 620 + text.length * 52;
+    state.talking = true;
+    rec.classList.add("on");
+    var spoke = false;
+    if (state.voiceOn && state.soundOn && "speechSynthesis" in window){
+      try {
+        var u = new SpeechSynthesisUtterance(text);
+        var v = pickVoice();
+        if (v) u.voice = v;
+        u.rate = 1.04; u.pitch = 1.35; u.volume = 1;
+        u.onstart = function(){ state.talking = true; rec.classList.add("on"); };
+        u.onend = function(){ state.talking = false; rec.classList.remove("on"); };
+        u.onerror = function(){ state.talking = false; rec.classList.remove("on"); };
+        window.speechSynthesis.cancel();
+        window.speechSynthesis.speak(u);
+        spoke = true;
+      } catch (e) { spoke = false; }
+    }
+    if (!spoke){
+      clearTimeout(state.speakTimer);
+      state.speakTimer = setTimeout(function(){ state.talking = false; rec.classList.remove("on"); }, dur);
+    }
+    if (opts.after) setTimeout(opts.after, dur);
+  }
+
+  /* ---------------- specials ---------------- */
+
+  function dayIndex(){
+    var d = new Date();
+    return Math.floor(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()) / 86400000);
+  }
+  var specialShift = 0;
+  function todaySpecial(){ return SPECIALS[(dayIndex() + specialShift) % SPECIALS.length]; }
+  function paintSpecial(){ specialEl.textContent = todaySpecial(); }
+  rerollBtn.addEventListener("click", function(){
+    specialShift++;
+    paintSpecial();
+    squawk();
+    say("the board's changed its mind. today's special \u2014 " + todaySpecial() + ". on the house!");
+  });
+
+  /* ---------------- bobby's menu (pops up on his left) ---------------- */
+
+  var MENU_FLAT = [];
+  (function buildMenu(){
+    var html = "";
+    MENU.forEach(function(sec){
+      html += '<h4>' + sec.name + '</h4>';
+      sec.items.forEach(function(it){
+        var i = MENU_FLAT.push(it) - 1;
+        html += '<div class="mpWrap">' +
+                  '<button class="mpItem" type="button" data-i="' + i + '" aria-expanded="false">' +
+                    '<span class="row"><span class="caret2">\u25B8</span>' +
+                    '<span class="nm">' + it.name + '</span>' +
+                    '<span class="dots"></span><span class="pr">' + it.price + '</span></span>' +
+                  '</button>' +
+                  '<div class="more">' +
+                    '<span class="desc">' + it.desc + '</span>' +
+                    '<span class="q">\u201c' + it.say + '\u201d</span>' +
+                    '<button class="mpAdd" type="button" data-add="' + i + '">add it to the order</button>' +
+                  '</div>' +
+                '</div>';
+      });
+    });
+    mcolsEl.innerHTML = html;
+    menuCountEl.textContent = MENU_FLAT.length + " things \u00b7 he makes none of them";
+    mfineEl.innerHTML = "everything on here is <b>on the house</b> \u2014 bobby cannot reach the till from " +
+      "inside the box, and he has checked. the special is the only real one.";
+  })();
+
+  function openMenu(){
+    if (menuPop.classList.contains("open")) return;
+    menuPop.classList.add("open");
+    menuPop.setAttribute("aria-hidden", "false");
+    menuBtn.textContent = "close his menu";
+    menuBtn.setAttribute("aria-expanded", "true");
+    squawk();
+    say("there you go \u2014 menu's on your left. tap anything and i'll talk you through it.");
+  }
+  function closeMenu(){
+    menuPop.classList.remove("open");
+    menuPop.setAttribute("aria-hidden", "true");
+    menuBtn.textContent = "read his menu";
+    menuBtn.setAttribute("aria-expanded", "false");
+  }
+  function toggleMenu(){ if (menuPop.classList.contains("open")) closeMenu(); else openMenu(); }
+
+  menuBtn.addEventListener("click", toggleMenu);
+  menuBtn.setAttribute("aria-expanded", "false");
+  menuBtn.setAttribute("aria-controls", "menuPop");
+  menuClose.addEventListener("click", closeMenu);
+
+  function closeOthers(keep){
+    var open = mcolsEl.querySelectorAll(".mpWrap.open");
+    for (var i = 0; i < open.length; i++){
+      if (open[i] === keep) continue;
+      open[i].classList.remove("open");
+      var b = open[i].querySelector(".mpItem");
+      if (b) b.setAttribute("aria-expanded", "false");
+    }
+  }
+  mcolsEl.addEventListener("click", function(e){
+    var add = e.target.closest ? e.target.closest(".mpAdd") : null;
+    if (add){ addToOrder(+add.getAttribute("data-add")); add.blur(); return; }
+    var btn = e.target.closest ? e.target.closest(".mpItem") : null;
+    if (!btn) return;
+    var it = MENU_FLAT[+btn.getAttribute("data-i")];
+    var wrap = btn.parentNode;
+    var wasOpen = wrap.classList.contains("open");
+    closeOthers(null);
+    if (!wasOpen){
+      wrap.classList.add("open");
+      btn.setAttribute("aria-expanded", "true");
+      if (it){ squawk(); say(it.say); }
+      setTimeout(function(){
+        if (wrap.scrollIntoView) wrap.scrollIntoView({ block: "nearest", behavior: "smooth" });
+      }, 120);
+    }
+  });
+  menuPop.addEventListener("pointerdown", function(e){ e.stopPropagation(); });
+
+  /* ---------------- the printer: order slips ---------------- */
+
+  var TKT_KEY = "cafedreamr:jackbox:tickets";
+  var TKT_KEEP = 12, TKT_SHOW = 5;
+  var tickets = [], tray = [], tktNo = 1;
+  var NUMWORD = ["no","one","two","three","four","five","six","seven","eight","nine","ten","eleven","twelve"];
+  var SIG_SVG = '<svg class="tkSig" viewBox="0 0 84 30" aria-hidden="true">' +
+    '<path d="M4 22 C10 5 17 5 15.5 17 C14 26 22 27 25 14 C28 4 34 8 32 18 C30 26 39 25 42 13 ' +
+    'C45 3 51 9 48 19 C46 25 55 23 58 12" fill="none" stroke="#3a2350" stroke-width="1.6" stroke-linecap="round"/>' +
+    '<path d="M62 22 C66 9 78 12 75 20 C72 27 62 26 65 17" fill="none" stroke="#3a2350" stroke-width="1.6" stroke-linecap="round"/>' +
+    '<circle cx="69" cy="14" r="1.15" fill="#3a2350"/><circle cx="73.5" cy="13" r="1.15" fill="#3a2350"/></svg>';
+  var ORDER_LINES = [
+    "order up! {o}. table: no \u2014 that's on the house.",
+    "right you are: {o}! kitchen isn't real but the order is.",
+    "{o}! coming right up \u2014 which means i'll shout it and then nothing happens.",
+    "got it \u2014 {o}. i've printed you a slip and kept a copy. i keep all of them.",
+    "{o}. i'll get that started, mate. on the house, as ever."
+  ];
+
+  function pad3(n){ return (n < 10 ? "00" : n < 100 ? "0" : "") + n; }
+  var MON = ["jan","feb","mar","apr","may","jun","jul","aug","sep","oct","nov","dec"];
+  var DAY = ["sun","mon","tue","wed","thu","fri","sat"];
+  function whenStr(d){
+    function p(n){ return (n < 10 ? "0" : "") + n; }
+    return DAY[d.getDay()] + " " + d.getDate() + " " + MON[d.getMonth()] +
+           " \u00b7 " + p(d.getHours()) + ":" + p(d.getMinutes());
+  }
+
+  function tkLoad(){
+    try{
+      var raw = JSON.parse(localStorage.getItem(TKT_KEY) || "null");
+      if (raw && raw.list && raw.list.length){
+        tickets = raw.list.slice(0, TKT_KEEP);
+        tktNo = raw.next || (tickets[0].n + 1);
+      }
+    }catch(e){ tickets = []; }
+  }
+  function tkSave(){
+    try{ localStorage.setItem(TKT_KEY, JSON.stringify({ list: tickets.slice(0, TKT_KEEP), next: tktNo })); }catch(e){}
+  }
+
+  function pileT(d){
+    return "translate(" + (-d * 6) + "px," + (-d * 9) + "px) rotate(" + (-1.4 + d * 1.15).toFixed(2) +
+           "deg) scale(" + (1 - d * 0.012).toFixed(3) + ")";
+  }
+
+  function ticketEl(rec, d){
+    var el = document.createElement("div");
+    el.className = "ticket";
+    el.setAttribute("data-n", rec.n);
+    el.style.transform = pileT(d);
+    el.style.zIndex = String(120 - d);
+    var items = rec.items.map(function(it){
+      return '<li><span>' + NUMWORD[it.qty] + " " + it.name + '</span><i>' + it.price + '</i></li>';
+    }).join("");
+    el.innerHTML =
+      '<div class="tkTop"><span>cafedreamr toy co.</span><b>no. ' + pad3(rec.n) + '</b></div>' +
+      '<div class="tkMeta">server: bobby &middot; table: no<br>the order box &middot; machine no. 01</div>' +
+      '<ul class="tkItems">' + items + '</ul>' +
+      '<div class="tkTot"><span>total</span><em>on the house</em></div>' +
+      '<div class="tkFoot"><span class="tkWhen">' + rec.when + '</span>' +
+      '<span class="tkStamp">paid in glitter</span>' + SIG_SVG + '</div>';
+    return el;
+  }
+
+  function renderTickets(){
+    var olds = tktStack.querySelectorAll(".ticket");
+    for (var k = 0; k < olds.length; k++) olds[k].remove();
+    var show = tickets.slice(0, TKT_SHOW);
+    for (var i = show.length - 1; i >= 0; i--) tktStack.appendChild(ticketEl(show[i], i));
+    tkCountEl.innerHTML = tickets.length
+      ? "the spike \u00b7 <b>" + tickets.length + " kept</b>" +
+        (tickets.length > 1 ? '<span class="w"> \u00b7 click to leaf</span>' : "")
+      : "the spike \u00b7 bobby keeps a copy";
+  }
+
+  function printTicket(items){
+    if (!items || !items.length) return null;
+    var rec = { n: tktNo++, when: whenStr(new Date()), items: items.slice() };
+    tickets.unshift(rec);
+    if (tickets.length > TKT_KEEP) tickets.splice(TKT_KEEP);
+    tkSave();
+    renderTickets();
+    var el = tktStack.querySelector('.ticket[data-n="' + rec.n + '"]');
+    if (el && toy && stage){
+      var k = stage.offsetWidth ? (stage.getBoundingClientRect().width / stage.offsetWidth) : 1;
+      if (!k || !isFinite(k)) k = 1;
+      var tr = toy.getBoundingClientRect(), er = el.getBoundingClientRect();
+      var sc = 0.5;
+      var sx = tr.left + tr.width * (434 / 720);
+      var sy = tr.top + tr.height * (622 / 820);
+      var dx = (sx - (er.left + er.width * sc / 2)) / k;
+      var dy = (sy - er.top) / k;
+      var atSlot = "translate(" + dx.toFixed(1) + "px," + dy.toFixed(1) + "px)";
+      el.style.transition = "none";
+      el.style.transform = atSlot + " scale(" + sc + ") rotate(-4deg)";
+      el.style.clipPath = "inset(0 0 97% 0)";
+      el.style.webkitClipPath = "inset(0 0 97% 0)";
+      void el.offsetWidth;
+      el.style.transition = "transform .34s ease-out, clip-path .38s ease-out";
+      el.style.transform = atSlot + " scale(.68) rotate(-4deg)";
+      el.style.clipPath = "inset(0 0 0 0)";
+      el.style.webkitClipPath = "inset(0 0 0 0)";
+      paperShhk();
+      setTimeout(function(){
+        el.style.transition = "transform .8s cubic-bezier(.2,.88,.22,1)";
+        el.style.clipPath = "";
+        el.style.webkitClipPath = "";
+        el.style.transform = pileT(0);
+      }, 470);
+      setTimeout(thunk, 1160);
+    }
+    say(orderLine(rec.items));
+    return rec;
+  }
+
+  function orderLine(items){
+    var names = items.map(function(it){ return NUMWORD[it.qty] + " " + it.name; });
+    var o = names.length === 1 ? names[0] :
+            names.slice(0, -1).join(", ") + " and " + names[names.length - 1];
+    return ORDER_LINES[Math.floor(Math.random() * ORDER_LINES.length)].replace("{o}", o);
+  }
+
+  function addToOrder(i){
+    var it = MENU_FLAT[i];
+    if (!it) return;
+    var found = null;
+    for (var k = 0; k < tray.length; k++) if (tray[k].name === it.name) found = tray[k];
+    if (found) found.qty++;
+    else tray.push({ name: it.name, price: it.price, qty: 1 });
+    tick(0.45);
+    renderTray();
+  }
+  function renderTray(){
+    chipsEl.innerHTML = tray.length
+      ? tray.map(function(t, i){
+          return '<button class="mpChip" type="button" data-rm="' + i + '" title="take it off">' +
+                 (t.qty > 1 ? t.qty + "\u00d7 " : "") + t.name + '</button>';
+        }).join("")
+      : "nothing yet";
+    placeBtn.disabled = !tray.length;
+  }
+  chipsEl.addEventListener("click", function(e){
+    var rm = e.target.closest ? e.target.closest("[data-rm]") : null;
+    if (!rm) return;
+    tray.splice(+rm.getAttribute("data-rm"), 1);
+    tick(0.2);
+    renderTray();
+  });
+  function placeOrder(){
+    if (!tray.length) return;
+    var items = tray.slice();
+    tray = [];
+    renderTray();
+    closeMenu();
+    squawk();
+    setTimeout(function(){ printTicket(items); }, 430);
+  }
+  placeBtn.addEventListener("click", placeOrder);
+  tktStack.addEventListener("click", function(){
+    if (tickets.length < 2) return;
+    tickets.push(tickets.shift());
+    tkSave();
+    renderTickets();
+    tick(0.25);
+  });
+  tkLoad();
+  renderTray();
+  renderTickets();
+
+  /* ---------------- svg furniture ---------------- */
+
+  (function buildTicks(){
+    var svg = "";
+    for (var i = 0; i < NEED; i++){
+      var a = (-68 + (136 / (NEED - 1)) * i) * Math.PI / 180;
+      var x1 = 252 + Math.sin(a) * 20, y1 = 514 - Math.cos(a) * 20;
+      var x2 = 252 + Math.sin(a) * 27, y2 = 514 - Math.cos(a) * 27;
+      svg += '<line id="tick' + i + '" x1="' + x1.toFixed(1) + '" y1="' + y1.toFixed(1) +
+             '" x2="' + x2.toFixed(1) + '" y2="' + y2.toFixed(1) + '"/>';
+    }
+    gaugeTicks.innerHTML = svg;
+  })();
+
+  var tickEls = [];
+  for (var ti = 0; ti < NEED; ti++) tickEls.push(document.getElementById("tick" + ti));
+
+  /* ---------------- spring + lid geometry ---------------- */
+
+  var LID = {
+    hingeY: 430, hingeX0: 255, hingeX1: 565,
+    freeY0: 470, freeX0: 205, freeX1: 515,
+    openY: 232, openX0: 300, openX1: 522
+  };
+
+  function paintLid(open){
+    var e = 1 - Math.pow(1 - clamp(open, 0, 1), 3);
+    var y = lerp(LID.freeY0, LID.openY, e);
+    var x0 = lerp(LID.freeX0, LID.openX0, e);
+    var x1 = lerp(LID.freeX1, LID.openX1, e);
+    lidQuad.setAttribute("points",
+      LID.hingeX0 + "," + LID.hingeY + " " + LID.hingeX1 + "," + LID.hingeY + " " +
+      x1.toFixed(1) + "," + y.toFixed(1) + " " + x0.toFixed(1) + "," + y.toFixed(1));
+    lidQuad.setAttribute("fill", "url(#gLid)");
+    hasp.setAttribute("transform", "translate(360," + (470 + e * 26).toFixed(1) + ") rotate(" + (e * 42).toFixed(1) + ")");
+  }
+
+  function paintSpring(headY){
+    var top = headY + 86, bottom = 452;
+    var len = bottom - top;
+    if (len < 14){ springWrap.setAttribute("opacity", "0"); return; }
+    springWrap.setAttribute("opacity", "1");
+    var coils = 8, amp = Math.min(26, 7 + len * 0.09), steps = 46;
+    var dk = "M394 " + bottom.toFixed(1), lt = "M394 " + bottom.toFixed(1), sh = "M396 " + (bottom + 2).toFixed(1);
+    for (var i = 1; i <= steps; i++){
+      var t = i / steps;
+      var y = bottom - len * t;
+      var x = 394 + Math.sin(t * coils * Math.PI * 2) * amp;
+      dk += " L" + x.toFixed(1) + " " + y.toFixed(1);
+      lt += " L" + (x + 1.6).toFixed(1) + " " + (y - 1.2).toFixed(1);
+      sh += " L" + (x + 2.4).toFixed(1) + " " + (y + 2.2).toFixed(1);
+    }
+    springShade.setAttribute("d", sh);
+    springDark.setAttribute("d", dk);
+    springLite.setAttribute("d", lt);
+  }
+
+  /* ---------------- state painting ---------------- */
+
+  function paintHud(){
+    var p = state.wind / NEED;
+    var rp = Math.round(p * 200) / 200;
+    if (rp !== state.lastP){
+      state.lastP = rp;
+      meterFill.style.width = (p * 100).toFixed(1) + "%";
+      pctEl.textContent = "wound " + p.toFixed(2) + " of 6 turns";
+      for (var i = 0; i < NEED; i++){
+        tickEls[i].setAttribute("stroke", (i / NEED) < p ? "#ccff00" : "#5a4a6b");
+      }
+    }
+    needle.setAttribute("transform", "rotate(" + (-68 + 136 * p).toFixed(1) + " 252 514)");
+  }
+
+  function paintTake(){
+    var t = TAKES[state.take];
+    takeName.innerHTML = "take " + t.n + " &middot; <span class=\"who\">" + t.who + "</span> &mdash; &ldquo;" + t.title + "&rdquo;";
+    labelTake.textContent = "TAKE " + t.n + " LOADED";
+  }
+
+  /* ---------------- the payout ----------------
+     the box pays arcade jellies — they're spent at the claw machine
+     (MIKI/GAMES/claw.html). the passport keeps them; a local mirror
+     stands in until the passport that knows about jellies is deployed. */
+  var TK_MIRROR = "cafedreamr:jellies";
+  var TK_OLD    = "cafedreamr:tokens";   /* the jar used to be called tokens */
+  function tkHave(){
+    var v = localStorage.getItem(TK_MIRROR);
+    if (v === null) v = localStorage.getItem(TK_OLD);
+    return Number(v) || 0;
+  }
+  function pay(n, label){
+    try{
+      if (window.CD && typeof CD.award === "function"){ CD.award(n, label, { accent:"#ccff00" }); return; }
+      localStorage.setItem(TK_MIRROR, String(tkHave() + n));
+      if (window.CD && CD.toast) CD.toast("+" + n + "  " + label, "#ccff00", 2200);
+    }catch(e){}
+  }
+
+  /* ---------------- spring physics ---------------- */
+
+  var sp = { y:0, v:0 };
+  var sway = { a:0, v:0 };
+
+  function popNow(){
+    if (state.popped || state.popping) return;
+    state.popping = true;
+    state.wind = NEED;
+    stopTake(true);
+    boing();
+    bell(1180, 0.09, 0.5);
+    setTimeout(function(){ bell(1560, 0.07, 0.6); }, 130);
+    spawnGlitter(30);
+    flash.classList.add("on");
+    setTimeout(function(){ flash.classList.remove("on"); }, 260);
+    setTimeout(function(){
+      state.popped = true; state.popping = false;
+      talkBtn.disabled = false;
+      backBtn.hidden = false;
+      pay(15, "the box paid out 15 jellies");
+      say(GREETS[Math.floor(Math.random() * GREETS.length)]);
+    }, 520);
+  }
+
+  function windBack(){
+    if (!state.popped) return;
+    state.popped = false;
+    state.wind = 0;
+    stopTake(false);
+    talkBtn.disabled = true;
+    backBtn.hidden = true;
+    state.take = state.take ? 0 : 1;
+    paintTake();
+    loadTake(state.take);
+    lineEl.textContent = "back in the box. take " + TAKES[state.take].n + " is loaded.";
+    tick(0.6);
+  }
+
+  /* ---------------- glitter + dust ---------------- */
+
+  var cv = $("#dust"), cx2 = cv.getContext("2d"), parts = [], dust = [], W = 0, H = 0, dpr = 1;
+
+  function sizeCanvas(){
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = cv.clientWidth; H = cv.clientHeight;
+    cv.width = Math.floor(W * dpr); cv.height = Math.floor(H * dpr);
+    cx2.setTransform(dpr, 0, 0, dpr, 0, 0);
+    dust = [];
+    var n = Math.round(W * H / 26000);
+    for (var i = 0; i < n; i++){
+      dust.push({ x: Math.random() * W, y: Math.random() * H, r: rnd(.5, 1.7),
+                  a: rnd(.08, .34), vy: rnd(-.06, -0.016), vx: rnd(-.05, .05) });
+    }
+  }
+
+  function spawnGlitter(n){
+    var r = toy.getBoundingClientRect();
+    var ox = r.left + r.width * 0.55, oy = r.top + r.height * 0.22;
+    for (var i = 0; i < n; i++){
+      parts.push({ x:ox + rnd(-40, 40), y:oy + rnd(-16, 16), vx:rnd(-2.6, 2.6), vy:rnd(-5.4, -1.4),
+        r:rnd(1.6, 4.2), life:rnd(900, 1900), born:performance.now(),
+        c:["#ff2d95", "#ff86c0", "#ccff00", "#ffffff"][Math.floor(Math.random() * 4)], rot:rnd(0, 6.3) });
+    }
+  }
+
+  /* ---------------- loop ---------------- */
+
+  var last = performance.now();
+
+  function frame(now){
+    var dt = Math.min(0.05, (now - last) / 1000);
+    last = now;
+
+    if (state.wind >= NEED && !state.popped && !state.popping) popNow();
+
+    if (state.winding || state.windingKey){
+      if (state.windingKey && state.wind < NEED && !state.popped){
+        state.wind = Math.min(NEED, state.wind + 0.55 * dt);
+        state.speed = clamp(state.speed * 0.9 + 0.5 * 0.1, 0, 2.6);
+      }
+    } else {
+      state.speed += (0 - state.speed) * Math.min(1, dt * 3.4);
+    }
+
+    if (!state.popped && state.wind > NEED * 0.5 && !state.winding && !state.windingKey){
+      state.wind = Math.max(NEED * 0.5, state.wind - 0.35 * dt);
+    }
+
+    var target = state.popped ? 1 : 0;
+    var k = state.popped ? 210 : 150, damp = state.popped ? 9 : 15;
+    sp.v += (target - sp.y) * k * dt - sp.v * damp * dt;
+    sp.y += sp.v * dt;
+    if (sp.y < 0){ sp.y = 0; if (sp.v < 0) sp.v *= -0.3; }
+    if (sp.y > 1.24) sp.y = 1.24;
+
+    sway.v += (-sway.a * 260 - sway.v * 13) * dt;
+    sway.a += sway.v * dt;
+    if (state.popping) sway.v += rnd(-9, 9);
+
+    var rise = clamp(sp.y, 0, 1);
+    var headY = 512 - 322 * rise;
+    var headX = 394 + sway.a * 1.5;
+    var squash = clamp(1 + sp.v * 0.012 * 10, 0.86, 1.18);
+
+    bobby.setAttribute("transform",
+      "translate(" + headX.toFixed(1) + "," + headY.toFixed(1) + ") rotate(" + (sway.a * 0.6).toFixed(2) +
+      ") scale(" + (1 / squash).toFixed(3) + "," + squash.toFixed(3) + ")");
+    var vis = clamp((rise - 0.40) / 0.14, 0, 1);
+    bobby.setAttribute("opacity", vis.toFixed(3));
+    paintSpring(headY);
+    paintLid(clamp(sp.y, 0, 1) * 1.0);
+
+    var p = state.wind / NEED;
+    var rattle = (!state.popped ? Math.pow(p, 1.7) * 3.4 * (state.winding || state.windingKey ? 1 : 0.22) : 0);
+    var tx = rnd(-rattle, rattle), ty = rnd(-rattle, rattle) * 0.5;
+    var tilt = (!state.popped ? p * 1.5 * (state.winding ? 1 : -0.4) : 2.2) + (state.popped ? sway.a * 0.2 : 0);
+    rig.setAttribute("transform", "translate(" + tx.toFixed(2) + "," + ty.toFixed(2) + ") rotate(" + tilt.toFixed(2) + " 360 640)");
+
+    if (state.talking){
+      var m = Math.abs(Math.sin(now / 46)) * (0.55 + 0.45 * Math.abs(Math.sin(now / 137)));
+      var ry = 3 + m * 22;
+      mouthOpen.setAttribute("ry", ry.toFixed(1));
+      tongue.setAttribute("cy", (47 + ry * 0.45).toFixed(1));
+      tongue.setAttribute("ry", (2 + ry * 0.32).toFixed(1));
+    } else {
+      var ry2 = 3 + Math.abs(Math.sin(now / 900)) * 2.4;
+      mouthOpen.setAttribute("ry", ry2.toFixed(1));
+      tongue.setAttribute("cy", (47 + ry2 * 0.45).toFixed(1));
+      tongue.setAttribute("ry", (2 + ry2 * 0.32).toFixed(1));
+    }
+
+    if (now - state.lastBlink > 2600 + Math.random() * 2600){
+      state.lastBlink = now; state.blinkUntil = now + 110;
+    }
+    var blink = now < state.blinkUntil ? 0.16 : 1;
+    var eL = document.getElementById("eyeL"), eR = document.getElementById("eyeR");
+    eL.setAttribute("transform", "translate(-41,-17) rotate(-7) scale(1," + blink.toFixed(2) + ")");
+    eR.setAttribute("transform", "translate(41,0) rotate(6) scale(1," + blink.toFixed(2) + ")");
+    twinkle.setAttribute("opacity", (0.35 + 0.65 * Math.abs(Math.sin(now / 620))).toFixed(2));
+
+    if ((state.winding || state.windingKey) && state.soundOn){
+      var want = clamp(0.55 + state.speed * 0.5, 0.55, 1.55);
+      if (A.mode === "plain" && A.el){ A.el.playbackRate = want; }
+      if (A.src){ try { A.src.playbackRate.setTargetAtTime(want, A.ctx.currentTime, 0.09); } catch (e) {} }
+      var lastTick = Math.floor(state.wind * 9);
+      if (lastTick !== state.lastTick){
+        state.lastTick = lastTick;
+        tick(clamp(state.speed, 0, 1.4));
+        if (state.wind > NEED * 0.62 && Math.random() < 0.5) bell(rnd(1500, 2400), 0.03, 0.22);
+      }
+    }
+
+    /* canvas */
+    cx2.clearRect(0, 0, W, H);
+    for (var d = 0; d < dust.length; d++){
+      var q = dust[d];
+      q.x += q.vx; q.y += q.vy;
+      if (q.y < -6) { q.y = H + 6; q.x = Math.random() * W; }
+      if (q.x < -6) q.x = W + 6; if (q.x > W + 6) q.x = -6;
+      cx2.globalAlpha = q.a;
+      cx2.fillStyle = "#ffeec9";
+      cx2.beginPath(); cx2.arc(q.x, q.y, q.r, 0, 6.283); cx2.fill();
+    }
+    cx2.globalAlpha = 1;
+    for (var g = parts.length - 1; g >= 0; g--){
+      var pt = parts[g];
+      var age = (now - pt.born) / pt.life;
+      if (age >= 1){ parts.splice(g, 1); continue; }
+      pt.vy += 9 * dt; pt.x += pt.vx; pt.y += pt.vy;
+      pt.vx *= 0.995;
+      cx2.save();
+      cx2.globalAlpha = (1 - age) * 0.95;
+      cx2.translate(pt.x, pt.y); cx2.rotate(pt.rot + now / 260);
+      cx2.fillStyle = pt.c;
+      var s = pt.r;
+      cx2.beginPath();
+      cx2.moveTo(0, -s * 2.2); cx2.lineTo(s * 0.6, -s * 0.6); cx2.lineTo(s * 2.2, 0);
+      cx2.lineTo(s * 0.6, s * 0.6); cx2.lineTo(0, s * 2.2); cx2.lineTo(-s * 0.6, s * 0.6);
+      cx2.lineTo(-s * 2.2, 0); cx2.lineTo(-s * 0.6, -s * 0.6);
+      cx2.closePath(); cx2.fill();
+      cx2.restore();
+    }
+
+    paintHud();
+    requestAnimationFrame(frame);
+  }
+
+  /* ---------------- input ---------------- */
+
+  function crankCentre(){
+    var r = document.getElementById("crankWrap").getBoundingClientRect();
+    return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
+  }
+
+  function angleAt(e, c){ return Math.atan2(e.clientY - c.y, e.clientX - c.x); }
+
+  stage.addEventListener("pointerdown", function(e){
+    if (e.target.closest && e.target.closest(".menuPop, .tktStack")) return;
+    if (state.popped || state.popping) return;
+    state.winding = true;
+    stage.classList.add("dragging");
+    hint.classList.add("gone");
+    audioInit();
+    loadTake(state.take);
+    startTake();
+    var c = crankCentre();
+    state.lastAngle = angleAt(e, c);
+    state.lastT = performance.now();
+    try { stage.setPointerCapture(e.pointerId); } catch (err) {}
+    e.preventDefault();
+  });
+
+  stage.addEventListener("pointermove", function(e){
+    if (!state.winding) return;
+    var c = crankCentre();
+    var a = angleAt(e, c);
+    var d = a - state.lastAngle;
+    while (d > Math.PI) d -= Math.PI * 2;
+    while (d < -Math.PI) d += Math.PI * 2;
+    state.lastAngle = a;
+    var now = performance.now();
+    var dt = Math.max(0.016, (now - state.lastT) / 1000);
+    state.lastT = now;
+    var turns = d / (Math.PI * 2);
+    if (turns > 0){
+      state.wind = Math.min(NEED, state.wind + turns * 1.35);
+      state.speed = clamp(state.speed * 0.72 + (Math.abs(turns) / dt) * 0.28, 0, 2.6);
+      if (Math.random() < 0.14) tick(clamp(state.speed, 0, 1.4));
+    } else {
+      state.wind = Math.max(0, state.wind + turns * 0.45);
+    }
+  });
+
+  function endWind(){ state.winding = false; stage.classList.remove("dragging"); }
+  stage.addEventListener("pointerup", endWind);
+  stage.addEventListener("pointercancel", endWind);
+
+  document.addEventListener("keydown", function(e){
+    if (e.target && /input|textarea|button|a/i.test(e.target.tagName)) return;
+    if (e.key === " " || e.key === "Spacebar" || e.key.toLowerCase() === "w" || e.key === "Enter"){
+      if (state.popped) return;
+      state.windingKey = true; hint.classList.add("gone");
+      audioInit(); loadTake(state.take); startTake();
+      e.preventDefault();
+    }
+    if (e.key.toLowerCase() === "t" && state.popped){ talkBtn.click(); }
+  });
+  document.addEventListener("keyup", function(e){
+    if (e.key === " " || e.key === "Spacebar" || e.key.toLowerCase() === "w" || e.key === "Enter"){
+      state.windingKey = false;
+    }
+  });
+
+  talkBtn.addEventListener("click", function(){
+    if (!state.popped) return;
+    squawk();
+    if (!state.deck || !state.deck.length){
+      state.deck = LINES.slice();
+      for (var i = state.deck.length - 1; i > 0; i--){
+        var j = Math.floor(Math.random() * (i + 1)), t = state.deck[i];
+        state.deck[i] = state.deck[j]; state.deck[j] = t;
+      }
+    }
+    var next = state.deck.pop();
+    if (next.indexOf("today's special") !== -1){
+      next = "try today's special \u2014 " + todaySpecial() + ". it's on the house!";
+    }
+    say(next);
+  });
+
+  backBtn.addEventListener("click", windBack);
+
+  soundBtn.addEventListener("click", function(){
+    state.soundOn = !state.soundOn;
+    soundBtn.textContent = "sound: " + (state.soundOn ? "on" : "off");
+    soundBtn.classList.toggle("off", !state.soundOn);
+    soundBtn.setAttribute("aria-pressed", state.soundOn ? "true" : "false");
+    if (!state.soundOn){
+      stopTake(true);
+      if ("speechSynthesis" in window) window.speechSynthesis.cancel();
+      state.talking = false; rec.classList.remove("on");
+    } else if (state.winding){ startTake(); }
+  });
+
+  window.jib = {
+    state: function(){ return { wind: state.wind, popped: state.popped, take: state.take, mode: A.mode }; },
+    wind: function(turns){ state.wind = clamp(turns, 0, NEED); },
+    pop: popNow, talk: function(){ talkBtn.click(); }, back: windBack,
+    say: say, setTake: function(i){ state.take = i % TAKES.length; paintTake(); },
+    menu: toggleMenu, openMenu: openMenu, closeMenu: closeMenu, MENU: MENU,
+    order: placeOrder, add: addToOrder, print: printTicket,
+    tickets: function(){ return tickets.slice(); }, tray: function(){ return tray.slice(); },
+    clearSpike: function(){ tickets = []; tktNo = 1; tkSave(); renderTickets(); }
+  };
+
+  sizeCanvas();
+  window.addEventListener("resize", sizeCanvas);
+  paintTake();
+  paintSpecial();
+  paintLid(0);
+  paintHud();
+  requestAnimationFrame(frame);
+
+  var hash = String(location.hash || "").replace(/^#/, "").toLowerCase();
+  if (hash === "pop" || hash === "talk"){
+    setTimeout(function(){ popNow(); if (hash === "talk") setTimeout(function(){ talkBtn.click(); }, 1400); }, 700);
+  }
+})();
+</script>
+</body>
+</html>
