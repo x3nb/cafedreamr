@@ -1,0 +1,1063 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0d001a">
+<title>the drum machine &middot; cafedreamr</title>
+<meta name="description" content="Machine no. 05 in miki's games room: sylvestre's drum machine. Five voices, sixteen steps, two takes from the twins, and a volume knob that is not lost — it is gone, and those are different things.">
+<meta property="og:title" content="the drum machine &middot; cafedreamr">
+<meta property="og:description" content="he hits the drums like the ground means it. the knob is missing, on purpose. mind your ears.">
+<meta property="og:type" content="website">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%230d001a'/%3E%3Ccircle cx='8' cy='6' r='3.2' fill='%23150426' stroke='%2345c9f0' stroke-width='1'/%3E%3Cpath d='M8 3.4v2.2' stroke='%23ccff00' stroke-width='1.4'/%3E%3Crect x='3' y='11' width='10' height='3' rx='1' fill='%2345c9f0'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Klee+One:wght@400;600&family=Shadows+Into+Light&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --plum:#0d001a; --plum2:#150426; --ink:#07000f;
+  --lav:#e9e2f4; --lav2:#c3b6d8; --dim:#8d80a3;
+  --lime:#ccff00; --cyan:#00e5ff; --pink:#ff2d95; --gold:#d8a24a;
+  --twin:#45c9f0;                 /* the twins' tone, off their dossier cards */
+  --wood:#3a1140; --wood2:#24073a;
+  --disp:'Bebas Neue',Impact,sans-serif;
+  --mono:'Space Mono',ui-monospace,monospace;
+  --hand:'Klee One','Segoe Script',cursive;
+  --write:'Shadows Into Light','Klee One',cursive;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{
+  background:var(--plum); color:var(--lav); text-align:left;
+  font-family:var(--mono); font-size:13px; line-height:1.7; min-height:100%;
+  background-image:
+    radial-gradient(680px 420px at 46% 22%, rgba(69,201,240,.11), rgba(69,201,240,0) 70%),
+    radial-gradient(900px 620px at 50% 118%, rgba(204,255,0,.06), rgba(204,255,0,0) 70%),
+    linear-gradient(180deg, var(--plum) 0%, var(--ink) 100%);
+  background-attachment:fixed;
+}
+#dust{position:fixed; inset:0; width:100%; height:100%; pointer-events:none; z-index:6}
+.vig{position:fixed; inset:0; pointer-events:none; z-index:2;
+  background:radial-gradient(120% 90% at 50% 40%, rgba(0,0,0,0) 46%, rgba(0,0,0,.62) 100%)}
+a{color:var(--cyan); text-decoration:none}
+a:hover{color:var(--lime)}
+button{font:inherit; cursor:pointer}
+
+.wrap{position:relative; z-index:4; max-width:1120px; margin:0 auto; padding:16px 16px 40px}
+
+.top{display:flex; align-items:center; gap:14px; flex-wrap:wrap;
+  border-bottom:1px solid rgba(255,255,255,.10); padding-bottom:10px}
+.top .back{font-size:9.5px; letter-spacing:.16em; text-transform:uppercase;
+  border-bottom:1px solid rgba(0,229,255,.4); padding-bottom:2px; color:var(--lav)}
+.top .back:hover{background:var(--cyan); color:var(--ink); border-color:var(--cyan)}
+.top .sign{font-family:var(--disp); font-size:26px; letter-spacing:.06em; color:var(--lime);
+  text-shadow:0 0 12px rgba(204,255,0,.45), 0 0 34px rgba(204,255,0,.18)}
+.top .no{margin-left:auto; font-size:9px; letter-spacing:.18em; text-transform:uppercase; color:var(--dim)}
+
+.head{margin:26px 0 4px}
+.head .kick{font-size:9px; letter-spacing:.24em; text-transform:uppercase; color:var(--twin)}
+.head h1{font-family:var(--disp); font-weight:400; font-size:clamp(32px,6.2vw,58px); line-height:1;
+  letter-spacing:.03em; margin:6px 0 12px}
+.head h1 b{color:var(--twin); font-weight:400}
+.head .sub{color:var(--lav2); font-size:12.5px; max-width:66ch; margin:8px 0 0}
+.head .sub b{color:var(--lime)}
+
+.note{margin:18px 0 0; padding:13px 15px; border:1px solid rgba(204,255,0,.16);
+  border-left:3px solid var(--lime); border-radius:4px; background:rgba(204,255,0,.045);
+  font-family:var(--hand); font-size:14px; color:#e6f7c6; max-width:70ch}
+.note .who{display:block; margin-top:7px; font-family:var(--mono); font-size:9px;
+  letter-spacing:.16em; text-transform:uppercase; color:var(--dim)}
+
+.stage{display:grid; grid-template-columns:minmax(330px,600px) 1fr; gap:22px; align-items:start; margin-top:24px}
+
+/* ---------------- the machine ---------------- */
+.cab{width:100%; max-width:600px; margin:0 auto}
+.marq{display:flex; align-items:baseline; justify-content:space-between; gap:10px;
+  border:1px solid rgba(255,255,255,.14); border-bottom:none; border-radius:6px 6px 0 0;
+  padding:9px 13px; background:linear-gradient(180deg,rgba(58,17,64,.85),rgba(21,4,38,.85))}
+.marq b{font-family:var(--disp); font-weight:400; font-size:22px; letter-spacing:.08em; color:var(--twin)}
+.marq span{font-size:9px; letter-spacing:.18em; text-transform:uppercase; color:var(--dim)}
+
+.face{position:relative; border:1px solid rgba(255,255,255,.16); border-top:none; border-radius:0 0 6px 6px;
+  padding:14px 15px 16px; overflow:hidden;
+  background:
+    radial-gradient(120% 70% at 50% 0%, rgba(69,201,240,.10), rgba(69,201,240,0) 66%),
+    linear-gradient(180deg,#1b0730 0%, #120424 46%, #0a0114 100%)}
+.face:before{content:""; position:absolute; inset:0; pointer-events:none; z-index:0;
+  background:repeating-linear-gradient(180deg, rgba(255,255,255,.016) 0 1px, rgba(0,0,0,0) 1px 4px)}
+
+/* the readout: one line from the machine, and it does not repeat itself */
+.read{position:relative; z-index:1; display:flex; align-items:center; gap:10px; margin-bottom:12px}
+.lcd{flex:1 1 auto; min-width:0; display:flex; align-items:center; gap:9px;
+  border:1px solid rgba(69,201,240,.26); border-radius:4px; padding:7px 10px;
+  background:linear-gradient(180deg, rgba(4,20,30,.94), rgba(3,12,20,.94));
+  box-shadow:inset 0 0 22px rgba(69,201,240,.10), inset 0 1px 0 rgba(255,255,255,.04)}
+.lcd .dot{flex:0 0 auto; width:7px; height:7px; border-radius:50%; background:var(--twin); opacity:.28;
+  box-shadow:0 0 8px rgba(69,201,240,.5)}
+.lcd.on .dot{opacity:1; animation:lamp 1.1s steps(2,end) infinite}
+@keyframes lamp{0%,100%{opacity:1}50%{opacity:.34}}
+.lcd .t{min-width:0; font-size:11.5px; line-height:1.35; color:#cfeeff;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.lcd .t i{font-style:normal; color:var(--lime)}
+.lcd .ct{flex:0 0 auto; font-size:9px; letter-spacing:.14em; text-transform:uppercase; color:var(--twin); opacity:.85}
+
+.transportRow{position:relative; z-index:1; display:flex; flex-wrap:wrap; align-items:center; gap:7px; margin:10px 0 12px}
+.pill{font-family:var(--mono); font-size:9px; letter-spacing:.14em; text-transform:uppercase;
+  color:#e7dcff; background:rgba(11,11,14,.55); border:1px solid rgba(255,255,255,.2);
+  border-radius:999px; padding:7px 11px}
+.pill:hover{border-color:var(--twin); color:#fff}
+.pill:focus-visible{outline:2px solid var(--twin); outline-offset:2px}
+.pill.on{border-color:var(--lime); color:var(--ink); background:var(--lime)}
+.pill.wide{border-radius:4px}
+.pill[disabled]{opacity:.34; cursor:not-allowed; border-style:dashed}
+.pill .n{color:var(--lime)}
+.grp{display:flex; align-items:center; gap:6px; padding:3px 8px 3px 9px; border-radius:999px;
+  border:1px solid rgba(255,255,255,.13); background:rgba(0,0,0,.28)}
+.grp .lab{font-size:8.5px; letter-spacing:.16em; text-transform:uppercase; color:var(--dim)}
+.grp .val{font-size:11px; color:var(--lav); min-width:34px; text-align:center}
+.grp button{width:20px; height:20px; line-height:1; padding:0; border-radius:50%;
+  border:1px solid rgba(255,255,255,.24); background:rgba(255,255,255,.04); color:var(--lav)}
+.grp button:hover{border-color:var(--twin); color:#fff}
+
+/* the kit: five voices, sixteen steps each */
+.kitWrap{position:relative; z-index:1; overflow-x:auto; padding-bottom:2px}
+.kit{display:grid; grid-template-columns:96px repeat(16, minmax(14px,1fr)); gap:5px; min-width:392px}
+.kit .vh{display:flex; align-items:center; gap:6px; font-size:9px; letter-spacing:.08em;
+  text-transform:uppercase; color:var(--lav2); background:none; border:none; padding:0 2px 0 0; text-align:left}
+.kit .vh:hover{color:#fff}
+.kit .vh .bulb{flex:0 0 auto; width:6px; height:6px; border-radius:50%; background:var(--vc,var(--twin));
+  opacity:.5}
+.kit .vh.hit .bulb{opacity:1; box-shadow:0 0 9px var(--vc,var(--twin))}
+.kit .vh .nm{min-width:0; white-space:nowrap}
+.step{position:relative; aspect-ratio:1/1.06; border-radius:3px; padding:0;
+  border:1px solid rgba(255,255,255,.16); background:rgba(255,255,255,.045);
+  transition:background .12s, border-color .12s, transform .08s}
+.step:hover{border-color:rgba(255,255,255,.4)}
+.step[data-lvl="1"]{background:var(--vc,var(--twin)); border-color:var(--vc,var(--twin)); opacity:.82;
+  box-shadow:inset 0 -2px 0 rgba(0,0,0,.28)}
+.step[data-lvl="2"]{background:var(--vc,var(--twin)); border-color:#fff;
+  box-shadow:0 0 10px var(--vc,var(--twin)), inset 0 -2px 0 rgba(0,0,0,.22)}
+.step.beat{border-color:rgba(255,255,255,.3)}
+.step.now{outline:2px solid var(--lime); outline-offset:1px}
+.kit .beatmark{font-size:8px; color:var(--dim); letter-spacing:.1em; text-align:center; padding-top:1px}
+.kit .beatmark.b{color:var(--lav2)}
+.scrollHint{display:none; margin:7px 0 0; font-size:9.5px; letter-spacing:.06em; color:var(--dim)}
+
+/* ---------------- the knob ---------------- */
+.knobRow{position:relative; z-index:1; display:flex; align-items:center; gap:14px;
+  margin-top:14px; padding-top:13px; border-top:1px dashed rgba(255,255,255,.14)}
+.knobBox{position:relative; flex:0 0 auto; width:84px; height:84px}
+.kshaft{position:absolute; inset:0; border-radius:50%;
+  border:1px dashed rgba(255,255,255,.22); background:radial-gradient(60% 60% at 50% 34%, rgba(255,255,255,.05), rgba(0,0,0,.4))}
+.kshaft:after{content:""; position:absolute; left:50%; top:50%; width:9px; height:9px; margin:-4.5px 0 0 -4.5px;
+  border-radius:50%; background:var(--wood2); border:1px solid rgba(255,255,255,.2)}
+.knob{position:absolute; inset:0; border-radius:50%; cursor:grab; touch-action:none;
+  background:radial-gradient(58% 58% at 42% 28%, #3d1a5c, #150426 76%);
+  border:2px solid #c3b6d8; box-shadow:0 6px 16px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.14)}
+.knob:active{cursor:grabbing}
+.knob .ptr{position:absolute; left:50%; top:50%; width:3.4px; height:38%; margin-left:-1.7px; transform-origin:50% 100%;
+  background:var(--lime); border-radius:2px; box-shadow:0 0 7px rgba(204,255,0,.6)}
+.knob .grip{position:absolute; inset:14%; border-radius:50%; border:1px solid rgba(255,255,255,.08)}
+.knobBox.gone .kshaft{border-style:dashed; border-color:rgba(255,45,149,.5)}
+.knobBox.gone .kshaft:after{background:#1a0512; border-color:rgba(255,45,149,.5)}
+.knobTxt{min-width:0; font-size:11.5px; color:var(--lav2); line-height:1.5}
+.knobTxt b{color:var(--lav)}
+.knobTxt .q{color:var(--pink)}
+.knobTxt a{border-bottom:1px solid rgba(0,229,255,.4)}
+
+/* ---------------- the right hand column ---------------- */
+.rail{display:flex; flex-direction:column; gap:14px; min-width:0}
+.panel{border:1px solid rgba(255,255,255,.11); border-radius:5px; padding:13px 15px 14px;
+  background:linear-gradient(180deg, rgba(255,255,255,.035), rgba(0,0,0,.30))}
+.panel h2{font-family:var(--disp); font-weight:400; font-size:20px; letter-spacing:.05em; margin:0 0 6px;
+  color:var(--lav)}
+.panel h2 span{font-family:var(--mono); font-size:8.5px; letter-spacing:.18em; text-transform:uppercase; color:var(--dim)}
+.panel p{margin:0 0 9px; color:var(--lav2); font-size:12px; line-height:1.66}
+.panel p:last-child{margin-bottom:0}
+.panel p b{color:var(--lav)}
+.panel .fine{font-family:var(--hand); font-size:13.5px; color:#cfe9f5}
+.kv{display:flex; gap:10px; padding:7px 0; border-top:1px dashed rgba(255,255,255,.12)}
+.kv:first-of-type{border-top:none}
+.kv .nm{flex:0 0 96px; font-family:var(--disp); font-size:16px; letter-spacing:.05em; color:var(--vc,var(--twin))}
+.kv .ds{min-width:0; font-size:11.5px; color:var(--lav2)}
+.slots{display:flex; flex-wrap:wrap; gap:6px; margin-top:9px}
+.slot{font-family:var(--disp); font-size:15px; letter-spacing:.06em; min-width:42px; padding:6px 9px; border-radius:3px;
+  border:1px solid rgba(255,255,255,.2); background:rgba(0,0,0,.3); color:var(--lav)}
+.slot:hover{border-color:var(--twin); color:#fff}
+.slot.has{border-color:rgba(69,201,240,.6); color:var(--twin)}
+.slot.cur{border-color:var(--lime); color:var(--ink); background:var(--lime)}
+.slot small{display:block; font-family:var(--mono); font-size:8px; letter-spacing:.1em; color:var(--dim)}
+.slot.cur small{color:#2c3a00}
+
+.foot{margin-top:38px; border-top:1px solid rgba(255,255,255,.10); padding-top:14px;
+  font-size:9px; letter-spacing:.15em; text-transform:uppercase; color:var(--dim);
+  display:flex; flex-wrap:wrap; gap:7px 10px; justify-content:space-between; align-items:center}
+.foot a{color:var(--lav); border-bottom:1px solid rgba(255,255,255,.22); padding-bottom:1px}
+.foot a:hover{background:var(--lime); color:var(--ink); border-color:var(--lime)}
+.foot .set{display:flex; flex-wrap:wrap; gap:6px 9px}
+
+.say{margin-top:12px; font-family:var(--write); font-size:15px; color:#d7f3ff; min-height:22px}
+@keyframes pop{0%{opacity:0; transform:translateY(5px)}100%{opacity:1; transform:none}}
+.pop{animation:pop .32s ease both}
+
+@media (max-width:900px){
+  .stage{grid-template-columns:1fr; gap:18px}
+  .cab{max-width:620px}
+}
+@media (max-width:680px){
+  .wrap{padding:14px 12px 34px}
+  .marq b{font-size:19px}
+  /* sixteen steps will not fit in one hand: the grid keeps pads you can
+     actually hit and scrolls sideways instead of shrinking them to specks */
+  .kitWrap{overflow-x:auto; -webkit-overflow-scrolling:touch; overscroll-behavior-x:contain}
+  .kit{grid-template-columns:82px repeat(16, 18px); gap:4px; min-width:442px}
+  .kit .vh{font-size:8.5px; letter-spacing:.04em}
+  .scrollHint{display:block}
+  .knobRow{gap:11px}
+  .knobBox{width:72px; height:72px}
+  .kv{flex-direction:column; gap:2px}
+  .kv .nm{flex:0 0 auto}
+}
+@media (prefers-reduced-motion:reduce){
+  .step{transition:none}
+  .lcd.on .dot{animation:none}
+  .pop{animation:none}
+}
+</style>
+</head>
+<body>
+<canvas id="dust" aria-hidden="true"></canvas>
+<div class="vig" aria-hidden="true"></div>
+
+<div class="wrap">
+
+  <header class="top">
+    <a class="back" href="./">&larr; miki&rsquo;s games room</a>
+    <span class="sign">the drum machine</span>
+    <span class="no">machine no. 05 &middot; sylvestre&rsquo;s</span>
+  </header>
+
+  <div class="head">
+    <span class="kick">downstairs &middot; the fifth machine &middot; sixteen steps to a bar</span>
+    <h1>five voices, <b>one knob missing</b></h1>
+    <p class="sub">Sylvestre keeps it behind the claw machine because it is the loudest thing he owns and he likes to be able to see it. It has five voices and a volume knob that is <b>not lost</b> &mdash; it is gone, and he says those are different things, and Slay agrees with him, which is how you know it is a joke they both decided to keep.</p>
+  </div>
+
+  <div class="note">
+    the knob&rsquo;s gone. i know. it is not lost &mdash; lost means i&rsquo;d look for it. gone means we agreed. take 10 is on the left pad, take 11 is on the right, and they will both go louder than you think, so mind your ears.
+    <span class="who">&mdash; sylvestre, on a slip of tape stuck over the serial number</span>
+  </div>
+
+  <div class="stage">
+
+    <!-- ---------------- the machine ---------------- -->
+    <section class="cab" aria-label="sylvestre's drum machine">
+      <div class="marq">
+        <b>DR&#8209;05 &middot; aqua storm</b>
+        <span id="marqState">stopped &middot; taking the room&rsquo;s ground</span>
+      </div>
+
+      <div class="face">
+        <div class="read">
+          <div class="lcd" id="lcd">
+            <span class="dot" aria-hidden="true"></span>
+            <span class="t" id="lcdT">hit <i>take 10</i> or draw your own. sixteen steps, five voices, no undo worth the name.</span>
+            <span class="ct" id="lcdMeta">a &middot; 92 bpm</span>
+          </div>
+        </div>
+
+        <div class="transportRow">
+          <button class="pill wide" id="playBtn" type="button" aria-pressed="false">play</button>
+          <span class="grp"><span class="lab">tempo</span>
+            <button id="bpmDn" type="button" aria-label="slower">&minus;</button>
+            <span class="val" id="bpmV">92</span>
+            <button id="bpmUp" type="button" aria-label="faster">+</button>
+          </span>
+          <span class="grp"><span class="lab">lean</span>
+            <button id="swDn" type="button" aria-label="less lean">&minus;</button>
+            <span class="val" id="swV">0%</span>
+            <button id="swUp" type="button" aria-label="more lean">+</button>
+          </span>
+          <button class="pill" id="earBtn" type="button" aria-pressed="false">one ear off</button>
+          <button class="pill" id="clearBtn" type="button">clear it</button>
+        </div>
+
+        <div class="kitWrap">
+          <div class="kit" id="kit"></div>
+          <div class="kit" id="marks" aria-hidden="true"></div>
+        </div>
+        <p class="scrollHint">sixteen steps is one bar and a bar is wider than one hand &mdash; the grid scrolls sideways down here, and it does not mind.</p>
+
+        <div class="knobRow">
+          <div class="knobBox gone" id="knobBox">
+            <div class="kshaft" aria-hidden="true"></div>
+            <div class="knob" id="knob" hidden role="slider" tabindex="0"
+                 aria-label="volume" aria-valuemin="0" aria-valuemax="10" aria-valuenow="5" aria-valuetext="volume 5 of 10">
+              <span class="ptr" id="knobPtr" style="transform:rotate(-140deg)"></span>
+              <span class="grip" aria-hidden="true"></span>
+            </div>
+          </div>
+          <div class="knobTxt" id="knobTxt"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------------- the paperwork ---------------- -->
+    <div class="rail">
+
+      <section class="panel">
+        <h2>how it works <span>plainly</span></h2>
+        <p>Sixteen steps, and one pass of the sixteen is one bar. Tap a square to put a hit on it; tap it again to make the hit <b>harder</b> (the pale one is a ghost, the lit one is the hit, the bright one is both sticks); tap it a third time to take it off.</p>
+        <p><b>play</b> starts it, and it will keep going while you draw on it, the way a real one does. <b>tempo</b> is in beats per minute and <b>lean</b> is swing &mdash; it pushes every second sixteenth a little late, which is the difference between a drum machine and a drummer.</p>
+        <p>Everything stays where you left it. Your beat is kept between visits, and you can park four of them on the shelf down the side.</p>
+      </section>
+
+      <section class="panel">
+        <h2>the kit <span>five voices, no samples</span></h2>
+        <p>All five are made on the spot out of an oscillator and a little noise, which is why it sounds like a machine and not like a record. Tap a name to hear it on its own.</p>
+        <div id="kitList"></div>
+        <p class="fine">nothing here is recorded. sylvestre says a machine that has to be taught the sound is a machine you can argue with.</p>
+      </section>
+
+      <section class="panel">
+        <h2>the two takes <span>the twins, cut at midday</span></h2>
+        <p>Take 10 is <b>Sylvestre</b> &mdash; the ground twin. It sits back on the beat and lets the room carry it: the half-time one, the one that holds the floor down. Take 11 is <b>Slay</b> &mdash; the storm twin, and the weather coming in. It runs fast and it hits everything twice.</p>
+        <p>They are the two instrumentals on the terminal&rsquo;s track list, marked <b>no vocals at all</b>. This machine is where they started; the tapes are where they went.</p>
+        <div class="transportRow" style="margin-bottom:0">
+          <button class="pill" id="take10" type="button">load take 10 &middot; the ground</button>
+          <button class="pill" id="take11" type="button">load take 11 &middot; the storm</button>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>the shelf <span>four of yours</span></h2>
+        <p>Keep the one you are working on and it goes on the shelf. You get four, which Sylvestre says is three more than anyone needs and one fewer than Slay will ask for.</p>
+        <div class="slots" id="slots"></div>
+        <div class="transportRow" style="margin:10px 0 0">
+          <button class="pill" id="keepBtn" type="button">keep this one</button>
+          <button class="pill" id="wipeBtn" type="button">wipe the shelf</button>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>the knob <span>machine no. 02 has it</span></h2>
+        <p id="knobPanel"></p>
+        <p class="fine" id="knobFine"></p>
+      </section>
+
+    </div>
+  </div>
+
+  <footer class="foot">
+    <span>the drum machine &middot; machine no. 05 &middot; cafedreamr toy co.</span>
+    <span class="set">
+      <a href="./">the games room</a>
+      <a href="./claw.html">the claw machine</a>
+      <a href="./jackbox.html">bobby in the box</a>
+      <a href="https://www.cafedreamr.art/LORE/OCS/CARDS-SOUNDS/cards.html">the dossiers</a>
+      <a href="https://www.cafedreamr.art/MIKI/">miki&rsquo;s place</a>
+    </span>
+  </footer>
+</div>
+
+<script src="https://www.cafedreamr.art/PASSPORT/cd-passport.js"></script>
+<script>
+/* ============================================================
+   the drum machine &mdash; machine no. 05           MIKI/GAMES/drum.html
+   Sylvestre's kit. Five voices, sixteen steps, four saved slots and the
+   one knob the claw machine gives out. Every voice is synthesized at play
+   time (oscillator + noise, no samples), scheduled ahead of the audio
+   clock so the timing is the audio clock's and not setInterval's.
+   Canon: the twins are CC-009 (Slay, the storm twin, waynuki flute) and
+   CC-010 (Sylvestre, the ground twin, "hits the drums like the ground
+   means it"). The volume knob is a claw prize ("it fits the drum machine").
+   ============================================================ */
+(function(){
+  "use strict";
+
+  var $ = function(id){ return document.getElementById(id); };
+
+  /* ==================================================================
+     THE KIT — five voices. `vc` is the row's own colour, which is what
+     the pads paint with. Slay's and Sylvestre's cards are both #45c9f0,
+     so the twins' voices hold the room's aqua and the rest step outward.
+     ================================================================== */
+
+  var KIT = [
+    { id:"ground", nm:"the ground",   vc:"#45c9f0",
+      ds:"the kick, and it is the whole floor. sylvestre&rsquo;s voice: he hits it like the ground means it." },
+    { id:"weather",nm:"the weather",  vc:"#ff2d95",
+      ds:"the snare &mdash; slay&rsquo;s, the storm you can hear before he plays the flute. a little air, a little body, and a tail." },
+    { id:"tick",   nm:"the tick",     vc:"#ccff00",
+      ds:"the little one that keeps the count honest. closed on a scratch, open on a hard hit." },
+    { id:"gate",   nm:"the gate",     vc:"#e9e2f4",
+      ds:"the handclap, and it is three claps stacked so close they read as one, the way miki&rsquo;s mouth does through the gate." },
+    { id:"low",    nm:"the low notes",vc:"#b28bff",
+      ds:"the deep one that only shows up once a bar. miki&rsquo;s line, and the reason this machine is kept where the floor is stone." }
+  ];
+  var STEPS = 16;
+
+  /* patterns are 16 characters a voice: 0 off, 1 a hit, 2 both sticks.
+     readable on purpose — a future hand can retune a take by editing text. */
+  var TAKES = {
+    ten: { name:"take 10", who:"the ground twin", bpm:92, lean:0, rote:[
+      "2000010000100000",   /* ground  */
+      "0000100000001000",   /* weather */
+      "0010001000100010",   /* tick    */
+      "0000000000001000",   /* gate    */
+      "0000000000000100"    /* low     */
+    ]},
+    eleven: { name:"take 11", who:"the storm twin", bpm:148, lean:16, rote:[
+      "1001001010010010",   /* ground  */
+      "0000100100001001",   /* weather */
+      "1011101110111011",   /* tick    */
+      "0000001000000010",   /* gate    */
+      "0000100000000100"    /* low     */
+    ]}
+  };
+
+  function blankPattern(){
+    var rows = [];
+    for (var i = 0; i < KIT.length; i++) rows.push("0000000000000000");
+    return rows;
+  }
+  function fromTake(t){
+    var rows = [];
+    for (var i = 0; i < KIT.length; i++) rows.push(String(t[i] || "0000000000000000").slice(0, STEPS));
+    return rows;
+  }
+  function cloneRows(rows){ return rows.map(function(r){ return r; }); }
+
+  /* ==================================================================
+     WHAT IT KEEPS — one key per thing, all under cafedreamr:drum:.
+     ================================================================== */
+
+  var K = {
+    beat:   "cafedreamr:drum:beat",
+    shelf:  "cafedreamr:drum:shelf",
+    vol:    "cafedreamr:drum:volume",
+    ear:    "cafedreamr:drum:oneear"
+  };
+
+  function lsGet(k, dflt){
+    try{ var v = localStorage.getItem(k); return v === null ? dflt : JSON.parse(v); }
+    catch(e){ return dflt; }
+  }
+  function lsSet(k, v){
+    try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){}
+  }
+
+  /* the machine's own state — the working beat, plus how it is being played */
+  var M = {
+    rows:  blankPattern(),
+    bpm:   92,
+    lean:  0,
+    ear:   !!lsGet(K.ear, false),
+    vol:   typeof lsGet(K.vol, 6) === "number" ? lsGet(K.vol, 6) : 6,
+    slot:  -1,                 /* which shelf slot the working beat came from */
+    playing: false
+  };
+  /* the remembered beat is only taken if it looks like a beat */
+  (function restore(){
+    var b = lsGet(K.beat, null);
+    if (b && b.rows instanceof Array && b.rows.length === KIT.length){
+      M.rows = fromTake(b.rows);
+      if (typeof b.bpm === "number")  M.bpm  = Math.min(190, Math.max(60, b.bpm));
+      if (typeof b.lean === "number") M.lean = Math.min(40, Math.max(0, b.lean));
+      if (typeof b.slot === "number") M.slot = b.slot;
+    } else {
+      M.rows = fromTake(TAKES.ten.rote); M.bpm = TAKES.ten.bpm; M.lean = TAKES.ten.lean;
+    }
+  })();
+  function remember(){ lsSet(K.beat, { rows: M.rows, bpm: M.bpm, lean: M.lean, slot: M.slot }); }
+
+  var SHELF = (function(){
+    var s = lsGet(K.shelf, []);
+    return (s instanceof Array) ? s : [];
+  })();
+  function saveShelf(){ lsSet(K.shelf, SHELF); }
+
+  /* ---------- the knob: the claw keeps the prizes, so ask the claw ---------- */
+  function shelfOfClaw(){
+    try{
+      var v = JSON.parse(localStorage.getItem("cafedreamr:claw:shelf") || "{}");
+      return (v && typeof v === "object") ? v : {};
+    }catch(e){ return {}; }
+  }
+  function hasKnob(){ return !!shelfOfClaw().knob; }
+
+  /* ==================================================================
+     THE AUDIO — five voices off two primitives: an oscillator, and one
+     second of noise made once and reused. Voices are scheduled against
+     ctx.currentTime, so the grid is the audio clock's, not a timer's.
+     ================================================================== */
+
+  var AU = { ctx:null, master:null, pan:null, noise:null, ready:false };
+
+  function audio(){
+    if (AU.ctx) return AU.ctx;
+    var C = window.AudioContext || window.webkitAudioContext;
+    if (!C) return null;
+    return boot(new C());
+  }
+
+  /* the machine will build itself around any context it is handed, which is
+     how the harness renders a bar offline to check the timing is really the
+     grid's. the page itself only ever calls audio(). */
+  function boot(ctx){
+    var master = ctx.createGain();
+    var pan = ctx.createStereoPanner ? ctx.createStereoPanner() : null;
+    var comp = ctx.createDynamicsCompressor ? ctx.createDynamicsCompressor() : null;
+    if (comp){
+      try{
+        comp.threshold.value = -12; comp.knee.value = 22; comp.ratio.value = 3.4;
+        comp.attack.value = 0.004;  comp.release.value = 0.18;
+      }catch(e){}
+    }
+    if (pan) master.connect(pan);
+    if (comp){ (pan || master).connect(comp); comp.connect(ctx.destination); }
+    else { (pan || master).connect(ctx.destination); }
+    /* one second of noise, made once */
+    var buf = ctx.createBuffer(1, Math.floor(ctx.sampleRate), ctx.sampleRate);
+    var d = buf.getChannelData(0);
+    for (var i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+    AU.ctx = ctx; AU.master = master; AU.pan = pan; AU.noise = buf;
+    applyVolume(volGain(), 0);
+    return ctx;
+  }
+  function wake(){
+    var ctx = audio();
+    if (ctx && ctx.state === "suspended" && ctx.resume) ctx.resume();
+    AU.ready = true;
+    return ctx;
+  }
+  /* the knob is a value 0..10; without the knob the machine sits where it
+     was last left, which is loud, because sylvestre has no interest in it. */
+  function volGain(){ return hasKnob() ? (0.05 + (M.vol / 10) * 1.15) : 0.72; }
+  function applyVolume(v, t){
+    if (!AU.master) return;
+    var now = AU.ctx.currentTime + (t || 0.02);
+    try{ AU.master.gain.cancelScheduledValues(now); }catch(e){}
+    AU.master.gain.setTargetAtTime(v, now, 0.02);
+  }
+  function stereo(){
+    if (!AU.pan) return;
+    try{ AU.pan.pan.setTargetAtTime(M.ear ? -1 : 0, AU.ctx.currentTime + 0.02, 0.02); }catch(e){}
+  }
+
+  function noiseSrc(t, dur){
+    var s = AU.ctx.createBufferSource();
+    s.buffer = AU.noise; s.loop = true;
+    s.start(t); s.stop(t + dur + 0.02);
+    return s;
+  }
+  function env(t, peak, dec, hold){
+    var g = AU.ctx.createGain();
+    var a = hold == null ? 0.0018 : hold;
+    g.gain.setValueAtTime(0, t);
+    g.gain.linearRampToValueAtTime(peak, t + a);
+    g.gain.exponentialRampToValueAtTime(0.0008, t + a + dec);
+    return g;
+  }
+  function bq(type, freq, q, gain){
+    var f = AU.ctx.createBiquadFilter();
+    f.type = type; f.frequency.value = freq;
+    if (q != null) f.Q.value = q;
+    if (gain != null) f.gain.value = gain;
+    return f;
+  }
+
+  /* every voice: f(t, lvl) where lvl is 1 (hit) or 2 (both sticks). */
+  var VOICE = {
+    ground: function(t, lvl){
+      var o = AU.ctx.createOscillator(), g = env(t, (lvl === 2 ? 1.0 : 0.82), 0.30);
+      o.type = "sine";
+      o.frequency.setValueAtTime(lvl === 2 ? 158 : 138, t);
+      o.frequency.exponentialRampToValueAtTime(42, t + 0.085);
+      o.connect(g); g.connect(AU.master);
+      o.start(t); o.stop(t + 0.40);
+      var click = AU.ctx.createGain();
+      click.gain.setValueAtTime(lvl === 2 ? 0.30 : 0.20, t);
+      click.gain.exponentialRampToValueAtTime(0.0005, t + 0.015);
+      var hp = bq("highpass", 1400, 0.7);
+      var n = noiseSrc(t, 0.03);
+      n.connect(hp); hp.connect(click); click.connect(AU.master);
+    },
+    weather: function(t, lvl){
+      var g = env(t, (lvl === 2 ? 0.70 : 0.52), lvl === 2 ? 0.24 : 0.17);
+      var bp = bq("bandpass", 1900, 0.85);
+      var n = noiseSrc(t, 0.30);
+      n.connect(bp); bp.connect(g); g.connect(AU.master);
+      var o = AU.ctx.createOscillator(), og = env(t, (lvl === 2 ? 0.30 : 0.20), 0.11);
+      o.type = "triangle"; o.frequency.setValueAtTime(lvl === 2 ? 208 : 190, t);
+      o.frequency.exponentialRampToValueAtTime(140, t + 0.10);
+      o.connect(og); og.connect(AU.master);
+      o.start(t); o.stop(t + 0.22);
+    },
+    tick: function(t, lvl){
+      var open = (lvl === 2);
+      var g = env(t, open ? 0.34 : 0.26, open ? 0.16 : 0.038);
+      var hp = bq("highpass", open ? 6200 : 7600, 0.7);
+      var n = noiseSrc(t, open ? 0.22 : 0.07);
+      n.connect(hp); hp.connect(g); g.connect(AU.master);
+    },
+    gate: function(t, lvl){
+      var g = env(t, (lvl === 2 ? 0.62 : 0.46), lvl === 2 ? 0.20 : 0.14);
+      var bp = bq("bandpass", lvl === 2 ? 1250 : 1450, 1.1);
+      for (var i = 0; i < 3; i++){
+        var n = noiseSrc(t + i * 0.0092, 0.06);
+        n.connect(bp);
+      }
+      bp.connect(g); g.connect(AU.master);
+    },
+    low: function(t, lvl){
+      var o = AU.ctx.createOscillator(), g = env(t, (lvl === 2 ? 0.78 : 0.60), 0.42);
+      o.type = "sine";
+      o.frequency.setValueAtTime(lvl === 2 ? 168 : 152, t);
+      o.frequency.exponentialRampToValueAtTime(74, t + 0.22);
+      o.connect(g); g.connect(AU.master);
+      o.start(t); o.stop(t + 0.60);
+    }
+  };
+
+  function hit(voiceId, when, lvl){
+    if (!VOICE[voiceId]) return;
+    if (!AU.ctx) audio();
+    if (!AU.ctx) return;
+    VOICE[voiceId](Math.max(when, AU.ctx.currentTime + 0.001), lvl);
+  }
+
+  /* ==================================================================
+     THE CLOCK — a lookahead scheduler. setInterval only decides *when to
+     think*; the notes are placed on the audio clock, so a busy frame
+     cannot drag the groove.
+     ================================================================== */
+
+  var CLOCK = { step:0, next:0, timer:null, queue:[] };
+
+  function stepDur(){ return 60 / M.bpm / 4; }        /* one sixteenth */
+  function swingOf(step){ return (step % 2 === 1) ? (M.lean / 100) * (stepDur() / 3) : 0; }
+
+  /* one step's worth of voices, at an absolute time. the scheduler below and
+     the offline harness both go through here, so a bar rendered offline is
+     the same bar the speakers get. */
+  function fireStep(step, at){
+    for (var i = 0; i < KIT.length; i++){
+      var c = M.rows[i].charAt(step);
+      if (c === "1" || c === "2") hit(KIT[i].id, at, c === "2" ? 2 : 1);
+    }
+  }
+
+  function scheduleStep(step){
+    var t = CLOCK.next + swingOf(step);
+    fireStep(step, t);
+    CLOCK.queue.push({ step: step, at: t });
+    CLOCK.next += stepDur();
+  }
+
+  function pump(){
+    var horizon = AU.ctx.currentTime + 0.12;
+    var guard = 0;
+    while (CLOCK.next < horizon && guard++ < 64){
+      scheduleStep(CLOCK.step);
+      CLOCK.step = (CLOCK.step + 1) % STEPS;
+      if (CLOCK.step === 0) paintMarks();
+    }
+  }
+
+  function start(){
+    var ctx = wake();
+    if (!ctx) return;
+    CLOCK.step = 0; CLOCK.next = ctx.currentTime + 0.06; CLOCK.queue = [];
+    stereo();
+    CLOCK.timer = setInterval(pump, 25);
+    pump();
+    M.playing = true;
+    paintTransport();
+    lcd("playing. <i>" + (M.slot >= 0 ? "shelf " + "abcd".charAt(M.slot) : "your own") + "</i> &mdash; it keeps going while you draw on it.", meta());
+    follow();
+  }
+  function stop(say){
+    if (CLOCK.timer) clearInterval(CLOCK.timer);
+    CLOCK.timer = null; CLOCK.queue = [];
+    M.playing = false;
+    paintTransport();
+    clearNow();
+    if (say) lcd("stopped. still here, still holding the beat.", meta());
+  }
+
+  /* the playhead follows the audio clock, never the timer */
+  var RAF = 0;
+  function follow(){
+    if (!M.playing){ RAF = 0; return; }
+    var now = AU.ctx ? AU.ctx.currentTime : 0, cur = null;
+    while (CLOCK.queue.length && CLOCK.queue[0].at <= now + 0.001) cur = CLOCK.queue.shift();
+    if (cur != null) paintNow(cur.step);
+    RAF = requestAnimationFrame(follow);
+  }
+
+  /* ==================================================================
+     THE PANEL — the kit grid, the marks, the rows that light.
+     ================================================================== */
+
+  function buildKit(){
+    var kit = $("kit"), marks = $("marks"), html = "", mhtml = "";
+    for (var i = 0; i < KIT.length; i++){
+      var v = KIT[i];
+      html += '<button class="vh" type="button" data-v="' + v.id + '" style="--vc:' + v.vc + '" ' +
+              'title="hear ' + v.nm + ' on its own"><span class="bulb"></span><span class="nm">' + v.nm + '</span></button>';
+      for (var s = 0; s < STEPS; s++){
+        html += '<button class="step' + (s % 4 === 0 ? " beat" : "") + '" type="button" data-v="' + v.id + '" data-s="' + s +
+                '" style="--vc:' + v.vc + '" aria-label="' + v.nm + ', step ' + (s + 1) + '" aria-pressed="false"></button>';
+      }
+    }
+    mhtml += '<span></span>';
+    for (var s2 = 0; s2 < STEPS; s2++){
+      var n = Math.floor(s2 / 4) + 1, b = (s2 % 4 === 0);
+      mhtml += '<span class="beatmark' + (b ? " b" : "") + '">' + (b ? n : "&middot;") + '</span>';
+    }
+    kit.innerHTML = html;
+    marks.innerHTML = mhtml;
+  }
+
+  function paintKit(){
+    var nodes = document.querySelectorAll(".step");
+    for (var i = 0; i < nodes.length; i++){
+      var n = nodes[i], vi = indexOfVoice(n.getAttribute("data-v")), s = +n.getAttribute("data-s");
+      var c = M.rows[vi].charAt(s);
+      n.setAttribute("data-lvl", c === "0" ? "" : c);
+      n.setAttribute("aria-pressed", c === "0" ? "false" : "true");
+      n.setAttribute("aria-label", KIT[vi].nm + ", step " + (s + 1) + (c === "1" ? ", hit" : c === "2" ? ", both sticks" : ", off"));
+      n.classList.remove("now");
+    }
+  }
+  function indexOfVoice(id){
+    for (var i = 0; i < KIT.length; i++) if (KIT[i].id === id) return i;
+    return 0;
+  }
+  function paintNow(step){
+    var nodes = document.querySelectorAll(".step.now");
+    for (var i = 0; i < nodes.length; i++) nodes[i].classList.remove("now");
+    var on = document.querySelectorAll('.step[data-s="' + step + '"]');
+    for (var j = 0; j < on.length; j++) on[j].classList.add("now");
+  }
+  function clearNow(){
+    var nodes = document.querySelectorAll(".step.now");
+    for (var i = 0; i < nodes.length; i++) nodes[i].classList.remove("now");
+  }
+  /* the row bulbs bounce with the music, so the machine reads as running */
+  function paintMarks(){ /* kept as a hook: the marks are static, the rows are not */ }
+
+  function blinkRow(voiceId){
+    var b = document.querySelector('.vh[data-v="' + voiceId + '"]');
+    if (!b) return;
+    b.classList.add("hit");
+    setTimeout(function(){ b.classList.remove("hit"); }, 110);
+  }
+
+  function paintTransport(){
+    var pb = $("playBtn");
+    pb.textContent = M.playing ? "stop" : "play";
+    pb.setAttribute("aria-pressed", M.playing ? "true" : "false");
+    $("bpmV").textContent = M.bpm;
+    $("swV").textContent = M.lean + "%";
+    $("earBtn").setAttribute("aria-pressed", M.ear ? "true" : "false");
+    $("earBtn").className = "pill" + (M.ear ? " on" : "");
+    $("marqState").innerHTML = (M.playing ? "running" : "stopped") + " &middot; " +
+      (M.ear ? "one ear off" : "taking the room&rsquo;s ground");
+    $("lcdMeta").textContent = (M.slot >= 0 ? "shelf " + "abcd".charAt(M.slot) : "own beat") + " \u00b7 " + M.bpm + " bpm";
+  }
+
+  var LCD_SWAP = 0;
+  function lcd(html){
+    var t = $("lcdT");
+    t.innerHTML = html;
+    t.classList.remove("pop");
+    void t.offsetWidth;
+    t.classList.add("pop");
+    $("lcd").classList.add("on");
+  }
+  function meta(){ return ""; }
+
+  /* ==================================================================
+     THE HANDS — steps, rows, transport, takes, shelf.
+     ================================================================== */
+
+  function cycleStep(vi, s){
+    var row = M.rows[vi], cur = row.charAt(s), next = cur === "0" ? "1" : cur === "1" ? "2" : "0";
+    M.rows[vi] = row.slice(0, s) + next + row.slice(s + 1);
+    if (next !== "0"){ hit(KIT[vi].id, (AU.ctx ? AU.ctx.currentTime + 0.01 : 0), next === "2" ? 2 : 1); blinkRow(KIT[vi].id); }
+    M.slot = -1;           /* it is yours the moment you touch it */
+    paintKit(); paintTransport(); paintSlots(); remember();
+  }
+
+  function nudgeBpm(d){
+    M.bpm = Math.min(190, Math.max(60, M.bpm + d));
+    paintTransport(); remember();
+    $("lcd").classList.add("on");
+    lcd("tempo <i>" + M.bpm + "</i>. " + (M.bpm > 150 ? "the storm end of it." : M.bpm < 84 ? "slower than the ground. good." : "sitting in the middle."), meta());
+  }
+  function nudgeLean(d){
+    M.lean = Math.min(64, Math.max(0, M.lean + d));
+    paintTransport(); remember();
+    lcd(M.lean === 0 ? "straight. every sixteenth exactly where the grid says."
+      : "leaning <i>" + M.lean + "%</i> of a triplet &mdash; the offbeats arrive late, which is where a drummer lives.", meta());
+  }
+  function loadTake(which){
+    var t = TAKES[which];
+    M.rows = fromTake(t.rote); M.bpm = t.bpm; M.lean = t.lean; M.slot = -1;
+    paintKit(); paintTransport(); paintSlots(); remember();
+    if (M.playing) stop(false);
+    lcd("<i>" + t.name + "</i> &mdash; " + t.who + ". " +
+      (which === "ten" ? "92 and straight-backed; the room does the rest." : "148 with lean on it; every other sixteenth late, on purpose."), meta());
+    var btn = $("take10");
+    return t;
+  }
+  function clearIt(){
+    M.rows = blankPattern(); M.slot = -1;
+    paintKit(); paintSlots(); remember();
+    lcd("empty. sixteen steps of nothing, which is where every take starts.", meta());
+  }
+  function keepOne(){
+    var slot = -1;
+    for (var i = 0; i < 4; i++) if (!SHELF[i]){ slot = i; break; }
+    if (slot < 0) slot = SHELF.length < 4 ? SHELF.length : M.slot >= 0 ? M.slot : 0;
+    SHELF[slot] = { rows: cloneRows(M.rows), bpm: M.bpm, lean: M.lean };
+    saveShelf(); M.slot = slot;
+    paintSlots(); paintTransport(); remember();
+    lcd("kept as shelf <i>" + "abcd".charAt(slot) + "</i>. four of them is the whole shelf, so keep them carefully.", meta());
+  }
+  function loadSlot(i){
+    var s = SHELF[i];
+    if (!s){ lcd("shelf <i>" + "abcd".charAt(i) + "</i> is empty. keep a beat first.", meta()); return; }
+    M.rows = fromTake(s.rows); M.bpm = s.bpm; M.lean = s.lean; M.slot = i;
+    paintKit(); paintTransport(); paintSlots(); remember();
+    if (M.playing) stop(false);
+    lcd("shelf <i>" + "abcd".charAt(i) + "</i> &mdash; " + s.bpm + " bpm" + (s.lean ? ", leaning " + s.lean + "%" : "") + ".", meta());
+  }
+  function wipeShelf(){
+    SHELF.length = 0; saveShelf(); M.slot = -1;
+    paintSlots(); paintTransport(); remember();
+    lcd("shelf wiped. sylvestre watched you do that and said nothing, which is worse.", meta());
+  }
+  function paintSlots(){
+    var el = $("slots"), out = "";
+    for (var i = 0; i < 4; i++){
+      var s = SHELF[i];
+      out += '<button class="slot' + (s ? " has" : "") + (M.slot === i ? " cur" : "") + '" type="button" data-i="' + i +
+             '" aria-label="shelf ' + "abcd".charAt(i) + '"><span>' + "abcd".charAt(i) + '</span><small>' +
+             (s ? s.bpm : "&mdash;") + '</small></button>';
+    }
+    el.innerHTML = out;
+  }
+
+  /* ---------- the knob ---------- */
+  function paintKnob(saySo){
+    var box = $("knobBox"), k = $("knob"), txt = $("knobTxt"), panel = $("knobPanel"), fine = $("knobFine");
+    var has = hasKnob();
+    box.className = "knobBox" + (has ? "" : " gone");
+    k.hidden = !has;
+    k.setAttribute("aria-valuenow", M.vol);
+    k.setAttribute("aria-valuetext", "volume " + M.vol + " of 10");
+    $("knobPtr").style.transform = "rotate(" + (-140 + (M.vol / 10) * 280) + "deg)";
+    $("knobPtr").style.background = has ? "" : "";
+    if (has){
+      txt.innerHTML = '<b>the knob.</b> it came off machine no. 02, which means you won it. ' +
+        'drag it, or use the arrow keys on it &mdash; the volume is ' +
+        '<b>' + M.vol + '/10</b>. <span class="q">sylvestre says the missing knob was on purpose, and this knob does not change that.</span>';
+      panel.innerHTML = 'The knob is on the machine. You got it out of the claw &mdash; <b>the missing volume knob</b>, three pips, ' +
+        'brass-rimmed, and it fits the shaft the way a thing fits when it was made for it. It does not make the machine quiet; ' +
+        'it makes the machine <b>yours</b>.';
+      fine.innerHTML = 'he noticed you had it. he did not say anything. that is the whole of it.';
+      if (saySo) lcd("ah &mdash; the knob. <i>" + M.vol + "/10</i>. that is the one from the claw, and the shaft was always going to take it.", meta());
+    } else {
+      txt.innerHTML = '<b>the shaft.</b> bare, and keyed for a knob about this size. ' +
+        'the machine plays at whatever it was left at &mdash; which is <b>loud</b> &mdash; and the volume reads <span class="q">&mdash;</span> ' +
+        'until the knob turns up. <span class="q">Sylvestre says it is on purpose. Slay agrees with him, which is how you know.</span>';
+      panel.innerHTML = 'The knob is gone. Not lost &mdash; <b>gone</b>: lost means he would look for it. The shaft is right there and it is ' +
+        'keyed for it, which means the knob exists somewhere in this room. It does: it is a prize in <a href="./claw.html">the claw machine</a> ' +
+        '&mdash; <b>the missing volume knob</b>, three pips, taped to the back of the glass with the rest of the manifest.';
+      fine.innerHTML = 'one jelly a go. charlotte is slow, but she is not wrong.';
+    }
+  }
+  function setVol(v, saySo){
+    M.vol = Math.min(10, Math.max(0, Math.round(v)));
+    lsSet(K.vol, M.vol);
+    paintKnob(false);
+    applyVolume(volGain());
+    if (saySo) lcd("volume <i>" + M.vol + "/10</i>. " + (M.vol === 0 ? "and nothing comes out, which is a thing you can now do." : M.vol >= 9 ? "that is the loudest the room will take." : ""), meta());
+  }
+  function knobDrag(ev){
+    var k = $("knob"), r = k.getBoundingClientRect();
+    var cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+    function ang(e){
+      var x = (e.clientX != null ? e.clientX : e.touches[0].clientX) - cx;
+      var y = (e.clientY != null ? e.clientY : e.touches[0].clientY) - cy;
+      var a = Math.atan2(y, x) * 180 / Math.PI + 90;   /* -140 .. +140 over the usable arc */
+      if (a > 180) a -= 360;
+      return a;
+    }
+    function move(e){
+      var a = Math.max(-140, Math.min(140, ang(e)));
+      setVol(((a + 140) / 280) * 10, false);
+      e.preventDefault();
+    }
+    function up(){
+      document.removeEventListener("pointermove", move);
+      document.removeEventListener("pointerup", up);
+      document.removeEventListener("pointercancel", up);
+      setVol(M.vol, true);
+    }
+    document.addEventListener("pointermove", move);
+    document.addEventListener("pointerup", up);
+    document.addEventListener("pointercancel", up);
+    move(ev);
+    ev.preventDefault();
+  }
+
+  /* ==================================================================
+     WIRING
+     ================================================================== */
+
+  function wire(){
+    $("kit").addEventListener("click", function(e){
+      var vh = e.target.closest(".vh");
+      if (vh){
+        var vi = indexOfVoice(vh.getAttribute("data-v"));
+        wake();
+        hit(KIT[vi].id, (AU.ctx ? AU.ctx.currentTime + 0.01 : 0), 2);
+        blinkRow(KIT[vi].id);
+        lcd("<i>" + KIT[vi].nm + "</i> &mdash; " + KIT[vi].ds, meta());
+        return;
+      }
+      var st = e.target.closest(".step");
+      if (st) cycleStep(indexOfVoice(st.getAttribute("data-v")), +st.getAttribute("data-s"));
+    });
+
+    $("playBtn").addEventListener("click", function(){
+      if (M.playing) stop(true); else start();
+    });
+    $("bpmDn").addEventListener("click", function(){ nudgeBpm(-4); });
+    $("bpmUp").addEventListener("click", function(){ nudgeBpm(4); });
+    $("swDn").addEventListener("click", function(){ nudgeLean(-8); });
+    $("swUp").addEventListener("click", function(){ nudgeLean(8); });
+    $("clearBtn").addEventListener("click", clearIt);
+    $("earBtn").addEventListener("click", function(){
+      M.ear = !M.ear; lsSet(K.ear, M.ear);
+      paintTransport(); stereo();
+      lcd(M.ear ? "one ear off &mdash; everything out of the left, the way the twins cut their takes at midday. the right ear is for the room."
+                : "both ears. the kit is back in the middle of your head.", meta());
+    });
+    $("take10").addEventListener("click", function(){ loadTake("ten"); });
+    $("take11").addEventListener("click", function(){ loadTake("eleven"); });
+    $("keepBtn").addEventListener("click", keepOne);
+    $("wipeBtn").addEventListener("click", wipeShelf);
+    $("slots").addEventListener("click", function(e){
+      var s = e.target.closest(".slot");
+      if (s) loadSlot(+s.getAttribute("data-i"));
+    });
+    $("knob").addEventListener("pointerdown", knobDrag);
+    $("knob").addEventListener("keydown", function(e){
+      var d = 0;
+      if (e.key === "ArrowLeft" || e.key === "ArrowDown") d = -1;
+      else if (e.key === "ArrowRight" || e.key === "ArrowUp") d = 1;
+      else if (e.key === "Home"){ setVol(0, true); e.preventDefault(); return; }
+      else if (e.key === "End"){ setVol(10, true); e.preventDefault(); return; }
+      if (d){ setVol(M.vol + d, true); e.preventDefault(); }
+    });
+    $("knobBox").addEventListener("click", function(e){
+      if (hasKnob() || e.target.closest(".knob")) return;
+      lcd("the shaft turns. it wants a knob the size of the one the claw keeps. <i>one jelly a go.</i>", meta());
+    });
+
+    document.addEventListener("keydown", function(e){
+      if (!e.target || e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA") return;
+      if (e.code === "Space" && (e.target === document.body || e.target.closest(".face"))){
+        e.preventDefault();
+        if (M.playing) stop(true); else start();
+      }
+    });
+  }
+
+  /* ---------- the room's dust, the same as every machine page ---------- */
+  function dust(){
+    var cv = $("dust"), ctx = cv.getContext("2d");
+    if (!ctx) return;
+    var dust = [], W = 0, H = 0;
+    function size(){
+      var dpr = Math.min(window.devicePixelRatio || 1, 2);
+      W = cv.width = Math.floor(window.innerWidth * dpr);
+      H = cv.height = Math.floor(window.innerHeight * dpr);
+      cv.style.width = window.innerWidth + "px";
+      cv.style.height = window.innerHeight + "px";
+    }
+    function seed(){
+      dust = [];
+      var n = Math.max(24, Math.min(70, Math.round((window.innerWidth * window.innerHeight) / 26000)));
+      for (var i = 0; i < n; i++){
+        dust.push({ x:Math.random()*W, y:Math.random()*H,
+          r:(Math.random()*1.5 + 0.4) * (W / window.innerWidth) * 0.9,
+          vy:-(Math.random()*0.16 + 0.04) * (H / window.innerHeight),
+          vx:(Math.random()-0.5) * 0.12,
+          a:Math.random()*0.34 + 0.06, p:Math.random()*Math.PI*2 });
+      }
+    }
+    var t0 = performance.now();
+    function tick(now){
+      var t = (now - t0) / 1000;
+      ctx.clearRect(0, 0, W, H);
+      for (var i = 0; i < dust.length; i++){
+        var d = dust[i];
+        d.y += d.vy; d.x += d.vx + Math.sin(t*0.5 + d.p) * 0.09;
+        if (d.y < -6){ d.y = H + 6; d.x = Math.random()*W; }
+        if (d.x < -6) d.x = W + 6; else if (d.x > W + 6) d.x = -6;
+        ctx.beginPath();
+        ctx.fillStyle = "rgba(233,226,244," + (d.a * (0.72 + 0.28*Math.sin(t*1.7 + d.p))).toFixed(3) + ")";
+        ctx.arc(d.x, d.y, d.r, 0, Math.PI*2);
+        ctx.fill();
+      }
+      requestAnimationFrame(tick);
+    }
+    size(); seed();
+    window.addEventListener("resize", function(){ size(); seed(); });
+    requestAnimationFrame(tick);
+  }
+
+  /* ---------- the kit panel's prose rows ---------- */
+  function paintKitList(){
+    var el = $("kitList"), out = "";
+    for (var i = 0; i < KIT.length; i++){
+      out += '<div class="kv" style="--vc:' + KIT[i].vc + '">' +
+        '<span class="nm">' + KIT[i].nm + '</span>' +
+        '<span class="ds">' + KIT[i].ds + '</span></div>';
+    }
+    el.innerHTML = out;
+  }
+
+  buildKit(); paintKitList(); paintKit(); paintTransport(); paintSlots(); paintKnob(false); wire(); dust();
+
+  /* ---------- arriving: the machine says where it was left ---------- */
+  lcd("the machine is where you left it &mdash; <i>" + (M.slot >= 0 ? "shelf " + "abcd".charAt(M.slot) : "your own beat") +
+      "</i>, " + M.bpm + " bpm. press <i>play</i>.", meta());
+  if (M.playing) paintTransport();
+
+  /* exposed for the harness and for anyone poking at it in a console */
+  window.drum = {
+    KIT:KIT, STEPS:STEPS, TAKES:TAKES, M:M, CLOCK:CLOCK, AU:AU,
+    start:start, stop:stop, hit:hit, voice:function(id, lvl){
+      var ctx = wake(); if (ctx) hit(id, ctx.currentTime + 0.02, lvl || 1);
+    },
+    boot:boot, fireStep:fireStep,                       /* the offline-render hooks */
+    cycle:cycleStep, rows:function(){ return M.rows; },
+    loadTake:loadTake, clear:clearIt, keep:keepOne, loadSlot:loadSlot, wipe:wipeShelf,
+    bpm:nudgeBpm, lean:nudgeLean, setVol:setVol, vol:function(){ return M.vol; },
+    hasKnob:hasKnob, paint:function(){ buildKit(); paintKit(); paintKitList(); paintTransport(); paintSlots(); paintKnob(false); },
+    lcd:lcd, stepDur:stepDur, swingOf:swingOf, shelf:SHELF, clawShelf:shelfOfClaw,
+    gain:function(){ return volGain(); }, isPlaying:function(){ return M.playing; }
+  };
+})();
+</script>
+<script>window.CD && CD.boot({page:"drum"});</script>
+</body>
+</html>
