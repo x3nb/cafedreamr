@@ -1,0 +1,1279 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0d001a">
+<title>the claw machine &middot; cafedreamr</title>
+<meta name="description" content="Machine no. 02 in miki's games room: the claw, the marbles, the manifest taped to the back of the glass, and the counter where jellies become something real.">
+<meta property="og:title" content="the claw machine &middot; cafedreamr">
+<meta property="og:description" content="one jelly a go. it has never picked anything up on purpose, and it has never put anything down on purpose, so it comes out even.">
+<meta property="og:type" content="website">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%230d001a'/%3E%3Cpath d='M8 2v5' stroke='%23c3b6d8' stroke-width='1.4'/%3E%3Cpath d='M5 7q0 4 3 5q3-1 3-5' fill='none' stroke='%23ccff00' stroke-width='1.4'/%3E%3Ccircle cx='5' cy='13' r='1.4' fill='%23ff2d95'/%3E%3Ccircle cx='11' cy='13.6' r='1.2' fill='%2300e5ff'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Klee+One:wght@400;600&family=Shadows+Into+Light&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --plum:#0d001a; --plum2:#150426; --ink:#07000f;
+  --lav:#e9e2f4; --lav2:#c3b6d8; --dim:#8d80a3;
+  --lime:#ccff00; --cyan:#00e5ff; --pink:#ff2d95; --gold:#d8a24a;
+  --wood:#3a1140; --wood2:#24073a;
+  --disp:'Bebas Neue',Impact,sans-serif;
+  --mono:'Space Mono',ui-monospace,monospace;
+  --hand:'Klee One','Segoe Script',cursive;
+  --write:'Shadows Into Light','Klee One',cursive;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{
+  background:var(--plum); color:var(--lav); text-align:left;
+  font-family:var(--mono); font-size:13px; line-height:1.7; min-height:100%;
+  background-image:
+    radial-gradient(680px 420px at 46% 24%, rgba(0,229,255,.10), rgba(0,229,255,0) 70%),
+    radial-gradient(900px 620px at 50% 118%, rgba(204,255,0,.07), rgba(204,255,0,0) 70%),
+    linear-gradient(180deg, var(--plum) 0%, var(--ink) 100%);
+  background-attachment:fixed;
+}
+#dust{position:fixed; inset:0; width:100%; height:100%; pointer-events:none; z-index:6}
+.vig{position:fixed; inset:0; pointer-events:none; z-index:2;
+  background:radial-gradient(120% 90% at 50% 40%, rgba(0,0,0,0) 46%, rgba(0,0,0,.62) 100%)}
+a{color:var(--cyan); text-decoration:none}
+a:hover{color:var(--lime)}
+button{font:inherit; cursor:pointer}
+
+.wrap{position:relative; z-index:4; max-width:1120px; margin:0 auto; padding:16px 16px 40px}
+
+.top{display:flex; align-items:center; gap:14px; flex-wrap:wrap;
+  border-bottom:1px solid rgba(255,255,255,.10); padding-bottom:10px}
+.top .back{font-size:9.5px; letter-spacing:.16em; text-transform:uppercase;
+  border-bottom:1px solid rgba(0,229,255,.4); padding-bottom:2px; color:var(--lav)}
+.top .back:hover{background:var(--cyan); color:var(--ink); border-color:var(--cyan)}
+.top .sign{font-family:var(--disp); font-size:26px; letter-spacing:.06em; color:var(--lime);
+  text-shadow:0 0 12px rgba(204,255,0,.45), 0 0 34px rgba(204,255,0,.18)}
+.top .no{margin-left:auto; font-size:9px; letter-spacing:.18em; text-transform:uppercase; color:var(--dim)}
+
+.head{margin:26px 0 4px}
+.head .kick{font-size:9px; letter-spacing:.24em; text-transform:uppercase; color:var(--pink)}
+.head h1{font-family:var(--disp); font-weight:400; font-size:clamp(34px,6.4vw,60px); line-height:.95;
+  letter-spacing:.03em; margin:6px 0 2px}
+.head .sub{color:var(--lav2); font-size:12.5px; max-width:64ch; margin:8px 0 0}
+
+.note{margin:18px 0 0; padding:13px 15px; border:1px solid rgba(12,255,0,.16);
+  border-left:3px solid var(--lime); border-radius:4px; background:rgba(204,255,0,.045);
+  font-family:var(--hand); font-size:14px; color:#e6f7c6; max-width:70ch}
+.note .who{display:block; margin-top:7px; font-family:var(--mono); font-size:9px;
+  letter-spacing:.16em; text-transform:uppercase; color:var(--dim)}
+
+.stage{display:grid; grid-template-columns:minmax(290px,430px) 1fr; gap:22px; align-items:start; margin-top:24px}
+
+/* ---------------- the cabinet ---------------- */
+.cab{width:100%; max-width:430px; margin:0 auto}
+.marq{display:flex; align-items:baseline; justify-content:space-between; gap:10px;
+  border:1px solid rgba(255,255,255,.14); border-bottom:none; border-radius:6px 6px 0 0;
+  padding:9px 13px; background:linear-gradient(180deg,rgba(58,17,64,.85),rgba(21,4,38,.85))}
+.marq b{font-family:var(--disp); font-weight:400; font-size:22px; letter-spacing:.08em; color:var(--lime)}
+.marq span{font-size:9px; letter-spacing:.18em; text-transform:uppercase; color:var(--dim)}
+
+.case{position:relative; width:100%; aspect-ratio:5/6; overflow:hidden;
+  border:1px solid rgba(255,255,255,.16); border-top:none;
+  background:
+    radial-gradient(120% 60% at 50% 0%, rgba(0,229,255,.10), rgba(0,229,255,0) 62%),
+    linear-gradient(180deg, #16052a 0%, #0a0114 68%, #06000d 100%)}
+.case .glass{position:absolute; inset:0; pointer-events:none; z-index:5;
+  background:linear-gradient(118deg, rgba(255,255,255,.10) 0%, rgba(255,255,255,0) 26%,
+    rgba(255,255,255,0) 62%, rgba(255,255,255,.055) 100%)}
+/* the inside walls + the floor's own shadow, so the case reads as a box, not a void */
+.case:before{content:""; position:absolute; inset:0; z-index:3; pointer-events:none;
+  background:
+    linear-gradient(90deg, rgba(255,255,255,.075) 0, rgba(255,255,255,0) 13%,
+      rgba(255,255,255,0) 87%, rgba(255,255,255,.05) 100%),
+    linear-gradient(0deg, rgba(0,0,0,.34) 0, rgba(0,0,0,0) 20%),
+    linear-gradient(180deg, rgba(0,0,0,.45) 0, rgba(0,0,0,0) 12%)}
+/* the gantry: two side rails that converge towards the back of the case, a floor
+   receding between them, and a bar that rides back and forth along the rails */
+.rigfloor,.rigtop{position:absolute; inset:0; pointer-events:none}
+.rigfloor{z-index:0}
+.rigtop{z-index:3}
+.rigfloor svg,.rigtop svg{display:block; width:100%; height:100%}
+.crossbar{position:absolute; top:14%; left:0; width:100%; height:6px; z-index:3; pointer-events:none;
+  border-radius:2px; background:linear-gradient(180deg,#a79cbe,#3b2f52); box-shadow:0 3px 8px rgba(0,0,0,.66)}
+.crossbar:after{content:""; position:absolute; inset:0 0 auto; height:1px; background:rgba(255,255,255,.28)}
+/* where the claw would come down — rings the thing it is over, or the floor */
+.aim{position:absolute; left:50%; top:80%; width:26px; height:13px; z-index:2; pointer-events:none;
+  transform:translate(-50%,-50%); border:1px dashed rgba(204,255,0,.32); border-radius:50%;
+  background:radial-gradient(50% 50% at 50% 50%, rgba(204,255,0,.18), rgba(204,255,0,0) 72%);
+  opacity:.85}
+.aim.on{border-style:solid; border-color:rgba(204,255,0,.62);
+  background:radial-gradient(50% 50% at 50% 50%, rgba(204,255,0,.22), rgba(204,255,0,0) 74%);
+  box-shadow:0 0 16px rgba(204,255,0,.20)}
+.floor{position:absolute; left:0; right:0; bottom:0; height:34%; z-index:0;
+  background:linear-gradient(180deg, rgba(58,17,64,0), rgba(58,17,64,.42) 60%, rgba(36,7,58,.7));
+  border-top:1px solid rgba(255,255,255,.06)}
+
+.trolley{position:absolute; top:14%; bottom:0; width:0; left:50%; z-index:4}
+.rod{position:absolute; top:0; left:-2px; width:4px; height:0; border-radius:2px;
+  background:linear-gradient(90deg,#5a5470,#cfc4e4,#5a5470)}
+.clawhead{position:absolute; top:0; left:-27px; width:54px; height:36px; will-change:transform;
+  transform-origin:50% 0}
+.clawhead .hub{position:absolute; left:14px; top:0; width:26px; height:15px; border-radius:4px;
+  background:linear-gradient(180deg,#cfc4e4,#615a78); border:1px solid #2c2440}
+.clawhead .hub:before{content:""; position:absolute; left:50%; top:3px; width:6px; height:6px; margin-left:-3px;
+  border-radius:50%; background:var(--lime); box-shadow:0 0 7px rgba(204,255,0,.8)}
+.prong{position:absolute; top:12px; width:7px; height:25px; border-radius:0 0 4px 4px;
+  background:linear-gradient(180deg,#cfc4e4,#6e6688); border:1px solid #2c2440;
+  transform-origin:50% 0; transform:rotate(0deg)}
+.prong.l{left:11px}
+.prong.r{right:11px}
+.held{position:absolute; left:50%; top:26px; width:38px; transform:translateX(-50%); z-index:4}
+
+.pile{position:absolute; inset:0; z-index:1}
+.prize{position:absolute; transform-origin:50% 100%; pointer-events:none}
+.prize:before{content:""; position:absolute; left:50%; bottom:-4%; width:80%; height:14%;
+  transform:translateX(-50%); border-radius:50%; background:rgba(0,0,0,.55); filter:blur(3px)}
+.prize svg{position:relative; display:block; width:100%; height:auto; filter:drop-shadow(0 3px 5px rgba(0,0,0,.55))}
+.prize.halfpiece svg{filter:drop-shadow(0 3px 5px rgba(0,0,0,.55)) saturate(.35)}
+.held svg{display:block; width:100%; height:auto}
+
+.chute{position:absolute; right:5%; bottom:2.5%; width:20%; height:9%; z-index:1;
+  border:1px solid rgba(255,255,255,.14); border-radius:4px 4px 2px 2px;
+  background:linear-gradient(180deg,#05000c,#12021f);
+  box-shadow:inset 0 6px 12px rgba(0,0,0,.85)}
+.chute i{position:absolute; left:8px; right:8px; bottom:6px; height:2px; background:rgba(204,255,0,.22)}
+.chute span{position:absolute; left:0; right:0; top:3px; text-align:center; font-size:7px;
+  letter-spacing:.18em; text-transform:uppercase; color:var(--dim)}
+.pilebase{position:absolute; left:3%; width:72%; bottom:0.5%; height:12%; z-index:0; pointer-events:none;
+  background:radial-gradient(52% 62% at 50% 64%, rgba(0,0,0,.62), rgba(0,0,0,0) 72%); filter:blur(3px)}
+
+.apron{border:1px solid rgba(255,255,255,.14); border-top:none; border-radius:0 0 6px 6px;
+  padding:11px 13px 13px; background:linear-gradient(180deg,rgba(21,4,38,.85),rgba(13,0,26,.95));
+  display:flex; flex-direction:column; gap:10px}
+.bank{display:flex; align-items:center; gap:9px}
+.bank .tk{font-family:var(--disp); font-size:30px; line-height:1; color:var(--lime);
+  text-shadow:0 0 12px rgba(204,255,0,.45)}
+.bank .lbl{font-size:9px; letter-spacing:.18em; text-transform:uppercase; color:var(--dim); line-height:1.4; flex:1; min-width:0}
+.bank .lbl b{display:block; color:var(--lav2); letter-spacing:.1em}
+.bank .snd{margin-left:auto; border:1px solid rgba(255,255,255,.2); background:transparent; color:var(--lav2);
+  border-radius:20px; padding:5px 10px; font-size:9px; letter-spacing:.14em; text-transform:uppercase; white-space:nowrap}
+.bank .snd:hover{border-color:var(--lime); color:var(--lime)}
+
+.play{width:100%; font-family:var(--disp); font-size:24px; letter-spacing:.07em; padding:10px;
+  border-radius:4px; border:1px solid var(--pink); background:var(--pink); color:#1c0012; transition:.15s}
+.play:hover:not(:disabled){background:var(--lime); border-color:var(--lime); color:var(--ink)}
+.play:disabled{opacity:.4; cursor:not-allowed}
+.move{display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px}
+.move button{font-family:var(--disp); font-size:22px; padding:7px; border-radius:4px;
+  border:1px solid rgba(255,255,255,.2); background:rgba(255,255,255,.05); color:var(--lav)}
+.move button:hover:not(:disabled){border-color:var(--cyan); color:var(--cyan)}
+.move button:disabled{opacity:.35; cursor:not-allowed}
+.move .mb{grid-column:2; grid-row:1}
+.move .ml{grid-column:1; grid-row:2}
+.move .mf{grid-column:2; grid-row:2}
+.move .mr{grid-column:3; grid-row:2}
+.legend{display:flex; justify-content:space-between; gap:8px; margin:2px 1px 0;
+  font-size:8px; letter-spacing:.15em; text-transform:uppercase; color:var(--dim)}
+.say{min-height:17px; font-size:10.5px; letter-spacing:.04em; color:var(--dim); text-align:center; font-style:italic}
+
+/* ---------------- the side ---------------- */
+.side{display:flex; flex-direction:column; gap:14px}
+.panel{border:1px solid rgba(255,255,255,.13); border-radius:5px; padding:13px 14px;
+  background:linear-gradient(180deg,rgba(21,4,38,.62),rgba(9,0,18,.72))}
+.panel .pt{font-family:var(--disp); font-weight:400; font-size:20px; letter-spacing:.09em; margin:0 0 3px; color:var(--lav)}
+.panel .pn{margin:0 0 10px; font-size:10.5px; color:var(--dim); letter-spacing:.02em}
+.manifest{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:0}
+.manifest li{display:flex; align-items:center; gap:9px; padding:5px 0; border-top:1px dashed rgba(255,255,255,.09)}
+.manifest li:first-child{border-top:none}
+.manifest .thumb{width:26px; height:26px; flex:0 0 auto; opacity:.92}
+.manifest .thumb svg{display:block; width:100%; height:100%}
+.manifest .nm{font-size:11px; color:var(--lav2); flex:1; min-width:0}
+.manifest .pips{font-size:9px; letter-spacing:.14em; color:var(--gold); white-space:nowrap; flex:0 0 auto}
+.manifest .mystery .nm{color:var(--pink); font-style:italic}
+.manifest li.got .nm:after{content:" \00b7 kept"; color:var(--lime); font-style:normal}
+
+.shelf{display:flex; flex-wrap:wrap; gap:7px; min-height:34px}
+.shelf .cell{position:relative; width:44px; height:44px; border:1px solid rgba(255,255,255,.14);
+  border-radius:4px; background:rgba(255,255,255,.035); padding:5px}
+.shelf .cell svg{display:block; width:100%; height:100%}
+.shelf .cell em{position:absolute; right:2px; bottom:0; font-style:normal; font-size:9px; color:var(--lime);
+  text-shadow:0 1px 3px #000}
+.shelf .none{font-size:10.5px; color:var(--dim); font-style:italic}
+
+.till .row{display:flex; align-items:center; gap:10px; padding:9px 0; border-top:1px dashed rgba(255,255,255,.09)}
+.till .row:first-of-type{border-top:none; padding-top:2px}
+.till .cost{font-family:var(--disp); font-size:20px; color:var(--gold); white-space:nowrap}
+.till .cost i{font-style:normal; font-size:9px; letter-spacing:.12em; color:var(--dim); margin-left:2px}
+.till .what{flex:1; font-size:11px; color:var(--lav2); line-height:1.45}
+.till .what b{display:block; color:var(--lav); font-weight:400}
+.till .what small{display:block; color:var(--dim); font-size:9.5px; letter-spacing:.03em; margin-top:2px}
+.till .what small.none{color:var(--pink)}
+.till .get{font-family:var(--mono); font-size:9px; letter-spacing:.12em; text-transform:uppercase;
+  border:1px solid var(--gold); color:var(--gold); background:rgba(216,162,74,.08);
+  border-radius:3px; padding:7px 10px; white-space:nowrap}
+.till .get:hover:not(:disabled){background:var(--gold); color:#241300}
+.till .get:disabled{opacity:.34; cursor:not-allowed; border-color:var(--dim); border-style:dashed; color:var(--dim); background:transparent}
+.till .empty{font-size:10.5px; color:var(--dim); font-style:italic}
+
+.foot{margin-top:30px; border-top:1px solid rgba(255,255,255,.10); padding-top:14px;
+  font-size:9px; letter-spacing:.15em; text-transform:uppercase; color:var(--dim);
+  display:flex; flex-wrap:wrap; gap:7px 10px; justify-content:space-between; align-items:center}
+.foot a{color:var(--lav); border-bottom:1px solid rgba(255,255,255,.22); padding-bottom:1px}
+.foot a:hover{background:var(--lime); color:var(--ink); border-color:var(--lime)}
+.foot .set{display:flex; flex-wrap:wrap; gap:6px 9px}
+
+/* ---------------- the reveal ---------------- */
+.pop{position:fixed; inset:0; z-index:2147482000; display:flex; align-items:center; justify-content:center;
+  padding:18px; background:rgba(4,0,9,.82); animation:pfade .22s ease}
+.pop[hidden]{display:none}
+@keyframes pfade{from{opacity:0}to{opacity:1}}
+.pop .box{position:relative; width:100%; max-width:520px; max-height:90vh; overflow:auto;
+  border:1px solid rgba(255,255,255,.16); border-radius:7px; padding:22px 20px 18px;
+  background:linear-gradient(180deg,#1b0630,#0a0114);
+  box-shadow:0 24px 70px rgba(0,0,0,.7), 0 0 40px rgba(204,255,0,.07)}
+.pop .kick{font-size:9px; letter-spacing:.22em; text-transform:uppercase; color:var(--dim)}
+.pop .art{width:118px; margin:12px auto 6px}
+.pop .art svg{display:block; width:100%; height:auto; filter:drop-shadow(0 6px 14px rgba(0,0,0,.6))}
+.pop h3{font-family:var(--disp); font-weight:400; font-size:32px; line-height:1; letter-spacing:.03em;
+  margin:6px 0 4px; text-align:center}
+.pop .pips{text-align:center; font-size:10px; letter-spacing:.3em; color:var(--gold); margin-bottom:8px}
+.pop .line{font-family:var(--hand); font-size:15px; color:#efe6fb; text-align:center; margin:0 auto; max-width:46ch}
+.pop .acts{display:flex; flex-wrap:wrap; gap:9px; justify-content:center; margin-top:18px}
+.pop .acts button,.pop .acts a{font-family:var(--mono); font-size:10px; letter-spacing:.13em; text-transform:uppercase;
+  border:1px solid rgba(255,255,255,.24); background:transparent; color:var(--lav2);
+  border-radius:3px; padding:9px 14px; text-decoration:none}
+.pop .acts button:hover,.pop .acts a:hover{border-color:var(--lime); color:var(--lime)}
+.pop .acts .go{border-color:var(--lime); color:var(--lime); background:rgba(204,255,0,.07)}
+.pop .acts .go:hover{background:var(--lime); color:var(--ink)}
+
+.code{font-family:var(--mono); font-size:clamp(15px,4.4vw,22px); letter-spacing:.16em; text-align:center;
+  color:var(--lime); background:rgba(204,255,0,.07); border:1px dashed rgba(204,255,0,.45);
+  border-radius:4px; padding:14px 10px; margin:12px 0 4px; word-break:break-all}
+.pop .fine{font-size:10px; color:var(--dim); text-align:center; margin:8px 0 0}
+
+/* the other half */
+.halves{display:flex; gap:0; margin:16px 0 4px; align-items:stretch}
+.paper{position:relative; flex:1 1 50%; min-width:0; background:#f4f0e5; color:#2b2317;
+  padding:12px 13px 18px; box-shadow:0 8px 20px rgba(0,0,0,.45);
+  print-color-adjust:exact; -webkit-print-color-adjust:exact}
+.paper .ph{display:block; font-family:var(--mono); font-size:8px; letter-spacing:.14em; text-transform:uppercase;
+  color:#8a7f66; margin-bottom:9px}
+.paper .sheet{background-image:repeating-linear-gradient(180deg, rgba(80,70,50,0) 0 29px, rgba(80,70,50,.24) 29px 30px)}
+.paper p{margin:0; font-family:var(--write); font-size:15px; line-height:30px; color:#2b2317}
+.paper s{color:#a2977c}
+.paper .dash{color:#7d7360}
+.paper.found{background-color:#fbf7ec}
+.paper.found p{color:#241d13}
+.pop .note2{font-size:10px; color:var(--dim); text-align:center; margin:12px 0 0; letter-spacing:.04em}
+
+@media (max-width:820px){
+  .stage{grid-template-columns:1fr; gap:18px}
+  .cab{max-width:400px}
+}
+@media (max-width:520px){
+  .wrap{padding:12px 11px 32px}
+  .marq b{font-size:19px}
+  .bank .tk{font-size:26px}
+  .halves{flex-direction:column; gap:10px}
+  .paper{font-size:14px}
+  .till .row{flex-wrap:wrap}
+  .till .get{width:100%}
+  .move button,.play{padding:12px}
+}
+@media (prefers-reduced-motion:reduce){
+  .pop{animation:none}
+  .prong{transition:none}
+}
+</style>
+</head>
+<body class="gclaw">
+<canvas id="dust" aria-hidden="true"></canvas>
+<div class="vig" aria-hidden="true"></div>
+
+<div class="wrap">
+
+  <header class="top">
+    <a class="back" href="./">&larr; the games room</a>
+    <span class="sign">the claw machine</span>
+    <span class="no">machine no. 02 &middot; under miki&rsquo;s place</span>
+  </header>
+
+  <div class="head">
+    <span class="kick">one jelly a go</span>
+    <h1>The claw machine</h1>
+    <p class="sub">The claw is very slow and very sincere. It has never once let go of anything on purpose, but it has also never once picked anything up on purpose, so it comes out even &mdash; which is the most you can ask of a machine.</p>
+  </div>
+
+  <div class="note">
+    one jelly a go, and the jellies come out of the other machines &mdash; go wind the box, it pays. the claw has a manifest taped to the back of the glass and it does not always honour the manifest. and there is a corner of paper under the marbles. it&rsquo;s nothing. it has been nothing for a while now.
+    <span class="who">&mdash; miki, on a card in the coin return</span>
+  </div>
+
+  <div class="stage">
+
+    <!-- ==================== the cabinet ==================== -->
+    <section class="cab">
+      <div class="marq"><b>the claw</b><span id="marqNote">line it up &amp; press</span></div>
+
+      <div class="case" id="case">
+        <div class="floor"></div>
+        <div class="rigfloor" id="rigFloor"></div>
+        <div class="pilebase"></div>
+        <div class="pile" id="pile"></div>
+        <div class="chute" id="chute"><i></i><span>prize chute</span></div>
+        <div class="aim" id="aim"></div>
+        <div class="rigtop" id="rigTop"></div>
+        <div class="crossbar" id="crossbar"></div>
+        <div class="trolley" id="trolley">
+          <div class="rod" id="rod"></div>
+          <div class="clawhead" id="head">
+            <div class="hub"></div>
+            <div class="prong l" id="prongL"></div>
+            <div class="prong r" id="prongR"></div>
+          </div>
+        </div>
+        <div class="glass"></div>
+      </div>
+
+      <div class="apron">
+        <div class="bank">
+          <span class="tk" id="tkCount">0</span>
+          <span class="lbl">jellies<b>in your pocket</b></span>
+          <button class="snd" id="sndBtn" type="button" aria-pressed="true">sound on</button>
+        </div>
+        <button class="play" id="playBtn" type="button">insert a jelly</button>
+        <div class="move">
+          <button class="mb" id="backBtn" type="button" aria-label="move the claw towards the back of the case" title="back">&uarr;</button>
+          <button class="ml" id="leftBtn" type="button" aria-label="move the claw left" title="left">&larr;</button>
+          <button class="mf" id="frontBtn" type="button" aria-label="move the claw towards the front of the case" title="front">&darr;</button>
+          <button class="mr" id="rightBtn" type="button" aria-label="move the claw right" title="right">&rarr;</button>
+        </div>
+        <p class="legend"><span>&larr; &rarr; across</span><span>&uarr; &darr; back &amp; forth</span></p>
+        <p class="say" id="sayEl">the claw waits. it is very patient about it.</p>
+      </div>
+    </section>
+
+    <!-- ==================== the side ==================== -->
+    <aside class="side">
+
+      <section class="panel">
+        <h3 class="pt">what&rsquo;s in it</h3>
+        <p class="pn">the manifest, taped to the back of the glass. it is not a promise.</p>
+        <ul class="manifest" id="manifest"></ul>
+      </section>
+
+      <section class="panel till">
+        <h3 class="pt">the counter</h3>
+        <p class="pn">jellies you don&rsquo;t spend on the claw can be changed, at the counter, into something real. the machine changes them over; the till is where it happens.</p>
+        <div id="tillList"></div>
+      </section>
+
+      <section class="panel">
+        <h3 class="pt">your shelf</h3>
+        <p class="pn">everything the claw has let you keep. it does not remember, so this page does.</p>
+        <div class="shelf" id="shelf"></div>
+      </section>
+
+    </aside>
+  </div>
+
+  <footer class="foot">
+    <span>the games room &middot; machine no. 02 &middot; cafedreamr toy co.</span>
+    <span class="set">
+      <a href="./">the room</a>
+      <a href="./jackbox.html">no. 01 Bobby in the box</a>
+      <a href="https://www.cafedreamr.art/MIKI/">miki&rsquo;s place</a>
+      <a href="https://www.cafedreamr.art/MIKI/ZINE/">the zine</a>
+      <a href="https://ko-fi.com/cafedreamr" target="_blank" rel="noopener noreferrer">the counter (ko-fi)</a>
+    </span>
+  </footer>
+</div>
+
+<div class="pop" id="pop" hidden><div class="box" id="popBox"></div></div>
+
+<script src="https://www.cafedreamr.art/PASSPORT/cd-passport.js"></script>
+<script>window.CD && CD.boot({page:"claw"});</script>
+<script>
+(function(){
+  "use strict";
+
+  var $ = function(s){ return document.querySelector(s); };
+  function esc(s){ return String(s == null ? "" : s).replace(/[&<>"']/g, function(c){
+    return { "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]; }); }
+  function wait(ms){ return new Promise(function(r){ setTimeout(r, ms); }); }
+
+  /* ==================================================================
+     THE NUMBERS — the only ones you should ever need to change
+     ================================================================== */
+
+  var PLAY_COST = 1;      /* jellies a go */
+  var STARTER   = 5;      /* jellies miki leaves a brand-new player */
+
+  /* the counter. paste ko-fi discount codes (or share-links) into `codes`,
+     one per line inside the array. while a list is empty the counter shows
+     it as "not stocked yet". the % is set on ko-fi, not here — keep the
+     label and the ko-fi code saying the same number.
+     on ko-fi, create the two discounts with these names so the window here
+     and the list there read the same:  `a small pot` (code SMALLPOT10)
+     and `the whole jar` (code WHOLEJAR20). the name is only for you and for
+     the reveal; the code is what a player pastes at the checkout.        */
+  var COUNTER = [
+    { id:"ten",    at:100, pct:"10%", name:"a small pot",
+      label:"a small pot · ten percent off at the ko-fi",
+      note:"one per person · it works on commissions and on the shop",
+      codes:[
+        /* "HANDFUL10",  or  "https://ko-fi.com/s/xxxxxxx"  */
+      ] },
+    { id:"twenty", at:260, pct:"20%", name:"the whole jar",
+      label:"the whole jar · twenty percent off at the ko-fi",
+      note:"for the patient · one per person · works on commissions and on the shop",
+      codes:[] }
+  ];
+
+  /* ==================================================================
+     THE PRIZES
+     grip = how well the claw holds it · slip = the chance it lets go on the way over
+     ================================================================== */
+
+  function P(id, name, rar, grip, slip, line, art){
+    return { id:id, name:name, rar:rar, grip:grip, slip:slip, line:line, art:art, tint:"" };
+  }
+
+  function artMarble(){
+    return '<svg viewBox="0 0 100 100"><defs><radialGradient id="gmar" cx="36%" cy="32%" r="72%">' +
+      '<stop offset="0" stop-color="#eafcff"/><stop offset=".45" stop-color="#7fe0ff"/><stop offset="1" stop-color="#0b3a54"/>' +
+      '</radialGradient></defs><circle cx="50" cy="54" r="30" fill="url(#gmar)"/>' +
+      '<path d="M28 64 Q50 34 72 56" fill="none" stroke="#ffffff" stroke-width="4" opacity=".5"/>' +
+      '<ellipse cx="40" cy="40" rx="8" ry="5" fill="#fff" opacity=".7"/></svg>';
+  }
+  function artSock(){
+    return '<svg viewBox="0 0 100 100"><path d="M36 8 h24 v42 a16 16 0 0 0 16 15 h3 a12 12 0 0 1 0 25 H54 a22 22 0 0 1 -18 -21 z" ' +
+      'fill="#efe7f7" stroke="#b6a9cf" stroke-width="2.6" stroke-linejoin="round"/>' +
+      '<path d="M36 24 h24" stroke="#ccff00" stroke-width="5"/>' +
+      '<path d="M40 62 q10 7 22 4" fill="none" stroke="#b6a9cf" stroke-width="2"/></svg>';
+  }
+  function artGum(){
+    return '<svg viewBox="0 0 100 100"><path d="M20 44 l13 -15 15 6 12 -13 18 11 -5 23 9 17 -21 9 -17 -11 -19 7 -9 -21 z" ' +
+      'fill="#d9dbe6" stroke="#9aa0b8" stroke-width="2.2" stroke-linejoin="round"/>' +
+      '<path d="M33 29 l7 19 M49 35 l4 17 M63 33 l3 19" stroke="#fbfcff" stroke-width="2.4" opacity=".85"/></svg>';
+  }
+  function artSpider(){
+    return '<svg viewBox="0 0 100 100"><g stroke="#8fd400" stroke-width="3.6" stroke-linecap="round" fill="none">' +
+      '<path d="M36 50 C21 44 15 37 14 28"/><path d="M34 58 C19 58 12 62 9 70"/><path d="M36 66 C25 72 22 79 21 86"/>' +
+      '<path d="M64 50 C79 44 85 37 86 28"/><path d="M66 58 C81 58 88 62 91 70"/><path d="M64 66 C75 72 78 79 79 86"/></g>' +
+      '<ellipse cx="50" cy="60" rx="16" ry="18" fill="#a6e22e" stroke="#6fae00" stroke-width="2"/>' +
+      '<circle cx="50" cy="38" r="10" fill="#8fd400" stroke="#6fae00" stroke-width="2"/>' +
+      '<circle cx="45.5" cy="36" r="2.2" fill="#08110a"/><circle cx="54.5" cy="36" r="2.2" fill="#08110a"/></svg>';
+  }
+  function artSticker(){
+    return '<svg viewBox="0 0 100 100"><rect x="21" y="21" width="58" height="58" rx="11" fill="#0d001a" stroke="#ccff00" stroke-width="3"/>' +
+      '<path d="M37 38 h18 v15 a9 9 0 0 1 -9 9 a9 9 0 0 1 -9 -9 z" fill="#ccff00"/>' +
+      '<path d="M55 42 h7 a6 6 0 0 1 0 12 h-7" fill="none" stroke="#ccff00" stroke-width="3"/>' +
+      '<path d="M45 35 q4 -7 8 -1" fill="none" stroke="#ff2d95" stroke-width="2.4"/></svg>';
+  }
+  function artClip(){
+    return '<svg viewBox="0 0 100 100"><defs><linearGradient id="gholo" x1="0" y1="0" x2="1" y2="1">' +
+      '<stop offset="0" stop-color="#c0a6ff"/><stop offset=".35" stop-color="#00e5ff"/>' +
+      '<stop offset=".7" stop-color="#ff2d95"/><stop offset="1" stop-color="#ccff00"/></linearGradient></defs>' +
+      '<rect x="24" y="28" width="50" height="9" rx="4.5" fill="url(#gholo)" opacity=".85" stroke="#e9e2f4" stroke-width="1.6"/>' +
+      '<rect x="13" y="50" width="74" height="15" rx="7.5" fill="url(#gholo)" stroke="#e9e2f4" stroke-width="2"/>' +
+      '<g fill="#e9e2f4" opacity=".9"><rect x="22" y="46" width="3" height="6"/><rect x="32" y="46" width="3" height="6"/>' +
+      '<rect x="42" y="46" width="3" height="6"/><rect x="52" y="46" width="3" height="6"/>' +
+      '<rect x="62" y="46" width="3" height="6"/><rect x="72" y="46" width="3" height="6"/></g>' +
+      '<circle cx="20" cy="57" r="4.5" fill="#cfc4e4" stroke="#8d80a3" stroke-width="1.6"/></svg>';
+  }
+  function artApple(){
+    return '<svg viewBox="0 0 100 100"><defs><radialGradient id="gapp" cx="40%" cy="34%" r="66%">' +
+      '<stop offset="0" stop-color="#fffbe0"/><stop offset=".5" stop-color="#ffe9a3"/><stop offset="1" stop-color="#df9f49"/>' +
+      '</radialGradient></defs><rect x="47" y="60" width="6" height="30" rx="3" fill="#8a5a22"/>' +
+      '<circle cx="50" cy="46" r="24" fill="url(#gapp)" stroke="#fff3c4" stroke-width="2"/>' +
+      '<circle cx="42" cy="38" r="6" fill="#fffdf2" opacity=".85"/>' +
+      '<path d="M52 22 q6 -10 12 -6" fill="none" stroke="#7fd06a" stroke-width="3"/></svg>';
+  }
+  function artJelly(){
+    return '<svg viewBox="0 0 100 100"><defs><radialGradient id="ggel" cx="38%" cy="30%" r="78%">' +
+      '<stop offset="0" stop-color="#f6ffc4"/><stop offset=".5" stop-color="#ccff00"/><stop offset="1" stop-color="#6f9200"/>' +
+      '</radialGradient></defs>' +
+      '<path d="M26 64 Q20 38 37 29 Q50 22 63 29 Q80 38 74 64 Q70 77 50 77 Q30 77 26 64 Z" fill="url(#ggel)" stroke="#5c7a00" stroke-width="2.4"/>' +
+      '<ellipse cx="40" cy="41" rx="7.5" ry="4.5" fill="#ffffff" opacity=".6"/>' +
+      '<path d="M24 67 Q50 80 76 67" fill="none" stroke="#eaffa0" stroke-width="3" opacity=".65"/>' +
+      '</svg>';
+  }
+  function artRat(){
+    return '<svg viewBox="0 0 100 100"><path d="M74 62 q18 5 11 21" fill="none" stroke="#e0b7d2" stroke-width="3.4"/>' +
+      '<ellipse cx="48" cy="62" rx="26" ry="20" fill="#f3eefb" stroke="#c9bede" stroke-width="2.4"/>' +
+      '<circle cx="34" cy="26" r="8.5" fill="#f7f3fd" stroke="#c9bede" stroke-width="2"/>' +
+      '<circle cx="62" cy="26" r="8.5" fill="#f7f3fd" stroke="#c9bede" stroke-width="2"/>' +
+      '<circle cx="48" cy="40" r="16" fill="#f7f3fd" stroke="#c9bede" stroke-width="2.4"/>' +
+      '<circle cx="42" cy="39" r="2.4" fill="#3a2440"/><circle cx="54" cy="39" r="2.4" fill="#3a2440"/>' +
+      '<path d="M48 45 l-3 3 h6 z" fill="#ff9fc6"/></svg>';
+  }
+  function artStick(){
+    return '<svg viewBox="0 0 100 100"><path d="M28 80 L66 30" stroke="#e8c98a" stroke-width="7.5" stroke-linecap="round"/>' +
+      '<ellipse cx="70" cy="25" rx="12" ry="14" fill="#f0d79b" stroke="#c9a266" stroke-width="2.2" transform="rotate(28 70 25)"/></svg>';
+  }
+  function artKnob(){
+    return '<svg viewBox="0 0 100 100"><circle cx="50" cy="56" r="27" fill="#2a0a45" stroke="#c3b6d8" stroke-width="2.6"/>' +
+      '<circle cx="50" cy="56" r="18" fill="#150426" stroke="#8d80a3" stroke-width="2"/>' +
+      '<path d="M50 40 v11" stroke="#ccff00" stroke-width="3.6" stroke-linecap="round"/>' +
+      '<g stroke="#8d80a3" stroke-width="2"><path d="M25 43 l-6 -5 M75 43 l6 -5 M25 69 l-6 5 M75 69 l6 5"/></g></svg>';
+  }
+  function artHalf(){
+    return '<svg viewBox="0 0 100 100"><path d="M24 14 h52 v36 l-6 -4 -6 5 -6 -5 -6 5 -7 -5 -6 5 -5 -4 -6 3 z" ' +
+      'fill="#f4f0e5" stroke="#cbbfa3" stroke-width="1.6"/>' +
+      '<g stroke="#7d7460" stroke-width="1.6" opacity=".5"><path d="M33 24 h34 M33 32 h29 M33 40 h32"/></g></svg>';
+  }
+
+  var PRIZES = {
+    marble : P("marble", "a marble",                        1, .88, .05, "cat&rsquo;s eye, the good kind. it has been in the machine so long it stopped rolling.", artMarble()),
+    sock   : P("sock",   "one (1) sock",                    1, .82, .07, "grey, ribbed, one of a pair. the machine has never once produced the other one, and has stopped being asked.", artSock()),
+    gum    : P("gum",    "a smoothed gum wrapper",          1, .90, .04, "somebody flattened it. that&rsquo;s all. somebody took the trouble to smooth a gum wrapper and put it in here for you.", artGum()),
+    spider : P("spider", "a green plastic spider",          1, .78, .08, "the green ones are lucky. the twins said so. the twins were lying, but it is still the lucky one.", artSpider()),
+    sticker: P("sticker","a house sticker",                 2, .80, .06, "the black cat with the lime stripe. it doesn&rsquo;t stay stuck to anything for long, but it&rsquo;s the thought.", artSticker()),
+    clip   : P("clip",   "a hologram hairclip",             2, .68, .09, "the same foil as issue 01. it catches the light like a small decision.", artClip()),
+    apple  : P("apple",  "a candy apple, still lit",        2, .62, .10, "from the atrium, out of chari&rsquo;s batch. still warm. do not admire it so long that it goes out.", artApple()),
+    token  : P("token",  "one warm jelly",                  2, .84, .05, "the machine pays you back one. it does not know why. it felt correct at the time.", artJelly()),
+    rat    : P("rat",    "a plush rat",                     3, .54, .10, "soft, white, faintly opinionated. nobody can tell whether it is crumb or mochi, and nobody has asked them directly.", artRat()),
+    stick  : P("stick",  "a drumstick",                     3, .48, .12, "sylvestre&rsquo;s. he has hundreds. he will notice anyway, and he will not say anything, and that will be worse.", artStick()),
+    knob   : P("knob",   "the missing volume knob",         3, .66, .08, "it fits the drum machine. sylvestre says the missing knob is on purpose, and this knob does not change that, but now you know.", artKnob()),
+    half   : P("half",   "the other half of the page",      5, .14, .00, "you found it.", artHalf())
+  };
+
+  /* the heap. x = centre across the case (%), y = how far up it sits (%), s = size (%), r = tilt.
+     painted back-to-front, and the further back it sits the darker and smaller it reads,
+     so the whole thing lands as one mound rather than a row of stickers.                     */
+  var PILE = [
+    /* the peak */
+    { id:"knob",    x:37, y:32, s:13, r:4  },
+    { id:"token",   x:51, y:30, s:13, r:-3 },
+    /* fourth layer */
+    { id:"marble",  x:29, y:25, s:13, r:0  },
+    { id:"stick",   x:44, y:26, s:15, r:-8 },
+    { id:"rat",     x:59, y:24, s:15, r:6  },
+    /* third layer */
+    { id:"clip",    x:21, y:17, s:15, r:3  },
+    { id:"apple",   x:36, y:18, s:16, r:-4 },
+    { id:"rat",     x:51, y:16, s:16, r:-6 },
+    { id:"spider",  x:65, y:18, s:15, r:4  },
+    /* second layer */
+    { id:"sock",    x:14, y:9,  s:18, r:6  },
+    { id:"marble",  x:28, y:10, s:14, r:0  },
+    { id:"sticker", x:42, y:9,  s:18, r:-5 },
+    { id:"apple",   x:57, y:10, s:17, r:4  },
+    { id:"sock",    x:67, y:14, s:17, r:9  },
+    /* the floor, packed shoulder to shoulder */
+    { id:"sock",    x:10, y:0,  s:21, r:5  },
+    { id:"gum",     x:23, y:1,  s:16, r:-8 },
+    { id:"marble",  x:35, y:0,  s:14, r:0  },
+    { id:"spider",  x:47, y:1,  s:17, r:4  },
+    { id:"rat",     x:60, y:0,  s:18, r:-6 },
+    { id:"knob",    x:66, y:1,  s:16, r:4  },
+    /* tucked behind the front, only a corner showing */
+    { id:"half",    x:12, y:6,  s:21, r:-14 }
+  ];
+
+  var ORDER = ["marble","sock","gum","spider","sticker","clip","apple","token","rat","stick","knob","half"];
+
+  /* the drawings sit inside a 100x100 box with air around them; zooming the
+     viewBox in makes every prize fill its slot, so the heap actually touches. */
+  Object.keys(PRIZES).forEach(function(k){
+    PRIZES[k].art = PRIZES[k].art.replace('viewBox="0 0 100 100"', 'viewBox="11 11 78 78"');
+  });
+
+  /* ==================================================================
+     THE BANK — the passport keeps the jellies; a local mirror stands in
+     until the passport that knows about them is deployed.
+     ================================================================== */
+
+  var BANK = (function(){
+    var MIRROR = "cafedreamr:jellies";
+    var OLD = "cafedreamr:tokens";   /* the jar used to be called tokens */
+    function real(){ return !!(window.CD && (typeof CD.jellies === "function" || typeof CD.tokens === "function")); }
+    function mg(){
+      try{
+        var v = localStorage.getItem(MIRROR);
+        if (v === null) v = localStorage.getItem(OLD);
+        return Number(v) || 0;
+      }catch(e){ return 0; }
+    }
+    function ms(n){ try{ localStorage.setItem(MIRROR, String(Math.max(0, Math.round(n)))); }catch(e){} }
+    function jellies(){ return real() ? (CD.jellies ? CD.jellies() : CD.tokens()) : mg(); }
+    function award(n, label, accent){
+      if (real()) return CD.award(n, label, { accent:accent });
+      ms(mg() + n); return mg();
+    }
+    function spend(n, label, accent){
+      if (real()) return CD.spend(n, label, { accent:accent });
+      if (mg() < n) return false;
+      ms(mg() - n); return true;
+    }
+    /* carry a mirror balance over the first time the real passport shows up */
+    function migrate(){
+      if (!real()) return;
+      var m = mg();
+      if (m > 0){ try{ CD.award(m, "jellies carried over to the stamp card", { accent:"#00e5ff" }); }catch(e){} ms(0); }
+    }
+    return { jellies:jellies, award:award, spend:spend, migrate:migrate, real:real };
+  })();
+
+  /* ==================================================================
+     LITTLE SOUNDS (all guarded — nothing plays until you press something)
+     ================================================================== */
+
+  var S = { ctx:null, master:null, on:true, hum:null };
+  function audio(){
+    if (S.ctx) return S.ctx;
+    var C = window.AudioContext || window.webkitAudioContext;
+    if (!C) return null;
+    try{
+      S.ctx = new C();
+      S.master = S.ctx.createGain();
+      S.master.gain.value = 0.5;
+      var lp = S.ctx.createBiquadFilter(); lp.type = "lowpass"; lp.frequency.value = 3200;
+      S.master.connect(lp); lp.connect(S.ctx.destination);
+      if (S.ctx.state === "suspended" && S.ctx.resume) S.ctx.resume();
+    }catch(e){ S.ctx = null; }
+    return S.ctx;
+  }
+  function tone(f, dur, type, vol, to){
+    if (!S.on) return;
+    var c = audio(); if (!c) return;
+    try{
+      var o = c.createOscillator(), g = c.createGain();
+      o.type = type || "square"; o.frequency.value = f;
+      if (to) o.frequency.exponentialRampToValueAtTime(Math.max(40, to), c.currentTime + dur);
+      g.gain.value = 0.0001;
+      g.gain.exponentialRampToValueAtTime(vol || 0.10, c.currentTime + 0.012);
+      g.gain.exponentialRampToValueAtTime(0.0001, c.currentTime + dur);
+      o.connect(g); g.connect(S.master); o.start(); o.stop(c.currentTime + dur + 0.02);
+    }catch(e){}
+  }
+  function noise(dur, vol){
+    if (!S.on) return;
+    var c = audio(); if (!c) return;
+    try{
+      var n = Math.floor(c.sampleRate * dur);
+      var b = c.createBuffer(1, n, c.sampleRate), d = b.getChannelData(0);
+      for (var i = 0; i < n; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / n);
+      var src = c.createBufferSource(); src.buffer = b;
+      var g = c.createGain(); g.gain.value = vol || 0.10;
+      src.connect(g); g.connect(S.master); src.start();
+    }catch(e){}
+  }
+  function motor(on){
+    if (!S.on){ if (S.hum){ try{ S.hum.stop(); }catch(e){} S.hum = null; } return; }
+    var c = audio(); if (!c) return;
+    if (on && !S.hum){
+      try{
+        var o = c.createOscillator(), g = c.createGain();
+        o.type = "sawtooth"; o.frequency.value = 62;
+        g.gain.value = 0.0001; g.gain.exponentialRampToValueAtTime(0.045, c.currentTime + 0.25);
+        o.connect(g); g.connect(S.master); o.start(); S.hum = { o:o, g:g };
+      }catch(e){ S.hum = null; }
+    } else if (!on && S.hum){
+      try{ S.hum.g.gain.exponentialRampToValueAtTime(0.0001, S.ctx.currentTime + 0.2); S.hum.o.stop(S.ctx.currentTime + 0.3); }catch(e){}
+      S.hum = null;
+    }
+  }
+  function sfx(kind){
+    if (kind === "coin"){ tone(1046, .09, "square", .09); setTimeout(function(){ tone(1568, .12, "square", .08); }, 80); }
+    else if (kind === "clunk"){ tone(150, .16, "triangle", .12, 90); noise(.10, .09); }
+    else if (kind === "grab"){ noise(.09, .10); tone(320, .08, "square", .07); }
+    else if (kind === "drop"){ tone(420, .22, "sine", .09, 120); }
+    else if (kind === "empty"){ tone(180, .20, "sine", .07, 120); }
+    else if (kind === "win"){ [[784,0],[988,110],[1319,220],[1568,330]].forEach(function(p){ setTimeout(function(){ tone(p[0], .22, "square", .085); }, p[1]); }); }
+    else if (kind === "no"){ tone(200, .10, "square", .07); setTimeout(function(){ tone(150, .16, "square", .07); }, 90); }
+  }
+
+  /* ==================================================================
+     THE CLAW
+     ================================================================== */
+
+  var caseEl = $("#case"), trolley = $("#trolley"), rod = $("#rod"), head = $("#head"),
+      prongL = $("#prongL"), prongR = $("#prongR"), pileEl = $("#pile"), chuteEl = $("#chute"),
+      crossbar = $("#crossbar"), aimEl = $("#aim"), rigFloor = $("#rigFloor"), rigTop = $("#rigTop");
+
+  var RADIUS = 9.5, CHUTE_X = 85;
+
+  /* ---- the two axes ----------------------------------------------------
+     x = across the case, in case-width % (0 left, 100 right).
+     z = how far back into the case it is: 0 is the front, nearest the glass,
+         1 is the back. everything the eye needs follows from z — the gantry
+         bar rides higher and narrower the further back it goes, and the claw
+         hangs a little smaller, the way it would if you were standing there.
+     Nothing is targeted unless it is close in BOTH axes.                  */
+  var YMAX = 32;                                 /* the y of the deepest thing in the heap */
+  var ZSTEP = 0.085;                             /* depth moved per press */
+  var ZFRONT_RAIL = 0.21, ZBACK_RAIL = 0.065;    /* the gantry bar, as a fraction of the case's height */
+  var ZFRONT_SPAN = 1.00, ZBACK_SPAN = 0.63;     /* the bar's width, as a fraction of the case's width */
+  var ZFRONT_CLAW = 1.00, ZBACK_CLAW = 0.72;     /* how big the claw hangs */
+  var ZFRONT_FLOOR = 1.00, ZBACK_FLOOR = 0.68;   /* where the floor reads at that depth */
+  var DEPTH_R = 0.18;                            /* how far off a thing's depth the claw still reaches */
+
+  var XEDGE = 6.5;   /* half the head's width, so the claw never hangs off the rail */
+
+  var G = { x:50, xT:50, z:0.5, zT:0.5, y:0, yT:0, open:1, openT:1, k:.14, dropMax:0,
+            cW:1, cH:1, busy:false, target:null, halfGone:false };
+  var nodes = [];
+  var arriver = null;
+
+  function lerp(a, b, t){ return a + (b - a) * t; }
+  function clamp(v, lo, hi){ return v < lo ? lo : (v > hi ? hi : v); }
+
+  function depthOf(pz){ return clamp(pz.y / YMAX, 0, 1); }
+  function railFrac(z){ return lerp(ZFRONT_RAIL, ZBACK_RAIL, z); }
+  function floorFrac(z){ return lerp(ZFRONT_FLOOR, ZBACK_FLOOR, z); }
+  function gantryScale(z){ return lerp(ZFRONT_SPAN, ZBACK_SPAN, z); }
+  function clawScale(z){ return lerp(ZFRONT_CLAW, ZBACK_CLAW, z); }
+  function xL(z){ return 50 * (1 - gantryScale(z)); }
+  function xR(z){ return 100 - xL(z); }
+
+  /* the heap's own projection, so the claw lands on what the eye is looking at */
+  function itemScale(pz){ return 0.90 + 0.12 * (1 - Math.min(1, pz.y / 31)); }
+  function itemHFrac(pz){ return (pz.s / 100) * (G.cW / G.cH) * itemScale(pz); }
+  /* the prong tips hang 37px below the head's top when the head is full size */
+  function clawReach(z){ return 37 * clawScale(z) + 8; }
+
+  function measure(){
+    var r = caseEl.getBoundingClientRect();
+    G.cW = r.width; G.cH = r.height;
+    G.dropMax = r.height * 0.72;
+    buildRig();
+    paintClaw();
+  }
+
+  /* the gantry frame, drawn from the same numbers the claw moves by: two side
+     rails converging towards the back, and the floor receding between them.  */
+  function buildRig(){
+    var zs = [0, 0.25, 0.5, 0.75, 1], i, z, y, g = "";
+    for (i = 0; i < zs.length; i++){
+      z = zs[i]; y = (floorFrac(z) * 120).toFixed(2);
+      g += '<line x1="' + xL(z).toFixed(2) + '" y1="' + y + '" x2="' + xR(z).toFixed(2) + '" y2="' + y +
+           '" stroke="rgba(255,255,255,' + (z === 0 ? "0.10" : "0.045") + ')" stroke-width="0.7"/>';
+    }
+    g += '<line x1="0" y1="120" x2="' + xL(1).toFixed(2) + '" y2="' + (floorFrac(1) * 120).toFixed(2) +
+         '" stroke="rgba(255,255,255,.07)" stroke-width="0.7"/>' +
+         '<line x1="100" y1="120" x2="' + xR(1).toFixed(2) + '" y2="' + (floorFrac(1) * 120).toFixed(2) +
+         '" stroke="rgba(255,255,255,.07)" stroke-width="0.7"/>';
+    rigFloor.innerHTML = '<svg viewBox="0 0 100 120" preserveAspectRatio="none">' + g + '</svg>';
+
+    var y0 = (railFrac(0) * 120).toFixed(2), y1 = (railFrac(1) * 120).toFixed(2), t = "";
+    t += '<line x1="' + xL(0).toFixed(2) + '" y1="' + y0 + '" x2="' + xL(1).toFixed(2) + '" y2="' + y1 +
+         '" stroke="rgba(255,255,255,.17)" stroke-width="1"/>' +
+         '<line x1="' + xR(0).toFixed(2) + '" y1="' + y0 + '" x2="' + xR(1).toFixed(2) + '" y2="' + y1 +
+         '" stroke="rgba(255,255,255,.17)" stroke-width="1"/>' +
+         '<line x1="' + xL(1).toFixed(2) + '" y1="' + y1 + '" x2="' + xR(1).toFixed(2) + '" y2="' + y1 +
+         '" stroke="rgba(255,255,255,.12)" stroke-width="0.8"/>' +
+         '<line x1="' + xL(0).toFixed(2) + '" y1="' + y0 + '" x2="' + xR(0).toFixed(2) + '" y2="' + y0 +
+         '" stroke="rgba(255,255,255,.07)" stroke-width="0.8"/>';
+    rigTop.innerHTML = '<svg viewBox="0 0 100 120" preserveAspectRatio="none">' + t + '</svg>';
+  }
+
+  /* how far down to travel: the tips a little way into whatever it is over, or
+     the floor at its own depth if it is over bare case.                      */
+  var TIPS_INTO = 0.19;      /* how far into a thing's shape the prong tips close */
+  function descendTo(n){
+    var top;
+    if (n){
+      top = ((100 - n.pz.y) / 100) - (1 - TIPS_INTO) * itemHFrac(n.pz);
+    } else {
+      top = floorFrac(G.z);
+    }
+    var want = top * G.cH - clawReach(G.z);
+    G.yT = clamp((want - railFrac(G.z) * G.cH) / G.dropMax, 0, 1);
+  }
+
+  function paintClaw(){
+    var z = G.z, zPct = (railFrac(z) * 100).toFixed(2) + "%", s = clawScale(z);
+    trolley.style.left = G.x.toFixed(2) + "%";
+    trolley.style.top = zPct;
+    var len = (G.y * G.dropMax).toFixed(1) + "px";
+    rod.style.height = len;
+    rod.style.width = (4 * s).toFixed(2) + "px";
+    rod.style.left = (-2 * s).toFixed(2) + "px";
+    head.style.transform = "translateY(" + len + ") scale(" + s.toFixed(3) + ")";
+    var a = (G.open * 26).toFixed(1);
+    prongL.style.transform = "rotate(" + (-a) + "deg)";
+    prongR.style.transform = "rotate(" + a + "deg)";
+    crossbar.style.left = xL(z).toFixed(2) + "%";
+    crossbar.style.width = (xR(z) - xL(z)).toFixed(2) + "%";
+    crossbar.style.top = zPct;
+    paintAim(s);
+  }
+
+  /* what the claw is over: ring it if it is in reach, else sit on the floor at
+     the claw's own depth, so both axes are always legible. the ring brightens
+     as the claw lines up on the thing, because being over it is not enough —
+     the depth has to match too, and that is what the glow is telling you.    */
+  function paintAim(s){
+    var n = G.busy ? null : pickTarget(), op;
+    if (n){
+      var dx = Math.abs(G.x - n.pz.x) / RADIUS, dz = Math.abs(G.z - depthOf(n.pz)) / DEPTH_R;
+      var align = Math.max(0, 1 - Math.max(dx, dz));
+      var hFrac = itemHFrac(n.pz);
+      aimEl.className = "aim on";
+      aimEl.style.left = n.pz.x + "%";
+      aimEl.style.top = (((100 - n.pz.y) / 100) - hFrac / 2) * 100 + "%";
+      aimEl.style.width = (n.pz.s * itemScale(n.pz) * 1.26).toFixed(2) + "%";
+      aimEl.style.height = (hFrac * G.cH * 1.38).toFixed(1) + "px";
+      op = 0.30 + 0.62 * align;
+    } else {
+      aimEl.className = "aim";
+      aimEl.style.left = G.x.toFixed(2) + "%";
+      aimEl.style.top = (Math.min(floorFrac(G.z), 0.965) * 100).toFixed(2) + "%";
+      aimEl.style.width = (26 * s).toFixed(1) + "px";
+      aimEl.style.height = (12 * s).toFixed(1) + "px";
+      op = G.busy ? 0 : 0.5;
+    }
+    aimEl.style.opacity = op.toFixed(2);
+  }
+  function frame(t){
+    var last = frame.last || t; var dt = Math.min(0.05, (t - last) / 1000); frame.last = t;
+    var k = 1 - Math.pow(1 - G.k, dt * 60);
+    G.x += (G.xT - G.x) * k;
+    G.z += (G.zT - G.z) * k;
+    G.x = clamp(G.x, xL(G.z) + XEDGE, xR(G.z) - XEDGE);
+    G.y += (G.yT - G.y) * k;
+    G.open += (G.openT - G.open) * k;
+    paintClaw();
+    if (arriver && Math.abs(G[arriver.k] - G[arriver.t]) <= arriver.eps){ var f = arriver.res; arriver = null; f(); }
+    requestAnimationFrame(frame);
+  }
+  function arrive(k, eps, tKey){
+    tKey = tKey || (k + "T");
+    if (Math.abs(G[k] - G[tKey]) <= eps) return Promise.resolve();
+    return new Promise(function(res){ arriver = { k:k, t:tKey, eps:eps, res:res }; });
+  }
+
+  /* ---- the heap ---- */
+  function paintPile(){
+    pileEl.innerHTML = "";
+    nodes = [];
+    PILE.slice().sort(function(a, b){ return b.y - a.y; }).forEach(function(p){
+      var pr = PRIZES[p.id];
+      var gone = (p.id === "half" && G.halfGone);
+      var el = document.createElement("div");
+      el.className = "prize" + (p.id === "half" ? " halfpiece" : "");
+      el.style.left = p.x + "%";
+      el.style.bottom = p.y + "%";
+      el.style.width = p.s + "%";
+      var back = Math.min(1, p.y / 31);                    /* 0 = on the floor, 1 = top of the heap */
+      var sc = itemScale(p);                                /* same number the claw's aim uses */
+      el.style.transform = "translateX(-50%) rotate(" + p.r + "deg) scale(" + sc.toFixed(2) + ")";
+      el.innerHTML = pr.art;
+      el.style.filter = "brightness(" + (0.80 + 0.26 * (1 - back)).toFixed(2) +
+                        ") saturate(" + (0.78 + 0.26 * (1 - back)).toFixed(2) + ")";
+      if (!gone) pileEl.appendChild(el);
+      nodes.push({ id:p.id, prize:pr, pz:p, el:el, gone:gone });
+    });
+  }
+
+  /* ---- the grab ---- */
+  /* it only reaches what it is close to on BOTH axes, and among those it takes
+     the best-aligned one — so the same spot across the case is a different
+     prize depending on how far back the claw is riding.                       */
+  function pickTarget(){
+    var best = null, bs = 1e9;
+    for (var i = 0; i < nodes.length; i++){
+      var n = nodes[i];
+      if (n.gone) continue;
+      var dx = Math.abs(G.x - n.pz.x), dz = Math.abs(G.z - depthOf(n.pz));
+      if (dx > RADIUS || dz > DEPTH_R) continue;
+      var sc = 0.60 * (dx / RADIUS) + 0.40 * (dz / DEPTH_R);
+      if (sc < bs - 0.002){ bs = sc; best = n; }
+    }
+    return best;
+  }
+  function rollGrab(n){
+    if (!n) return false;
+    var dx = Math.abs(G.x - n.pz.x) / RADIUS;
+    var dz = Math.abs(G.z - depthOf(n.pz)) / DEPTH_R;
+    var align = Math.max(0, 1 - Math.max(dx, dz));
+    var p = n.prize.grip * (0.34 + 0.66 * align);
+    return Math.random() < p;
+  }
+
+  /* ---- the wrapper the prize rides in ---- */
+  function attach(n){
+    var el = document.createElement("div");
+    el.className = "held";
+    el.innerHTML = n.prize.art;
+    head.appendChild(el);
+    return el;
+  }
+  function releaseAnimated(el, toBottom, ms){
+    return new Promise(function(res){
+      el.style.transition = "transform " + ms + "ms cubic-bezier(.5,.05,.9,.6), opacity " + ms + "ms linear";
+      el.style.transform = "translate(-50%," + toBottom + "px) rotate(" + (Math.random() * 40 - 20).toFixed(0) + "deg)";
+      el.style.opacity = "0";
+      setTimeout(function(){ if (el.parentNode) el.parentNode.removeChild(el); res(); }, ms + 30);
+    });
+  }
+
+  /* ---- one go ---- */
+  function setSay(t){ $("#sayEl").innerHTML = t; }
+  function canPlay(){ return !G.busy; }
+
+  async function play(){
+    if (G.busy) return;
+    if (BANK.jellies() < PLAY_COST){ sfx("no"); setSay("not enough jellies. go wind the box &mdash; it pays."); return; }
+    if (!BANK.spend(PLAY_COST, "a go on the claw")){ sfx("no"); return; }
+    paintBank();
+    G.busy = true; paintControls();
+    sfx("coin");
+    setSay("jelly in. line it up, then press.");
+    await wait(420);
+
+    /* down — it stops just above whatever it's over, the way a real one does */
+    G.k = .045; motor(true); setSay("the claw goes down. slowly. sincerely.");
+    var n = pickTarget();
+    descendTo(n);
+    await arrive("y", 0.006);
+    motor(false);
+
+    /* close */
+    G.k = .18; sfx("grab"); G.openT = 0; await arrive("open", 0.01);
+    var got = rollGrab(n);
+    await wait(260);
+
+    /* up */
+    G.k = .045; motor(true);
+    G.yT = 0;
+    var held = null;
+    if (got){
+      held = attach(n);
+      if (n.id === "half"){ n.gone = true; G.halfGone = true; }
+      sfx("clunk");
+    } else setSay("nothing. it closed on nothing, the way it always does.");
+    await arrive("y", 0.006);
+
+    /* over — and forward, because the chute is at the front right corner */
+    G.k = .05; setSay(got ? "carrying. careful. careful." : "carrying nothing, with enormous dignity.");
+    G.xT = CHUTE_X; G.zT = 0.05;
+    var carry = wait(1150);
+    if (got && Math.random() < n.prize.slip){
+      /* the wobble: it never lets go on purpose, but it is a very old machine */
+      await wait(430);
+      motor(false);
+      setSay("it let go. it did not mean to. it never means to.");
+      sfx("drop");
+      await releaseAnimated(held, (G.dropMax * (1 - G.y)) * 0.72, 520);
+      held = null;
+    }
+    await carry;
+    motor(false);
+
+    /* drop into the chute */
+    G.k = .18; setSay("over the chute.");
+    G.openT = 1; await arrive("open", 0.01);
+    if (held){
+      sfx("clunk");
+      await wait(150);
+      await releaseAnimated(held, 70, 420);
+      held = null;
+      await wait(180);
+      win(n);
+    } else {
+      sfx("empty");
+      await wait(420);
+    }
+
+    G.k = .14;
+    G.xT = 50; G.zT = 0.5;
+    G.busy = false; paintControls(); paintBank();
+    setSay(got ? "the claw is pleased with itself." : "the claw is unbothered. it is never bothered.");
+  }
+
+  /* ==================================================================
+     THE REVEAL
+     ================================================================== */
+
+  var popEl = $("#pop"), popBox = $("#popBox");
+  function pips(n){ var s = ""; for (var i = 0; i < 5; i++) s += (i < n ? "\u25cf" : "\u25cb"); return s; }
+
+  function closePop(){ popEl.hidden = true; popBox.innerHTML = ""; }
+  function showPop(html, cls){
+    popBox.className = "box" + (cls ? " " + cls : "");
+    popBox.innerHTML = html;
+    popEl.hidden = false;
+    var b = popBox.querySelector("[data-close]");
+    if (b) b.addEventListener("click", closePop);
+  }
+
+  function win(n){
+    bumpShelf(n.id);
+    sfx("win");
+    if (n.id === "half"){ halfReveal(); return; }
+    var art = n.prize.art;
+    showPop(
+      '<span class="kick">the claw lets you keep</span>' +
+      '<div class="art">' + art + '</div>' +
+      '<div class="pips">' + pips(n.prize.rar) + '</div>' +
+      '<h3>' + esc(n.prize.name.replace(/&rsquo;/g, "\u2019")) + '</h3>' +
+      '<p class="line">' + n.prize.line + '</p>' +
+      '<div class="acts"><button type="button" data-close>back to the machine</button></div>'
+    );
+    if (n.id === "token"){
+      BANK.award(2, "the machine paid you back", "#ccff00");
+      paintBank();
+    }
+  }
+
+  /* the other half: two torn halves, side by side, and what was under the tear */
+  function halfReveal(){
+    var left =
+      '<div class="paper" data-torn="right"><span class="ph">the half the archive kept</span>' +
+      '<div class="sheet">' +
+      '<p>dear diary.</p>' +
+      '<p>today i made sylvestre laugh so hard he fell off the drum stool, and slay laughed so hard he had to sit down on the floor, and i have been thinking about it for six hours straight.</p>' +
+      '<p>also: i fixed the camera in the west corridor.</p>' +
+      '<p>dear diary. today i<span class="dash"> &mdash;</span></p>' +
+      '</div></div>';
+    var right =
+      '<div class="paper found" data-torn="left"><span class="ph">the half that was in the machine</span>' +
+      '<div class="sheet">' +
+      '<p>&mdash; finished the claw.</p>' +
+      '<p>i put the rest of this page inside it, under the marbles, because hans files everything and this one i wanted <b>found</b> and not read. i have been testing it all week. it has never picked anything up on purpose and it has never put anything down on purpose, and then this morning it did exactly what i asked.</p>' +
+      '<p>so that is the job, then. the machines and the portals are the shift. the laughing is the job. i have decided.</p>' +
+      '<p>if you are holding this: thank you for playing with the thing i made. tell ed i am keeping the page.</p>' +
+      '<p>&mdash; m.</p>' +
+      '</div></div>';
+    showPop(
+      '<span class="kick">found, under the marbles</span>' +
+      '<h3>the other half of the page</h3>' +
+      '<div class="halves">' + left + right + '</div>' +
+      '<p class="note2">ed left a note in issue no. 2: <i>&ldquo;if you find the other half, don&rsquo;t file it. bring it to the counter.&rdquo;</i></p>' +
+      '<div class="acts">' +
+        '<a class="go" href="https://ko-fi.com/cafedreamr" target="_blank" rel="noopener noreferrer">take it to the counter &rarr;</a>' +
+        '<button type="button" data-close>back to the machine</button>' +
+      '</div>'
+    );
+    tearEdges();
+    refreshManifest();
+  }
+  function tearEdges(){
+    /* a ragged line where the two halves meet, so the tear reads as a tear */
+    var ps = popBox.querySelectorAll(".paper[data-torn]");
+    for (var i = 0; i < ps.length; i++){
+      var side = ps[i].getAttribute("data-torn");   /* the edge that is torn */
+      var n = 16, pts = [];
+      if (side === "right"){
+        pts.push("0% 0%", "100% 0%");
+        for (var j = 1; j < n; j++){
+          pts.push((100 - Math.random() * 4.5).toFixed(1) + "% " + ((j / n) * 100).toFixed(1) + "%");
+        }
+        pts.push("0% 100%");
+      } else {
+        pts.push("0% 0%");
+        for (var j2 = 1; j2 < n; j2++){
+          pts.push((Math.random() * 4.5).toFixed(1) + "% " + ((j2 / n) * 100).toFixed(1) + "%");
+        }
+        pts.push("100% 100%", "100% 0%");
+      }
+      var poly = "polygon(" + pts.join(",") + ")";
+      ps[i].style.clipPath = poly;
+      ps[i].style.webkitClipPath = poly;
+    }
+  }
+
+  /* ==================================================================
+     THE SHELF + THE MANIFEST
+     ================================================================== */
+
+  var SHELF_KEY = "cafedreamr:claw:shelf";
+  function shelf(){
+    try{ var v = JSON.parse(localStorage.getItem(SHELF_KEY) || "{}"); return (v && typeof v === "object") ? v : {}; }catch(e){ return {}; }
+  }
+  function bumpShelf(id){
+    var s = shelf(); s[id] = (s[id] || 0) + 1;
+    try{ localStorage.setItem(SHELF_KEY, JSON.stringify(s)); }catch(e){}
+    paintShelf(); refreshManifest();
+    if (id === "half"){ G.halfGone = true; paintPile(); }
+  }
+  function paintShelf(){
+    var s = shelf(), el = $("#shelf"), out = "";
+    ORDER.forEach(function(id){
+      if (!s[id]) return;
+      out += '<span class="cell" title="' + esc(PRIZES[id].name) + '">' + PRIZES[id].art +
+             (s[id] > 1 ? "<em>&times;" + s[id] + "</em>" : "") + "</span>";
+    });
+    el.innerHTML = out || '<span class="none">nothing yet. the claw is thinking about it.</span>';
+  }
+  function refreshManifest(){
+    var s = shelf();
+    var rows = ORDER.map(function(id){
+      var pr = PRIZES[id];
+      if (id === "half"){
+        var got = !!s.half;
+        var myst = !got;
+        return '<li class="' + (myst ? "mystery" : "got") + '">' +
+          '<span class="thumb">' + pr.art + '</span>' +
+          '<span class="nm">' + (myst ? "a corner of paper under the marbles" : pr.name) + '</span>' +
+          '<span class="pips">' + (myst ? "miki says it&rsquo;s nothing" : pips(pr.rar)) + '</span></li>';
+      }
+      return '<li class="' + (s[id] ? "got" : "") + '">' +
+        '<span class="thumb">' + pr.art + '</span>' +
+        '<span class="nm">' + esc(pr.name) + '</span>' +
+        '<span class="pips">' + pips(pr.rar) + '</span></li>';
+    }).join("");
+    $("#manifest").innerHTML = rows;
+  }
+
+  /* ==================================================================
+     THE BANK + THE TILL
+     ================================================================== */
+
+  function paintBank(){ $("#tkCount").textContent = BANK.jellies(); }
+  function paintControls(){
+    var btn = $("#playBtn");
+    btn.disabled = G.busy;
+    btn.innerHTML = G.busy ? "the claw is busy" : ("insert a jelly &middot; " + PLAY_COST + " &rarr;");
+    ["#leftBtn", "#rightBtn", "#backBtn", "#frontBtn"].forEach(function(s){ $(s).disabled = G.busy; });
+  }
+
+  var USED_KEY = "cafedreamr:claw:codes";
+  function used(){ try{ var v = JSON.parse(localStorage.getItem(USED_KEY) || "[]"); return v instanceof Array ? v : []; }catch(e){ return []; } }
+  function saveUsed(v){ try{ localStorage.setItem(USED_KEY, JSON.stringify(v)); }catch(e){} }
+
+  function paintTill(){
+    var el = $("#tillList"), have = BANK.jellies(), out = "";
+    COUNTER.forEach(function(r){
+      var u = used();
+      var stocked = r.codes.filter(function(c){ return u.indexOf(c) === -1; }).length;
+      out += '<div class="row">' +
+        '<span class="cost">' + r.at + '<i>jellies</i></span>' +
+        '<span class="what"><b>' + esc(r.label) + '</b><small>' + esc(r.note) + '</small>' +
+          (stocked ? "" : '<small class="none">not stocked yet</small>') + '</span>' +
+        '<button class="get" type="button" data-reward="' + esc(r.id) + '"' +
+          ((have >= r.at && stocked) ? "" : " disabled") + '>' + (stocked ? "change " + r.at : "waiting") + '</button>' +
+        '</div>';
+    });
+    if (!COUNTER.length || !COUNTER.some(function(r){ return r.codes.length; })){
+      out = '<p class="empty">the window isn&rsquo;t stocked yet &mdash; miki is still writing the codes. keep your jellies; they keep.</p>' + out;
+    }
+    el.innerHTML = out;
+  }
+  function redeem(r){
+    var u = used();
+    var pick = null;
+    for (var i = 0; i < r.codes.length; i++){ if (u.indexOf(r.codes[i]) === -1){ pick = r.codes[i]; break; } }
+    if (!pick){ sfx("no"); return; }
+    if (BANK.jellies() < r.at){ sfx("no"); return; }
+    if (!BANK.spend(r.at, "changed at the counter", "#d8a24a")){ return; }
+    u.push(pick); saveUsed(u);
+    sfx("win");
+    paintBank(); paintTill();
+    var body = /^https?:\/\//i.test(pick)
+      ? '<div class="acts"><a class="go" href="' + esc(pick) + '" target="_blank" rel="noopener noreferrer">open the discount &rarr;</a>' +
+        '<button type="button" data-close>done</button></div>'
+      : '<div class="code" id="codeBig">' + esc(pick) + '</div>' +
+        '<p class="fine">type it in at the ko-fi when you check out.</p>' +
+        '<div class="acts"><button type="button" id="copyBtn">copy the code</button>' +
+        '<a class="go" href="https://ko-fi.com/cafedreamr" target="_blank" rel="noopener noreferrer">the counter &rarr;</a>' +
+        '<button type="button" data-close>done</button></div>';
+    showPop(
+      '<span class="kick">the till opens</span>' +
+      '<div class="art">' + PRIZES.token.art + '</div>' +
+      '<h3>' + esc(r.pct) + ' off at the ko-fi</h3>' +
+      '<p class="line">here&rsquo;s what the jellies were for.</p>' +
+      body
+    );
+    var cp = $("#copyBtn");
+    if (cp) cp.addEventListener("click", function(){
+      try{ navigator.clipboard.writeText(pick); }catch(e){}
+      cp.textContent = "copied";
+    });
+  }
+
+  /* ==================================================================
+     POWER ON
+     ================================================================== */
+
+  pileEl.style.position = "absolute";
+  measure();
+  window.addEventListener("resize", measure);
+  G.halfGone = !!shelf().half;
+  paintPile();
+  paintShelf();
+  refreshManifest();
+  paintBank();
+  paintControls();
+  paintTill();
+  requestAnimationFrame(frame);
+
+  BANK.migrate();
+  if (BANK.jellies() === 0 && !localStorage.getItem("cafedreamr:claw:starter")){
+    try{ localStorage.setItem("cafedreamr:claw:starter", "1"); }catch(e){}
+    BANK.award(STARTER, "miki left you a few jellies", "#ccff00");
+    paintBank();
+  }
+
+  $("#playBtn").addEventListener("click", play);
+  function stepX(dir){
+    if (G.busy) return;
+    G.xT = clamp(G.xT + dir * 7.5, xL(G.zT) + XEDGE, xR(G.zT) - XEDGE);
+    tone(660, .03, "square", .035);
+  }
+  function stepZ(dir){
+    if (G.busy) return;
+    G.zT = clamp(G.zT + dir * ZSTEP, 0, 1);
+    G.xT = clamp(G.xT, xL(G.zT) + XEDGE, xR(G.zT) - XEDGE);
+    tone(dir < 0 ? 500 : 760, .05, "triangle", .03);
+  }
+  $("#leftBtn").addEventListener("click", function(){ stepX(-1); });
+  $("#rightBtn").addEventListener("click", function(){ stepX(1); });
+  $("#backBtn").addEventListener("click", function(){ stepZ(1); });
+  $("#frontBtn").addEventListener("click", function(){ stepZ(-1); });
+  var holdT = null;
+  [["#leftBtn",stepX,-1],["#rightBtn",stepX,1],["#backBtn",stepZ,1],["#frontBtn",stepZ,-1]].forEach(function(p){
+    var el = $(p[0]);
+    el.addEventListener("pointerdown", function(){ clearInterval(holdT); holdT = setInterval(function(){ p[1](p[2]); }, 155); });
+    ["pointerup","pointerleave","pointercancel"].forEach(function(ev){
+      el.addEventListener(ev, function(){ clearInterval(holdT); });
+    });
+  });
+  document.addEventListener("keydown", function(e){
+    if (e.key === "ArrowLeft" || e.key === "a"){ stepX(-1); e.preventDefault(); }
+    else if (e.key === "ArrowRight" || e.key === "d"){ stepX(1); e.preventDefault(); }
+    else if (e.key === "ArrowUp" || e.key === "w"){ stepZ(1); e.preventDefault(); }
+    else if (e.key === "ArrowDown" || e.key === "s"){ stepZ(-1); e.preventDefault(); }
+    else if (e.key === " " || e.key === "Enter"){ if (document.activeElement === document.body) { play(); e.preventDefault(); } }
+    else if (e.key === "Escape"){ closePop(); }
+  });
+  popEl.addEventListener("click", function(e){ if (e.target === popEl) closePop(); });
+  $("#tillList").addEventListener("click", function(e){
+    var b = e.target.closest ? e.target.closest("[data-reward]") : null;
+    if (!b) return;
+    var r = COUNTER.filter(function(x){ return x.id === b.getAttribute("data-reward"); })[0];
+    if (r) redeem(r);
+  });
+  $("#sndBtn").addEventListener("click", function(){
+    S.on = !S.on;
+    this.textContent = S.on ? "sound on" : "sound off";
+    this.setAttribute("aria-pressed", S.on ? "true" : "false");
+    if (!S.on) motor(false);
+  });
+
+  if (window.CD && CD.onChange) CD.onChange(function(){ paintBank(); paintTill(); });
+
+  window.claw = {
+    G: G, PRIZES: PRIZES, PILE: PILE, COUNTER: COUNTER,
+    play: play, grant: function(n, l){ var t = BANK.award(n, l || "a gift from miki"); paintBank(); paintTill(); return t; },
+    setX: function(x){ G.xT = clamp(x, xL(G.zT) + XEDGE, xR(G.zT) - XEDGE); G.x = G.xT; paintClaw(); },
+    setZ: function(z){ G.zT = G.z = clamp(z, 0, 1); G.xT = clamp(G.xT, xL(G.zT) + XEDGE, xR(G.zT) - XEDGE); G.x = G.xT; paintClaw(); },
+    stepX: stepX, stepZ: stepZ, depthOf: depthOf, railFrac: railFrac, floorFrac: floorFrac,
+    descend: descendTo,
+    /* debug: park the claw right on top of a named thing */
+    place: function(id){
+      var n = nodes.filter(function(x){ return x.id === id && !x.gone; })[0];
+      if (!n) return null;
+      G.xT = G.x = n.pz.x; G.zT = G.z = depthOf(n.pz); paintClaw();
+      return { x:G.x, z:G.z };
+    },
+    target: function(){ var n = pickTarget(); return n ? n.id : null; },
+    state: function(){ return { phase: G.busy ? "busy" : "idle", x: G.x, z: G.z, y: G.y, jellies: BANK.jellies(), halfGone: G.halfGone, target: (pickTarget() || {}).id || null }; },
+    shelf: shelf, reveal: function(id){ win({ id:id, prize:PRIZES[id] }); }
+  };
+})();
+</script>
+</body>
+</html>
