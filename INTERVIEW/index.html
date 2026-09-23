@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>the interview &middot; cafedreamr</title>
+<meta name="description" content="three of them, one counter, and nine questions that are not a test. star, milo and chari would like to know how you are, and by the end they will tell you which of them you sat nearest.">
+<meta property="og:title" content="the interview &middot; cafedreamr">
+<meta property="og:description" content="three of them, one counter, and nine questions that are not a test.">
+<meta name="theme-color" content="#0b0b0e">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%230b0b0e'/%3E%3Cpath d='M8 2l1.5 4.5L14 8l-4.5 1.5L8 14l-1.5-4.5L2 8l4.5-1.5z' fill='%23c0a6ff'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Klee+One:wght@400;600&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Vampiro+One&display=swap" rel="stylesheet">
+<style>
+:root{
+  --plum:#0d001a;
+  --ink:#0b0b0e;
+  --lav:#fff0f5;
+  --dim:#7d848b;
+  --line:rgba(255,255,255,.10);
+  --violet2:#ee82ee;
+  --star:#c0a6ff;
+  --milo:#98fb98;
+  --chari:#e6e6fa;
+  --mono:'Space Mono', ui-monospace, monospace;
+  --disp:'Bebas Neue', impact, sans-serif;
+  --logo:'Vampiro One', cursive;
+  --body:'Klee One', system-ui, sans-serif;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0;padding:0;background:var(--ink);color:var(--lav);font-family:var(--body);text-align:left;overflow-x:hidden}
+body{min-height:100dvh;line-height:1.6}
+a{color:var(--lav)}
+
+.bg{position:fixed;inset:0;z-index:0;background:
+  radial-gradient(1100px 760px at 50% -12%, rgba(192,166,255,.16), transparent 62%),
+  radial-gradient(900px 700px at 84% 112%, rgba(152,251,152,.10), transparent 60%),
+  radial-gradient(700px 600px at 10% 104%, rgba(238,130,238,.10), transparent 60%),
+  linear-gradient(180deg,#0d001a 0%, #0b0b0e 56%, #050508 100%)}
+#stars{position:absolute;inset:0;width:100%;height:100%;display:block;opacity:.82}
+.vign{position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(120% 100% at 50% 42%, transparent 52%, rgba(0,0,0,.72) 100%)}
+
+/* ---------- the awakening cover ---------- */
+#cover{position:fixed;inset:0;z-index:40;display:flex;align-items:center;justify-content:center;
+  flex-direction:column;text-align:center;padding:24px;cursor:pointer;
+  background:radial-gradient(circle at center, #1a001f 0%, #0d001a 70%);
+  transition:opacity .9s ease}
+#cover.out{opacity:0;pointer-events:none}
+.cov{max-width:min(92vw,560px)}
+.logo{font-family:var(--logo);font-size:clamp(22px,6vw,34px);color:var(--star);letter-spacing:.02em;
+  text-shadow:0 0 16px rgba(192,166,255,.55)}
+#typing{font-family:var(--mono);font-size:clamp(11px,3.2vw,13px);letter-spacing:.14em;text-transform:uppercase;
+  color:var(--lav);margin:22px 0 0;min-height:1.6em;text-align:center}
+#typing .cur{display:inline-block;width:7px;height:12px;background:var(--lav);vertical-align:-1px;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.press{font-family:var(--mono);font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--dim);
+  margin-top:26px;animation:fadeUp 2.4s 1.2s both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* ---------- the room ---------- */
+.wrap{position:relative;z-index:2;width:min(94vw,760px);margin:0 auto;padding:26px 14px 70px}
+.head{text-align:center;padding-top:6px}
+.kicker{font-family:var(--mono);font-size:9px;letter-spacing:.24em;text-transform:uppercase;color:var(--dim)}
+h1{font-family:var(--disp);font-weight:400;font-size:clamp(38px,11vw,64px);letter-spacing:.12em;
+  margin:6px 0 4px;color:var(--lav);text-shadow:0 0 18px rgba(192,166,255,.35), 0 0 46px rgba(238,130,238,.18)}
+.sub{font-size:13.5px;color:var(--dim);margin:0 auto;max-width:44ch;line-height:1.72}
+.whoRow{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin:18px 0 6px}
+.plate{font-family:var(--mono);font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;
+  border:1px solid var(--line);border-radius:999px;padding:6px 11px;color:var(--dim);transition:.35s}
+.plate[data-who="star"]{--a:var(--star)}
+.plate[data-who="milo"]{--a:var(--milo)}
+.plate[data-who="chari"]{--a:var(--chari)}
+.plate.on{color:var(--a);border-color:var(--a);box-shadow:0 0 14px -2px var(--a);background:rgba(255,255,255,.04)}
+.prog{font-family:var(--mono);font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--dim);margin-top:10px;min-height:14px}
+
+.log{display:flex;flex-direction:column;gap:13px;margin-top:24px}
+.msg{max-width:92%;padding:12px 15px;border-left:3px solid var(--a,#7d848b);
+  background:rgba(255,255,255,.035);border-radius:3px 12px 12px 3px;
+  animation:rise .5s ease both}
+@keyframes rise{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}
+.msg[data-who="star"]{--a:var(--star)}
+.msg[data-who="milo"]{--a:var(--milo)}
+.msg[data-who="chari"]{--a:var(--chari)}
+.msg[data-who="you"]{--a:rgba(255,255,255,.34);align-self:flex-end;border-left:0;
+  border-right:3px solid var(--a);border-radius:12px 3px 3px 12px;background:rgba(255,255,255,.055)}
+.msg .nm{font-family:var(--mono);font-size:8.5px;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--a);margin-bottom:4px}
+.msg .tx{font-size:14.5px;line-height:1.7;color:var(--lav)}
+.msg .tx .cur{display:inline-block;width:7px;height:13px;background:var(--lav);vertical-align:-2px;animation:blink 1s steps(1) infinite}
+
+.choices{display:flex;flex-direction:column;gap:8px;margin-top:18px}
+.choices[data-who="star"]{--a:var(--star)}
+.choices[data-who="milo"]{--a:var(--milo)}
+.choices[data-who="chari"]{--a:var(--chari)}
+.choice{display:block;width:100%;text-align:left;min-height:46px;cursor:pointer;
+  font-family:var(--body);font-size:14px;line-height:1.5;color:var(--lav);
+  background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:11px;padding:12px 14px;
+  transition:.18s;animation:rise .5s ease both}
+.choice::before{content:"\25B8";font-family:var(--mono);color:var(--dim);margin-right:9px;transition:.18s}
+.choice:hover{border-color:var(--a);background:rgba(255,255,255,.055);transform:translateX(3px)}
+.choice:hover::before{color:var(--a)}
+.choice:active{transform:translateY(1px)}
+.skipnote{font-family:var(--mono);font-size:8.5px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--dim);text-align:center;margin-top:16px}
+
+/* ---------- the reading ---------- */
+.div{display:flex;align-items:center;gap:12px;margin:26px 0 4px;
+  font-family:var(--mono);font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:var(--dim)}
+.div::before,.div::after{content:"";flex:1;height:1px;background:var(--line)}
+.seatHead{font-family:var(--disp);font-size:clamp(26px,7.5vw,40px);letter-spacing:.08em;line-height:1.2;
+  color:var(--a,var(--lav));text-shadow:0 0 20px var(--a,transparent);text-align:center;margin:6px 0 2px;
+  animation:rise .6s ease both}
+.seatSub{font-family:var(--mono);font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);
+  text-align:center;margin-bottom:14px}
+.seatHead[data-who="star"],.seatSub[data-who="star"]{--a:var(--star)}
+.seatHead[data-who="milo"],.seatSub[data-who="milo"]{--a:var(--milo)}
+.seatHead[data-who="chari"],.seatSub[data-who="chari"]{--a:var(--chari)}
+
+.keep{margin-top:26px;border:1px solid var(--line);border-radius:16px;padding:16px 17px;
+  background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.015));
+  box-shadow:0 22px 50px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.05);animation:rise .6s ease both}
+.keep .kk{font-family:var(--mono);font-size:8.5px;letter-spacing:.26em;text-transform:uppercase;color:var(--dim)}
+.keep .kseat{font-size:15px;margin:8px 0 4px;color:var(--lav)}
+.keep .kseat b{color:var(--a,var(--lav));font-weight:600}
+.keep .kdot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:8px;vertical-align:1px;
+  box-shadow:0 0 9px currentColor}
+.keep .kdate{font-family:var(--mono);font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim)}
+.keep .kline{font-size:13.5px;font-style:italic;color:var(--lav);opacity:.92;margin-top:10px;
+  border-left:2px solid var(--a,var(--line));padding-left:11px}
+
+.doors{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
+.door{font-family:var(--mono);font-size:9.5px;letter-spacing:.15em;text-transform:uppercase;
+  text-decoration:none;color:var(--lav);border:1px solid var(--line);border-radius:999px;padding:9px 13px;transition:.18s}
+.door:hover{border-color:var(--violet2);color:#fff;background:rgba(238,130,238,.08)}
+.door.main{border-color:rgba(192,166,255,.5);box-shadow:0 0 16px -4px rgba(192,166,255,.6)}
+.openline{font-size:13px;color:var(--dim);margin:16px 0 0;line-height:1.7}
+.script{margin-top:24px;border-left:2px solid var(--violet2);padding:4px 0 4px 14px;font-size:13px;
+  font-style:italic;color:var(--lav);opacity:.9;line-height:1.72}
+.script .ref{display:block;font-family:var(--mono);font-size:8.5px;letter-spacing:.2em;text-transform:uppercase;
+  font-style:normal;color:var(--dim);margin-top:7px;opacity:1}
+.again{margin-top:20px;font-family:var(--mono);font-size:9px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--dim);background:none;border:0;border-bottom:1px dashed rgba(255,255,255,.2);cursor:pointer;padding:2px 0}
+.again:hover{color:var(--lav);border-bottom-color:var(--lav)}
+
+.foot{margin-top:46px;padding-top:16px;border-top:1px solid var(--line);
+  font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);
+  display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.foot a{color:var(--dim);text-decoration:none;border-bottom:1px solid rgba(255,255,255,.14)}
+.foot a:hover{color:var(--lav);border-bottom-color:var(--lav)}
+
+@media (max-width:520px){
+  .wrap{padding:18px 11px 60px}
+  .msg{max-width:100%}
+  .sub{font-size:12.5px}
+  .choice{font-size:13.5px}
+}
+</style>
+</head>
+<body>
+<div class="bg"><canvas id="stars"></canvas><div class="vign"></div></div>
+
+<div id="cover">
+  <div class="cov">
+    <div class="logo">cafedreamr</div>
+    <p id="typing"></p>
+    <p class="press">[ press any key or click to begin ]</p>
+  </div>
+</div>
+
+<main class="wrap" id="room" hidden>
+  <header class="head">
+    <div class="kicker">cafedreamr &middot; at the counter</div>
+    <h1>the interview</h1>
+    <p class="sub">three of them, one counter, and nine questions that aren&rsquo;t a test. answer honestly and they&rsquo;ll tell you which of them you sat nearest.</p>
+    <p class="sub">there&rsquo;s another door too &mdash; <a href="https://www.cafedreamr.art/INTERVIEW/invitation/">an interview (eight questions)</a>, where chari, milo and star ask them.</p>
+    <div class="whoRow" id="whoRow">
+      <span class="plate" data-who="star" data-label="star">&#9733; star</span>
+      <span class="plate" data-who="milo" data-label="milo">&#10048; milo</span>
+      <span class="plate" data-who="chari" data-label="chari">&#9789; chari</span>
+    </div>
+    <div class="prog" id="prog"></div>
+  </header>
+
+  <section class="log" id="log" aria-live="polite"></section>
+  <div class="choices" id="choices" hidden></div>
+  <div class="skipnote" id="skipnote">tap anywhere to skip ahead</div>
+
+  <div id="keep" class="keep" hidden></div>
+  <div class="doors" id="doors" hidden></div>
+  <p class="openline" id="openline" hidden>nothing on this site costs anything and nothing is locked behind the interview &mdash; the doors are just doors. take one.</p>
+  <div class="script" id="script" hidden>
+    Then spake Jesus again unto them, saying, I am the light of the world: he that followeth me shall not walk in darkness, but shall have the light of life.
+    <span class="ref">john 8:12 &middot; kjv</span>
+  </div>
+  <button class="again" id="again" type="button" hidden>take it again</button>
+
+  <footer class="foot">
+    <span>cafedreamr &middot; the interview</span>
+    <span><a href="https://www.cafedreamr.art/INTERVIEW/invitation/">an interview</a> &middot; <a href="https://www.cafedreamr.art/">back to the terminal &rarr;</a></span>
+  </footer>
+</main>
+
+<script src="https://www.cafedreamr.art/PASSPORT/cd-passport.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  /* cafedreamr — the café's interview. star, milo and chari, nine
+     questions, one seat. the visitor's softest answers pick which of
+     the three they sat nearest. it is not a grade and it never fails
+     anyone; bobby runs miki's interviews, this one is the café's.
+     the conversation's shape and every line of voice are recorded in
+     src/README.md; use src/PLAY/index.html (levels 2 and 7) as the
+     reference for milo's and chari's speech. */
+
+  var NAME = (function () {
+    try {
+      var s = JSON.parse(localStorage.getItem("cd_session") || "null");
+      return s && s.name ? String(s.name).slice(0, 24) : "";
+    } catch (e) { return ""; }
+  })();
+
+  var WHO = {
+    star:  { label: "\u2605 star \u2014 host of cafedreamr" },
+    milo:  { label: "\u2740 milo \u2014 keeper of the zen" },
+    chari: { label: "\u263E chari \u2014 keeper of the atrium" },
+    you:   { label: "you" }
+  };
+
+  function script() {
+    return [
+      { t:"say", who:"star", text: "the interview" + (NAME ? ", " + NAME : "") + ". sit anywhere \u2014 that end of the counter is the warm one." },
+      { t:"say", who:"star", text: "it's the caf\u00e9's interview, not miki's. bobby runs hers and he's welcome to them." },
+      { t:"say", who:"star", text: "here's the whole of it: we ask, you answer, and at the end we tell you which of us you sat nearest. it's a seat, not a grade." },
+      { t:"say", who:"chari", text: "okay \u2014 hi. i'm chari. i have three questions and i rewrote them four times and then the rats sat on the draft, so if i sound like i'm reading, that's because i am." },
+      { t:"say", who:"milo", text: "and i have three, and there's no hurry in any of them. take them in whatever order they land." },
+      { t:"say", who:"star", text: "chari. you first. you've been vibrating since the door opened." },
+
+      { t:"ask", who:"chari", text: "first one. it's a soft one, so a soft answer is allowed. what are you carrying that nobody's asked you about yet?", opts: [
+        { t:"something i'm afraid of", w:{ chari: 3 },
+          reply:{ who:"chari", text: "yeah. those don't get smaller when you say them, and they don't have to. they just stop being carried alone for a minute. that's all this room is for." } },
+        { t:"something i want, and haven't said out loud", w:{ chari: 2, star: 1 },
+          reply:{ who:"chari", text: "wanting out loud is the scariest sentence there is. i've said about four of them in my life and the rats heard every one." } },
+        { t:"nothing, honestly. i'm alright", w:{ star: 3 },
+          reply:{ who:"star", text: "good. most people lie when they answer that one \u2014 i can usually tell. i don't think you are." } },
+        { t:"i don't know how to answer that", w:{ milo: 2, chari: 1 },
+          reply:{ who:"milo", text: "then you looked, which is the part that matters. the answer can arrive later. we aren't keeping score of it." } }
+      ]},
+
+      { t:"ask", who:"chari", text: "second one, and this is the making one. when you make something \u2014 a thing, a page, a meal, a mess \u2014 who is it for?", opts: [
+        { t:"me. only me, and that's the point", w:{ star: 3 },
+          reply:{ who:"star", text: "good. something that's only yours is the only thing nobody can take the shine off." } },
+        { t:"one person. i'd know exactly who", w:{ chari: 3 },
+          reply:{ who:"chari", text: "one person is the loudest thing there is. i built a palace and showed it to two rats, and that was my whole launch." } },
+        { t:"whoever turns up", w:{ milo: 3 },
+          reply:{ who:"milo", text: "then you're making a room and leaving the door open. that's most of what this place is, if you want to know." } },
+        { t:"i don't make things \u2014 i read, i listen, i watch", w:{ milo: 2, star: 1 },
+          reply:{ who:"milo", text: "then you're one of the ones it was made for, and that is a whole job. nothing here is finished until somebody is on the other end of it." } }
+      ]},
+
+      { t:"ask", who:"chari", text: "last one from me. what do you do with a thing you're scared to show anybody?", opts: [
+        { t:"show it anyway", w:{ chari: 2, milo: 1 },
+          reply:{ who:"chari", text: "oh. that's brave, and i'm going to be thinking about it at three in the morning. mine sat in a drawer for a year before the rats got a look." } },
+        { t:"keep it and refine it until it's dead", w:{ star: 3, chari: 1 },
+          reply:{ who:"star", text: "then it's never actually been shown \u2014 i know that one. the things i keep are the only ones i'd defend." } },
+        { t:"show it to exactly one person", w:{ chari: 3 },
+          reply:{ who:"chari", text: "one person is the whole thing. that's a whisper to one person, and the atrium keeps those loudest." } },
+        { t:"i don't finish it", w:{ milo: 2, chari: 1 },
+          reply:{ who:"milo", text: "unfinished isn't failed. some things are still drinking." } }
+      ]},
+
+      { t:"ask", who:"milo", text: "my turn. how are you carrying it today? not whether you're fine \u2014 how the weight is sitting.", opts: [
+        { t:"evenly, on both shoulders", w:{ milo: 3 },
+          reply:{ who:"milo", text: "then today is a good day, and you shouldn't spend it looking for a problem. i've watched people do that. the tea goes cold." } },
+        { t:"low, in the back, where i can't see it", w:{ chari: 2, milo: 1 },
+          reply:{ who:"chari", text: "i know that shelf. it's the one that decides things at three in the morning while you're asleep." } },
+        { t:"i put it down somewhere and forgot where", w:{ milo: 2, star: 1 },
+          reply:{ who:"milo", text: "then we'll leave it there. it doesn't need finding today, and it isn't going anywhere." } },
+        { t:"more than one person's worth", w:{ chari: 3 },
+          reply:{ who:"chari", text: "then give one back. not all of them \u2014 one. that's what i do, i do it badly, and it still works." } }
+      ]},
+
+      { t:"ask", who:"milo", text: "when you're making something, what does it seem to want from you?", opts: [
+        { t:"quiet, and a long time", w:{ milo: 3 },
+          reply:{ who:"milo", text: "then give it the morning. nothing in the garden finishes early except the things that were already finished." } },
+        { t:"to be finished", w:{ star: 2 },
+          reply:{ who:"star", text: "finished is the honest answer. i don't like things sitting half-done either." } },
+        { t:"all of me, right now, at once", w:{ chari: 2 },
+          reply:{ who:"chari", text: "at two in the morning, with music on. i built a palace like that. i don't recommend it. i'd do it again." } },
+        { t:"nothing. i just like doing it", w:{ milo: 2, star: 1 },
+          reply:{ who:"milo", text: "that's the best reason on the list, and the first one most people lose." } }
+      ]},
+
+      { t:"ask", who:"milo", text: "if you could put one thing down right now \u2014 anything, not just the big ones \u2014 what would it be?", opts: [
+        { t:"the thing i'm supposed to be doing", w:{ star: 2 },
+          reply:{ who:"star", text: "put it down. it'll still be there and it won't be smaller \u2014 you'll just be standing up." } },
+        { t:"what somebody thinks of me", w:{ chari: 2, milo: 1 },
+          reply:{ who:"chari", text: "that one has a body, and it lives in the room with you. i put it down about hourly." } },
+        { t:"the rest of today, which hasn't happened yet", w:{ milo: 3 },
+          reply:{ who:"milo", text: "good. the future isn't a thing you carry. it's a thing you meet." } },
+        { t:"nothing. i'd rather keep it", w:{ star: 3 },
+          reply:{ who:"star", text: "keeping it is allowed. i keep mine." } }
+      ]},
+
+      { t:"ask", who:"star", text: "mine. short ones. when you're in a room full of people, what are you actually doing?", opts: [
+        { t:"watching the door", w:{ star: 3 },
+          reply:{ who:"star", text: "so do i. it isn't fear, whatever they call it. somebody has to." } },
+        { t:"listening for the one who needs something", w:{ chari: 2, milo: 1 },
+          reply:{ who:"chari", text: "you do the thing i do. it's exhausting, and i'm not stopping either." } },
+        { t:"all of it at once, badly", w:{ chari: 3 },
+          reply:{ who:"chari", text: "badly is fine. i have never once seen it done well." } },
+        { t:"enjoying it, mostly", w:{ milo: 3 },
+          reply:{ who:"milo", text: "then keep doing that. it's allowed, and it's the thing people forget they're allowed." } }
+      ]},
+
+      { t:"ask", who:"star", text: "what have you made lately that you'd defend?", opts: [
+        { t:"something small, and finished", w:{ star: 3 },
+          reply:{ who:"star", text: "small and finished. good. i keep a list of mine \u2014 it's a short list, and i read it." } },
+        { t:"something nobody's seen", w:{ star: 3, chari: 1 },
+          reply:{ who:"star", text: "then it's yours, and that's a whole way of making things. i have those too." } },
+        { t:"nothing lately", w:{ milo: 3 },
+          reply:{ who:"milo", text: "then you've been resting, and resting is one of the things that gets made. i've watched it happen in the hammock all week." } },
+        { t:"a room. people walk into it and feel something", w:{ chari: 3 },
+          reply:{ who:"chari", text: "oh \u2014 you're one of those. you don't make things, you make rooms, and the room is the thing. i live in one you'd like." } }
+      ]},
+
+      { t:"ask", who:"star", text: "last one, and then it's done. what are you doing tomorrow morning?", opts: [
+        { t:"the same thing i do every morning", w:{ star: 3 },
+          reply:{ who:"star", text: "good. a routine is a floor. most people are standing on nothing and calling it freedom." } },
+        { t:"something i've been putting off", w:{ milo: 3 },
+          reply:{ who:"milo", text: "then do it slowly, in the morning, before anybody wants anything from you. that's when the hard things are lightest." } },
+        { t:"something with someone", w:{ chari: 3 },
+          reply:{ who:"chari", text: "yes. bring someone. that's the answer to about six of my questions." } },
+        { t:"i don't know yet", w:{ star: 2 },
+          reply:{ who:"star", text: "neither do i, and i own the building. we'll find out." } }
+      ]}
+    ];
+  }
+
+  var SEATS = {
+    counter: {
+      who:"star", name:"star", seat:"the counter \u00b7 realm 00", accent:"#c0a6ff",
+      head:"you sat nearest star.", keep:"i keep the keys. you can keep one too.",
+      lines:[
+        { who:"star", text:"of course you did. sit down, then \u2014 that end of the counter is for people who watch the door, count the exits, and come in anyway. i don't need you warm at me. i'd rather you were exact." },
+        { who:"star", text:"i keep this place: the books, the hours, and the keys to most of the doors, and i don't say which ones. i'm quiet \u2014 it isn't a mood and it isn't about you. sit here again and i'll remember your order. not much else. that's the whole of my table." },
+        { who:"milo", text:"the garden's two doors over, and it doesn't want anything from you. the tea's on either way." },
+        { who:"chari", text:"and the atrium keeps whatever you say softly. if you ever say a thing you'd rather not have said, it stays a whisper in there. i built it for exactly that." }
+      ]
+    },
+    garden: {
+      who:"milo", name:"milo", seat:"the garden \u00b7 realm 04", accent:"#98fb98",
+      head:"you sat nearest milo.", keep:"leave the heavy thing by the wall. it doesn't follow you out.",
+      lines:[
+        { who:"milo", text:"then come out the back with me, and bring nothing. the cushions don't bite and there is nothing on the list today." },
+        { who:"milo", text:"you're carrying it well, and that is not the same as carrying it lightly \u2014 i noticed which one it is. we'll leave the heavy part by the wall. nothing in the garden takes what isn't handed to it." },
+        { who:"star", text:"he means it. i've watched him leave an entire week by that wall and go home without it." },
+        { who:"chari", text:"and i'm two doors over with two rats, and they've already decided about you." }
+      ]
+    },
+    atrium: {
+      who:"chari", name:"chari", seat:"the atrium of whispered truths \u00b7 realm 02", accent:"#e6e6fa",
+      head:"you sat nearest chari.", keep:"the room keeps it. you don't have to carry it out.",
+      lines:[
+        { who:"chari", text:"oh. okay. okay \u2014 come here, then. mine's the opalescent one, right beside the garden, and it's the room that keeps every soft thing anyone has ever said in it." },
+        { who:"chari", text:"you feel all of it at once and you've been calling that a flaw. it isn't. it's why the room got built. i'm the last person who'd tell you to hold less \u2014 i'd just show you where to put it down while you sleep." },
+        { who:"star", text:"she's right about the room. i don't say that often." },
+        { who:"milo", text:"the tea stays warm. it does that either way." }
+      ]
+    },
+    "counter+garden": {
+      who:"star", name:"star and milo", seat:"the counter, and the garden behind it", accent:"#c0a6ff",
+      head:"you sat between star and milo.", keep:"watch the door. leave the weight by the wall. both are a day's work.",
+      lines:[
+        { who:"star", text:"half of you is watching the door. i know the feeling. i keep more than one key myself." },
+        { who:"milo", text:"and the other half is already outside, barefoot, with nothing on the list. that's not a contradiction \u2014 that's a person." },
+        { who:"chari", text:"you can always come and sit in the middle of mine when the two of them are tiring you out. the rats will take a shoulder each." }
+      ]
+    },
+    "counter+atrium": {
+      who:"star", name:"star and chari", seat:"the counter, and the atrium at the back", accent:"#c0a6ff",
+      head:"you sat between star and chari.", keep:"keep it, and feel it anyway. the two aren't in conflict.",
+      lines:[
+        { who:"star", text:"you keep things, and you feel them anyway. that's most of what i do at this counter, and nobody has ever put it better." },
+        { who:"chari", text:"and it's why my room sounds like yours inside. come in when it's loud in your head \u2014 it goes quiet in there, but it never goes empty." },
+        { who:"milo", text:"and if it gets heavy, the garden door isn't locked. it has never once been locked." }
+      ]
+    },
+    "garden+atrium": {
+      who:"milo", name:"milo and chari", seat:"the garden, and the atrium beside it", accent:"#98fb98",
+      head:"you sat between milo and chari.", keep:"tend the outside. keep the soft things. the neighbours do both.",
+      lines:[
+        { who:"milo", text:"so you tend things, and you keep what people say. that's a whole way of living, and a good one." },
+        { who:"chari", text:"we're neighbours, the garden and me. you can have both \u2014 the quiet outside and the room that keeps the soft things. we do it every night." },
+        { who:"star", text:"two doors and one hall. and mine's at the front, if you ever want to watch the room instead of being in it." }
+      ]
+    },
+    middle: {
+      who:"star", name:"all three of them", seat:"the middle of the room", accent:"#ee82ee",
+      head:"you sat in the middle, with all three of them looking at you.",
+      keep:"the middle is the hardest seat, and it is where the table is.",
+      lines:[
+        { who:"star", text:"that's the hardest seat in the building and you took it without being asked." },
+        { who:"milo", text:"nothing wrong with it. the middle is where the table is, and the tea reaches you from both sides." },
+        { who:"chari", text:"and the rats like you. that's three votes and one of them squeaked." }
+      ]
+    }
+  };
+
+  var DOORS = [
+    { label:"the terminal", href:"https://www.cafedreamr.art/", main:true },
+    { label:"star's place", href:"https://www.cafedreamr.art/STAR/" },
+    { label:"miki's games room", href:"https://www.cafedreamr.art/MIKI/GAMES/" },
+    { label:"the long day", href:"https://www.cafedreamr.art/PLAY/" },
+    { label:"the hours", href:"https://www.cafedreamr.art/LORE/HOURS/" },
+    { label:"an interview (eight questions)", href:"https://www.cafedreamr.art/INTERVIEW/invitation/" }
+  ];
+
+  var log = document.getElementById("log"),
+      choicesEl = document.getElementById("choices"),
+      prog = document.getElementById("prog"),
+      keepEl = document.getElementById("keep"),
+      doorsEl = document.getElementById("doors"),
+      openlineEl = document.getElementById("openline"),
+      scriptEl = document.getElementById("script"),
+      againEl = document.getElementById("again"),
+      plates = Array.prototype.slice.call(document.querySelectorAll(".plate")),
+      cover = document.getElementById("cover");
+
+  var SPEED = 17, skip = false, typing = false, waiter = null,
+      qn = 0, total = 0, done = false, started = false, auto = false,
+      totals = { counter:0, garden:0, atrium:0 };
+
+  function wait(ms) { return new Promise(function (r) { setTimeout(r, auto ? Math.min(ms, 5) : ms); }); }
+
+  function typeInto(el, text, speed) {
+    return new Promise(function (res) {
+      el.textContent = "";
+      var cur = document.createElement("span");
+      cur.className = "cur";
+      el.appendChild(cur);
+      var i = 0, fast = auto || speed < 5;
+      skip = false;
+      (function step() {
+        if (skip || i >= text.length) {
+          cur.remove();
+          el.textContent = text;
+          res();
+          return;
+        }
+        cur.insertAdjacentText("beforebegin", text[i++]);
+        setTimeout(step, fast ? 0 : speed);
+      })();
+    });
+  }
+
+  function scrollDown() {
+    try { window.scrollTo({ top: document.body.scrollHeight, behavior: auto ? "auto" : "smooth" }); }
+    catch (e) { window.scrollTo(0, document.body.scrollHeight); }
+  }
+
+  function light(who) {
+    plates.forEach(function (p) { p.classList.toggle("on", p.dataset.who === who); });
+  }
+
+  function say(who, text) {
+    var row = document.createElement("div");
+    row.className = "msg";
+    row.dataset.who = who;
+    var nm = document.createElement("div");
+    nm.className = "nm";
+    nm.textContent = (WHO[who] || WHO.you).label;
+    var tx = document.createElement("div");
+    tx.className = "tx";
+    row.appendChild(nm);
+    row.appendChild(tx);
+    log.appendChild(row);
+    scrollDown();
+    light(who);
+    typing = true;
+    return typeInto(tx, text, SPEED).then(function () {
+      typing = false;
+      light(null);
+    });
+  }
+
+  var SEAT_OF = { star:"counter", milo:"garden", chari:"atrium" };
+
+  function ask(beat) {
+    qn++;
+    prog.textContent = "question " + qn + " of " + total;
+    return say(beat.who, beat.text).then(function () {
+      choicesEl.dataset.who = beat.who;
+      choicesEl.hidden = false;
+      return new Promise(function (res) {
+        beat.opts.forEach(function (o, i) {
+          var b = document.createElement("button");
+          b.type = "button";
+          b.className = "choice";
+          b.textContent = o.t;
+          b.addEventListener("click", function () { choose(i, beat, res); });
+          choicesEl.appendChild(b);
+        });
+        scrollDown();
+      }).then(function (i) {
+        var o = beat.opts[i];
+        Array.prototype.slice.call(choicesEl.querySelectorAll(".choice")).forEach(function (b) { b.remove(); });
+        choicesEl.hidden = true;
+        Object.keys(o.w).forEach(function (k) { totals[SEAT_OF[k] || k] += o.w[k]; });
+        return say("you", o.t).then(function () {
+          return say(o.reply.who, o.reply.text);
+        }).then(function () { return wait(420); });
+      });
+    });
+  }
+
+  function choose(i, beat, res) {
+    if (waiter) return;
+    waiter = res;
+    res(i);
+    waiter = null;
+  }
+
+  function decide() {
+    var order = ["counter", "garden", "atrium"];
+    var sorted = order.slice().sort(function (a, b) {
+      return totals[b] - totals[a] || order.indexOf(a) - order.indexOf(b);
+    });
+    var a = totals[sorted[0]], b = totals[sorted[1]], c = totals[sorted[2]];
+    if (a === b && b === c) return "middle";
+    if (a === b) {
+      return sorted.slice(0, 2).sort(function (x, y) { return order.indexOf(x) - order.indexOf(y); }).join("+");
+    }
+    return sorted[0];
+  }
+
+  var FKEY = "cafedreamr:interview:found";
+  function foundAll() {
+    try { return JSON.parse(localStorage.getItem(FKEY) || "{}") || {}; } catch (e) { return {}; }
+  }
+  function remember(key) {
+    try {
+      var f = foundAll();
+      f[key] = Date.now();
+      localStorage.setItem(FKEY, JSON.stringify(f));
+      localStorage.setItem("cafedreamr:interview:seat", key);
+    } catch (e) {}
+  }
+  function foundCount() {
+    var f = foundAll();
+    return ["counter", "garden", "atrium"].filter(function (k) { return f[k]; }).length;
+  }
+  /* what the terminal reads the moment the visitor is actually in the cafe.
+     who is the one who writes to them; also is the other one they landed
+     beside, when they sat between two. */
+  var SEAT_WHO = {
+    counter: ["star", null], garden: ["milo", null], atrium: ["chari", null],
+    "counter+garden": ["star", "milo"], "counter+atrium": ["star", "chari"],
+    "garden+atrium": ["milo", "chari"], middle: ["all", null]
+  };
+  function seatRecord(key) {
+    var m = SEAT_WHO[key] || SEAT_WHO.middle;
+    try {
+      localStorage.setItem("cafedreamr:interview:last", JSON.stringify({ who: m[0], at: Date.now(), also: m[1] || null }));
+    } catch (e) {}
+  }
+  function stamp(id, opts) {
+    try { if (window.CD && window.CD.stamp) window.CD.stamp(id, opts); } catch (e) {}
+  }
+
+  function dateStr() {
+    var d = new Date();
+    return d.toLocaleDateString(undefined, { day:"numeric", month:"long", year:"numeric" });
+  }
+
+  function keepsake(seat) {
+    keepEl.style.setProperty("--a", seat.accent);
+    keepEl.innerHTML =
+      '<div class="kk">the interview &middot; kept</div>' +
+      '<div class="kseat"><span class="kdot" style="background:' + seat.accent + ';color:' + seat.accent + '"></span>' +
+      "seated nearest <b>" + seat.name + "</b> &middot; " + seat.seat + "</div>" +
+      '<div class="kdate">' + dateStr() + " &middot; " + foundCount() + " of 3 seats found</div>" +
+      '<div class="kline">&ldquo;' + seat.keep + '&rdquo;</div>';
+    keepEl.hidden = false;
+  }
+
+  function doors() {
+    DOORS.forEach(function (d) {
+      var a = document.createElement("a");
+      a.className = "door" + (d.main ? " main" : "");
+      a.href = d.href;
+      a.textContent = d.label;
+      doorsEl.appendChild(a);
+    });
+    doorsEl.hidden = false;
+    openlineEl.hidden = false;
+    scriptEl.hidden = false;
+    againEl.hidden = false;
+  }
+
+  function finish() {
+    return say("star", "that's the nine. sit still a second \u2014 we don't take long to decide.").then(function () {
+      return wait(620);
+    }).then(function () {
+      var key = decide(), seat = SEATS[key];
+      prog.textContent = "the reading";
+      var div = document.createElement("div");
+      div.className = "div";
+      div.textContent = "the reading";
+      log.appendChild(div);
+      scrollDown();
+      return wait(360).then(function () {
+        var h = document.createElement("div");
+        h.className = "seatHead";
+        h.dataset.who = seat.who;
+        h.textContent = seat.head;
+        var s = document.createElement("div");
+        s.className = "seatSub";
+        s.dataset.who = seat.who;
+        s.textContent = seat.seat;
+        log.appendChild(h);
+        log.appendChild(s);
+        scrollDown();
+        return wait(420);
+      }).then(function () {
+        return seat.lines.reduce(function (p, L) {
+          return p.then(function () { return say(L.who, L.text); }).then(function () { return wait(260); });
+        }, Promise.resolve());
+      }).then(function () {
+        return say("star", "come back and it'll read differently. so will you.").then(function () { return wait(300); });
+      }).then(function () {
+        remember(key);
+        seatRecord(key);
+        stamp("intake:sat", { label: "sat the caf\u00e9's interview" });
+        if (key === "counter") stamp("intake:seat-counter", { label: "sat nearest star" });
+        if (key === "garden") stamp("intake:seat-garden", { label: "sat nearest milo" });
+        if (key === "atrium") stamp("intake:seat-atrium", { label: "sat nearest chari" });
+        keepsake(seat);
+        doors();
+        document.getElementById("skipnote").hidden = true;
+        done = true;
+      });
+    });
+  }
+
+  function run() {
+    var beats = script();
+    total = beats.filter(function (b) { return b.t === "ask"; }).length;
+    var p = Promise.resolve();
+    beats.forEach(function (b) {
+      p = p.then(function () {
+        if (b.t === "say") return say(b.who, b.text).then(function () { return wait(460); });
+        return ask(b);
+      });
+    });
+    return p.then(function () { return finish(); });
+  }
+
+  function begin() {
+    if (started) return;
+    started = true;
+    cover.classList.add("out");
+    setTimeout(function () {
+      cover.hidden = true;
+      document.getElementById("room").hidden = false;
+      window.scrollTo(0, 0);
+      try { if (window.CD && window.CD.boot) window.CD.boot({ page:"interview" }); } catch (e) {}
+      run();
+    }, 900);
+  }
+
+  document.addEventListener("click", function () { if (typing) skip = true; });
+  document.addEventListener("keydown", function (e) {
+    if (!started) { begin(); return; }
+    if (typing && (e.key === " " || e.key === "Enter")) skip = true;
+  });
+  cover.addEventListener("click", begin);
+
+  againEl.addEventListener("click", function () {
+    log.innerHTML = "";
+    totals = { counter:0, garden:0, atrium:0 };
+    qn = 0; done = false;
+    keepEl.hidden = true; keepEl.innerHTML = "";
+    doorsEl.innerHTML = ""; doorsEl.hidden = true;
+    openlineEl.hidden = true; scriptEl.hidden = true; againEl.hidden = true;
+    document.getElementById("skipnote").hidden = false;
+    prog.textContent = "";
+    window.scrollTo(0, 0);
+    run();
+  });
+
+  (function coverType() {
+    var el = document.getElementById("typing");
+    var msg = "booting the caf\u00e9 \u00b7 waking the lavender node \u00b7 the counter is warm";
+    var i = 0;
+    (function step() {
+      if (i >= msg.length) return;
+      el.insertAdjacentText("beforeend", msg[i++]);
+      setTimeout(step, 52);
+    })();
+  })();
+
+  (function stars() {
+    var c = document.getElementById("stars"), x = c.getContext("2d");
+    function paint() {
+      var w = c.width = window.innerWidth, h = c.height = window.innerHeight;
+      x.clearRect(0, 0, w, h);
+      var n = Math.min(320, Math.round(w * h / 9000));
+      for (var i = 0; i < n; i++) {
+        x.globalAlpha = Math.random() * 0.6 + 0.14;
+        x.fillStyle = Math.random() < 0.14 ? "#c0a6ff" : "#fff0f5";
+        x.beginPath();
+        x.arc(Math.random() * w, Math.random() * h, Math.random() * 1.25 + 0.2, 0, 6.283);
+        x.fill();
+      }
+      x.globalAlpha = 1;
+    }
+    paint();
+    window.addEventListener("resize", paint);
+  })();
+
+  try { if (window.CD && window.CD.boot) window.CD.boot({ page:"interview" }); } catch (e) {}
+
+  window.IV = {
+    speed: function (n) { SPEED = Math.max(0, Number(n) || 0); },
+    skip: function () { skip = true; },
+    fast: function () { auto = true; },
+    pick: function (i) {
+      var b = choicesEl.querySelectorAll(".choice")[i];
+      if (!b) return false;
+      b.click();
+      return true;
+    },
+    state: function () {
+      return { q: qn, total: total, totals: { counter:totals.counter, garden:totals.garden, atrium:totals.atrium }, seat: SEATS[decide()].name, done: done, started: started };
+    }
+  };
+})();
+</script>
+</body>
+</html>
