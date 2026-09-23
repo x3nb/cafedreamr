@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>an interview &middot; cafedreamr</title>
+<meta name="description" content="an interview: eight questions from chari, milo and star, and a lean at the end. it isn't a score &mdash; it's how we find the frequency you already are.">
+<meta property="og:title" content="an interview &middot; cafedreamr">
+<meta property="og:description" content="eight questions, a lean, and the frequency you already are.">
+<meta name="theme-color" content="#0b0b0e">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' shape-rendering='crispEdges'%3E%3Crect width='16' height='16' fill='%230b0b0e'/%3E%3Crect x='3' y='3' width='10' height='1' fill='%23ccff00'/%3E%3Crect x='2' y='4' width='3' height='1' fill='%23ccff00'/%3E%3Crect x='6' y='4' width='4' height='1' fill='%23ff2d95'/%3E%3Crect x='11' y='4' width='3' height='1' fill='%23ccff00'/%3E%3Crect x='2' y='5' width='1' height='2' fill='%23ccff00'/%3E%3Crect x='4' y='5' width='8' height='1' fill='%23ff2d95'/%3E%3Crect x='13' y='5' width='1' height='2' fill='%23ccff00'/%3E%3Crect x='2' y='7' width='1' height='2' fill='%23ccff00'/%3E%3Crect x='4' y='7' width='3' height='2' fill='%23ff2d95'/%3E%3Crect x='9' y='7' width='3' height='2' fill='%23ff2d95'/%3E%3Crect x='13' y='7' width='1' height='2' fill='%23ccff00'/%3E%3Crect x='2' y='9' width='12' height='1' fill='%23ccff00'/%3E%3Crect x='4' y='10' width='8' height='1' fill='%23ccff00'/%3E%3Crect x='6' y='11' width='4' height='1' fill='%2398fb98'/%3E%3Crect x='7' y='12' width='2' height='1' fill='%2398fb98'/%3E%3C/svg%3E">
+<link rel="alternate icon" type="image/png" sizes="32x32" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABk0lEQVR4AeyXMVICMRSG/2xJcDkAnQewsWXGDo5gT+sJrNTKE9hS6xGwc4bWxgNYyQFkgDa8LLyZnbcbkuxkU7Hjm2eW9/7/e0koKHB6tB5NtS7ftb76o2z6iUqbPEbTky0qgMGgfALMkl7eA2qM3p5KmzzM8ugJFJomVwrPyPxYT+tNO2Dmmb1rdmZuASa1N5n/NRMCqM4lszHbqTEB8KI9f203iIl2FfdbL4C7Nc0nTgCeOtYmts8JEGvctb4B4Jrg9uYN50ICuHRkXQNAFvS99gLw1Awy/H1EW9wNS9jgutDsBQgV6loXDMBTb69fUQ+fMd8FmbkvGIAbUucLQPAO8LnzXeDsOxL7zWgL7gsG4IbU2Qvw/fMAG2zMOyEz33KuC81egFChrnUNAD4vKWh34VzIepeOrGsAyIK+106A0AkkYGyfE0AK97X2AvBEoTkWlADMOrYpXb1ZE4BapROMVVIrC7CIbUtXrxbFbvf/aQyy/za0ntabdgDY7zcvgJoB+ADS3gnSrP1V2uShZkdP4AAAAP//e/7TsgAAAAZJREFUAwAJed+/zTQA9gAAAABJRU5ErkJggg==">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Klee+One:wght@400;600&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Vampiro+One&display=swap" rel="stylesheet">
+<style>
+:root{
+  --plum:#0d001a;
+  --ink:#0b0b0e;
+  --ink2:#141419;
+  --ink3:#1b1b22;
+  --lime:#ccff00;
+  --pink:#ff2d95;
+  --cyan:#00e5ff;
+  --violet:#bf40bf;
+  --violet2:#ee82ee;
+  --corn:#6495ed;
+  --mint:#98fb98;
+  --lav:#fff0f5;
+  --dim:#7d848b;
+  --line:rgba(255,255,255,.10);
+  --glow:0 0 12px rgba(191,64,191,.55), 0 0 34px rgba(191,64,191,.22);
+  --star:#c0a6ff;
+  --milo:#98fb98;
+  --chari:#e6e6fa;
+  --mono:'Space Mono', ui-monospace, monospace;
+  --disp:'Bebas Neue', impact, sans-serif;
+  --logo:'Vampiro One', cursive;
+  --body:'Klee One', system-ui, sans-serif;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0;padding:0;background:var(--ink);color:var(--lav);font-family:var(--body);text-align:left;overflow-x:hidden}
+body{min-height:100dvh;line-height:1.6}
+a{color:var(--lav)}
+
+.bg{position:fixed;inset:0;z-index:0;background:
+  radial-gradient(1200px 800px at 50% -10%, rgba(100,149,237,.16), transparent 60%),
+  radial-gradient(900px 700px at 80% 110%, rgba(255,45,149,.12), transparent 60%),
+  linear-gradient(180deg,#0d001a 0%, #0b0b0e 55%, #050508 100%)}
+#stars{position:absolute;inset:0;width:100%;height:100%;display:block;opacity:.85}
+.vign{position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(120% 100% at 50% 45%, transparent 55%, rgba(0,0,0,.75) 100%)}
+
+/* ---------- STAGE + CABINET ---------- */
+.stage{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;padding:26px 14px 60px}
+.cabinet{width:min(94vw,760px);background:linear-gradient(180deg,var(--ink2),var(--ink));
+  border:1px solid var(--line);border-radius:24px;padding:14px 14px 18px;position:relative;
+  box-shadow:0 40px 90px rgba(0,0,0,.75), inset 0 1px 0 rgba(255,255,255,.06), 0 0 0 6px rgba(255,255,255,.02)}
+.cabinet:before{content:"";position:absolute;inset:6px;border-radius:18px;pointer-events:none;
+  border:1px solid rgba(255,255,255,.04)}
+
+.marquee{display:flex;align-items:center;gap:13px;padding:9px 8px 11px;border-bottom:1px dashed rgba(255,255,255,.10)}
+.brand{font-family:var(--disp);font-size:30px;letter-spacing:.12em;line-height:1;white-space:nowrap;
+  color:var(--lime);text-shadow:0 0 10px rgba(204,255,0,.45)}
+.tag{font-family:var(--mono);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);
+  flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.led{width:9px;height:9px;border-radius:50%;background:var(--pink);flex:0 0 auto;
+  box-shadow:0 0 10px var(--pink);animation:pulse 1.6s infinite ease-in-out}
+@keyframes pulse{0%,100%{opacity:.35;transform:scale(.85)}50%{opacity:1;transform:scale(1)}}
+@keyframes fadein{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@keyframes blink{50%{opacity:0}}
+
+/* ---------- THE TITLE PLATE ---------- */
+.head{text-align:center;padding:18px 8px 4px}
+.kicker{font-family:var(--mono);font-size:8.5px;letter-spacing:.26em;text-transform:uppercase;color:var(--dim)}
+h1{font-family:var(--disp);font-weight:400;font-size:clamp(38px,10vw,58px);letter-spacing:.1em;line-height:1;margin:8px 0 6px;
+  color:var(--lav);text-shadow:0 0 18px rgba(192,166,255,.4), 0 0 46px rgba(238,130,238,.18)}
+
+/* ---------- THE SCREEN (the invitation) ---------- */
+.screen{position:relative;margin:13px 0 0;border-radius:16px;overflow:hidden;background:#000;
+  min-height:470px;display:flex;align-items:center;justify-content:center;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.08), inset 0 0 60px rgba(0,0,0,.9), 0 0 26px rgba(191,64,191,.18)}
+.screen .void{position:absolute;inset:0;background:
+  radial-gradient(72% 82% at 50% 36%, rgba(191,64,191,.18), transparent 62%),
+  radial-gradient(60% 60% at 84% 98%, rgba(255,45,149,.12), transparent 60%)}
+.glare{position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(115deg, rgba(255,255,255,.10) 0%, transparent 38%, transparent 70%, rgba(255,45,149,.10) 100%)}
+.scan{position:absolute;inset:0;pointer-events:none;
+  background:repeating-linear-gradient(180deg, rgba(0,0,0,.32) 0 1px, rgba(0,0,0,0) 1px 3px);
+  mix-blend-mode:multiply;opacity:.5}
+.osd{position:absolute;top:0;left:0;right:0;height:44px;z-index:3;display:flex;align-items:center;
+  justify-content:space-between;padding:0 12px;pointer-events:none;
+  background:linear-gradient(180deg, rgba(6,1,12,.95) 0%, rgba(6,1,12,.5) 62%, rgba(6,1,12,0) 100%);
+  font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--lime)}
+.osd .r{color:var(--dim)}
+.osd .dot{font-style:normal;animation:pulse 1.4s infinite}
+.sbody{position:relative;z-index:2;width:100%;padding:46px 20px 22px;text-align:center;animation:fadein .6s ease both}
+.screen.accepted{min-height:0}
+.screen.accepted .osd{position:static;width:100%;height:40px;background:linear-gradient(180deg,rgba(6,1,12,.92),rgba(6,1,12,.62))}
+.screen.accepted .void,.screen.accepted .glare,.screen.accepted .scan{display:none}
+.screen.accepted .osd span:first-child{color:var(--mint)}
+
+.tk{font-family:var(--mono);font-size:8.5px;letter-spacing:.26em;text-transform:uppercase;color:var(--lime);
+  margin:0;text-shadow:0 0 10px rgba(204,255,0,.4)}
+.inv1{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin:15px 0 3px}
+.inv2{font-family:var(--disp);font-size:clamp(38px,9vw,60px);letter-spacing:.1em;line-height:1;color:var(--lime);margin:0;
+  text-shadow:0 0 16px rgba(204,255,0,.45), 0 0 46px rgba(204,255,0,.18)}
+.inv3{font-size:13.5px;margin:14px auto 0;max-width:44ch;line-height:1.72;text-wrap:balance;text-shadow:0 1px 8px rgba(0,0,0,.9)}
+.inv4{font-size:13.5px;margin:16px auto 0;max-width:46ch;line-height:1.74;text-wrap:balance;
+  border-top:1px solid var(--line);padding-top:14px;text-shadow:0 1px 8px rgba(0,0,0,.9)}
+.inv4 b{color:var(--lime);font-weight:600;text-shadow:0 0 10px rgba(204,255,0,.35)}
+.qline{font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--violet2);
+  margin:20px 0 0;text-shadow:var(--glow)}
+.no{font-size:13px;color:var(--dim);margin:16px auto 0;max-width:46ch;line-height:1.74}
+.row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:17px}
+
+.startBtn{font-family:var(--disp);font-size:24px;letter-spacing:.18em;line-height:1.15;white-space:nowrap;color:#0b0b0e;cursor:pointer;
+  background:linear-gradient(180deg,var(--lime),#9fce00);border:0;border-radius:12px;padding:12px 26px;
+  box-shadow:0 0 22px rgba(204,255,0,.35), inset 0 -3px 0 rgba(0,0,0,.25);transition:transform .08s ease, filter .2s}
+.startBtn:hover{filter:brightness(1.08)}
+.startBtn:active{transform:translateY(2px)}
+.ghost{font-family:var(--disp);font-size:17px;letter-spacing:.16em;line-height:1.15;white-space:nowrap;color:var(--lav);cursor:pointer;
+  background:rgba(255,255,255,.035);border:1px solid rgba(192,166,255,.5);border-radius:12px;padding:12px 20px;transition:.18s}
+.ghost:hover{border-color:var(--violet2);background:rgba(192,166,255,.09)}
+.ghost:active{transform:translateY(2px)}
+
+/* ---------- THE PANEL ---------- */
+.panel{margin-top:15px;padding:0 2px}
+.sect{margin-top:28px}
+.sectHead{text-align:center}
+.sectHead .sk{font-family:var(--mono);font-size:8.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--dim);
+  display:block;margin-bottom:8px}
+h2{font-family:var(--disp);font-weight:400;font-size:clamp(24px,6.5vw,34px);letter-spacing:.1em;margin:0;color:var(--lav);
+  text-shadow:0 0 16px rgba(192,166,255,.28)}
+.sub{font-size:13px;color:var(--dim);margin:9px auto 0;max-width:56ch;line-height:1.74;text-wrap:balance}
+.sub a{color:var(--violet2);text-decoration:none;border-bottom:1px solid rgba(238,130,238,.35)}
+.sub a:hover{color:var(--lime);border-bottom-color:currentColor}
+
+/* ---------- THE HOSTS ---------- */
+.hosts{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:20px}
+.host{position:relative;overflow:hidden;border:1px solid var(--line);border-radius:12px;padding:15px 13px;text-align:center;
+  background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.012));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.05);animation:fadein .5s ease both}
+.host:before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--a);opacity:.55}
+.host[data-who="star"]{--a:var(--star)}
+.host[data-who="milo"]{--a:var(--milo)}
+.host[data-who="chari"]{--a:var(--chari)}
+.portrait{width:104px;height:104px;margin:2px auto 11px;border-radius:50%;overflow:hidden;background:#000;
+  border:2px solid var(--a);box-shadow:0 0 22px -6px var(--a)}
+.portrait img{width:100%;height:100%;object-fit:cover;display:block;filter:saturate(1.05) contrast(1.03)}
+.host .hn{font-family:var(--disp);font-size:26px;letter-spacing:.08em;color:var(--a);margin:0;text-shadow:0 0 14px var(--a)}
+.host .ht{font-family:var(--mono);font-size:8.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);
+  margin:6px 0 10px;line-height:1.7}
+.host .hb{font-size:12.5px;line-height:1.7;margin:0;color:var(--lav);opacity:.94}
+
+/* ---------- THE QUESTIONS ---------- */
+.block{margin-top:24px;animation:fadein .5s ease both}
+.block[data-who="star"]{--a:var(--star)}
+.block[data-who="milo"]{--a:var(--milo)}
+.block[data-who="chari"]{--a:var(--chari)}
+.askHead{display:flex;align-items:center;gap:10px;margin:0;padding-bottom:8px;border-bottom:1px solid var(--line);
+  font-family:var(--mono);font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim)}
+.askHead .dot{width:7px;height:7px;border-radius:50%;background:var(--a);flex:0 0 auto;
+  box-shadow:0 0 10px var(--a);animation:pulse 1.8s ease-in-out infinite}
+.askHead .who{color:var(--a);white-space:nowrap}
+.askHead .rule{flex:1;height:1px;background:var(--line)}
+.askHead .n{font-size:8.5px;letter-spacing:.14em;color:var(--dim);white-space:nowrap}
+.qgroup{margin-top:14px;border:1px solid var(--line);border-left:2px solid var(--a);border-radius:4px 12px 12px 4px;
+  padding:14px 15px;background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,.01));animation:fadein .5s ease both}
+.qgroup.done{background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(0,0,0,0))}
+.q{font-size:15px;line-height:1.68;margin:0;text-wrap:pretty}
+.opts{display:flex;flex-direction:column;gap:7px;margin-top:13px}
+.opt{display:flex;align-items:center;gap:10px;width:100%;text-align:left;min-height:44px;cursor:pointer;
+  font-family:var(--body);font-size:13.5px;line-height:1.5;color:var(--lav);
+  background:rgba(255,255,255,.028);border:1px solid var(--line);border-radius:10px;padding:11px 13px;transition:.18s}
+.opt::before{content:"\25B8";font-family:var(--mono);color:var(--dim);flex:0 0 auto;transition:.18s}
+.opt:hover{border-color:var(--a);background:rgba(255,255,255,.055);transform:translateX(3px);
+  box-shadow:0 0 16px -8px var(--a)}
+.opt:hover::before{color:var(--a)}
+.opt:active{transform:translateY(1px)}
+.opt.chosen{border-color:var(--a);color:var(--a);background:color-mix(in srgb,var(--a) 10%, transparent)}
+.opt.chosen::before{content:"\2713";color:var(--a)}
+.opt[disabled]{cursor:default;opacity:.45}
+.opt.chosen[disabled]{opacity:1}
+.reply{margin-top:12px;padding:11px 13px;border:1px solid rgba(238,130,238,.26);border-left:3px solid var(--a);
+  border-radius:4px 12px 12px 4px;background:rgba(10,0,20,.55);box-shadow:0 0 18px -9px var(--a);animation:fadein .5s ease both}
+.reply .rn{font-family:var(--mono);font-size:8.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--a);margin-bottom:4px}
+.reply .rt{font-size:13.5px;line-height:1.72;margin:0}
+.prog{font-family:var(--mono);font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--lime);
+  min-height:14px;margin:0 0 4px;text-shadow:0 0 8px rgba(204,255,0,.35)}
+.skipnote{font-family:var(--mono);font-size:8.5px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--dim);text-align:center;margin-top:18px}
+
+/* ---------- THE READING ---------- */
+.div{display:flex;align-items:center;gap:12px;margin:30px 0 4px;
+  font-family:var(--mono);font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:var(--dim)}
+.div::before,.div::after{content:"";flex:1;height:1px;background:var(--line)}
+.readHead{font-family:var(--disp);font-size:clamp(26px,7.5vw,40px);letter-spacing:.08em;line-height:1.2;text-align:center;
+  color:var(--a,var(--lav));text-shadow:0 0 20px var(--a,transparent);margin:6px 0 2px}
+.readSub{font-family:var(--mono);font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);
+  text-align:center;margin-bottom:16px}
+.readHead[data-who="star"]{--a:var(--star)}
+.readHead[data-who="milo"]{--a:var(--milo)}
+.readHead[data-who="chari"]{--a:var(--chari)}
+.readHead[data-who="all"]{--a:var(--violet2)}
+.log{display:flex;flex-direction:column;gap:11px}
+.msg{max-width:94%;padding:11px 13px;border:1px solid var(--line);border-left:3px solid var(--a,#7d848b);
+  border-radius:4px 12px 12px 4px;background:rgba(10,0,20,.5);box-shadow:0 0 18px -10px var(--a);animation:fadein .5s ease both}
+.msg[data-who="star"]{--a:var(--star)}
+.msg[data-who="milo"]{--a:var(--milo)}
+.msg[data-who="chari"]{--a:var(--chari)}
+.msg .nm{font-family:var(--mono);font-size:8.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--a);margin-bottom:4px}
+.msg .tx{font-size:14px;line-height:1.72;margin:0}
+
+.keep{margin-top:22px;padding:14px 16px;border:1px solid var(--line);border-radius:12px;position:relative;overflow:hidden;
+  background:linear-gradient(150deg,rgba(27,0,44,.72),rgba(11,11,14,.8));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.05);animation:fadein .5s ease both}
+.keep::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;
+  background:linear-gradient(180deg,var(--lime),var(--cyan) 55%,var(--violet2))}
+.keep .kk{font-family:var(--mono);font-size:8.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--dim)}
+.keep .kline2{font-size:15px;margin:8px 0 4px}
+.keep .kline2 b{color:var(--a,var(--lav));font-weight:600}
+.keep .kdot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:8px;vertical-align:1px;
+  box-shadow:0 0 9px currentColor}
+.keep .kdate{font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+.keep .kq{font-size:13.5px;font-style:italic;color:var(--lav);opacity:.92;margin-top:10px;
+  border-left:2px solid var(--a,var(--line));padding-left:11px}
+
+.through{margin-top:24px}
+.through .th{font-family:var(--mono);font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);
+  margin:0;padding-bottom:8px;border-bottom:1px solid var(--line)}
+.through ul{list-style:none;margin:12px 0 0;padding:0;display:grid;grid-template-columns:repeat(2,1fr);gap:7px}
+.through li{font-size:12.5px;line-height:1.55;border:1px solid var(--line);border-radius:10px;padding:10px 12px;
+  background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,.01));transition:.18s}
+.through li:hover{border-color:rgba(204,255,0,.4);background:rgba(204,255,0,.045)}
+.through li b{color:var(--lime);font-weight:600}
+.doors{display:flex;flex-wrap:wrap;gap:7px;margin-top:18px}
+.door{font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;text-decoration:none;
+  color:var(--dim);border:1px solid var(--line);border-radius:999px;padding:9px 13px;transition:.18s;white-space:nowrap}
+.door:hover{color:var(--lav);border-color:var(--violet2);background:rgba(238,130,238,.08)}
+.door.main{color:var(--lime);border-color:rgba(204,255,0,.45);background:rgba(204,255,0,.07);
+  box-shadow:0 0 14px -5px rgba(204,255,0,.7)}
+.door.main:hover{color:#0b0b0e;background:var(--lime);border-color:var(--lime)}
+.openline{font-family:var(--mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);
+  margin:16px 0 0;line-height:1.9}
+.openline a{color:var(--violet2);text-decoration:none;border-bottom:1px solid rgba(238,130,238,.35)}
+.openline a:hover{color:var(--lime);border-bottom-color:currentColor}
+.script{margin-top:22px;border-left:2px solid var(--violet2);padding:4px 0 4px 14px;font-size:13px;font-style:italic;
+  color:var(--lav);opacity:.9;line-height:1.72}
+.script .ref{display:block;font-family:var(--mono);font-size:8.5px;letter-spacing:.18em;text-transform:uppercase;
+  font-style:normal;color:var(--dim);margin-top:7px;opacity:1}
+.again{margin-top:20px;font-family:var(--mono);font-size:9px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--dim);background:none;border:0;border-bottom:1px dashed rgba(255,255,255,.2);cursor:pointer;padding:2px 0}
+.again:hover{color:var(--lime);border-bottom-color:var(--lime)}
+
+.foot{margin-top:34px;padding-top:14px;border-top:1px solid var(--line);
+  font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);
+  display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;width:min(94vw,760px)}
+.foot a{color:var(--dim);text-decoration:none;border-bottom:1px solid rgba(255,255,255,.14)}
+.foot a:hover{color:var(--lime);border-bottom-color:var(--lime)}
+
+@media (max-width:700px){
+  .hosts{grid-template-columns:1fr;gap:11px}
+  .portrait{width:92px;height:92px}
+  .through ul{grid-template-columns:1fr}
+  .screen{min-height:520px}
+  .sbody{padding:42px 15px 20px}
+}
+@media (max-width:460px){
+  .askHead{font-size:9px;letter-spacing:.16em}
+  .askHead .n{display:none}
+}
+@media (max-width:420px){
+  .stage{padding:16px 10px 52px}
+  .cabinet{padding:11px 11px 14px;border-radius:20px}
+  .brand{font-size:23px;letter-spacing:.10em}
+  .tag{font-size:8.5px}
+  .sbody{padding:40px 13px 18px}
+  .inv2{font-size:clamp(34px,12vw,46px)}
+  .startBtn{font-size:20px;padding:11px 18px;width:100%}
+  .ghost{font-size:15px;width:100%}
+  .q{font-size:14px}
+  .opt{font-size:13px}
+  .msg{max-width:100%}
+  .foot{flex-direction:column;align-items:flex-start;gap:6px;width:100%}
+}
+@media (prefers-reduced-motion:reduce){
+  .host,.block,.qgroup,.reply,.msg,.keep,.sbody{animation:none!important}
+  .led,.osd .dot,.askHead .dot{animation:none!important}
+}
+</style>
+</head>
+<body>
+<div class="bg"><canvas id="stars"></canvas><div class="vign"></div></div>
+
+<main class="stage">
+  <div class="cabinet">
+    <div class="marquee">
+      <span class="brand">CAFE DREAMR</span>
+      <span class="tag">the frequency reader</span>
+      <span class="led"></span>
+    </div>
+
+    <header class="head">
+      <div class="kicker">cafedreamr &middot; find your frequency</div>
+      <h1>an interview</h1>
+      <p class="sub">an invitation, three of them, and eight questions: chari asks three, milo asks two, star asks three.</p>
+    </header>
+
+    <section class="screen" id="inviteEl">
+      <div class="void"></div>
+      <div class="glare"></div>
+      <div class="scan"></div>
+      <div class="osd">
+        <span><i class="dot">&#9679;</i> dream signal <span id="osdState">live</span></span>
+        <span class="r">rec &middot; 8 questions</span>
+      </div>
+      <div class="sbody" id="inviteBody">
+        <p class="tk">an encrypted invitation</p>
+        <p class="inv1">you&rsquo;ve received an invitation from:</p>
+        <p class="inv2">cafedreamr</p>
+        <p class="inv3">we&rsquo;re not looking for anybody in particular. we never were.</p>
+        <p class="inv4">this is an interview &mdash; eight questions, and at the end it tells you <b>which of the three of us you align with</b>. whoever it is will write to you when you come in.</p>
+        <p class="qline">do you accept it?</p>
+        <div class="row">
+          <button class="startBtn" id="yesBtn" type="button">yes, i&rsquo;ll sit</button>
+          <button class="ghost" id="noBtn" type="button">not yet</button>
+        </div>
+        <p class="no" id="noLine" hidden>then it keeps. the doors here are just doors &mdash; nothing on this site costs anything and nothing is locked behind this. come back when it suits you.</p>
+      </div>
+    </section>
+
+    <div class="panel">
+      <section class="sect" id="hostsEl" hidden>
+        <div class="sectHead">
+          <span class="sk">the invitation is accepted</span>
+          <h2>meet your hosts</h2>
+          <p class="sub">three of them, and eight questions between them. they ask in this order: chari, then milo, then star.</p>
+        </div>
+        <div class="hosts">
+          <article class="host" data-who="chari">
+            <div class="portrait"><img src="https://xencafe.nekoweb.org/2024-ARCHIVES/CHIMERACAT-LORE/Chari-Barista.jpeg" alt="chari, a pale lilac cat-human hybrid"></div>
+            <h3 class="hn">chari</h3>
+            <p class="ht">keeper of the atrium &middot; realm 02</p>
+            <p class="hb">lavender stripes, the youngest of the three, and the one who wrote these questions &mdash; four times, and then the rats sat on the draft. two white rats, crumb and mochi, ride her shoulders. her room keeps every soft thing anybody has ever said in it.</p>
+          </article>
+          <article class="host" data-who="milo">
+            <div class="portrait"><img src="https://xencafe.nekoweb.org/2024-ARCHIVES/CHIMERACAT-LORE/Emo-Milo-Japanese-Parisian.jpeg" alt="milo, a mint-green cat-human hybrid"></div>
+            <h3 class="hn">milo</h3>
+            <p class="ht">keeper of the garden &middot; realm 04</p>
+            <p class="hb">mint stripes. the still one. one pot of tea, a hammock, and cushions nobody has been asked to move. if you hand him the heavy thing you&rsquo;re carrying, he will leave it by the wall &mdash; and it will not follow you out.</p>
+          </article>
+          <article class="host" data-who="star">
+            <div class="portrait"><img src="https://xencafe.nekoweb.org/2024-ARCHIVES/CHIMERACAT-LORE/STAR.jpeg" alt="star, a purple cat-human hybrid holding a cup of coffee"></div>
+            <h3 class="hn">star</h3>
+            <p class="ht">host of cafedreamr &middot; keeps the keys</p>
+            <p class="hb">purple stripes and a japanese-german cat. she built the counter, keeps the hours and most of the doors, and will remember your order and not much else. her cat, char, greets everybody who comes in, and has since the beginning.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="sect" id="asksEl" hidden>
+        <div class="prog" id="progEl"></div>
+        <div class="block" data-who="chari" id="blockChari" hidden>
+          <p class="askHead"><span class="dot"></span><span class="who">chari asks:</span><span class="rule"></span><span class="n">three</span></p>
+        </div>
+        <div class="block" data-who="milo" id="blockMilo" hidden>
+          <p class="askHead"><span class="dot"></span><span class="who">milo asks:</span><span class="rule"></span><span class="n">two</span></p>
+        </div>
+        <div class="block" data-who="star" id="blockStar" hidden>
+          <p class="askHead"><span class="dot"></span><span class="who">star asks:</span><span class="rule"></span><span class="n">three</span></p>
+        </div>
+        <p class="skipnote" id="skipnote">one at a time. there is no clock on any of this.</p>
+      </section>
+
+      <section class="sect" id="readingEl" hidden>
+        <div class="div">the reading</div>
+        <h2 class="readHead" id="readHead"></h2>
+        <p class="readSub" id="readSub">a lean, not a mark. eight questions can only ever lean.</p>
+        <div class="log" id="readLog"></div>
+        <div class="keep" id="keepEl" hidden></div>
+        <div class="through">
+          <p class="th">what&rsquo;s actually behind the door</p>
+          <ul>
+            <li><b>the counter</b> &mdash; star&rsquo;s coffee, brewed wrong on purpose, and the stamp card that keeps your ledger</li>
+            <li><b>the garden</b> &mdash; one pot of tea that doesn&rsquo;t run out, and a hammock with somebody in it</li>
+            <li><b>the atrium</b> &mdash; which keeps what you say softly, and repeats none of it</li>
+            <li><b>miki&rsquo;s games room</b> &mdash; the zine, the machines, and an order box with a sock in it</li>
+            <li><b>the long day</b> &mdash; eight levels, four in the morning, nobody keeping time</li>
+            <li><b>the hours</b> &mdash; all twenty-four of them, and what each one is for</li>
+          </ul>
+        </div>
+        <div class="doors" id="doorsEl"></div>
+        <p class="openline">nothing here costs anything and nothing is locked behind the interview &mdash; the doors are just doors. take one.</p>
+        <div class="script" id="scriptEl">
+          Behold, I stand at the door, and knock: if any man hear my voice, and open the door, I will come in to him, and will sup with him, and he with me.
+          <span class="ref">revelation 3:20 &middot; kjv</span>
+        </div>
+        <button class="again" id="againBtn" type="button">take it again</button>
+      </section>
+    </div>
+  </div>
+
+  <footer class="foot">
+    <span>cafedreamr &middot; an interview</span>
+    <span><a href="https://www.cafedreamr.art/INTERVIEW/">the interview (nine questions) &rarr;</a></span>
+  </footer>
+</main>
+
+<script src="https://www.cafedreamr.art/PASSPORT/cd-passport.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  /* cafedreamr — an interview (eight questions, at /INTERVIEW/invitation/).
+     the machine's screen holds the invitation; below it, three host cards,
+     then chari's questions, then milo's, then star's, then a reading. it leans;
+     it never marks. bobby runs miki's interviews; the café's are this one and
+     the nine-question interview at /INTERVIEW/. the flow and every line of
+     voice live in src/README.md. */
+
+  var $ = function (id) { return document.getElementById(id); };
+
+  var WHO = {
+    star:  "star \u2014 host of cafedreamr",
+    milo:  "milo \u2014 keeper of the garden",
+    chari: "chari \u2014 keeper of the atrium"
+  };
+
+  /* the eight questions, in the order they're asked.
+     `w` is the lean each answer gives you. */
+  var BLOCKS = [
+    { who:"chari", el:"blockChari", qs:[
+      { q:"a soft one to start, and a soft answer is allowed. what makes you feel like you're standing outside the room?",
+        opts:[
+          { t:"i notice things nobody else says out loud.", w:{ chari:3 },
+            reply:{ who:"chari", text:"that isn't a flaw. somebody has to notice, or the room never learns a thing. mine is the room that keeps what gets noticed." } },
+          { t:"i want different things than the people around me.", w:{ chari:2, star:1 },
+            reply:{ who:"chari", text:"then you're not outside, you're early. i've been early to about nine things and two of them are this caf\u00e9." } },
+          { t:"i don't, really. i'm just quiet.", w:{ star:3 },
+            reply:{ who:"star", text:"quiet isn't outside. most of this building is quiet. sit down." } }
+        ]},
+      { q:"second one, and it's the making one. your own making \u2014 in one word?",
+        opts:[
+          { t:"chaotic.", w:{ chari:3 },
+            reply:{ who:"chari", text:"good. chaos is a room before the furniture arrives. i live in one, and the rats approve of the layout." } },
+          { t:"colourful.", w:{ chari:2, milo:1 },
+            reply:{ who:"chari", text:"then bring it. half the realm is greyer than it should be and we are not above taking help." } },
+          { t:"eccentric.", w:{ star:2, chari:1 },
+            reply:{ who:"chari", text:"that word has only ever meant \u201ci don't know where to file you.\u201d filing is hans's department." } }
+        ]},
+      { q:"last one from me. what does a room need most?",
+        opts:[
+          { t:"acceptance.", w:{ chari:3 },
+            reply:{ who:"chari", text:"yeah. and the boring kind \u2014 the kind that doesn't notice it's doing it. that's the kind that lasts." } },
+          { t:"creativity.", w:{ star:2, chari:1 },
+            reply:{ who:"chari", text:"then you'll like miki's room. she has more of it than she has shelves, and she has a lot of shelves." } },
+          { t:"support.", w:{ milo:2, chari:2 },
+            reply:{ who:"chari", text:"both hands and no questions. that's the whole of it, and i'm not embarrassed by how simple it is." } }
+        ]}
+    ]},
+    { who:"milo", el:"blockMilo", qs:[
+      { q:"mine now, and there's no hurry in it. when the day gets loud, how do you come back to yourself?",
+        opts:[
+          { t:"sitting still, and letting it pass.", w:{ milo:3 },
+            reply:{ who:"milo", text:"then sit. nothing in the garden finishes early. nothing worth having finishes early." } },
+          { t:"being outside, somewhere green.", w:{ milo:3, chari:1 },
+            reply:{ who:"milo", text:"good. the door at the back has never once been locked. it isn't a rule, it's just true." } },
+          { t:"a book, and nobody asking me anything.", w:{ milo:2, star:1 },
+            reply:{ who:"milo", text:"that's a good answer. there are more books in this building than there are shelves for, and hans has counted twice." } }
+        ]},
+      { q:"tea, then. what is it, honestly?",
+        opts:[
+          { t:"a comfort.", w:{ milo:3 },
+            reply:{ who:"milo", text:"then you are already drinking it correctly." } },
+          { t:"a ritual.", w:{ milo:2, star:1 },
+            reply:{ who:"milo", text:"it is. hans will argue about which ritual, at length, and he will be right." } },
+          { t:"a way to reach somebody.", w:{ milo:2, chari:2 },
+            reply:{ who:"milo", text:"then you understand this whole caf\u00e9, and you've only been here eight questions." } }
+        ]}
+    ]},
+    { who:"star", el:"blockStar", qs:[
+      { q:"mine. if the counter made you a drink, what would be in it?",
+        opts:[
+          { t:"lavender, and something bitter underneath.", w:{ star:3 },
+            reply:{ who:"star", text:"bitter under the flower. that's honest, and i'd drink it." } },
+          { t:"mint and mocha, together.", w:{ milo:2, star:1 },
+            reply:{ who:"star", text:"that's a crime. i'd make it for you anyway, and i'd charge you nothing for it, like everything else here." } },
+          { t:"all of it at once, in a colour a drink shouldn't be.", w:{ chari:3 },
+            reply:{ who:"chari", text:"yes. yes \u2014 i'll do the colour. come and see the palace sometime, it's the same idea." } }
+        ]},
+      { q:"how does it come out of you?",
+        opts:[
+          { t:"art.", w:{ star:3 },
+            reply:{ who:"star", text:"good. i keep mine in a drawer and read it back when i need to remember i made it." } },
+          { t:"writing.", w:{ star:2, chari:1 },
+            reply:{ who:"star", text:"then write it down. this building is full of people who didn't, and it's the only regret anybody here will admit to." } },
+          { t:"music.", w:{ star:1, milo:1, chari:1 },
+            reply:{ who:"star", text:"miki's room, then. the machines are honest and the twins are loud, and both of those are better than silence." } }
+        ]},
+      { q:"last one. how do you feel about doing all of this beside other people?",
+        opts:[
+          { t:"yes. always.", w:{ star:2, chari:2 },
+            reply:{ who:"star", text:"then there's a seat, and it's warm, and nobody will ask you to perform in it." } },
+          { t:"open to it.", w:{ star:1, milo:2 },
+            reply:{ who:"star", text:"open is enough. nobody arrives through the front door already belonging." } },
+          { t:"i'd rather work alone.", w:{ star:3 },
+            reply:{ who:"star", text:"then work alone \u2014 and take a key anyway. i keep more than one, and i don't say which doors they're for." } }
+        ]}
+    ]}
+  ];
+
+  var LEANS = {
+    star: {
+      head:"you leaned toward star.", who:"star",
+      lines:[
+        { who:"star", text:"then sit at this end. it's the warm one, and nobody here will ask you to talk." },
+        { who:"milo", text:"the garden is two doors over and the tea is on either way." },
+        { who:"chari", text:"and my room keeps whatever you said softly. nothing said in the atrium has ever been repeated." }
+      ],
+      quote:"keep the keys. you can keep one too."
+    },
+    milo: {
+      head:"you leaned toward milo.", who:"milo",
+      lines:[
+        { who:"milo", text:"then you'd be out the back, barefoot, with nothing on the list. leave the heavy one by the wall." },
+        { who:"chari", text:"he means it. i've watched him leave an entire week by that wall and go home without it." },
+        { who:"star", text:"the counter's still here when you want the loud end of the building. both exist." }
+      ],
+      quote:"it doesn't follow you out."
+    },
+    chari: {
+      head:"you leaned toward chari.", who:"chari",
+      lines:[
+        { who:"chari", text:"oh. okay. then come in \u2014 mine's the opalescent one, and it's the loudest quiet place in the building." },
+        { who:"milo", text:"she keeps what people say. that isn't a small job; it's the one nobody else took." },
+        { who:"star", text:"she's right about all of it. i don't say that often enough." }
+      ],
+      quote:"the room keeps it. you don't have to carry it out."
+    },
+    all: {
+      head:"you leaned three ways, dead level.", who:"all",
+      lines:[
+        { who:"star", text:"level answers. that's not indecision, that's somebody being honest in both directions." },
+        { who:"milo", text:"the middle of the room is where the table is, and the tea reaches you from both sides." },
+        { who:"chari", text:"and the rats like you. that's three votes and one of them squeaked." }
+      ],
+      quote:"the middle is the hardest seat, and it is where the table is."
+    }
+  };
+
+  var DOORS = [
+    { label:"the terminal", href:"https://www.cafedreamr.art/", main:true },
+    { label:"the interview (nine questions)", href:"https://www.cafedreamr.art/INTERVIEW/" },
+    { label:"star's place", href:"https://www.cafedreamr.art/STAR/" },
+    { label:"miki's games room", href:"https://www.cafedreamr.art/MIKI/GAMES/" },
+    { label:"the long day", href:"https://www.cafedreamr.art/PLAY/" },
+    { label:"the hours", href:"https://www.cafedreamr.art/LORE/HOURS/" }
+  ];
+
+  var LKEY = "cafedreamr:invitation:leans";
+  var SEAT_KEY = "cafedreamr:interview:last";
+  var totals = { star:0, milo:0, chari:0 },
+      asked = 0, total = 0, auto = false, lean = null, done = false;
+  var picks = [];
+
+  BLOCKS.forEach(function (b) { total += b.qs.length; });
+
+  function wait(ms) { return new Promise(function (r) { setTimeout(r, auto ? 5 : ms); }); }
+
+  function scrollTo(el) {
+    try { el.scrollIntoView({ behavior: auto ? "auto" : "smooth", block: "center" }); } catch (e) { el.scrollIntoView(); }
+  }
+
+  /* ---------------- the invitation ---------------- */
+
+  function accept() {
+    var body = $("inviteBody");
+    if (body) body.hidden = true;
+    $("inviteEl").classList.add("accepted");
+    var st = $("osdState");
+    if (st) st.textContent = "accepted";
+    $("hostsEl").hidden = false;
+    scrollTo($("hostsEl"));
+    wait(1400).then(function () {
+      $("asksEl").hidden = false;
+      buildQuestions();
+      var g0 = document.querySelector(".qgroup");
+      if (g0) scrollTo(g0);
+    });
+  }
+
+  $("yesBtn").addEventListener("click", function () {
+    $("noLine").hidden = true;
+    accept();
+  });
+  $("noBtn").addEventListener("click", function () {
+    $("noLine").hidden = false;
+    $("noBtn").hidden = true;
+    $("yesBtn").textContent = "then i'll sit";
+    scrollTo($("noLine"));
+  });
+
+  /* ---------------- the questions ---------------- */
+
+  function buildQuestions() {
+    if (buildQuestions.built) return;
+    buildQuestions.built = true;
+    BLOCKS.forEach(function (b) {
+      var block = $(b.el);
+      b.qs.forEach(function (q, qi) {
+        var g = document.createElement("div");
+        g.className = "qgroup";
+        var p = document.createElement("p");
+        p.className = "q";
+        p.textContent = "\u201c" + q.q + "\u201d";
+        g.appendChild(p);
+        var opts = document.createElement("div");
+        opts.className = "opts";
+        q.opts.forEach(function (o) {
+          var btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "opt";
+          btn.textContent = o.t;
+          btn.addEventListener("click", function () { answer(b, q, o, g, opts); });
+          opts.appendChild(btn);
+        });
+        g.appendChild(opts);
+        if (qi > 0) g.hidden = true;
+        block.appendChild(g);
+      });
+    });
+    $("blockChari").hidden = false;
+    prog();
+  }
+
+  function prog() {
+    $("progEl").textContent = asked >= total ? "" : "question " + (asked + 1) + " of " + total;
+  }
+
+  function answer(block, q, o, group, opts) {
+    if (group.classList.contains("done")) return;
+    group.classList.add("done");
+    Array.prototype.slice.call(opts.querySelectorAll(".opt")).forEach(function (b) {
+      b.disabled = true;
+      if (b.textContent === o.t) b.classList.add("chosen");
+    });
+    Object.keys(o.w).forEach(function (k) { totals[k] += o.w[k]; });
+    picks.push({ who: block.who, text: o.t, w: o.w });
+    asked++;
+    prog();
+    var r = document.createElement("div");
+    r.className = "reply";
+    r.innerHTML = '<div class="rn"></div><p class="rt"></p>';
+    r.querySelector(".rn").textContent = WHO[o.reply.who];
+    r.querySelector(".rt").textContent = "\u201c" + o.reply.text + "\u201d";
+    group.appendChild(r);
+    scrollTo(group);
+    wait(900).then(function () {
+      var next = nextGroup();
+      if (next) {
+        var blk = next.closest(".block");
+        if (blk) blk.hidden = false;
+        next.hidden = false;
+        scrollTo(next);
+      } else {
+        reading();
+      }
+    });
+  }
+
+  function nextGroup() {
+    var groups = Array.prototype.slice.call(document.querySelectorAll(".qgroup"));
+    for (var i = 0; i < groups.length; i++) {
+      if (groups[i].hidden) {
+        var block = groups[i].closest(".block");
+        if (block && block.hidden) continue;
+        return groups[i];
+      }
+    }
+    /* the next unseen group may sit in a block that is still hidden */
+    for (var j = 0; j < groups.length; j++) {
+      if (!groups[j].classList.contains("done")) return groups[j];
+    }
+    return null;
+  }
+
+  /* ---------------- the reading ---------------- */
+
+  function decide() {
+    var order = ["star", "milo", "chari"];
+    var sorted = order.slice().sort(function (a, b) {
+      return totals[b] - totals[a] || order.indexOf(a) - order.indexOf(b);
+    });
+    if (totals[sorted[0]] === totals[sorted[1]]) return "all";
+    return sorted[0];
+  }
+
+  function dateStr() {
+    var d = new Date();
+    return d.toLocaleDateString(undefined, { day:"numeric", month:"long", year:"numeric" });
+  }
+
+  function leans() {
+    try { return JSON.parse(localStorage.getItem(LKEY) || "{}") || {}; } catch (e) { return {}; }
+  }
+  function remember(k) {
+    try {
+      var f = leans();
+      f[k] = Date.now();
+      localStorage.setItem(LKEY, JSON.stringify(f));
+    } catch (e) {}
+  }
+  function leanCount() {
+    var f = leans();
+    return ["star", "milo", "chari"].filter(function (k) { return f[k]; }).length;
+  }
+
+  function stamp(id, opts) {
+    try { if (window.CD && window.CD.stamp) window.CD.stamp(id, opts); } catch (e) {}
+  }
+
+  /* what the terminal reads: which of the three the visitor aligned with, and
+     the answer of theirs that leaned hardest that way, so the note they get
+     when they come in can quote them back to themselves. */
+  function echoFor(key) {
+    var best = null, bestScore = -1;
+    picks.forEach(function (p) {
+      var s;
+      if (key === "all") {
+        var lo = Math.min(p.w.star || 0, p.w.milo || 0, p.w.chari || 0);
+        s = lo * 10 + (p.w.star || 0) + (p.w.milo || 0) + (p.w.chari || 0);
+      } else {
+        s = (p.w[key] || 0) * 10 + (p.who === key ? 1 : 0);
+      }
+      if (s > bestScore) { bestScore = s; best = p; }
+    });
+    return best ? { who: best.who, text: best.text } : null;
+  }
+  function saveResult(key) {
+    try {
+      localStorage.setItem(SEAT_KEY, JSON.stringify({ who: key, at: Date.now(), echo: echoFor(key) }));
+    } catch (e) {}
+  }
+
+  function say(who, text) {
+    var row = document.createElement("div");
+    row.className = "msg";
+    row.dataset.who = who;
+    row.innerHTML = '<div class="nm"></div><p class="tx"></p>';
+    row.querySelector(".nm").textContent = WHO[who];
+    row.querySelector(".tx").textContent = text;
+    $("readLog").appendChild(row);
+    scrollTo(row);
+  }
+
+  function reading() {
+    if (done || reading.started) return;
+    reading.started = true;
+    $("skipnote").hidden = true;
+    var key = decide(), L = LEANS[key];
+    lean = key;
+    $("readHead").dataset.who = L.who;
+    $("readHead").textContent = L.head;
+    $("readingEl").hidden = false;
+    scrollTo($("readingEl"));
+    var p = Promise.resolve();
+    L.lines.forEach(function (m) {
+      p = p.then(function () { return say(m.who, m.text); }).then(function () { return wait(700); });
+    });
+    p.then(function () {
+      return say("star", "sit it again whenever you like. it only ever leans \u2014 it has never once marked anybody.");
+    }).then(function () {
+      var seat = key === "all" ? "all" : key;
+      var acc = seat === "star" ? "#c0a6ff" : seat === "milo" ? "#98fb98" : seat === "chari" ? "#e6e6fa" : "#ee82ee";
+      var name = key === "all" ? "the three of them" : key;
+      $("keepEl").style.setProperty("--a", acc);
+      $("keepEl").innerHTML =
+        '<div class="kk">an interview &middot; kept</div>' +
+        '<div class="kline2"><span class="kdot" style="background:' + acc + ';color:' + acc + '"></span>' +
+        "leaned toward <b>" + name + "</b></div>" +
+        '<div class="kdate">' + dateStr() + " &middot; " + leanCount() + " of 3 leanings found</div>" +
+        '<div class="kq">&ldquo;' + L.quote + '&rdquo;</div>';
+      $("keepEl").hidden = false;
+      DOORS.forEach(function (d) {
+        var a = document.createElement("a");
+        a.className = "door" + (d.main ? " main" : "");
+        a.href = d.href;
+        a.textContent = d.label;
+        $("doorsEl").appendChild(a);
+      });
+      if (key !== "all") remember(key);
+      saveResult(key);
+      stamp("intake:invitation", { p: 4, label: "sat the interview" });
+      done = true;
+      scrollTo($("keepEl"));
+    });
+  }
+
+  $("againBtn").addEventListener("click", function () {
+    totals = { star:0, milo:0, chari:0 }; asked = 0; done = false; lean = null;
+    picks = [];
+    $("readLog").innerHTML = "";
+    $("keepEl").hidden = true; $("keepEl").innerHTML = "";
+    $("doorsEl").innerHTML = "";
+    $("readingEl").hidden = true;
+    $("skipnote").hidden = false;
+    $("progEl").textContent = "";
+    Array.prototype.slice.call(document.querySelectorAll(".qgroup")).forEach(function (g) {
+      g.remove();
+    });
+    buildQuestions.built = false;
+    ["blockChari", "blockMilo", "blockStar"].forEach(function (id) {
+      var b = $(id);
+      Array.prototype.slice.call(b.querySelectorAll(".qgroup")).forEach(function (g) { g.remove(); });
+      b.hidden = true;
+    });
+    buildQuestions();
+    window.scrollTo(0, 0);
+    scrollTo($("asksEl"));
+  });
+
+  /* ---------------- the stars ---------------- */
+
+  (function stars() {
+    var c = $("stars"), x = c.getContext("2d");
+    function paint() {
+      var w = c.width = window.innerWidth, h = c.height = window.innerHeight;
+      x.clearRect(0, 0, w, h);
+      var n = Math.min(320, Math.round(w * h / 9000));
+      for (var i = 0; i < n; i++) {
+        x.globalAlpha = Math.random() * 0.6 + 0.14;
+        x.fillStyle = Math.random() < 0.14 ? "#c0a6ff" : "#fff0f5";
+        x.beginPath();
+        x.arc(Math.random() * w, Math.random() * h, Math.random() * 1.25 + 0.2, 0, 6.283);
+        x.fill();
+      }
+      x.globalAlpha = 1;
+    }
+    paint();
+    window.addEventListener("resize", paint);
+  })();
+
+  try { if (window.CD && window.CD.boot) window.CD.boot({ page:"invitation" }); } catch (e) {}
+
+  window.OI = {
+    auto: function () { auto = true; },
+    yes: function () { $("yesBtn").click(); },
+    pick: function (i) {
+      var gs = Array.prototype.slice.call(document.querySelectorAll(".qgroup"));
+      var g = null;
+      for (var k = 0; k < gs.length; k++) {
+        var gb = gs[k].closest(".block");
+        if (!gs[k].hidden && gb && !gb.hidden && !gs[k].classList.contains("done")) { g = gs[k]; break; }
+      }
+      if (!g) return false;
+      var b = g.querySelectorAll(".opt")[i];
+      if (!b) return false;
+      b.click();
+      return true;
+    },
+    state: function () {
+      return { asked: asked, total: total, totals: { star:totals.star, milo:totals.milo, chari:totals.chari }, lean: lean, done: done };
+    }
+  };
+})();
+</script>
+</body>
+</html>
