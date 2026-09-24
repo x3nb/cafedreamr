@@ -1,0 +1,1577 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0d001a">
+<title>the glitter drop &middot; cafedreamr</title>
+<meta name="description" content="Machine no. 07 in miki's games room: the glitter drop. Bobby built the box, so this is the other half of the problem. Walk miki down the path with the box, set it on the mat, and be past the door before the hoodie one comes round the corner of the house.">
+<meta property="og:title" content="the glitter drop &middot; cafedreamr">
+<meta property="og:description" content="bobby built the box. miki does the walking. be past the door before he rounds the corner.">
+<meta property="og:type" content="website">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%230d001a'/%3E%3Crect x='3.4' y='7' width='9.2' height='6' rx='1' fill='%233a1140' stroke='%23ccff00' stroke-width='.8'/%3E%3Cpath d='M5 7V5.4h6V7' fill='none' stroke='%23ccff00' stroke-width='.8'/%3E%3Ccircle cx='8' cy='3.4' r='1.5' fill='%23ff2d95'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Klee+One:wght@400;600&family=Shadows+Into+Light&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --plum:#0d001a; --plum2:#150426; --ink:#07000f;
+  --lav:#e9e2f4; --lav2:#c3b6d8; --dim:#8d80a3;
+  --lime:#ccff00; --cyan:#00e5ff; --pink:#ff2d95; --gold:#d8a24a;
+  --bob:#ff2d95;                  /* bobby's accent, off his dossier card */
+  --box:#b98a52;                  /* the box, and it is a box */
+  --disp:'Bebas Neue',Impact,sans-serif;
+  --mono:'Space Mono',ui-monospace,monospace;
+  --hand:'Klee One','Segoe Script',cursive;
+  --write:'Shadows Into Light','Klee One',cursive;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{
+  background:var(--plum); color:var(--lav); text-align:left;
+  font-family:var(--mono); font-size:13px; line-height:1.7; min-height:100%;
+  background-image:
+    radial-gradient(700px 440px at 62% 16%, rgba(204,255,0,.09), rgba(204,255,0,0) 70%),
+    radial-gradient(760px 520px at 16% 88%, rgba(255,45,149,.10), rgba(255,45,149,0) 72%),
+    linear-gradient(180deg, var(--plum) 0%, var(--ink) 100%);
+  background-attachment:fixed;
+}
+#dust{position:fixed; inset:0; width:100%; height:100%; pointer-events:none; z-index:6}
+.vig{position:fixed; inset:0; pointer-events:none; z-index:2;
+  background:radial-gradient(120% 90% at 50% 40%, rgba(0,0,0,0) 46%, rgba(0,0,0,.64) 100%)}
+a{color:var(--cyan); text-decoration:none}
+a:hover{color:var(--lime)}
+button{font:inherit; cursor:pointer}
+
+.wrap{position:relative; z-index:4; max-width:1120px; margin:0 auto; padding:16px 16px 40px}
+
+.top{display:flex; align-items:center; gap:14px; flex-wrap:wrap;
+  border-bottom:1px solid rgba(255,255,255,.10); padding-bottom:10px}
+.top .back{font-size:9.5px; letter-spacing:.16em; text-transform:uppercase;
+  border-bottom:1px solid rgba(0,229,255,.4); padding-bottom:2px; color:var(--lav)}
+.top .back:hover{background:var(--cyan); color:var(--ink); border-color:var(--cyan)}
+.top .sign{font-family:var(--disp); font-size:26px; letter-spacing:.06em; color:var(--lime);
+  text-shadow:0 0 12px rgba(204,255,0,.45), 0 0 34px rgba(204,255,0,.18)}
+.top .no{margin-left:auto; font-size:9px; letter-spacing:.18em; text-transform:uppercase; color:var(--dim)}
+
+.head{margin:26px 0 4px}
+.head .kick{font-size:9px; letter-spacing:.24em; text-transform:uppercase; color:var(--cyan)}
+.head h1{font-family:var(--disp); font-weight:400; font-size:clamp(32px,6.2vw,58px); line-height:1;
+  letter-spacing:.03em; margin:6px 0 12px}
+.head h1 b{color:var(--lime); font-weight:400}
+.head .sub{color:var(--lav2); font-size:12.5px; max-width:68ch; margin:8px 0 0}
+.head .sub b{color:var(--lime)}
+
+.note{margin:18px 0 0; padding:13px 15px; border:1px solid rgba(204,255,0,.16);
+  border-left:3px solid var(--lime); border-radius:4px; background:rgba(204,255,0,.045);
+  font-family:var(--hand); font-size:14px; color:#e6f7c6; max-width:72ch}
+.note .who{display:block; margin-top:7px; font-family:var(--mono); font-size:9px;
+  letter-spacing:.16em; text-transform:uppercase; color:var(--dim)}
+
+.stage{display:grid; grid-template-columns:minmax(340px,640px) 1fr; gap:22px; align-items:start; margin-top:24px}
+.stage > *{min-width:0}
+
+/* ---------------- the machine ---------------- */
+.cab{width:100%; max-width:640px; margin:0 auto}
+.marq{display:flex; align-items:baseline; justify-content:space-between; gap:10px;
+  border:1px solid rgba(255,255,255,.14); border-bottom:none; border-radius:6px 6px 0 0;
+  padding:9px 13px; background:linear-gradient(180deg,rgba(58,17,64,.85),rgba(21,4,38,.85))}
+.marq b{font-family:var(--disp); font-weight:400; font-size:22px; letter-spacing:.08em; color:var(--lime)}
+.marq span{font-size:9px; letter-spacing:.18em; text-transform:uppercase; color:var(--dim)}
+
+.face{position:relative; border:1px solid rgba(255,255,255,.16); border-top:none; border-radius:0 0 6px 6px;
+  padding:14px 15px 16px; overflow:hidden;
+  background:
+    radial-gradient(120% 70% at 62% 0%, rgba(204,255,0,.10), rgba(204,255,0,0) 66%),
+    linear-gradient(180deg,#1b0730 0%, #120424 46%, #0a0114 100%)}
+.face:before{content:""; position:absolute; inset:0; pointer-events:none; z-index:0;
+  background:repeating-linear-gradient(180deg, rgba(255,255,255,.016) 0 1px, rgba(0,0,0,0) 1px 4px)}
+
+/* the porch cam */
+.camWrap{position:relative; z-index:1; border-radius:5px; overflow:hidden;
+  border:1px solid rgba(255,255,255,.18); background:#05000b;
+  box-shadow:inset 0 0 40px rgba(0,0,0,.7)}
+#cam{display:block; width:100%; height:auto}
+.camWrap .scan{position:absolute; inset:0; pointer-events:none;
+  background:repeating-linear-gradient(180deg, rgba(0,0,0,.20) 0 1px, rgba(0,0,0,0) 1px 3px); opacity:.5}
+.camWrap .camTag{position:absolute; top:8px; left:10px; display:flex; align-items:center; gap:6px;
+  font-family:var(--mono); font-size:8.5px; letter-spacing:.16em; text-transform:uppercase; color:#9feaff}
+.camWrap .camTag i{width:7px;height:7px;border-radius:50%;background:#ff2020;opacity:.35}
+.camWrap.live .camTag i{opacity:1; animation:lamp .9s steps(2,end) infinite}
+.camWrap .stampTag{position:absolute; top:8px; right:10px; font-family:var(--mono); font-size:8.5px;
+  letter-spacing:.14em; color:rgba(233,226,244,.6)}
+@keyframes lamp{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* the big button */
+.bigRow{position:relative; z-index:1; display:flex; align-items:center; gap:16px; margin-top:14px}
+.bigBtn{position:relative; flex:0 0 auto; width:118px; height:118px; border-radius:50%;
+  border:3px solid #6fe6ff; color:#00222b; font-family:var(--disp); font-size:34px; letter-spacing:.06em;
+  background:radial-gradient(58% 58% at 40% 30%, #8df0ff, #00e5ff 70%, #00768c);
+  box-shadow:0 0 0 5px rgba(0,229,255,.14), 0 12px 30px -10px rgba(0,229,255,.7), inset 0 -4px 0 rgba(0,0,0,.28);
+  transition:transform .08s ease, filter .2s}
+.bigBtn:hover{filter:brightness(1.08)}
+.bigBtn:active{transform:translateY(3px)}
+.bigBtn[disabled]{filter:saturate(.4) brightness(.7); cursor:not-allowed}
+.bigBtn small{display:block; font-family:var(--mono); font-size:8px; letter-spacing:.14em; color:#003543; margin-top:1px}
+.bigSide{min-width:0; flex:1 1 auto}
+.bigSide .say{margin:0; font-family:var(--write); font-size:17px; line-height:1.45; color:#cdf6ff}
+.bigSide .say:before{content:"miki"; display:block; font-family:var(--mono); font-size:8.5px;
+  letter-spacing:.2em; text-transform:uppercase; color:var(--dim); margin-bottom:1px}
+
+/* the readout */
+.lcd{position:relative; z-index:1; display:flex; align-items:center; gap:9px; margin-top:12px;
+  border:1px solid rgba(204,255,0,.26); border-radius:4px; padding:7px 10px;
+  background:linear-gradient(180deg, rgba(16,22,4,.94), rgba(8,12,2,.94));
+  box-shadow:inset 0 0 22px rgba(204,255,0,.10), inset 0 1px 0 rgba(255,255,255,.04)}
+.lcd .dot{flex:0 0 auto; width:7px; height:7px; border-radius:50%; background:var(--lime); opacity:.3;
+  box-shadow:0 0 8px rgba(204,255,0,.5)}
+.lcd.on .dot{opacity:1; animation:lamp 1.1s steps(2,end) infinite}
+.lcd .t{min-width:0; flex:1 1 auto; font-size:11.5px; line-height:1.35; color:#eaf7c8}
+.lcd .t i{font-style:normal; color:var(--lime)}
+.lcd .ct{flex:0 0 auto; font-size:9px; letter-spacing:.14em; text-transform:uppercase; color:var(--lime); opacity:.85}
+
+/* the chain log */
+.chain{margin-top:12px; border:1px dashed rgba(255,255,255,.16); border-radius:4px; padding:9px 11px;
+  min-height:74px; max-height:150px; overflow-y:auto; font-size:11.5px; line-height:1.6; color:var(--lav2);
+  position:relative; z-index:1; scrollbar-width:thin; scrollbar-color:var(--lime) transparent}
+.chain::-webkit-scrollbar{width:4px}
+.chain::-webkit-scrollbar-thumb{background:var(--lime); border-radius:9px}
+.chain .cl{opacity:0; transform:translateY(3px); transition:opacity .3s, transform .3s}
+.chain .cl.on{opacity:1; transform:none}
+.chain .cl b{color:var(--lime); font-weight:400}
+.chain .empty{color:var(--dim); font-style:italic}
+
+.pill{font-family:var(--mono); font-size:9px; letter-spacing:.14em; text-transform:uppercase;
+  color:#e7dcff; background:rgba(11,11,14,.55); border:1px solid rgba(255,255,255,.2);
+  border-radius:999px; padding:8px 12px}
+.pill:hover{border-color:var(--lime); color:#fff}
+.pill:focus-visible{outline:2px solid var(--lime); outline-offset:2px}
+.walkRow{display:flex; gap:8px; margin-top:10px}
+.walkRow .pill{flex:1; font-family:var(--disp); font-size:17px; letter-spacing:.06em; padding:9px 6px; text-align:center}
+.walkRow .pill:disabled{opacity:.45; cursor:default}
+.walkRow .ar{display:inline-block}
+.walkRow.hint .ar{animation:hintBlink 1.6s ease-in-out infinite}
+.walkRow.hint #walkR .ar{animation-delay:.2s}
+.walkHint{margin:9px 0 0; font-family:var(--mono); font-size:9.5px; letter-spacing:.1em;
+  color:var(--dim); text-align:center}
+.walkHint b{color:var(--lime); font-weight:400}
+@keyframes hintBlink{0%,100%{opacity:.26}50%{opacity:1}}
+.walkRow #placeBtn{flex:1.5; background:var(--lime); color:#1a2200; border-color:var(--lime)}
+.walkRow #placeBtn:disabled{background:transparent; color:var(--dim); border-color:rgba(255,255,255,.18)}
+.pill[disabled]{opacity:.34; cursor:not-allowed; border-style:dashed}
+.transportRow{position:relative; z-index:1; display:flex; flex-wrap:wrap; align-items:center; gap:7px; margin-top:10px}
+
+/* ---------------- the right hand column ---------------- */
+.rail{display:flex; flex-direction:column; gap:14px; min-width:0}
+.panel{border:1px solid rgba(255,255,255,.11); border-radius:5px; padding:13px 15px 14px;
+  background:linear-gradient(180deg, rgba(255,255,255,.035), rgba(0,0,0,.30))}
+.panel h2{font-family:var(--disp); font-weight:400; font-size:20px; letter-spacing:.05em; margin:0 0 6px;
+  color:var(--lav)}
+.panel h2 span{font-family:var(--mono); font-size:8.5px; letter-spacing:.18em; text-transform:uppercase; color:var(--dim)}
+.panel p{margin:0 0 9px; color:var(--lav2); font-size:12px; line-height:1.66}
+.panel p:last-child{margin-bottom:0}
+.panel p b{color:var(--lav)}
+.panel .fine{font-family:var(--hand); font-size:13.5px; color:#eef7cf}
+
+/* the rig / revisions */
+.revs{display:flex; flex-direction:column; gap:5px; margin-top:9px}
+.rv{display:flex; gap:9px; align-items:flex-start; border:1px dashed rgba(255,255,255,.15);
+  border-left:3px solid rgba(141,128,163,.5); border-radius:4px; padding:6px 9px; background:rgba(0,0,0,.22)}
+.rv.on{border-style:solid; border-left-color:var(--lime); background:rgba(204,255,0,.05)}
+.rv.next{border-left-color:var(--cyan)}
+.rv .n{flex:0 0 30px; font-family:var(--disp); font-size:14px; letter-spacing:.04em; color:var(--dim); line-height:1.4}
+.rv.on .n{color:var(--lime)}
+.rv.next .n{color:var(--cyan)}
+.rv .b{min-width:0}
+.rv .t{font-family:var(--disp); font-size:15px; letter-spacing:.04em; color:var(--lav); line-height:1.25}
+.rv .d{font-size:10.5px; line-height:1.5; color:var(--lav2)}
+.rv .lock{font-size:10.5px; color:var(--dim); font-style:italic}
+
+/* the report */
+.report{margin-top:9px; border:1px solid rgba(255,255,255,.16); border-radius:4px; overflow:hidden;
+  background:#0a0114}
+.report .rh{display:flex; align-items:baseline; justify-content:space-between; gap:8px; padding:7px 11px;
+  background:rgba(204,255,0,.14); border-bottom:1px dashed rgba(255,255,255,.2)}
+.report .rh b{font-family:var(--disp); font-size:16px; letter-spacing:.06em; color:var(--lime); font-weight:400}
+.report .rh span{font-size:8.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--dim)}
+.report .rb{padding:9px 11px}
+.report .quote{font-family:var(--write); font-size:15.5px; color:var(--lav); margin:0 0 8px}
+.report .meta{display:flex; flex-direction:column; gap:5px; margin-bottom:8px}
+.bar{display:flex; align-items:center; gap:8px; font-size:9px; letter-spacing:.1em; text-transform:uppercase; color:var(--dim)}
+.bar .nm{flex:0 0 76px}
+.bar .tr{flex:1 1 auto; height:5px; border-radius:3px; background:rgba(255,255,255,.09); overflow:hidden}
+.bar .tr i{display:block; height:100%; border-radius:3px; background:linear-gradient(90deg,var(--cyan),var(--lime))}
+.bar .vl{flex:0 0 auto; color:var(--lav2)}
+.report .note{font-family:var(--hand); font-size:13.5px; color:#eef7cf; margin:0;
+  border:0; background:none; padding:0; max-width:none; border-left:0}
+.report .note b{color:var(--lime)}
+.report .empty{color:var(--dim); font-style:italic; font-size:11.5px}
+.revchip{display:inline-block; font-family:var(--mono); font-size:8px; letter-spacing:.12em; text-transform:uppercase;
+  color:#1c0012; background:var(--lime); border-radius:99px; padding:2px 7px; margin-left:6px}
+
+.foot{margin-top:38px; border-top:1px solid rgba(255,255,255,.10); padding-top:14px;
+  font-size:9px; letter-spacing:.15em; text-transform:uppercase; color:var(--dim);
+  display:flex; flex-wrap:wrap; gap:7px 10px; justify-content:space-between; align-items:center}
+.foot a{color:var(--lav); border-bottom:1px solid rgba(255,255,255,.22); padding-bottom:1px}
+.foot a:hover{background:var(--lime); color:var(--ink); border-color:var(--lime)}
+.foot .set{display:flex; flex-wrap:wrap; gap:6px 9px}
+
+@media (max-width:900px){
+  .stage{grid-template-columns:1fr; gap:18px}
+  .cab{max-width:640px}
+}
+@media (max-width:680px){
+  .wrap{padding:14px 12px 34px}
+  .marq b{font-size:18px}
+  .marq span{display:none}
+  .bigRow{gap:12px}
+  .bigBtn{width:96px; height:96px; font-size:28px}
+  .walkRow .pill{padding:13px 6px; font-size:18px}
+  .bigSide .say{font-size:15.5px}
+  .lcd .t{white-space:normal}
+  .bar .nm{flex:0 0 62px}
+  .bigSide{min-width:0}
+}
+@media (prefers-reduced-motion:reduce){
+  .camWrap.live .camTag i{animation:none}
+  .lcd.on .dot{animation:none}
+  .chain .cl{transition:none}
+  .walkRow.hint .ar{animation:none}
+}
+</style>
+</head>
+<body>
+<canvas id="dust" aria-hidden="true"></canvas>
+<div class="vig" aria-hidden="true"></div>
+
+<div class="wrap">
+
+  <header class="top">
+    <a class="back" href="./">&larr; miki&rsquo;s games room</a>
+    <span class="sign">the glitter drop</span>
+    <span class="no">machine no. 07 &middot; miki&rsquo;s own</span>
+  </header>
+
+  <div class="head">
+    <span class="kick">downstairs &middot; the seventh machine &middot; she does the walking</span>
+    <h1>Bobby built the box. <b>Miki plants it.</b></h1>
+    <p class="sub">Bobby built it, and bobby put up the sign, and he says both were his idea and both are staying. It is a box with a lid, a cup, four trays, a delay, one thing you can smell through the tape, and a camera &mdash; every part bolted on to answer a complaint the last test left. This machine is the other half: <b>the walking</b>. Take the finished box down the path, put it on the mat, and be gone before the hoodie one comes round the corner of the house. He always picks it up. That is the entire point of him.</p>
+  </div>
+
+  <div class="note">
+    bobby built the box and the box works &mdash; i have watched it work, at length, from behind the amp. the trouble is that a box is only half of a prank. somebody has to <b>carry it down the path</b> and put it on the mat, and somebody has to not be standing there when he looks up. that somebody is me, because it was my idea to find out whether the hoodie one would take it off the grass. he always takes it off the grass. <b>hold left or right to walk, set it down, and pick it up again if you are off the mat.</b> the box is the easy half.
+    <span class="who">&mdash; miki, from the doorway, holding the box</span>
+  </div>
+
+  <div class="stage">
+
+    <!-- ---------------- the machine ---------------- -->
+    <section class="cab" aria-label="the glitter drop machine">
+      <div class="marq">
+        <b>GD&#8209;07 &middot; she does the walking</b>
+        <span id="marqState">dormant</span>
+      </div>
+
+      <div class="face">
+
+        <div class="camWrap" id="camWrap">
+          <canvas id="cam" width="900" height="420" aria-label="the path, the porch, the mat and the corner of the house"></canvas>
+          <span class="scan" aria-hidden="true"></span>
+          <span class="camTag"><i></i> path cam 07 &middot; live</span>
+          <span class="stampTag" id="camStamp">--:--:--</span>
+        </div>
+
+        <div class="bigRow">
+          <button class="bigBtn" id="bigBtn" type="button">walk it out<small>she does the rest</small></button>
+          <div class="bigSide">
+            <p class="say" id="bobbyLine">the box is by the door. the mat is at the far end of the path, and the corner of the house is where he comes from.</p>
+          </div>
+        </div>
+
+        <div class="walkRow" id="walkRow">
+          <button class="pill" id="walkL" type="button" aria-label="hold to walk left"><span class="ar">&larr;</span> hold</button>
+          <button class="pill" id="placeBtn" type="button" disabled>set it down</button>
+          <button class="pill" id="walkR" type="button" aria-label="hold to walk right">hold <span class="ar">&rarr;</span></button>
+        </div>
+
+        <p class="walkHint">hold <b>&larr;</b> or <b>&rarr;</b> to walk her down the path &middot; <b>set it down</b> on the mat &middot; then get her back through the door before he looks up</p>
+
+        <div class="lcd" id="lcd">
+          <span class="dot" aria-hidden="true"></span>
+          <span class="t" id="lcdT">the box is by the door and the path is empty. nothing has happened to anybody yet.</span>
+          <span class="ct" id="lcdMeta">run 0 &middot; window 12.4s</span>
+        </div>
+
+        <div class="chain" id="chain"><p class="empty">nothing on the tape. run one and she will tell you what happened.</p></div>
+
+        <div class="transportRow">
+          <button class="pill" id="soundBtn" type="button" aria-pressed="true">sound: on</button>
+          <button class="pill" id="againBtn" type="button" disabled>run it again</button>
+          <button class="pill" id="keepBtn" type="button" disabled>keep the still</button>
+          <button class="pill" id="wipeBtn" type="button">start the takes over</button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ---------------- the paperwork ---------------- -->
+    <div class="rail">
+
+      <section class="panel">
+        <h2>the takes <span>and how long he leaves her</span></h2>
+        <p>She runs it the same way he tests it, which is his fault: one clean getaway and the machine takes the next one harder. Every take shortens the window between pressing the button and the hoodie one coming round the corner, and tightens what counts as <b>on the mat</b>. He does not stop coming round the corner.</p>
+        <div class="revs" id="revs"></div>
+      </section>
+
+      <section class="panel">
+        <h2>the field report <span>last run</span></h2>
+        <div class="report" id="report"><div class="rb"><p class="empty">nothing on the tape. run one and she will tell you what happened.</p></div></div>
+      </section>
+
+      <section class="panel">
+        <h2>how it works <span>plainly</span></h2>
+        <p>Press the button and the box is in her arms. <b>Hold left and right to walk</b>, and <b>set it down</b> when she is on the mat &mdash; the glowing strip is the mat, and the wider the strip the earlier the take. Then walk her back past the door before the corner clock runs out. If she is still out there when he looks up, he sees her, waves, and takes the box anyway, which is the ending she likes best.</p>
+        <p>Set it down off the mat and he will still take it &mdash; he is not fussy, and the report will say so. You can <b>pick it up again</b> and have another go, but turning around costs seconds and seconds are the whole game. Then she prints the <b>field report</b>: the plant time, whether he saw her, how far clear she got, and what she thought of it.</p>
+        <p><b>keep the still</b> saves the frame where the glitter is still in the air. <b>start the takes over</b> winds the machine back to take one. Keyboard: <b>&larr; &rarr;</b> (or a/d) to walk, <b>space</b> to set it down or pick it up, <b>r</b> to run it.</p>
+      </section>
+
+      <section class="panel">
+        <h2>the rule <span>still the only rule</span></h2>
+        <p class="fine">do not open the box.</p>
+        <p>That is still the rule &mdash; it was bobby&rsquo;s rule and it survived being handed over. She carries it by the handle, sets it down on the mat, and does not look inside it, because she has seen what happens when somebody looks inside it.</p>
+      </section>
+
+    </div>
+  </div>
+
+  <footer class="foot">
+    <span>the glitter drop &middot; machine no. 07 &middot; cafedreamr toy co.</span>
+    <span class="set">
+      <a href="./">the games room</a>
+      <a href="./glitterbomb.html">the glitter bomb</a>
+      <a href="./booth.html">bobby&rsquo;s interview booth</a>
+      <a href="./jackbox.html">bobby in the box</a>
+      <a href="./drum.html">the drum machine</a>
+      <a href="./claw.html">the claw machine</a>
+      <a href="https://www.cafedreamr.art/LORE/OCS/CARDS-SOUNDS/cards.html">the dossiers</a>
+    </span>
+  </footer>
+</div>
+
+<script src="https://www.cafedreamr.art/PASSPORT/cd-passport.js"></script>
+<script>
+/* ============================================================
+   the glitter drop — machine no. 07            MIKI/GAMES/glitterdrop.html
+   The other half of bobby's glitter bomb, and it is miki's machine
+   because the walking is hers. Bobby built the box; a box is only half
+   of a prank, because somebody has to carry it down the path and put it
+   on the mat and then not be standing there when the hoodie one comes
+   round the corner of the house. That is the whole game: hold left or
+   right to walk (she carries it slower than she walks back), set it down
+   on the mat, pick it up again if you are off the mat, and be past the
+   door before the corner clock runs out. He takes it whichever way it
+   ends — off the mat, out of her hands, whatever — because a dummy is a
+   dummy and no dummy is ever hurt, only covered. Clean getaways shorten
+   the window and tighten the mat, one take at a time.
+   The scene, the box, the pirate, the light pool and the whole glitter
+   particle system are the same ones the other machine uses, so the two
+   read as one build; miki herself is new, drawn on the canvas in her own
+   black/lime/cyan — never a purple pixel, per the stripe rule.
+   Canon: miki is CC-003, #ccff00, the prankster who keeps the machines;
+   the hoodie one is a test dummy with a skateboard and confidence.
+   ============================================================ */
+(function(){
+  "use strict";
+
+  var $ = function(id){ return document.getElementById(id); };
+  function clamp(v,a,b){ return v<a?a:v>b?b:v; }
+  function esc(s){ return String(s==null?"":s).replace(/[&<>"]/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]; }); }
+  var rnd = Math.random;
+  function rr(a,b){ return a + rnd()*(b-a); }
+  function pick(a){ return a[Math.floor(rnd()*a.length)]; }
+
+  /* ==================================================================
+     THE REVISIONS — each one answers the complaint the last test left.
+     `flaw` is what the report says is still wrong, and it is also the
+     reason the *next* part exists. Order matters: this is the build.
+     ================================================================== */
+  var REVS = [
+    { id:"lid",   n:"i",    t:"the lid",            d:"spring-loaded. it pops, and it pops hard. that is the entire first idea.", p:"the pop" },
+    { id:"cup",   n:"ii",   t:"the rotating cup",   d:"a cup that spins as it opens, so the glitter goes out sideways instead of straight up.", p:"direction" },
+    { id:"trays", n:"iii",  t:"the four trays",     d:"four nested trays, each one deeper. four layers, not one puff.", p:"volume" },
+    { id:"delay", n:"iv",   t:"the delay",          d:"it waits until the box has actually been lifted. he calls this the single most important part.", p:"timing" },
+    { id:"fart",  n:"v",    t:"the other smell",    d:"he will not say what is in it. it arrives about a second and a half after the glitter.", p:"duration" },
+    { id:"cam",   n:"vi",   t:"the little camera",  d:"faces the mat, films the whole thing, and puts a little red dot in the corner of the tape.", p:"evidence" },
+    { id:"dust",  n:"vii",  t:"the fine glitter",   d:"the kind that hangs in the air and gets into everything. you will be finding it in june.", p:"reach" },
+    { id:"track", n:"viii", t:"the tracker",        d:"so the box is never really gone, even when it is.", p:"recovery" },
+    { id:"decoy", n:"ix",   t:"the decoy box",      d:"a second box that looks like the first one, so the honest thief gets the honest one.", p:"cunning" }
+  ];
+  /* the complaint each test leaves, in order */
+  var FLAWS = [
+    { after:"lid",   need:"cup",   say:"it popped, and the glitter just sat there. it needs a direction." },
+    { after:"cup",   need:"trays", say:"it went out in one thin puff. it needs volume." },
+    { after:"trays", need:"delay", say:"it went off before they even picked it up. it needs to wait." },
+    { after:"delay", need:"fart",  say:"it worked beautifully and then they stayed long enough to take something else. it needs to hurry them along." },
+    { after:"fart",  need:"cam",   say:"perfect, and nobody would ever believe it. it needs a witness." },
+    { after:"cam",   need:"dust",  say:"it stopped dead at the edge of the mat. it needs reach." },
+    { after:"dust",  need:"track", say:"they got away with the box. it needs to follow them home." },
+    { after:"track", need:"decoy", say:"they always take the real one. it needs a lie." }
+  ];
+  /* ==================================================================
+     THE PIRATES — the test dummies. Not people: dummies. One of them is
+     recurring, because of course one of them is recurring.
+     ================================================================== */
+  var PIRATES = [
+    { who:"the bicycle one",     ride:"a bike with no brakes" },
+    { who:"the hoodie one",      ride:"a skateboard and confidence" },
+    { who:"the shopper",         ride:"a shopping cart" },
+    { who:"the runner",          ride:"on foot, and very sure of it" },
+    { who:"the cousin",          ride:"their friend's car, engine running" },
+    { who:"the two-step",        ride:"a scooter, two steps behind" },
+    { who:"the slow one",        ride:"on foot, no rush at all" }
+  ];
+  var LINES = [
+    "oh no. oh no no no.",
+    "ok. ok ok ok.",
+    "what is &mdash; why is it &mdash; it&rsquo;s in my mouth.",
+    "i&rsquo;m not even mad. i&rsquo;m impressed.",
+    "this is my house now. i&rsquo;ve earned this.",
+    "i&rsquo;m never doing this again. i say that every time.",
+    "it&rsquo;s in my ears. how is it in my ears.",
+    "you couldn&rsquo;t have just left it. you had to build something.",
+    "i&rsquo;m going to be finding this at christmas."
+  ];
+
+  /* ==================================================================
+     THE AUDIO — pop, whoosh, cascade, beep, the other smell, shutter,
+     confetti, fan. All synthesized; nothing sampled.
+     ================================================================== */
+  var A = { ctx:null, on:true, noise:null };
+  function wake(){
+    if (A.ctx) { if (A.ctx.state === "suspended") A.ctx.resume(); return A.ctx; }
+    var C = window.AudioContext || window.webkitAudioContext; if (!C) return null;
+    A.ctx = new C();
+    var n = A.ctx.sampleRate * 1.2, buf = A.ctx.createBuffer(1, n, A.ctx.sampleRate), d = buf.getChannelData(0);
+    for (var i = 0; i < n; i++) d[i] = Math.random()*2 - 1;
+    A.noise = buf;
+    return A.ctx;
+  }
+  function tone(f1, f2, dur, type, vol, t0){
+    var ctx = A.ctx; if (!ctx || !A.on) return;
+    var t = Math.max(t0 || ctx.currentTime, ctx.currentTime);
+    var o = ctx.createOscillator(), g = ctx.createGain();
+    o.type = type || "sine";
+    o.frequency.setValueAtTime(f1, t);
+    if (f2) o.frequency.exponentialRampToValueAtTime(Math.max(20,f2), t + dur);
+    g.gain.setValueAtTime(0, t);
+    g.gain.linearRampToValueAtTime(vol == null ? 0.22 : vol, t + 0.012);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    o.connect(g); g.connect(ctx.destination); o.start(t); o.stop(t + dur + 0.02);
+  }
+  function noiseHit(f, sweep, q, dur, vol, t0, type){
+    var ctx = A.ctx; if (!ctx || !A.noise || !A.on) return;
+    var t = Math.max(t0 || ctx.currentTime, ctx.currentTime);
+    var s = ctx.createBufferSource(); s.buffer = A.noise;
+    var bp = ctx.createBiquadFilter(); bp.type = type || "bandpass";
+    bp.frequency.setValueAtTime(f, t);
+    if (sweep) bp.frequency.exponentialRampToValueAtTime(Math.max(60,sweep), t + dur);
+    bp.Q.value = q || 1.1;
+    var g = ctx.createGain();
+    g.gain.setValueAtTime(0, t);
+    g.gain.linearRampToValueAtTime(vol == null ? 0.14 : vol, t + 0.008);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    s.connect(bp); bp.connect(g); g.connect(ctx.destination); s.start(t); s.stop(t + dur + 0.02);
+  }
+  var SFX = {
+    pop:  function(){ noiseHit(900, 2600, 1.4, 0.18, 0.16); tone(520, 120, 0.42, "sine", 0.28); },
+    whir: function(){ noiseHit(360, 1400, 0.8, 0.55, 0.07); tone(180, 420, 0.5, "sawtooth", 0.05); },
+    cascade: function(t){ t = t || (A.ctx ? A.ctx.currentTime : 0);
+      for (var i = 0; i < 6; i++) noiseHit(1800 - i*140, 900, 2.2, 0.05, 0.06, t + i*0.055, "highpass"); },
+    beep: function(t){ tone(1200, 1200, 0.09, "square", 0.12, t); },
+    fart: function(t){ var ctx = A.ctx; if (!ctx || !A.on) return;
+      var tt = t || ctx.currentTime;
+      var o = ctx.createOscillator(), g = ctx.createGain(), lp = ctx.createBiquadFilter();
+      o.type = "sawtooth"; lp.type = "lowpass"; lp.frequency.value = 420; lp.Q.value = 6;
+      var lfo = ctx.createOscillator(), lg = ctx.createGain();
+      lfo.type = "sawtooth"; lfo.frequency.value = 15; lg.gain.value = 42; lfo.connect(lg); lg.connect(o.frequency);
+      o.frequency.setValueAtTime(150, tt);
+      o.frequency.exponentialRampToValueAtTime(78, tt + 0.7);
+      g.gain.setValueAtTime(0, tt);
+      g.gain.linearRampToValueAtTime(0.2, tt + 0.03);
+      g.gain.exponentialRampToValueAtTime(0.0001, tt + 0.85);
+      o.connect(lp); lp.connect(g); g.connect(ctx.destination);
+      o.start(tt); lfo.start(tt); o.stop(tt + 0.9); lfo.stop(tt + 0.9);
+      noiseHit(300, 140, 1.2, 0.5, 0.05, tt);
+    },
+    shutter: function(t){ t = t || (A.ctx ? A.ctx.currentTime : 0);
+      noiseHit(2400, 800, 3, 0.05, 0.12, t); noiseHit(1500, 500, 3, 0.05, 0.08, t + 0.07); },
+    conf: function(t){ t = t || (A.ctx ? A.ctx.currentTime : 0);
+      noiseHit(2400, 900, 0.9, 0.3, 0.14, t); tone(180, 60, 0.4, "triangle", 0.16, t); },
+    fan: function(){ noiseHit(260, 720, 0.7, 1.4, 0.09); }
+  };
+
+  /* ==================================================================
+     THE SCENE — the porch, drawn on the canvas. Logical 900x420.
+     ================================================================== */
+  var CW = 900, CH = 420, GROUND = 362;
+  var BOX = { x:646, y:362, w:92, h:66 };
+  var cv = $("cam"), g = cv.getContext("2d");
+  var DPR = 1;
+  function sizeCanvas(){
+    DPR = Math.min(2, window.devicePixelRatio || 1);
+    cv.width = Math.round(CW * DPR); cv.height = Math.round(CH * DPR);
+    g.setTransform(DPR, 0, 0, DPR, 0, 0);
+  }
+
+  /* ---- particles: glitter, confetti, puffs, streaks ... and glitter ---- */
+  var P = [];
+  var GLIT = ["#ff2d95", "#ff86c0", "#ccff00", "#ffffff", "#00e5ff", "#ffe9a8"];
+  function spawnGlitter(x, y, n, power, dir, spread){
+    for (var i = 0; i < n; i++){
+      var ang = dir + rr(-spread, spread);
+      var sp = power * rr(0.45, 1.15);
+      P.push({
+        t:"g", x:x + rr(-18, 18), y:y + rr(-13, 13),
+        vx:Math.cos(ang) * sp, vy:Math.sin(ang) * sp - rr(0, 70),
+        r:rr(2.0, 5.0), rot:rr(0, 6.3), vr:rr(-9, 9),
+        c:pick(GLIT), life:rr(2600, 5200), born:nowMs(), settle:true, amb:rr(0, .5)
+      });
+    }
+  }
+  function spawnConfetti(x, y, n, power, dir, spread){
+    for (var i = 0; i < n; i++){
+      var ang = dir + rr(-spread, spread);
+      var sp = power * rr(0.5, 1.2);
+      P.push({ t:"c", x:x + rr(-10, 10), y:y + rr(-8, 8),
+        vx:Math.cos(ang)*sp, vy:Math.sin(ang)*sp - rr(40, 140),
+        w:rr(4, 11), h:rr(3, 7), rot:rr(0, 6.3), vr:rr(-7, 7), sway:rr(0, 6.3),
+        c:pick(["#ccff00", "#ff2d95", "#ffffff", "#00e5ff"]), life:rr(2400, 4200), born:nowMs(), settle:true });
+    }
+  }
+  function spawnPuff(x, y, n, spread, color){
+    for (var i = 0; i < n; i++){
+      P.push({ t:"p", x:x + rr(-16, 16), y:y + rr(-12, 6),
+        vx:rr(-spread, spread), vy:rr(-46, -14), r:rr(9, 20), grow:rr(6, 15),
+        c:color || "rgba(190,225,130,", life:rr(1200, 2400), born:nowMs() });
+    }
+  }
+  function nowMs(){ return performance.now() + SIM; }
+
+  function stepParticles(dt, now){
+    for (var i = P.length - 1; i >= 0; i--){
+      var p = P[i], age = now - p.born;
+      if (age > p.life){ P.splice(i, 1); continue; }
+      if (p.t === "p"){
+        p.x += p.vx * dt; p.y += p.vy * dt; p.vx *= 0.985; p.vy *= 0.985; p.r += p.grow * dt;
+        continue;
+      }
+      p.vy += (p.t === "c" ? 320 : 470) * dt;
+      p.vx *= (1 - 1.1 * dt);
+      if (p.t === "c"){ p.sway += dt * 6; p.vx += Math.sin(p.sway) * 26 * dt; p.vy *= (1 - 1.6 * dt); }
+      p.x += p.vx * dt; p.y += p.vy * dt; p.rot += p.vr * dt;
+      var floorY = GROUND + 6 + (p.t === "c" ? rr(0, 6) : 0);
+      if (p.settle && p.y > floorY){
+        p.y = floorY; p.vx *= 0.4; p.vy = 0;
+        if (Math.abs(p.vx) < 14){ p.vx = 0; p.rest = true; }
+      }
+    }
+  }
+  function drawParticles(now){
+    for (var i = 0; i < P.length; i++){
+      var p = P[i], age = now - p.born, fade = 1 - Math.max(0, (age - p.life * 0.72) / (p.life * 0.28));
+      if (p.t === "p"){
+        g.fillStyle = p.c + (0.16 * fade).toFixed(3) + ")";
+        g.beginPath(); g.arc(p.x, p.y, p.r, 0, 6.3); g.fill();
+        continue;
+      }
+      var tw = p.rest ? (0.55 + 0.45 * Math.abs(Math.sin(now / 260 + p.amb * 6))) : 1;
+      g.save(); g.translate(p.x, p.y); g.rotate(p.rot);
+      g.globalAlpha = clamp(fade * tw, 0, 1); g.fillStyle = p.c;
+      if (p.t === "c") g.fillRect(-p.w/2, -p.h/2, p.w, p.h);
+      else { var r = p.r * (p.rest ? 1 : (0.7 + 0.5 * Math.abs(Math.sin(now / 90 + p.amb * 9)))); g.fillRect(-r, -r*0.55, r*2, r*1.1); }
+      g.restore();
+    }
+    g.globalAlpha = 1;
+  }
+
+  /* ---- the porch ---- */
+  var STARS = null;
+  function stars(){
+    if (STARS) return STARS;
+    STARS = [];
+    for (var i = 0; i < 46; i++) STARS.push({ x:Math.random()*CW, y:Math.random()*150, r:Math.random()*1.3+0.3, a:Math.random()*0.5+0.2, p:Math.random()*6.3 });
+    return STARS;
+  }
+  function drawSky(now){
+    var gr = g.createLinearGradient(0, 0, 0, CH);
+    gr.addColorStop(0, "#0a0216"); gr.addColorStop(0.55, "#130427"); gr.addColorStop(1, "#07000f");
+    g.fillStyle = gr; g.fillRect(0, 0, CW, CH);
+    var st = stars();
+    for (var i = 0; i < st.length; i++){
+      var s = st[i];
+      g.globalAlpha = s.a * (0.55 + 0.45 * Math.abs(Math.sin(now/900 + s.p)));
+      g.fillStyle = "#dfe6ff"; g.fillRect(s.x, s.y, s.r*1.7, s.r*1.7);
+    }
+    g.globalAlpha = 1;
+    g.fillStyle = "rgba(226,236,255,.07)"; g.beginPath(); g.arc(212, 56, 30, 0, 6.3); g.fill();
+    g.fillStyle = "rgba(232,238,255,.26)"; g.beginPath(); g.arc(212, 56, 13, 0, 6.3); g.fill();
+    g.fillStyle = "rgba(9,2,20,.55)"; g.beginPath(); g.arc(206, 52, 11, 0, 6.3); g.fill();
+    /* the streetlamp, post and all, on the far side of the yard */
+    g.fillStyle = "rgba(0,229,255,.06)";
+    g.beginPath(); g.ellipse(74, GROUND + 26, 116, 30, 0, 0, 6.3); g.fill();
+    g.strokeStyle = "rgba(196,208,236,.30)"; g.lineWidth = 7; g.lineCap = "round";
+    g.beginPath(); g.moveTo(74, GROUND + 22); g.lineTo(74, 98); g.stroke();
+    g.lineCap = "butt";
+    g.fillStyle = "rgba(196,208,236,.22)"; g.beginPath(); g.ellipse(74, GROUND + 25, 10, 3.6, 0, 0, 6.3); g.fill();
+    g.fillStyle = "rgba(196,208,236,.14)"; g.beginPath(); g.ellipse(74, GROUND + 25, 22, 7, 0, 0, 6.3); g.fill();
+    g.strokeStyle = "rgba(196,208,236,.30)"; g.lineWidth = 6;
+    g.beginPath(); g.moveTo(74, 100); g.lineTo(98, 100); g.stroke();
+    g.fillStyle = "#0f2028"; g.fillRect(90, 96, 18, 9);
+    g.fillStyle = "rgba(0,229,255,.55)"; g.beginPath(); g.arc(97, 100, 5, 0, 6.3); g.fill();
+    g.fillStyle = "rgba(0,229,255,.07)"; g.beginPath(); g.arc(97, 100, 36, 0, 6.3); g.fill();
+    g.lineCap = "butt";
+  }
+  function drawHouse(){
+    g.fillStyle = "#1c0c2b"; g.fillRect(300, 26, CW - 300, GROUND - 26);
+    g.fillStyle = "rgba(0,0,0,.30)"; g.fillRect(300, 26, 5, GROUND - 26);
+    g.strokeStyle = "rgba(255,255,255,.032)"; g.lineWidth = 1;
+    for (var y = 44; y < GROUND; y += 15){
+      g.beginPath(); g.moveTo(305, y); g.lineTo(360, y); g.stroke();
+      g.beginPath(); g.moveTo(422, y); g.lineTo(704, y); g.stroke();
+      g.beginPath(); g.moveTo(820, y); g.lineTo(CW, y); g.stroke();
+    }
+    /* the door */
+    var dx = 704, dy = 92, dw = 116, dh = GROUND - 92;
+    g.fillStyle = "rgba(0,0,0,.35)"; g.fillRect(dx + 3, dy + 3, dw, dh);
+    g.fillStyle = "#150527"; g.fillRect(dx, dy, dw, dh);
+    g.strokeStyle = "rgba(255,255,255,.12)"; g.lineWidth = 1.6; g.strokeRect(dx, dy, dw, dh);
+    g.strokeStyle = "rgba(255,255,255,.07)"; g.lineWidth = 1; g.strokeRect(dx + 9, dy + 10, dw - 18, dh - 24);
+    g.fillStyle = "rgba(126,196,255,.10)"; g.fillRect(dx + 16, dy + 16, dw - 32, 40);
+    g.strokeStyle = "rgba(255,255,255,.14)"; g.strokeRect(dx + 16, dy + 16, dw - 32, 40);
+    g.fillStyle = "rgba(233,226,244,.5)"; g.beginPath(); g.arc(dx + 18, dy + 152, 4, 0, 6.3); g.fill();
+    g.fillStyle = "rgba(233,226,244,.32)"; g.fillRect(dx + 14, dy + 142, 9, 14);
+    /* the porch light, on a bracket, over the mat */
+    g.fillStyle = "#241033"; g.fillRect(658, 72, 28, 12); g.fillRect(670, 84, 7, 9);
+    g.fillStyle = "rgba(255,224,168,.95)"; g.beginPath(); g.arc(673, 96, 5.4, 0, 6.3); g.fill();
+    var lp = g.createRadialGradient(673, 100, 4, 673, 150, 250);
+    lp.addColorStop(0, "rgba(255,216,152,.30)"); lp.addColorStop(0.45, "rgba(255,196,120,.10)"); lp.addColorStop(1, "rgba(255,196,120,0)");
+    g.fillStyle = lp; g.fillRect(433, 60, 460, 320);
+    /* the number, on the wall beside the door */
+    g.fillStyle = "rgba(233,226,244,.5)"; g.font = "22px 'Bebas Neue', Impact, sans-serif"; g.textAlign = "left";
+    g.fillText("04", 658, 66);
+    /* a dark window, with a frame and a sill */
+    g.fillStyle = "#0b1420"; g.fillRect(360, 92, 62, 50);
+    g.fillStyle = "rgba(126,196,255,.07)"; g.beginPath(); g.moveTo(362, 92); g.lineTo(392, 92); g.lineTo(372, 142); g.lineTo(362, 142); g.closePath(); g.fill();
+    g.strokeStyle = "rgba(233,226,244,.18)"; g.lineWidth = 2; g.strokeRect(360, 92, 62, 50);
+    g.strokeStyle = "rgba(233,226,244,.09)"; g.lineWidth = 1;
+    g.beginPath(); g.moveTo(391, 92); g.lineTo(391, 142); g.moveTo(360, 117); g.lineTo(422, 117); g.stroke();
+    g.fillStyle = "rgba(233,226,244,.12)"; g.fillRect(355, 142, 72, 5);
+  }
+  function drawPorch(){
+    /* the slab */
+    g.fillStyle = "#2b1538"; g.fillRect(410, GROUND, CW - 410, CH - GROUND);
+    g.fillStyle = "rgba(255,255,255,.06)"; g.fillRect(410, GROUND, CW - 410, 3);
+    g.strokeStyle = "rgba(0,0,0,.22)"; g.lineWidth = 1;
+    for (var x = 440; x < CW; x += 46){ g.beginPath(); g.moveTo(x, GROUND + 4); g.lineTo(x - 10, CH); g.stroke(); }
+    /* the step down */
+    g.fillStyle = "#1a0a2b"; g.fillRect(348, GROUND + 30, 78, CH - GROUND - 30);
+    g.fillStyle = "rgba(255,255,255,.04)"; g.fillRect(348, GROUND + 30, 78, 2);
+    /* the yard */
+    g.fillStyle = "#0d0418"; g.fillRect(0, GROUND + 30, 348, CH - GROUND - 30);
+    /* the hedge along the yard */
+    g.fillStyle = "#122019";
+    for (var hx = -10; hx < 352; hx += 26){
+      g.beginPath(); g.arc(hx + 13, GROUND + 32, 15 + ((hx * 7 + 26) % 6), Math.PI, 0); g.fill();
+    }
+    g.fillStyle = "rgba(0,0,0,.28)"; g.fillRect(0, GROUND + 30, 348, 4);
+    /* grass */
+    g.strokeStyle = "rgba(120,160,120,.16)"; g.lineWidth = 1;
+    for (var i = 0; i < 34; i++){
+      var gx = (i * 37) % 336, gy = GROUND + 42 + ((i * 53) % 34);
+      g.beginPath(); g.moveTo(gx, gy); g.lineTo(gx + 2, gy - 6); g.stroke();
+    }
+    /* the path */
+    g.fillStyle = "rgba(255,255,255,.035)";
+    g.beginPath(); g.moveTo(30, CH); g.lineTo(120, GROUND + 30); g.lineTo(250, GROUND + 30); g.lineTo(340, CH); g.closePath(); g.fill();
+    /* the mat, and the box sits on it */
+    g.fillStyle = "rgba(0,0,0,.4)";
+    g.beginPath(); g.moveTo(592, GROUND + 2); g.lineTo(744, GROUND + 2); g.lineTo(756, GROUND + 36); g.lineTo(580, GROUND + 36); g.closePath(); g.fill();
+    g.fillStyle = "#40164a";
+    g.beginPath(); g.moveTo(596, GROUND); g.lineTo(740, GROUND); g.lineTo(752, GROUND + 32); g.lineTo(584, GROUND + 32); g.closePath(); g.fill();
+    g.strokeStyle = "rgba(204,255,0,.30)"; g.lineWidth = 1.6;
+    g.beginPath(); g.moveTo(596, GROUND); g.lineTo(740, GROUND); g.lineTo(752, GROUND + 32); g.lineTo(584, GROUND + 32); g.closePath(); g.stroke();
+    g.strokeStyle = "rgba(204,255,0,.12)"; g.lineWidth = 1;
+    g.beginPath(); g.moveTo(606, GROUND + 9); g.lineTo(730, GROUND + 9); g.stroke();
+  }
+
+  /* ---- the box (which visibly gains parts) ---- */
+  function drawBox(open, rig){
+    var w = BOX.w, h = BOX.h, x = BOX.x - w/2, y = BOX.y - h, base = BOX.y;
+    var dx = 15, dy = 11, lift = open ? 6 : 0;
+    var TOP = "#c08a55", FRONT = "#a9784a", SIDE = "#7d5531", EDGE = "rgba(0,0,0,.34)";
+    /* its shadow on the mat */
+    g.fillStyle = "rgba(0,0,0,.5)";
+    g.beginPath(); g.ellipse(BOX.x + 4, base - 1, w * 0.66, 8, 0, 0, 6.3); g.fill();
+    /* the decoy: the box that looks like the box, and is not */
+    if (rig.decoy){
+      var dw2 = 56, dh2 = 38, dx2 = x - dw2 - 16, dy2 = base - dh2;
+      g.fillStyle = "rgba(0,0,0,.45)"; g.beginPath(); g.ellipse(dx2 + dw2/2 + 2, base - 1, dw2 * 0.62, 6, 0, 0, 6.3); g.fill();
+      g.fillStyle = "#8a6539"; g.fillRect(dx2, dy2, dw2, dh2);
+      g.fillStyle = "#a37b47"; g.beginPath(); g.moveTo(dx2, dy2); g.lineTo(dx2+dw2, dy2); g.lineTo(dx2+dw2+9, dy2-7); g.lineTo(dx2+9, dy2-7); g.closePath(); g.fill();
+      g.fillStyle = "#63482a"; g.beginPath(); g.moveTo(dx2+dw2, dy2); g.lineTo(dx2+dw2+9, dy2-7); g.lineTo(dx2+dw2+9, dy2+dh2-7); g.lineTo(dx2+dw2, dy2+dh2); g.closePath(); g.fill();
+      g.strokeStyle = "rgba(0,0,0,.3)"; g.lineWidth = 1; g.strokeRect(dx2, dy2, dw2, dh2);
+      g.fillStyle = "rgba(204,255,0,.7)"; g.font = "12px 'Bebas Neue', Impact, sans-serif"; g.fillText("DON'T", dx2 + 8, dy2 + 24);
+    }
+    /* the right side, then the front, so it reads as a box and not a rectangle */
+    g.fillStyle = SIDE;
+    g.beginPath(); g.moveTo(x+w, y - lift); g.lineTo(x+w+dx, y-dy - lift); g.lineTo(x+w+dx, y+h-dy - lift); g.lineTo(x+w, y+h - lift); g.closePath(); g.fill();
+    g.fillStyle = FRONT; g.fillRect(x, y - lift, w, h);
+    g.fillStyle = "rgba(255,255,255,.05)"; g.fillRect(x, y - lift, w, 3);
+    g.strokeStyle = EDGE; g.lineWidth = 1; g.strokeRect(x, y - lift, w, h);
+    /* the tape: a seam down the middle, and a band across it */
+    g.fillStyle = "rgba(226,220,196,.40)"; g.fillRect(x + w/2 - 8, y - lift, 16, h);
+    g.fillStyle = "rgba(255,255,255,.10)"; g.fillRect(x + w/2 - 8, y - lift, 4, h);
+    g.fillStyle = "rgba(226,220,196,.22)"; g.fillRect(x, y + h*0.42 - 5 - lift, w, 10);
+    /* the sign, and the button that says it */
+    g.fillStyle = "#0a0114"; g.fillRect(x + 8, y + 16 - lift, 52, 23);
+    g.fillStyle = "#ccff00"; g.font = "16px 'Bebas Neue', Impact, sans-serif"; g.fillText("DON'T", x + 13, y + 34 - lift);
+    g.fillStyle = "#ff2d95"; g.beginPath(); g.arc(x + w - 15, y + 28 - lift, 6.4, 0, 6.3); g.fill();
+    g.strokeStyle = "rgba(255,255,255,.5)"; g.lineWidth = 1.4; g.beginPath(); g.arc(x + w - 15, y + 28 - lift, 6.4, 0, 6.3); g.stroke();
+    if (rig.delay){
+      g.fillStyle = "#0a0114"; g.fillRect(x + 10, y + h - 20 - lift, 32, 14);
+      g.fillStyle = "#ccff00"; g.font = "9px 'Space Mono', monospace"; g.fillText("00", x + 15, y + h - 10 - lift);
+    }
+    if (rig.fart){
+      var cxx = x - 19;
+      g.fillStyle = "rgba(0,0,0,.4)"; g.beginPath(); g.ellipse(cxx + 7, base - 2, 13, 4, 0, 0, 6.3); g.fill();
+      g.fillStyle = "#566276"; g.fillRect(cxx, y + 16 - lift, 14, 42);
+      g.fillStyle = "#7d8aa0"; g.beginPath(); g.ellipse(cxx + 7, y + 58 - lift, 7, 3, 0, 0, 6.3); g.fill();
+      g.fillStyle = "#39414f"; g.beginPath(); g.ellipse(cxx + 7, y + 16 - lift, 7, 3, 0, 0, 6.3); g.fill();
+      g.fillStyle = "#101018"; g.fillRect(cxx + 3, y + 8 - lift, 8, 9);
+      g.fillStyle = "#2a3340"; g.fillRect(cxx + 1, y + 5 - lift, 12, 4);
+      g.strokeStyle = "rgba(204,255,0,.55)"; g.lineWidth = 1.4; g.lineCap = "round";
+      g.beginPath(); g.moveTo(cxx + 3, y + 2 - lift); g.quadraticCurveTo(cxx + 1, y - 5 - lift, cxx + 4, y - 10 - lift); g.stroke();
+      g.beginPath(); g.moveTo(cxx + 9, y + 1 - lift); g.quadraticCurveTo(cxx + 8, y - 6 - lift, cxx + 11, y - 12 - lift); g.stroke();
+      g.lineCap = "butt";
+      g.fillStyle = "rgba(255,255,255,.14)"; g.fillRect(cxx + 2, y + 18 - lift, 3, 38);
+    }
+    /* the top face, or the lid, hinged up and back */
+    if (!open){
+      g.fillStyle = TOP;
+      g.beginPath(); g.moveTo(x, y); g.lineTo(x+w, y); g.lineTo(x+w+dx, y-dy); g.lineTo(x+dx, y-dy); g.closePath(); g.fill();
+      g.strokeStyle = EDGE; g.stroke();
+      g.strokeStyle = "rgba(0,0,0,.26)"; g.beginPath();
+      g.moveTo(x + w/2, y); g.lineTo(x + w/2 + dx, y-dy); g.stroke();
+    } else {
+      /* the mouth of the box, dark inside */
+      g.fillStyle = "#2e1b0c";
+      g.beginPath(); g.moveTo(x, y - lift); g.lineTo(x+w, y - lift); g.lineTo(x+w+dx, y-dy - lift); g.lineTo(x+dx, y-dy - lift); g.closePath(); g.fill();
+      /* the light coming out of it */
+      var glow = g.createRadialGradient(x + w/2, y - lift, 2, x + w/2, y - lift, 54);
+      glow.addColorStop(0, "rgba(255,240,255,.42)"); glow.addColorStop(1, "rgba(255,45,149,0)");
+      g.fillStyle = glow; g.fillRect(x - 16, y - 44 - lift, w + 36, 50);
+      /* the four trays, sprung up out of the mouth and still spilling */
+      var nlay = rig.trays ? 4 : 1;
+      var TRAY = ["#e9c265", "#ff86c0", "#c7e86a", "#f4dd93"];
+      for (var ti = nlay - 1; ti >= 0; ti--){
+        var ty3 = y - lift - 6 - ti * 10, tw3 = w - 6 - ti * 8, tx3 = x + (w - tw3)/2;
+        g.fillStyle = TRAY[ti % 4];
+        g.fillRect(tx3, ty3, tw3, 6);
+        g.fillStyle = "rgba(255,255,255,.38)"; g.fillRect(tx3, ty3, tw3, 1.6);
+        g.fillStyle = "rgba(0,0,0,.34)"; g.fillRect(tx3, ty3 + 6, tw3, 2);
+        for (var sp = 0; sp < 7; sp++){
+          g.fillStyle = pick(GLIT); g.fillRect(tx3 + 3 + ((sp * 17 + ti * 9) % (tw3 - 6)), ty3 - 2 - ((sp * 5) % 3), 2.6, 2.6);
+        }
+      }
+      /* (the lid itself is drawn last, over the glitter — see drawLidFly) */
+    }
+    /* the rotating cup */
+    if (rig.cup){
+      var cxp = x + w/2, cyp = open ? (y - lift - 14) : (y - 5);
+      var ch = open ? 30 : 15, cy0 = cyp - ch;
+      g.fillStyle = "rgba(0,0,0,.35)"; g.beginPath(); g.ellipse(cxp, cyp + 1.5, 19, 5.4, 0, 0, 6.3); g.fill();
+      g.fillStyle = "#6d5a78"; g.beginPath(); g.ellipse(cxp, cyp + 0.5, 18, 5, 0, 0, 6.3); g.fill();
+      g.fillStyle = open ? "#e6a8c8" : "#9a7aa6";
+      g.beginPath(); g.moveTo(cxp - 16, cy0); g.lineTo(cxp - 16, cyp); g.lineTo(cxp + 16, cyp); g.lineTo(cxp + 16, cy0); g.closePath(); g.fill();
+      g.fillStyle = "rgba(255,255,255,.16)"; g.fillRect(cxp - 15, cy0, 5, ch);
+      g.fillStyle = open ? "#f7d0e4" : "#b394bf";
+      g.beginPath(); g.ellipse(cxp, cy0, 16, 5.2, 0, 0, 6.3); g.fill();
+      if (open){
+        g.fillStyle = "rgba(255,45,149,.85)"; g.beginPath(); g.ellipse(cxp, cy0 + 1.5, 12.5, 3.6, 0, 0, 6.3); g.fill();
+        for (var q = 0; q < 6; q++){ g.fillStyle = pick(GLIT); g.fillRect(cxp - 11 + ((q * 13) % 22), cy0 - 3 - ((q * 7) % 5), 2.6, 2.6); }
+      }
+      g.strokeStyle = "rgba(0,0,0,.35)"; g.lineWidth = 1.2; g.beginPath(); g.ellipse(cxp, cy0, 16, 5.2, 0, 0, 6.3); g.stroke();
+    }
+    /* the little camera */
+    if (rig.cam){
+      var px = x + w - 14;
+      g.fillStyle = "#0b0b12"; g.fillRect(px - 2, y - dy - 22 - lift, 4, 24);
+      g.fillStyle = "#15151d"; g.fillRect(px - 2, y - dy - 22 - lift, 4, 4);
+      g.fillStyle = "#101018"; g.fillRect(px - 22, y - dy - 34 - lift, 25, 13);
+      g.fillStyle = "#22303a"; g.beginPath(); g.arc(px - 10, y - dy - 27 - lift, 4.2, 0, 6.3); g.fill();
+      g.fillStyle = "#3f5568"; g.beginPath(); g.arc(px - 10, y - dy - 27 - lift, 2.1, 0, 6.3); g.fill();
+      g.fillStyle = "#ff2d2d"; g.beginPath(); g.arc(px - 17, y - dy - 31 - lift, 1.7, 0, 6.3); g.fill();
+    }
+    /* the tracker */
+    if (rig.track){
+      var tx = x + w + dx - 6;
+      g.fillStyle = "#1b2430"; g.fillRect(tx - 8, y - dy - 11 - lift, 15, 11);
+      g.fillStyle = "rgba(255,255,255,.16)"; g.fillRect(tx - 8, y - dy - 11 - lift, 15, 2.4);
+      g.fillStyle = "#0e1620"; g.fillRect(tx - 4, y - dy - 28 - lift, 7, 18);
+      g.strokeStyle = "rgba(0,229,255,.85)"; g.lineWidth = 2.8; g.lineCap = "round";
+      g.beginPath(); g.moveTo(tx, y - dy - 28 - lift); g.lineTo(tx, y - dy - 48 - lift); g.stroke();
+      g.lineCap = "butt";
+      g.fillStyle = "rgba(0,229,255,.16)"; g.beginPath(); g.arc(tx, y - dy - 50 - lift, 9, 0, 6.3); g.fill();
+      g.fillStyle = "rgba(0,229,255,.95)"; g.beginPath(); g.arc(tx, y - dy - 50 - lift, 3.2, 0, 6.3); g.fill();
+    }
+    /* the fine glitter, already everywhere */
+    if (rig.dust){
+      var dd;
+      for (dd = 0; dd < 11; dd++){
+        var fpx = x + 6 + ((dd * 29) % (w - 12)), fpy = y - lift + 6 + ((dd * 41) % (h - 14));
+        g.fillStyle = "rgba(204,255,0,.18)"; g.fillRect(fpx - 1.8, fpy - 1.8, 5.6, 5.6);
+        g.fillStyle = "rgba(255,255,255,.6)"; g.fillRect(fpx, fpy, 2.2, 2.2);
+      }
+      for (dd = 0; dd < 6; dd++){
+        var mpx = x - 6 + ((dd * 47) % (w + 12)), mpy = base - 3 + ((dd * 13) % 11);
+        g.fillStyle = "rgba(255,255,255,.45)"; g.fillRect(mpx, mpy, 2, 2);
+      }
+    }
+  }
+
+  /* ---- the lid, off the box and tumbling away (drawn over the glitter) ---- */
+  function drawLidFly(){
+    if (!open) return;
+    var w = BOX.w, x = BOX.x - w/2, y = BOX.y - BOX.h, lift = 6, dx2 = 15, i;
+    g.save();
+    for (i = 2; i >= 0; i--){
+      g.save();
+      g.translate(x + w/2 + 52 - i * 13, y - lift - 64 + i * 10);
+      g.rotate(-0.44 + i * 0.13);
+      g.globalAlpha = i === 0 ? 1 : 0.13 * (3 - i);
+      g.fillStyle = i === 0 ? "#c08a55" : "#8a6a44";
+      g.beginPath(); g.moveTo(-w/2, -22); g.lineTo(w/2, -22); g.lineTo(w/2 + dx2, 16); g.lineTo(-w/2 + dx2, 16); g.closePath(); g.fill();
+      if (i === 0){
+        g.fillStyle = "#8a6038";
+        g.beginPath(); g.moveTo(-w/2 + dx2, 16); g.lineTo(w/2 + dx2, 16); g.lineTo(w/2 + dx2, 22); g.lineTo(-w/2 + dx2, 22); g.closePath(); g.fill();
+        g.strokeStyle = "rgba(0,0,0,.34)"; g.lineWidth = 1.4;
+        g.beginPath(); g.moveTo(-w/2, -22); g.lineTo(w/2, -22); g.lineTo(w/2 + dx2, 16); g.lineTo(-w/2 + dx2, 16); g.closePath(); g.stroke();
+        g.fillStyle = "rgba(226,220,196,.44)"; g.fillRect(-8, -22, 16, 38);
+        g.fillStyle = "rgba(255,255,255,.10)";
+        g.beginPath(); g.moveTo(-w/2, -22); g.lineTo(w/2, -22); g.lineTo(w/2 + 6, -16); g.lineTo(-w/2 + 6, -16); g.closePath(); g.fill();
+        g.strokeStyle = "rgba(0,0,0,.20)"; g.lineWidth = 1;
+        g.beginPath(); g.moveTo(-w/2 + dx2/2, -22); g.lineTo(w/2 + dx2/2, 16); g.stroke();
+      }
+      g.restore();
+    }
+    g.globalAlpha = 1;
+    g.restore();
+  }
+
+  /* ---- the pirate (a dummy; no dummy is ever hurt) ---- */
+  function drawPirate(st){
+    if (!st.visible) return;
+    var x = st.x, feet = GROUND + 8, s = st.scale || 1.35;
+    g.save();
+    g.translate(x, feet);
+    g.scale(st.dir * s, s);
+    if (st.lean) g.rotate(st.lean);
+    var crouch = st.crouch || 0;
+    var legSw = st.legSw || 0;
+    var BODY = "#20263a", RIM = "rgba(255,214,150,.4)", DARK = "#141a2a";
+    /* contact shadow, thrown away from the porch light */
+    g.fillStyle = "rgba(0,0,0,.22)"; g.beginPath(); g.ellipse(-16, 2, 58, 14, 0, 0, 6.3); g.fill();
+    g.fillStyle = "rgba(0,0,0,.5)"; g.beginPath(); g.ellipse(-6, 0, 33 - crouch * 5, 8, 0, 0, 6.3); g.fill();
+    /* legs, out of one hip so they never cross — and they bend when he crouches */
+    var sw = Math.sin(legSw) * 16, knee = crouch * 14;
+    g.strokeStyle = DARK; g.lineWidth = 10; g.lineCap = "round";
+    g.beginPath(); g.moveTo(-1, -26); g.quadraticCurveTo(-sw - knee, -15, -sw, -3); g.stroke();
+    g.beginPath(); g.moveTo(1, -26); g.quadraticCurveTo(sw + knee, -15, sw, -3); g.stroke();
+    g.lineWidth = 7;
+    g.beginPath(); g.moveTo(-sw, -3); g.lineTo(-sw - 10, -3); g.stroke();
+    g.beginPath(); g.moveTo(sw, -3); g.lineTo(sw + 10, -3); g.stroke();
+    /* everything above the hip drops when he crouches */
+    g.translate(0, crouch * 12);
+    /* torso, ending above the knees */
+    g.fillStyle = BODY;
+    g.beginPath();
+    g.moveTo(-15, -42 - crouch * 3); g.lineTo(15, -42 - crouch * 3);
+    g.quadraticCurveTo(18, -32, 12, -20); g.lineTo(-12, -20);
+    g.quadraticCurveTo(-18, -32, -15, -42 - crouch * 3);
+    g.closePath(); g.fill();
+    /* rim light from the porch on the right */
+    g.strokeStyle = RIM; g.lineWidth = 1.6;
+    g.beginPath(); g.moveTo(15, -42 - crouch * 3); g.quadraticCurveTo(18, -32, 12, -20); g.stroke();
+    /* it is a hoodie: strings, and the pocket, and that is the whole costume */
+    g.strokeStyle = "rgba(233,226,244,.5)"; g.lineWidth = 1.4;
+    g.beginPath(); g.moveTo(-4, -41 - crouch * 3); g.lineTo(-6, -30 - crouch * 3); g.stroke();
+    g.beginPath(); g.moveTo(4, -41 - crouch * 3); g.lineTo(6, -29 - crouch * 3); g.stroke();
+    g.fillStyle = "rgba(0,0,0,.26)";
+    g.beginPath(); g.moveTo(-9, -27 - crouch * 3); g.lineTo(9, -27 - crouch * 3); g.lineTo(7, -22 - crouch * 3); g.lineTo(-7, -22 - crouch * 3); g.closePath(); g.fill();
+    /* the hood */
+    g.fillStyle = BODY;
+    g.beginPath(); g.arc(0, -58 - crouch * 4, 14, 0, 6.3); g.fill();
+    g.beginPath(); g.ellipse(-3, -50 - crouch * 4, 15, 12, 0.25, 0, 6.3); g.fill();
+    g.beginPath(); g.moveTo(-13.4, -61 - crouch * 4); g.lineTo(-2, -78 - crouch * 4); g.lineTo(11.6, -62 - crouch * 4); g.closePath(); g.fill();
+    g.strokeStyle = RIM; g.lineWidth = 1.3;
+    g.beginPath(); g.arc(0, -58 - crouch * 4, 14, -1.1, 1.1); g.stroke();
+    /* the face: shadow, and one glint */
+    g.fillStyle = "#0b0f1a"; g.beginPath(); g.ellipse(3, -57 - crouch * 4, 8.4, 9, 0.2, 0, 6.3); g.fill();
+    g.fillStyle = "rgba(255,255,255,.55)"; g.fillRect(4.5, -59 - crouch * 4, 3, 1.6);
+    g.fillStyle = "rgba(255,255,255,.3)"; g.fillRect(8.4, -55 - crouch * 4, 2.4, 1.4);
+    /* arms */
+    var aa = st.armAng == null ? 0.5 : st.armAng;
+    var ay = -38 - crouch * 3;
+    g.strokeStyle = BODY; g.lineWidth = 9; g.lineCap = "round";
+    var h1x = -13 - 6 + Math.cos(aa) * 8, h1y = ay + 6 + Math.sin(aa) * 16;
+    var h2x = 13 + 6 + Math.cos(aa) * 10, h2y = ay + 6 + Math.sin(aa) * 18;
+    g.beginPath(); g.moveTo(-13, ay); g.lineTo(h1x, h1y); g.stroke();
+    g.beginPath(); g.moveTo(13, ay); g.lineTo(h2x, h2y); g.stroke();
+    /* gloved hands */
+    g.fillStyle = "#0e1320";
+    g.beginPath(); g.arc(h1x, h1y, 4.6, 0, 6.3); g.fill();
+    g.beginPath(); g.arc(h2x, h2y, 4.6, 0, 6.3); g.fill();
+    /* the sack */
+    if (st.sack){
+      g.fillStyle = "#3a2b18";
+      g.beginPath(); g.ellipse(22, -34 - crouch * 3, 12, 15, 0.25, 0, 6.3); g.fill();
+      g.strokeStyle = "rgba(0,0,0,.45)"; g.lineWidth = 1.4; g.stroke();
+      g.strokeStyle = RIM; g.lineWidth = 1.2; g.beginPath(); g.moveTo(30, -46); g.lineTo(33, -30); g.stroke();
+    }
+    g.lineCap = "butt";
+    g.restore();
+  }
+
+  /* ---- the porch light's pool, laid over everything on the porch ---- */
+  function drawLightPool(){
+    g.save();
+    g.globalCompositeOperation = "lighter";
+    /* the pool on the porch slab, an ellipse, with falloff */
+    g.translate(673, 318); g.scale(1, 0.52);
+    var lp = g.createRadialGradient(0, 0, 8, 0, 0, 296);
+    lp.addColorStop(0, "rgba(255,208,136,.22)");
+    lp.addColorStop(0.38, "rgba(255,186,110,.11)");
+    lp.addColorStop(1, "rgba(255,186,110,0)");
+    g.fillStyle = lp; g.beginPath(); g.arc(0, 0, 296, 0, 6.3); g.fill();
+    g.restore();
+    /* and the wash up the wall around the lamp */
+    g.save(); g.globalCompositeOperation = "lighter";
+    var wp = g.createRadialGradient(673, 98, 5, 673, 98, 200);
+    wp.addColorStop(0, "rgba(255,214,150,.17)"); wp.addColorStop(1, "rgba(255,214,150,0)");
+    g.fillStyle = wp; g.fillRect(473, 28, 400, 290);
+    g.restore();
+    /* while it is going off, the box throws its own light */
+    if (open){
+      g.save(); g.globalCompositeOperation = "lighter";
+      var bp = g.createRadialGradient(BOX.x, BOX.y - BOX.h, 4, BOX.x, BOX.y - BOX.h, 190);
+      bp.addColorStop(0, "rgba(255,196,236,.22)");
+      bp.addColorStop(0.45, "rgba(255,120,200,.08)");
+      bp.addColorStop(1, "rgba(255,120,200,0)");
+      g.fillStyle = bp; g.beginPath(); g.arc(BOX.x, BOX.y - BOX.h, 190, 0, 6.3); g.fill();
+      g.restore();
+    }
+  }
+
+  /* ---- overlay: camera furniture ---- */  function drawOverlay(now, live){
+    g.strokeStyle = "rgba(255,255,255,.05)"; g.lineWidth = 1; g.strokeRect(0.5, 0.5, CW - 1, CH - 1);
+    g.fillStyle = "rgba(0,0,0,.28)"; g.fillRect(0, 0, CW, 22);
+    g.fillStyle = "rgba(233,226,244,.5)"; g.font = "11px 'Space Mono', monospace"; g.textAlign = "left";
+    g.fillText("PATH CAM 07", 12, 15);
+    g.textAlign = "right";
+    g.fillText(live ? "LIVE" : "REPLAY \u00b7 CHIPMUNK", CW - 12, 15);
+    g.textAlign = "left";
+    if (live){ g.fillStyle = "#ff2020"; g.beginPath(); g.arc(112, 11, 3.4, 0, 6.3); g.fill(); }
+  }
+
+  /* ==================================================================
+     THE WALK — machine no. 07, miki's half of the glitter bomb.
+     Bobby built the box; this is the other half of the problem. Somebody
+     has to carry it down the path and put it on the mat, and then be gone
+     before the hoodie one comes round the corner of the house. The whole
+     game is the walk: hold left or right, set it down, pick it up again
+     if you are off the mat, and be past the door when he looks up.
+     ================================================================== */
+  var S = { runs:0, clean:0, sparks:0, reports:[], busy:false, phase:"idle", t0:0, seen:false, fireAt:0, lastSeenMs:null, movedThisRun:false };
+  var MI = { x:96, dir:1, legSw:0, carry:true, crouch:0, act:null, actT:0, hidden:false, scale:1.32 };
+  var PIR = { visible:false, x:1050, dir:-1, crouch:0, legSw:0, armAng:0.5, lean:0, scale:1.35, sack:false, accent:"#ffc861" };
+  var MAT = 646, SAFE = 46, DOOR = 40;
+  var PLACE = { x:null, ok:false, at:0 };
+  var zone = 46, eta = 12400;
+  var open = false, LIVE = true, SIM = 0, last = 0;
+  var held = { l:false, r:false };
+  var CARRY_SP = 142, FREE_SP = 182, PLACE_T = 950, PICK_T = 620;
+  var FULLRIG = { lid:1, cup:1, trays:1, delay:1, fart:1, cam:1, dust:1, track:1, decoy:1 };
+  var ROMAN = ["i", "ii", "iii", "iv", "v", "vi"];
+
+  var LADDER = [
+    { eta:12400, zone:46, d:"twelve and a half seconds, and a mat you cannot really miss. walk it out, set it down, come back." },
+    { eta:11600, zone:40, d:"eleven and a half, and the mat has an edge on it now." },
+    { eta:10900, zone:34, d:"ten and a half. do not overshoot &mdash; turning around costs more than walking." },
+    { eta:10000, zone:30, d:"ten seconds flat, and a small mat." },
+    { eta: 9200, zone:26, d:"nine and a bit, and he is not walking slowly any more." },
+    { eta: 8600, zone:22, d:"eight and a half, a hand's width of mat, and no time to think about it at all." }
+  ];
+  function rung(){ return LADDER[Math.min(S.clean, LADDER.length - 1)]; }
+  function onMat(){ return Math.abs(MI.x - MAT) <= zone; }
+  function tsec(ms){ return (ms / 1000).toFixed(1); }
+
+  function chainLine(html){
+    var el = $("chain"), d = document.createElement("div");
+    d.className = "cl"; d.innerHTML = html; el.appendChild(d);
+    requestAnimationFrame(function(){ d.classList.add("on"); });
+    el.scrollTop = el.scrollHeight;
+  }
+  function runChain(queue){
+    var el = $("chain"); el.innerHTML = "";
+    queue.sort(function(a, b){ return a.at - b.at; });
+    queue.forEach(function(q){
+      setTimeout(function(){
+        var d = document.createElement("div"); d.className = "cl";
+        d.innerHTML = q.html; el.appendChild(d);
+        requestAnimationFrame(function(){ d.classList.add("on"); });
+        el.scrollTop = el.scrollHeight;
+      }, q.at);
+    });
+  }
+  function beginRun(){
+    if (S.busy) return;
+    wake();
+    var r = rung();
+    eta = r.eta; zone = r.zone;
+    S.busy = true; S.phase = "run"; S.t0 = nowMs(); S.seen = false; S.lastSeenMs = null;
+    S.movedThisRun = false; refreshHint();
+    open = false; P.length = 0;
+    MI.x = 96; MI.dir = 1; MI.legSw = 0; MI.carry = true; MI.crouch = 0; MI.act = null; MI.actT = 0; MI.hidden = false;
+    BOX.x = -600; BOX.y = 362;
+    PLACE.x = null; PLACE.ok = false; PLACE.at = 0;
+    PIR.visible = false; PIR.x = CW + 70; PIR.dir = -1; PIR.crouch = 0; PIR.legSw = 0;
+    PIR.armAng = 0.5; PIR.lean = 0; PIR.sack = false;
+    held.l = false; held.r = false;
+    $("bigBtn").disabled = true; $("againBtn").disabled = true;
+    $("placeBtn").disabled = false; $("placeBtn").textContent = "set it down";
+    $("chain").innerHTML = "";
+    $("camWrap").classList.add("live");
+    marq("he is due in " + tsec(eta) + "s");
+    lcd("the box is in her arms and the path is empty. <i>he comes round the corner of the house.</i>",
+        "run " + (S.runs + 1) + " &middot; window " + tsec(eta) + "s &middot; mat &plusmn;" + zone);
+    say("&ldquo;right,&rdquo; she says. &ldquo;you watch the corner. i&rsquo;ll do the walking.&rdquo;");
+    chainLine("she picks the box up. it is heavier than it looks, and what is in it is glitter.");
+  }
+  function beginAction(kind){
+    if (S.phase !== "run" || MI.act) return;
+    if (kind === "place" && !MI.carry) return;
+    if (kind === "pick" && MI.carry) return;
+    MI.act = kind; MI.actT = kind === "place" ? PLACE_T : PICK_T; MI.crouch = 0;
+    wake(); SFX.beep();
+    $("placeBtn").textContent = kind === "place" ? "setting it down&hellip;" : "picking it up&hellip;";
+    $("placeBtn").disabled = true;
+  }
+  function finishAction(){
+    var kind = MI.act; MI.act = null;
+    $("placeBtn").disabled = false;
+    if (kind === "place"){
+      PLACE.x = MI.x; PLACE.ok = onMat(); PLACE.at = nowMs() - S.t0;
+      MI.carry = false; BOX.x = MI.x; BOX.y = 362;
+      noiseHit(240, 110, 1.6, 0.16, 0.10); SFX.conf();
+      $("placeBtn").textContent = "pick it up";
+      if (PLACE.ok){
+        chainLine("the box goes down on the mat. <b>square on it.</b>");
+        marq("planted &middot; get clear");
+        lcd("it is on the mat and the clock is running. <i>she has to be past the door before he looks up.</i>");
+      } else {
+        chainLine("the box goes down <b>" + Math.round(Math.abs(MI.x - MAT)) + "px off the mat.</b> he will take it off the grass anyway, and he will have opinions about it.");
+        marq("planted &middot; off the mat");
+        lcd("it is off the mat. <i>press it again to pick it up and have another go</i> &mdash; turning around costs seconds, and seconds are the whole game.");
+      }
+    } else {
+      MI.carry = true; PLACE.x = null; PLACE.ok = false; BOX.x = -600;
+      $("placeBtn").textContent = "set it down";
+      chainLine("she picks it back up. <b>nothing is where it was.</b>");
+    }
+  }
+  function doFire(){
+    open = true; S.fireAt = nowMs();
+    var bx = BOX.x, by = BOX.y - BOX.h, i;
+    SFX.pop(); SFX.whir();
+    spawnGlitter(bx, by, 64, 400, -0.2, 1.35);
+    spawnGlitter(bx, by, 40, 430, Math.PI + 0.2, 1.3);
+    spawnGlitter(bx, by, 34, 330, -1.0, 0.6);
+    SFX.cascade(A.ctx ? A.ctx.currentTime + 0.15 : null);
+    for (i = 0; i < 4; i++) spawnGlitter(bx, by, 32, 300 + i * 48, -0.3 - i * 0.17, 1.15);
+    spawnConfetti(bx, by, 40, 390, -Math.PI/2, 1.4);
+    spawnPuff(bx, by, 10, 90, "rgba(214,236,160,");
+    for (i = 0; i < 54; i++) spawnGlitter(bx + rr(-34, 34), by - rr(0, 44), 1, 120, -Math.PI/2 + rr(-0.7, 0.7), 0.2);
+    if (S.seen && !MI.hidden){
+      var mx = clamp(MI.x + 26, DOOR + 6, CW - 30);
+      for (i = 0; i < 30; i++) spawnGlitter(mx + rr(-34, 34), GROUND - rr(6, 104), 1, 150, -Math.PI/2 + rr(-1.0, 1.0), 0.55);
+      for (i = 0; i < 10; i++) spawnConfetti(mx + rr(-30, 30), GROUND - rr(30, 96), 1, 120, -Math.PI/2 + rr(-0.8, 0.8), 0.7);
+    }
+    setTimeout(function(){ if (A.on){ SFX.fart(); spawnPuff(BOX.x, BOX.y - 20, 16, 70, "rgba(196,230,120,"); } }, 1400);
+    setTimeout(function(){ if (A.on) tone(1600, 1800, 0.07, "sine", 0.08); }, 2200);
+    fireChain();
+  }
+  function fireChain(){
+    var q = [], at = 0;
+    function L(a, html){ q.push({ at:a, html:html }); }
+    L(at, "the box comes off the ground. <b>that is the trigger.</b>"); at += 150;
+    L(at, "<b>the lid goes.</b>"); at += 120;
+    L(at, "then the cup turns, and it stops being a puff."); at += 170;
+    L(at, "layer one. layer two. <b>layer three. layer four.</b>"); at += 180;
+    L(at, "the fine stuff hangs in the air and drifts. <b>this is the part that lives in the carpet.</b>"); at += 210;
+    L(at, "and then, right on schedule, <b>the other thing.</b>"); at += 170;
+    if (PLACE.x == null){ L(at, "he did not have to take it off the mat. <b>she handed it to him.</b>"); }
+    else if (!PLACE.ok){ L(at, "he took it off the grass. <b>no style points, and he did not care.</b>"); }
+    at += 160;
+    if (S.seen && PLACE.x != null){ L(at, "she is still in the road, so she wears it too. <b>she does not seem to mind.</b>"); }
+    at += 160;
+    L(at, "&ldquo;" + pick(LINES) + "&rdquo;"); at += 230;
+    L(at, "somewhere in the dark, a sock puppet is <b>extremely pleased</b> with the pair of you.");
+    runChain(q);
+  }
+  function endRun(){
+    S.phase = "idle"; S.busy = false; PIR.visible = false;
+    refreshHint();
+    $("camWrap").classList.remove("live");
+    $("bigBtn").disabled = false; $("againBtn").disabled = false;
+    $("placeBtn").disabled = true;
+    marq("dormant");
+    var spare = S.lastSeenMs == null ? 0 : Math.max(0, (eta - S.lastSeenMs) / 1000);
+    var clear = Math.max(0, Math.round(DOOR - MI.x));
+    var rep = {
+      n: S.runs + 1, plant: PLACE.x == null ? null : PLACE.at / 1000,
+      ok: PLACE.ok, seen: S.seen, clear: clear, spare: spare, zone: zone, eta: eta,
+      off: PLACE.x == null ? null : Math.round(Math.abs(PLACE.x - MAT)),
+      mess: !PLACE.ok ? 7 : (S.seen ? 8 : 10),
+      line: pick(LINES), at: new Date().toISOString().slice(0, 16).replace("T", " ")
+    };
+    S.runs++;
+    if (!S.seen && PLACE.x != null && PLACE.ok){ S.clean++; S.sparks += 8; } else { S.sparks += 4; }
+    S.reports.unshift(rep); if (S.reports.length > 4) S.reports.pop();
+    save(); paintLadder(); paintReport(rep);
+    var done = S.clean >= LADDER.length;
+    if (PLACE.x != null && PLACE.ok) stamp("drop:plant", { label:"miki planted the glitter bomb", accent:"#ccff00" });
+    if (!S.seen && PLACE.x != null && PLACE.ok) stamp("drop:clean", { label:"and got clean away", accent:"#00e5ff" });
+    if (!PLACE.ok && PLACE.x != null){
+      lcd("he took it off the grass. <i>the box does not care where it goes off.</i>", "run " + S.runs + " &middot; off the mat");
+      say("&ldquo;it has to be <em>on</em> the mat,&rdquo; she says. &ldquo;the mat is the bit that makes it funny.&rdquo;");
+    } else if (S.seen){
+      lcd("he saw her. <i>he took it anyway &mdash; he is a good sport about it.</i>", "run " + S.runs + " &middot; seen");
+      say("&ldquo;he waved,&rdquo; she says, delighted. &ldquo;he actually waved. then he took it.&rdquo;");
+    } else if (done){
+      lcd("no further complaints. <i>she is satisfied</i>, which she says is rarer than it sounds.", "run " + S.runs + " &middot; clean &middot; the full ladder");
+      say("&ldquo;that,&rdquo; she says, brushing glitter off her hands, &ldquo;is how you do it.&rdquo;");
+    } else {
+      lcd("she was through the door before he looked up. <i>the path was empty.</i>", "run " + S.runs + " &middot; clean");
+      say("&ldquo;next one&rsquo;s tighter,&rdquo; she says, and she is already picking the box up again.");
+    }
+  }
+  /* ---------- loop ---------- */
+  function frame(now){
+    var dt = Math.min(0.045, (now - last) / 1000); last = now;
+    if (S.phase === "run"){
+      var t = now - S.t0;
+      if (MI.act){
+        MI.crouch = Math.min(1, MI.crouch + dt * 4.2);
+        MI.actT -= dt * 1000;
+        if (MI.actT <= 0) finishAction();
+      } else {
+        var dir = (held.l ? -1 : 0) + (held.r ? 1 : 0);
+        var sp = MI.carry ? CARRY_SP : FREE_SP;
+        if (dir !== 0){
+          MI.x = clamp(MI.x + dir * sp * dt, DOOR - 10, CW - 40);
+          MI.dir = dir; MI.legSw += dt * (sp / 11);
+          if (!S.movedThisRun){ S.movedThisRun = true; refreshHint(); }
+        } else {
+          MI.legSw += dt * 1.1;
+        }
+        MI.crouch = Math.max(0, MI.crouch - dt * 5);
+      }
+      if (MI.x > SAFE) S.lastSeenMs = t;
+      var left = Math.max(0, eta - t);
+      marq(PIR.visible ? "he is here" : "he is due in " + tsec(left) + "s");
+      if (!PIR.visible && t >= eta){
+        PIR.visible = true; PIR.x = CW + 70; PIR.dir = -1;
+        S.seen = MI.x > SAFE;
+        if (S.seen){
+          SFX.beep();
+          chainLine("he comes round the corner. <b>he can see her.</b>");
+        } else {
+          chainLine("he comes round the corner and the path is empty. <b>she got away.</b>");
+        }
+      }
+      if (PIR.visible){
+        var tgt = PLACE.x != null ? PLACE.x : MI.x;
+        if (!open){
+          if (PIR.x > tgt + 42){
+            PIR.x -= 106 * dt; PIR.legSw += dt * 8.5; PIR.crouch = Math.max(0, PIR.crouch - dt * 2);
+          } else {
+            PIR.crouch = Math.min(1, PIR.crouch + dt * 3.4); PIR.armAng = 1.1; PIR.lean = -0.05;
+            if (PIR.crouch >= 1) doFire();
+          }
+        } else {
+          var ft = now - S.fireAt;
+          if (ft < 520){ PIR.lean = -0.3; PIR.armAng = 1.5; }
+          else if (ft < 1500){ PIR.lean = 0.06 * Math.sin(ft / 120); PIR.armAng = 0.85; PIR.sack = true; PIR.crouch = 0; }
+          else if (ft < 4600){ PIR.x -= 156 * dt; PIR.legSw += dt * 9; }
+          else endRun();
+        }
+      }
+    }
+    stepParticles(dt, now);
+    render(now);
+    var secs = Math.floor(now / 1000), se = $("camStamp");
+    if (se){
+      var txt = String(Math.floor(secs / 60) % 60).padStart(2, "0") + ":" + String(secs % 60).padStart(2, "0") + ":" + String(Math.floor(now % 1000 / 10)).padStart(2, "0");
+      if (se.textContent !== txt) se.textContent = txt;
+    }
+  }
+  function loop(now){ frame(now); requestAnimationFrame(loop); }
+  function render(now){
+    g.clearRect(0, 0, CW, CH);
+    drawSky(now); drawHouse(); drawPorch(); drawBox(open, FULLRIG); drawMiki(MI); drawPirate(PIR);
+    drawLightPool(); drawParticles(now); drawLidFly(); drawOverlay(now, LIVE); drawHud(now);
+  }
+
+  /* ---------- painting the machine ---------- */
+  function say(html){ $("bobbyLine").innerHTML = html; }
+  function marq(t){ $("marqState").innerHTML = t; }
+  function lcd(html, meta){
+    $("lcdT").innerHTML = html; $("lcd").classList.add("on");
+    if (meta != null) $("lcdMeta").innerHTML = meta;
+  }
+  function refreshHint(){
+    var el = $("walkRow"); if (!el) return;
+    el.classList.toggle("hint", S.phase === "run" && !S.movedThisRun);
+  }
+  function paintLadder(){
+    var el = $("revs"), out = "", i, on, nx;
+    for (i = 0; i < LADDER.length; i++){
+      on = i < S.clean; nx = i === S.clean;
+      out += '<div class="rv' + (on ? " on" : nx ? " next" : "") + '">' +
+        '<span class="n">' + ROMAN[i] + '</span><span class="b">' +
+        '<span class="t">take ' + (i + 1) + ' &mdash; ' + tsec(LADDER[i].eta) + 's, mat &plusmn;' + LADDER[i].zone + '</span>' +
+        '<span class="d">' + (on ? LADDER[i].d : nx ? "this is the one on the machine now." : "he leaves you longer than this. not for much longer.") + '</span></span></div>';
+    }
+    el.innerHTML = out;
+  }
+  function paintReport(rep){
+    var el = $("report");
+    if (!rep){ el.innerHTML = '<div class="rb"><p class="empty">nothing on the tape. run one and she will tell you what happened.</p></div>'; return; }
+    function bar(nm, v){
+      return '<div class="bar"><span class="nm">' + nm + '</span><span class="tr"><i style="width:' + (v * 10) + '%"></i></span><span class="vl">' + v + '/10</span></div>';
+    }
+    var how;
+    if (rep.plant == null) how = "she never put it down &mdash; <b>she handed it to him</b>, which is not the plan and is very funny.";
+    else if (rep.ok) how = "she set it down <b>square on the mat</b> at " + rep.plant.toFixed(1) + "s, and walked back out of the light.";
+    else how = "she set it down <b>" + rep.off + "px off the mat</b>, and he took it anyway, because he is not fussy.";
+    el.innerHTML =
+      '<div class="rh"><b>field report</b><span>run ' + rep.n + ' &middot; ' + rep.at + '</span></div>' +
+      '<div class="rb">' +
+        '<p class="quote">&ldquo;' + rep.line + '&rdquo;<br><span style="font-family:var(--mono);font-size:9.5px;color:var(--dim)">&mdash; the hoodie one, with a skateboard and confidence</span></p>' +
+        '<div class="meta">' + bar("the pop", 10) + bar("the layers", 10) + bar("the reach", 9) + bar("the footage", 10) +
+          bar("the surprise", rep.seen ? 3 : 10) + bar("the getaway", rep.seen ? 2 : clamp(5 + Math.round((rep.spare || 0) * 1.2), 5, 10)) + '</div>' +
+        '<p class="note">' + how + " he came round the corner at " + tsec(rep.eta) + "s, and " +
+          (rep.seen ? "<b>he saw her</b> &mdash; so she wears some of it too, and she says that is the price of a front-row seat."
+                    : rep.spare > 0 ? "<b>the path was empty</b> &mdash; she was out of sight " + rep.spare.toFixed(1) + "s before he looked up."
+                    : "<b>she got clear on the very last step</b> &mdash; the path was empty and that is all that matters.") +
+        '</p>' +
+      '</div>';
+  }
+
+  /* ---------- storage ---------- */
+  var K = { runs:"cafedreamr:drop:runs", clean:"cafedreamr:drop:clean", reports:"cafedreamr:drop:reports", sparks:"cafedreamr:drop:sparks", sound:"cafedreamr:drop:sound" };
+  function lsGet(k, d){ try{ var v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); }catch(e){ return d; } }
+  function lsSet(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
+  function save(){ lsSet(K.runs, S.runs); lsSet(K.clean, S.clean); lsSet(K.sparks, S.sparks); lsSet(K.reports, S.reports); }
+  function stamp(id, opts){ try{ if (window.CD && CD.stamp) CD.stamp(id, opts); }catch(e){} }
+
+  /* ---------- wiring ---------- */
+  function hold(el, side){
+    function down(e){ if (e && e.preventDefault) e.preventDefault(); held[side] = true; wake(); }
+    function up(){ held[side] = false; }
+    el.addEventListener("pointerdown", down);
+    el.addEventListener("pointerup", up);
+    el.addEventListener("pointercancel", up);
+    el.addEventListener("pointerleave", up);
+    el.addEventListener("keydown", function(e){ if (e.key === " " || e.key === "Enter") down(e); });
+    el.addEventListener("keyup", up);
+  }
+  function wire(){
+    $("bigBtn").addEventListener("click", function(){ wake(); if (!S.busy) beginRun(); });
+    $("againBtn").addEventListener("click", function(){ wake(); if (!S.busy) beginRun(); });
+    $("placeBtn").addEventListener("click", function(){ beginAction(MI.carry ? "place" : "pick"); });
+    hold($("walkL"), "l");
+    hold($("walkR"), "r");
+    $("soundBtn").addEventListener("click", function(){
+      A.on = !A.on; this.textContent = "sound: " + (A.on ? "on" : "off");
+      this.setAttribute("aria-pressed", A.on ? "true" : "false"); lsSet(K.sound, A.on);
+      if (A.on){ wake(); tone(880, 1320, 0.09, "sine", 0.12); }
+    });
+    $("keepBtn").addEventListener("click", function(){
+      if (!cv.toBlob) return;
+      cv.toBlob(function(b){
+        if (!b) return;
+        var a = document.createElement("a"); a.href = URL.createObjectURL(b);
+        a.download = "glitter-drop-path-" + (S.runs + 1) + ".png";
+        document.body.appendChild(a); a.click();
+        setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 400);
+        lcd("still kept. <i>she wants the one with the glitter still in the air.</i>");
+      }, "image/png");
+    });
+    $("wipeBtn").addEventListener("click", function(){
+      if (S.busy) return;
+      S.runs = 0; S.clean = 0; S.sparks = 0; S.reports = [];
+      open = false; P.length = 0; MI.x = 96; MI.carry = true; MI.hidden = false; MI.act = null; BOX.x = -600;
+      PLACE.x = null; PLACE.ok = false; held.l = false; held.r = false;
+      save(); paintLadder(); paintReport(null); refreshHint();
+      lcd("everything wound back to take one. <i>she says the early ones are for learning the walk.</i>", "run 0 &middot; window " + tsec(LADDER[0].eta) + "s");
+      say("&ldquo;from the top,&rdquo; she says. &ldquo;i&rsquo;ll do the walking. again.&rdquo;");
+      marq("dormant");
+    });
+    document.addEventListener("keydown", function(e){
+      if (e.key === "ArrowLeft" || e.key === "a" || e.key === "A"){ held.l = true; wake(); }
+      else if (e.key === "ArrowRight" || e.key === "d" || e.key === "D"){ held.r = true; wake(); }
+      else if (e.key === " " || e.key === "Enter"){
+        if (S.phase !== "run"){ if (!S.busy) beginRun(); }
+        else { beginAction(MI.carry ? "place" : "pick"); }
+      }
+      else if (e.key === "r" || e.key === "R"){ if (!S.busy) beginRun(); }
+    });
+    document.addEventListener("keyup", function(e){
+      if (e.key === "ArrowLeft" || e.key === "a" || e.key === "A") held.l = false;
+      else if (e.key === "ArrowRight" || e.key === "d" || e.key === "D") held.r = false;
+    });
+  }
+  /* ---------- the box that is not a box (dust) ---------- */
+  function dust(){
+    var dcv = $("dust"), ctx = dcv.getContext("2d"), d = [], W = 0, H = 0;
+    function size(){
+      var dpr = Math.min(window.devicePixelRatio || 1, 2);
+      W = dcv.width = Math.floor(window.innerWidth * dpr); H = dcv.height = Math.floor(window.innerHeight * dpr);
+      dcv.style.width = window.innerWidth + "px"; dcv.style.height = window.innerHeight + "px";
+    }
+    function seed(){
+      d = []; var n = Math.max(24, Math.min(70, Math.round(window.innerWidth * window.innerHeight / 26000)));
+      for (var i = 0; i < n; i++) d.push({ x:Math.random()*W, y:Math.random()*H, r:(Math.random()*1.5+0.4)*(W/window.innerWidth)*0.9,
+        vy:-(Math.random()*0.16+0.04)*(H/window.innerHeight), vx:(Math.random()-0.5)*0.12, a:Math.random()*0.34+0.06, p:Math.random()*6.3 });
+    }
+    var t0 = performance.now();
+    function tick(now){
+      var t = (now - t0) / 1000; ctx.clearRect(0, 0, W, H);
+      for (var i = 0; i < d.length; i++){
+        var o = d[i]; o.y += o.vy; o.x += o.vx + Math.sin(t*0.5 + o.p)*0.09;
+        if (o.y < -6){ o.y = H + 6; o.x = Math.random()*W; }
+        if (o.x < -6) o.x = W + 6; else if (o.x > W + 6) o.x = -6;
+        ctx.beginPath(); ctx.fillStyle = "rgba(233,226,244," + (o.a*(0.72+0.28*Math.sin(t*1.7+o.p))).toFixed(3) + ")";
+        ctx.arc(o.x, o.y, o.r, 0, 6.3); ctx.fill();
+      }
+      requestAnimationFrame(tick);
+    }
+    size(); seed(); window.addEventListener("resize", function(){ size(); seed(); }); requestAnimationFrame(tick);
+  }
+
+  /* ---- miki (her own palette: black, lime and cyan — no purple anywhere) ---- */
+  function drawMiki(st){
+    if (st.hidden) return;
+    var x = st.x, feet = GROUND + 8, s = st.scale || 1.32;
+    var BODY = "#1e1e2e", DARK = "#0e0e19", LIME = "#ccff00", CYAN = "#00e5ff";
+    var sw = Math.sin(st.legSw) * 15, crouch = st.crouch || 0;
+    g.save();
+    g.translate(x, feet);
+    g.scale(st.dir * s, s);
+    g.translate(0, crouch * 13);
+    g.fillStyle = "rgba(0,0,0,.5)"; g.beginPath(); g.ellipse(-3, 1, 30 - crouch * 4, 7.5, 0, 0, 6.3); g.fill();
+    /* tail */
+    g.strokeStyle = DARK; g.lineWidth = 7; g.lineCap = "round";
+    var tw = Math.sin(st.legSw * 0.5) * 11;
+    g.beginPath(); g.moveTo(-9, -30); g.quadraticCurveTo(-30, -42 + tw * 0.3, -46, -26 + tw); g.stroke();
+    g.strokeStyle = LIME; g.globalAlpha = .55; g.lineWidth = 1.4;
+    g.beginPath(); g.moveTo(-31, -41 + tw * 0.3); g.lineTo(-25, -37 + tw * 0.3); g.stroke();
+    g.globalAlpha = 1;
+    /* legs */
+    g.strokeStyle = DARK; g.lineWidth = 9.5;
+    g.beginPath(); g.moveTo(-1, -28); g.lineTo(-sw, -3); g.stroke();
+    g.beginPath(); g.moveTo(1, -28); g.lineTo(sw, -3); g.stroke();
+    g.strokeStyle = "#22222f"; g.lineWidth = 8;
+    g.beginPath(); g.moveTo(-sw, -3); g.lineTo(-sw - 12, -3); g.stroke();
+    g.beginPath(); g.moveTo(sw, -3); g.lineTo(sw + 12, -3); g.stroke();
+    g.strokeStyle = LIME; g.globalAlpha = .6; g.lineWidth = 1.5;
+    g.beginPath(); g.moveTo(-2, -26); g.lineTo(-sw, -6); g.stroke();
+    g.beginPath(); g.moveTo(2, -26); g.lineTo(sw, -6); g.stroke();
+    g.globalAlpha = 1;
+    /* torso */
+    g.fillStyle = BODY;
+    g.beginPath();
+    g.moveTo(-12, -45); g.lineTo(12, -45);
+    g.quadraticCurveTo(15, -34, 10, -23); g.lineTo(-10, -23);
+    g.quadraticCurveTo(-15, -34, -12, -45);
+    g.closePath(); g.fill();
+    g.strokeStyle = LIME; g.lineWidth = 2.2;
+    g.beginPath(); g.moveTo(-11.5, -40); g.lineTo(11.5, -38.6); g.stroke();
+    g.beginPath(); g.moveTo(-10.6, -33); g.lineTo(10.4, -31.8); g.stroke();
+    g.strokeStyle = CYAN; g.globalAlpha = .82; g.lineWidth = 1.2;
+    g.beginPath(); g.moveTo(11.4, -44); g.quadraticCurveTo(14.4, -34, 9.6, -23.6); g.stroke();
+    g.globalAlpha = 1;
+    /* a rim down her back and her shoulder, so she reads against the night */
+    g.strokeStyle = "rgba(0,229,255,.6)"; g.lineWidth = 2.4;
+    g.beginPath(); g.moveTo(-11.8, -45); g.quadraticCurveTo(-15.2, -34, -10, -23.4); g.stroke();
+    g.strokeStyle = "rgba(204,255,0,.55)"; g.lineWidth = 1.6;
+    g.beginPath(); g.moveTo(-12.6, -44); g.lineTo(-11.4, -24); g.stroke();
+    /* head */
+    g.fillStyle = BODY; g.beginPath(); g.arc(0, -55, 12.6, 0, 6.3); g.fill();
+    g.strokeStyle = "rgba(0,229,255,.5)"; g.lineWidth = 1.8;
+    g.beginPath(); g.arc(0, -55, 12.6, 2.15, 4.15); g.stroke();
+    g.fillStyle = "rgba(239,232,218,.88)"; g.beginPath(); g.ellipse(5.4, -51, 5.4, 4.2, 0, 0, 6.3); g.fill();
+    g.fillStyle = CYAN; g.fillRect(2.6, -58.6, 7.6, 2.8);
+    g.fillStyle = "rgba(255,255,255,.85)"; g.fillRect(9.4, -58, 1.7, 2.2);
+    g.strokeStyle = LIME; g.globalAlpha = .5; g.lineWidth = 1.1;
+    g.beginPath(); g.moveTo(-3, -57); g.lineTo(-7, -55.4); g.stroke();
+    g.beginPath(); g.moveTo(-3, -53.6); g.lineTo(-7.4, -52.6); g.stroke();
+    g.globalAlpha = 1;
+    /* ears — one up, one bent. she has never once had two good ears. */
+    g.fillStyle = BODY;
+    g.beginPath(); g.moveTo(-11.4, -63); g.lineTo(-16.4, -79); g.lineTo(-3.4, -67); g.closePath(); g.fill();
+    g.beginPath(); g.moveTo(4.4, -67); g.lineTo(10.6, -80); g.lineTo(12.4, -68.4); g.closePath(); g.fill();
+    g.beginPath(); g.moveTo(10.6, -80); g.lineTo(19.6, -78.6); g.lineTo(13.4, -73.4); g.closePath(); g.fill();
+    g.fillStyle = "rgba(204,255,0,.34)";
+    g.beginPath(); g.moveTo(-10, -66); g.lineTo(-13.4, -75.4); g.lineTo(-6, -68); g.closePath(); g.fill();
+    /* arms */
+    g.strokeStyle = BODY; g.lineWidth = 8.6; g.lineCap = "round";
+    var ay = -39 - crouch * 2;
+    if (st.carry){
+      g.beginPath(); g.moveTo(-11, ay); g.lineTo(-4, ay + 12); g.stroke();
+      g.beginPath(); g.moveTo(11, ay); g.lineTo(4, ay + 12); g.stroke();
+      g.save();
+      g.translate(0, ay + 17);
+      var bw = 46, bh = 33;
+      g.fillStyle = "#b98a52"; g.fillRect(-bw/2, -bh, bw, bh);
+      g.fillStyle = "#a2763f"; g.fillRect(-bw/2, -bh, bw, 7);
+      g.fillStyle = "rgba(226,220,196,.5)"; g.fillRect(-6, -bh, 12, bh);
+      g.strokeStyle = "rgba(0,0,0,.35)"; g.lineWidth = 1.2; g.strokeRect(-bw/2, -bh, bw, bh);
+      g.strokeStyle = "rgba(255,45,149,.55)"; g.lineWidth = 1.4;
+      g.beginPath(); g.moveTo(-bw/2 + 3, -bh + 3); g.lineTo(bw/2 - 3, bh - 3); g.stroke();
+      g.restore();
+      g.fillStyle = "#0e0e18";
+      g.beginPath(); g.arc(-4, ay + 15, 4.4, 0, 6.3); g.fill();
+      g.beginPath(); g.arc(4, ay + 15, 4.4, 0, 6.3); g.fill();
+    } else {
+      var aa = 0.5 + Math.sin(st.legSw * 0.9) * 0.35;
+      var ax = 13 + Math.cos(aa) * 5, ayy = ay + 15 + Math.sin(aa) * 5;
+      g.beginPath(); g.moveTo(-11, ay); g.lineTo(-ax, ayy); g.stroke();
+      g.beginPath(); g.moveTo(11, ay); g.lineTo(ax, ayy); g.stroke();
+      g.fillStyle = "#0e0e18";
+      g.beginPath(); g.arc(-ax, ayy, 4.2, 0, 6.3); g.fill();
+      g.beginPath(); g.arc(ax, ayy, 4.2, 0, 6.3); g.fill();
+    }
+    g.lineCap = "butt";
+    g.restore();
+  }
+
+  /* ---- the heads-up: the corner clock, the mat, the zone ---- */
+  function drawHud(now){
+    var t = now - S.t0, left = Math.max(0, eta - t), inside = onMat() && MI.carry;
+    /* the mat zone, painted on the ground while she is carrying the box */
+    if (MI.carry && S.phase === "run"){
+      g.save();
+      g.globalAlpha = inside ? .34 : .16;
+      g.fillStyle = "#ccff00";
+      g.fillRect(MAT - zone, GROUND + 1, zone * 2, 9);
+      g.globalAlpha = inside ? .8 : .35;
+      g.strokeStyle = "#ccff00"; g.lineWidth = 1; g.setLineDash([5, 4]);
+      g.strokeRect(MAT - zone + 0.5, GROUND + 1.5, zone * 2 - 1, 8);
+      g.setLineDash([]);
+      g.restore();
+    }
+    g.save();
+    g.font = "12px 'Space Mono', monospace";
+    g.textAlign = "left";
+    /* the corner clock, up in the top bar where it cannot cover her */
+    g.fillStyle = "rgba(0,0,0,.5)"; g.fillRect(14, 28, 232, 28);
+    g.strokeStyle = left < 3000 ? "rgba(255,45,149,.78)" : "rgba(204,255,0,.5)"; g.lineWidth = 1;
+    g.strokeRect(14.5, 28.5, 231, 27);
+    g.fillStyle = left < 3000 ? "#ff86c0" : "#ccff00";
+    g.fillText("THE CORNER: " + tsec(left) + "s", 26, 46);
+    /* what she is doing */
+    g.textAlign = "right";
+    g.fillStyle = "rgba(233,226,244,.78)";
+    var state = MI.act ? (MI.act === "place" ? "SETTING IT DOWN" : "PICKING IT UP")
+              : MI.carry ? (inside ? "ON THE MAT — SET IT DOWN" : "CARRYING IT") : "EMPTY-HANDED";
+    g.fillText(state, CW - 14, 46);
+    /* the mat, labelled, while the box is not on it */
+    if (MI.carry && S.phase === "run"){
+      g.textAlign = "center";
+      g.font = "11px 'Space Mono', monospace";
+      g.fillStyle = inside ? "#ccff00" : "rgba(233,226,244,.42)";
+      g.fillText("the mat", MAT, GROUND + 26);
+    }
+    /* the plant progress */
+    if (MI.act){
+      var p = 1 - MI.actT / (MI.act === "place" ? PLACE_T : PICK_T);
+      g.strokeStyle = "rgba(0,0,0,.5)"; g.lineWidth = 5;
+      g.beginPath(); g.arc(MI.x, GROUND - 96, 15, -Math.PI/2, Math.PI * 1.5); g.stroke();
+      g.strokeStyle = "#ccff00";
+      g.beginPath(); g.arc(MI.x, GROUND - 96, 15, -Math.PI/2, -Math.PI/2 + 6.283 * clamp(p, 0, 1)); g.stroke();
+    }
+    g.restore();
+  }
+
+  /* ---------- boot ---------- */
+  function boot(){
+    sizeCanvas(); dust(); wire();
+    S.runs = lsGet(K.runs, 0) || 0;
+    S.clean = lsGet(K.clean, 0) || 0;
+    S.sparks = lsGet(K.sparks, 0) || 0;
+    var reports = lsGet(K.reports, []);
+    S.reports = reports instanceof Array ? reports : [];
+    A.on = lsGet(K.sound, true) !== false;
+    $("soundBtn").textContent = "sound: " + (A.on ? "on" : "off");
+    $("placeBtn").disabled = true;
+    $("keepBtn").disabled = false;
+    refreshHint();
+    MI.x = 96; MI.carry = true; MI.act = null; BOX.x = -600;
+    paintLadder(); paintReport(S.reports[0] || null);
+    if (S.runs > 0){
+      lcd("the box is back by the door. <i>" + S.clean + " clean out of " + S.runs + " run" + (S.runs === 1 ? "" : "s") + "</i>, and the mat has not moved.",
+          "run " + S.runs + " &middot; next window " + tsec(rung().eta) + "s");
+      say("&ldquo;back again,&rdquo; she says. &ldquo;the corner is where he comes from. do not be standing there.&rdquo;");
+    }
+    requestAnimationFrame(function(now){ last = now; loop(now); });
+  }
+
+  /* ---------- harness: pose a still without playing the run ---------- */
+  window.gd = {
+    S:S, MI:MI, PIR:PIR, BOX:BOX, LADDER:LADDER,
+    run:beginRun, fire:doFire,
+    place:function(){ beginAction("place"); },
+    pick:function(){ beginAction("pick"); },
+    pose:function(o){
+      if (o.miki){ for (var k in o.miki) MI[k] = o.miki[k]; }
+      if (o.pirate){ for (var k2 in o.pirate) PIR[k2] = o.pirate[k2]; }
+      if (o.place){ for (var k3 in o.place) PLACE[k3] = o.place[k3]; }
+      if (o.boxX != null){ BOX.x = o.boxX; }
+      if (o.open != null){ open = !!o.open; }
+      if (o.phase){ S.phase = o.phase; }
+      if (o.eta != null){ eta = o.eta; }
+      if (o.t0 != null){ S.t0 = nowMs() - o.t0; }
+      render(nowMs());
+    },
+    particles:function(){ return P; },
+    clear:function(){ P.length = 0; },
+    burst:function(x){
+      open = true;
+      var bx = x == null ? BOX.x : x, i;
+      for (i = 0; i < 60; i++) spawnGlitter(bx, 320, 1, 300, -Math.PI/2 + rr(-1.2, 1.2), 1.1);
+      spawnConfetti(bx, 320, 30, 340, -Math.PI/2, 1.3);
+    },
+    step:function(ms){ SIM += (ms == null ? 16 : ms); frame(nowMs()); },
+    render:function(n){ render(n == null ? nowMs() : n); },
+    canvas:cv
+  };
+
+  boot();
+})();
+</script>
+<script>window.CD && CD.boot({page:"glitterdrop"});</script>
+</body>
+</html>
