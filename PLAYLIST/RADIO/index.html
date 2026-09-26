@@ -1,0 +1,1185 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0b0b0e">
+<title>the all-night — cafedreamr radio</title>
+<meta name="description" content="cafedreamr radio: every song in the realm strung on one spider web. pick up the firefly and set it on a strand to choose a song, or leave the machine alone and it plays all night.">
+<!-- cafedreamr — the all-night, the realm's radio station.
+     a vending machine with a spider web strung inside the glass: every song
+     the realm has recorded is a node on the web. leave it alone and it plays
+     the whole dial on its own; pick up the firefly and set it on a strand to
+     choose a song. the front of the machine is the EDIT SURFACE below. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0b0b0e; --ink:#e9e6de; --dim:#7d848b; --faint:#3c3f44;
+    --pink:#ff2d95; --cyan:#00e5ff; --acid:#ccff00;
+    --amber:#ffd98a; --silk:#cdb6ff; --silk2:#e0a3c8; --led:#7dffa0;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  html{color-scheme:dark}
+  body{
+    background:var(--bg); color:var(--ink);
+    font-family:"Space Mono",monospace;
+    text-align:center; overflow-x:hidden;
+    -webkit-user-select:none; user-select:none;
+  }
+  .bg{
+    position:fixed; inset:0; z-index:0; pointer-events:none;
+    background:
+      radial-gradient(900px 560px at 50% -12%, rgba(255,45,149,.16), transparent 62%),
+      radial-gradient(760px 520px at 88% 112%, rgba(0,229,255,.10), transparent 62%),
+      radial-gradient(700px 520px at 8% 110%, rgba(180,140,255,.11), transparent 62%),
+      repeating-linear-gradient(0deg, rgba(255,255,255,.014) 0 1px, transparent 1px 4px),
+      repeating-linear-gradient(90deg, rgba(255,255,255,.014) 0 1px, transparent 1px 4px);
+  }
+  .hazard{
+    position:fixed; left:0; right:0; bottom:0; height:12px; z-index:6;
+    background:repeating-linear-gradient(45deg,#ccff00 0 12px,#0b0b0e 12px 24px);
+    opacity:.7; pointer-events:none;
+  }
+
+  /* ---------- nav ---------- */
+  .nav{position:fixed; top:12px; left:12px; z-index:20; display:flex; gap:7px; flex-wrap:wrap; max-width:calc(100vw - 24px); justify-content:center}
+  .nav a{
+    font-size:9.5px; letter-spacing:.2em; text-transform:uppercase; text-decoration:none;
+    color:var(--dim); background:rgba(16,16,21,.82); border:1px solid rgba(255,45,149,.28);
+    border-radius:999px; padding:6px 11px; backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px);
+    transition:color .15s, border-color .15s, box-shadow .15s;
+  }
+  .nav a:hover{color:var(--pink); border-color:var(--pink); box-shadow:0 0 12px rgba(255,45,149,.3)}
+
+  /* ---------- stage ---------- */
+  .stage{
+    position:relative; z-index:1; height:100vh; height:100dvh;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    gap:9px; padding:44px 10px 22px;
+  }
+  .tagline{flex:none; font-size:10.5px; letter-spacing:2.4px; text-transform:lowercase; color:var(--dim)}
+  .tagline b{color:var(--pink); font-weight:700}
+
+  .machine{
+    position:relative; width:min(720px,96vw);
+    flex:1 1 auto; min-height:0; max-height:100%;
+    display:flex; flex-direction:column;
+    padding:12px 14px 12px; border-radius:16px;
+    background:linear-gradient(180deg,#202027 0%,#141419 30%,#1b1b22 100%);
+    border:3px solid #050508;
+    box-shadow:
+      0 0 0 2px #000,
+      0 0 34px rgba(255,45,149,.22),
+      0 0 90px rgba(0,229,255,.08),
+      inset 0 1px 0 rgba(255,255,255,.06),
+      inset 0 -8px 20px rgba(0,0,0,.6);
+  }
+  .machine::before{
+    content:""; position:absolute; inset:6px; border-radius:12px;
+    border:1px solid rgba(255,255,255,.05); pointer-events:none;
+  }
+  .rivet{position:absolute; width:8px; height:8px; border-radius:50%;
+    background:radial-gradient(circle at 35% 35%,#5a5a63,#16161b 70%); box-shadow:0 1px 2px #000}
+
+  /* ---------- sign ---------- */
+  .sign{
+    font-family:"Bebas Neue",sans-serif;
+    font-size:clamp(34px,7.6vw,56px); line-height:.98; letter-spacing:4px;
+    color:#fff; padding:2px 8px 1px;
+    text-shadow:0 0 6px var(--pink), 0 0 20px var(--pink), 0 0 48px rgba(255,45,149,.7);
+    animation:flicker 6s infinite; user-select:none;
+  }
+  .sign small{
+    display:block; font-family:"Space Mono",monospace;
+    font-size:10px; letter-spacing:2.6px; color:#9df3ff;
+    text-shadow:0 0 9px var(--cyan); margin-top:0;
+  }
+  .sign .sign-hint{
+    display:inline-block; font-size:9.5px; letter-spacing:1.5px; color:#ffe3f2;
+    background:rgba(255,45,149,.14); border:1px solid rgba(255,45,149,.4);
+    border-radius:999px; padding:3px 10px; margin-top:7px;
+    text-shadow:0 0 8px rgba(255,45,149,.5);
+  }
+  @keyframes flicker{0%,100%{opacity:1}92%{opacity:1}93%{opacity:.58}94%{opacity:1}96%{opacity:.8}97%{opacity:1}}
+
+  /* ---------- marquee ---------- */
+  .marquee{
+    position:relative; overflow:hidden; height:22px; margin:7px 0;
+    border-top:1px solid rgba(255,45,149,.2); border-bottom:1px solid rgba(255,45,149,.2);
+    background:rgba(0,0,0,.35);
+  }
+  .marquee .track{
+    position:absolute; top:0; left:0; display:inline-block; white-space:nowrap;
+    height:22px; line-height:22px; font-size:10px; letter-spacing:2.2px; text-transform:uppercase;
+    color:#8cefff; text-shadow:0 0 9px rgba(0,229,255,.6);
+    animation:mq 38s linear infinite;
+  }
+  .marquee .track span{padding-right:42px}
+  @keyframes mq{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+  /* ---------- glass ---------- */
+  .glass{
+    position:relative; width:100%; flex:1 1 auto; min-height:168px;
+    border-radius:8px; overflow:hidden; cursor:grab; touch-action:none;
+    background:linear-gradient(160deg,rgba(0,229,255,.06),rgba(0,10,20,.9) 55%),#0a141c;
+    border:3px solid #050508;
+    box-shadow:inset 0 0 42px rgba(0,0,0,.85), inset 0 0 10px rgba(0,229,255,.12);
+  }
+  .glass.grabbing{cursor:grabbing}
+  .glass canvas{position:absolute; inset:0; width:100%; height:100%; display:block; pointer-events:none}
+  #fly{z-index:4}
+  .spiderLayer{position:absolute; inset:0; z-index:3; pointer-events:none}
+  .spiderLayer svg{filter:brightness(1.14) drop-shadow(0 0 10px rgba(255,45,149,.6)) drop-shadow(0 0 24px rgba(180,140,255,.4))}
+  .scan{
+    position:absolute; inset:0; z-index:5; pointer-events:none; opacity:.45; mix-blend-mode:overlay;
+    background:repeating-linear-gradient(0deg, rgba(255,255,255,.05) 0 1px, transparent 1px 3px);
+  }
+  .glass::after{
+    content:""; position:absolute; top:0; left:0; right:0; height:42%; z-index:5; pointer-events:none;
+    background:linear-gradient(180deg, rgba(255,255,255,.07), transparent);
+  }
+  .glassTitle{
+    position:absolute; left:9px; top:7px; z-index:6; pointer-events:none;
+    font-size:8.5px; letter-spacing:2.6px; text-transform:uppercase;
+    color:var(--silk2); opacity:.85; text-shadow:0 0 10px rgba(0,0,0,.95);
+  }
+  .glassHint{
+    position:absolute; left:0; right:0; bottom:9px; z-index:6; pointer-events:none;
+    font-size:9.5px; letter-spacing:2px; text-transform:uppercase;
+    color:rgba(233,230,222,.8); text-shadow:0 0 10px rgba(0,0,0,.95);
+    transition:opacity .7s ease;
+  }
+  .glassHint.off{opacity:0}
+
+  /* ---------- deck ---------- */
+  .deck{display:grid; grid-template-columns:1fr auto; gap:10px; margin-top:9px; align-items:stretch}
+  .deck,.volrow,.keypad,.tray,.marquee,.sign{flex:none}
+  .readout{
+    background:#04130a; border:2px solid #050508; border-radius:6px; padding:7px 10px 6px;
+    text-align:left; min-width:0; display:flex; flex-direction:column; justify-content:center; gap:2px;
+    box-shadow:inset 0 0 14px rgba(0,0,0,.85), inset 0 0 5px rgba(125,255,160,.18);
+  }
+  .led{font-size:13px; font-weight:700; color:var(--led); text-shadow:0 0 9px rgba(125,255,160,.7);
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+  .ledSub{font-size:9.5px; letter-spacing:1.3px; color:#4f9d6c; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+  .pbar{height:3px; border-radius:2px; background:rgba(125,255,160,.16); overflow:hidden; cursor:pointer; margin-top:3px}
+  .pbar i{display:block; height:100%; width:0%; background:linear-gradient(90deg,#7dffa0,#00e5ff)}
+  .buttons{display:flex; gap:6px; align-items:center}
+  .btn{
+    font-family:"Space Mono",monospace; font-weight:700; font-size:13px; line-height:1; color:#0b0b0e;
+    background:linear-gradient(180deg,#c9c6bc,#8f8d86); border:2px solid #050508; border-radius:6px;
+    width:44px; height:44px; cursor:pointer;
+    box-shadow:0 3px 0 #050508, inset 0 1px 0 rgba(255,255,255,.4);
+    transition:transform .06s, box-shadow .06s, filter .15s, background .2s;
+  }
+  .btn:hover{filter:brightness(1.1)}
+  .btn:active{transform:translateY(2px); box-shadow:0 1px 0 #050508}
+  .btn.play{width:54px; font-size:16px; background:linear-gradient(180deg,#ff7bc0,#ff2d95)}
+  .btn.play.on{background:linear-gradient(180deg,#6bebff,#00e5ff)}
+  .btn.small{width:auto; padding:0 10px; font-size:9.5px; letter-spacing:1.5px; text-transform:uppercase}
+  .btn.small.on{background:linear-gradient(180deg,#e5ff6b,#ccff00)}
+
+  .volrow{display:flex; align-items:center; gap:9px; margin-top:8px}
+  .volrow span{font-size:8.5px; letter-spacing:2px; text-transform:uppercase; color:var(--dim); flex:none}
+  .volrow input[type=range]{
+    -webkit-appearance:none; appearance:none; flex:1; height:4px; border-radius:2px; outline:none;
+    background:linear-gradient(90deg,var(--pink),var(--cyan));
+  }
+  .volrow input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance:none; width:15px; height:15px; border-radius:50%;
+    background:#e9e6de; border:2px solid #050508; cursor:pointer; box-shadow:0 0 8px rgba(255,45,149,.6);
+  }
+  .volrow input[type=range]::-moz-range-thumb{
+    width:15px; height:15px; border-radius:50%; background:#e9e6de; border:2px solid #050508; cursor:pointer;
+  }
+
+  /* ---------- keypad ---------- */
+  .keypad{display:grid; grid-template-columns:repeat(5,1fr); gap:5px; margin-top:9px}
+  .key{
+    font-family:"Space Mono",monospace; font-size:10.5px; letter-spacing:.2px; color:#dcd9d0;
+    background:linear-gradient(180deg,#181a20,#101218); border:2px solid #050508; border-radius:5px;
+    min-height:44px; padding:5px 3px 5px; cursor:pointer; text-transform:lowercase; line-height:1.2; overflow:hidden;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    box-shadow:0 3px 0 #050508, inset 0 1px 0 rgba(255,255,255,.05);
+    transition:transform .06s, box-shadow .06s, color .15s, background .2s;
+  }
+  .key b{display:block; font-size:9px; color:#7defff; letter-spacing:1.7px; font-weight:700}
+  .key i{display:block; font-style:normal; font-size:8px; color:#82867e; margin-top:2px; letter-spacing:.4px}
+  .key:hover{color:#fff}
+  .key:active{transform:translateY(2px); box-shadow:0 1px 0 #050508}
+  .key.on{
+    background:linear-gradient(180deg,#3a0e26,#23081a); color:#fff;
+    box-shadow:0 3px 0 #050508, inset 0 0 0 1.5px var(--pink), 0 0 12px rgba(255,45,149,.4);
+  }
+  .key.on b{color:var(--pink)}
+
+  /* ---------- tray ---------- */
+  .tray{
+    display:flex; align-items:center; gap:10px; margin-top:9px; padding:8px 11px; text-align:left;
+    background:linear-gradient(180deg,#0c0c10,#16161b); border:2px solid #050508; border-radius:8px;
+  }
+  .tray .fly{
+    width:11px; height:11px; border-radius:50%; flex:none; background:var(--amber);
+    box-shadow:0 0 12px var(--amber); animation:flP 2.4s ease-in-out infinite;
+  }
+  @keyframes flP{0%,100%{opacity:.55; transform:scale(.9)}50%{opacity:1; transform:scale(1.14)}}
+  .tray p{font-size:10px; line-height:1.55; color:var(--dim); flex:1; min-width:0}
+  .tray p b{color:var(--ink); font-weight:700}
+  .tray p .short{display:none}
+  .tray .sfx{
+    font-family:"Space Mono",monospace; font-size:8.5px; letter-spacing:1.4px; text-transform:uppercase;
+    color:var(--dim); background:#101218; border:1px solid #2b2e33; border-radius:4px;
+    padding:5px 8px; cursor:pointer; flex:none;
+  }
+  .tray .sfx:hover{color:var(--acid); border-color:rgba(204,255,0,.5)}
+
+  footer{flex:none; display:flex; flex-direction:column; gap:6px; align-items:center; padding-bottom:8px}
+  footer .fnote{font-size:10.5px; letter-spacing:2px; color:#8a9099}
+  footer .flinks{font-size:10px; letter-spacing:1.6px; color:#8a9099}
+  footer .flinks a{color:#adb3ba; text-decoration:none; border-bottom:1px dotted rgba(255,45,149,.35)}
+  footer .flinks a:hover{color:var(--pink)}
+
+  @media (max-width:640px){
+    .stage{padding:48px 7px 24px; gap:8px}
+    .nav{left:7px; top:8px; gap:5px}
+    .nav a{font-size:8.5px; letter-spacing:.14em; padding:5px 9px}
+    .machine{width:100%; padding:10px 10px 11px; border-radius:12px}
+    .sign{font-size:clamp(32px,12vw,48px); letter-spacing:4px}
+    .sign .sign-hint{font-size:8.5px; letter-spacing:1.2px}
+    .glass{min-height:150px}
+    .deck{grid-template-columns:1fr; gap:8px}
+    .buttons{justify-content:center}
+    .btn{width:50px; height:44px}
+    .btn.play{width:58px}
+    .keypad{grid-template-columns:repeat(5,1fr); gap:4px}
+    .key{font-size:9px; padding:6px 2px 5px}
+    .key i{font-size:7px}
+    .tray p{font-size:9.5px}
+    .tray p .long{display:none}
+    .tray p .short{display:inline}
+    .tray .sfx{display:none}
+  }
+  @media (any-pointer:coarse){
+    .key{min-height:44px}
+    .glass{cursor:default}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .sign,.marquee .track,.tray .fly{animation:none}
+  }
+  @media (max-height:660px){
+    .stage{padding-top:38px; padding-bottom:18px}
+    .sign{font-size:clamp(26px,5vw,40px); letter-spacing:3px}
+    .sign .sign-hint{display:none}
+    .key{min-height:36px}
+    .key i{display:none}
+    .tray p{font-size:9px}
+    .glass{min-height:126px}
+  }
+</style>
+</head>
+<body>
+<div class="bg"></div>
+<div class="hazard"></div>
+
+<nav class="nav">
+  <a href="https://www.cafedreamr.art/" target="_blank" rel="noopener noreferrer">the terminal</a>
+  <a href="https://www.cafedreamr.art/PLAYLIST/SPIDER-LULLABY/" target="_blank" rel="noopener noreferrer">her music web</a>
+  <a href="https://www.cafedreamr.art/MENU/" target="_blank" rel="noopener noreferrer">the menu</a>
+</nav>
+
+<main class="stage">
+  <div class="tagline">cafedreamr radio &middot; <b>one web, every song</b></div>
+
+  <div class="machine">
+    <div class="rivet" style="top:8px;left:8px"></div>
+    <div class="rivet" style="top:8px;right:8px"></div>
+    <div class="rivet" style="bottom:8px;left:8px"></div>
+    <div class="rivet" style="bottom:8px;right:8px"></div>
+
+    <div class="sign">the all&#8209;night
+      <small>cafedreamr radio &middot; 24 hours</small>
+      <em class="sign-hint" id="signHint">pick up the firefly &#8594;</em>
+    </div>
+
+    <div class="marquee"><div class="track" id="marqueeTrack"></div></div>
+
+    <div class="glass" id="glass">
+      <canvas id="web"></canvas>
+      <div class="spiderLayer" id="spiderLayer"></div>
+      <canvas id="fly"></canvas>
+      <div class="scan"></div>
+      <div class="glassTitle" id="glassTitle">the all&#8209;night dial</div>
+      <div class="glassHint" id="glassHint">press play, then leave it alone</div>
+    </div>
+
+    <div class="deck">
+      <div class="readout">
+        <div class="led" id="led">&hellip;</div>
+        <div class="ledSub" id="ledSub">tuning&hellip;</div>
+        <div class="pbar" id="pbar"><i id="pbarFill"></i></div>
+      </div>
+      <div class="buttons">
+        <button class="btn" id="prevBtn" type="button" title="previous take" aria-label="previous take">&#9198;</button>
+        <button class="btn play" id="playBtn" type="button" title="play" aria-label="play">&#9654;</button>
+        <button class="btn" id="nextBtn" type="button" title="next take" aria-label="next take">&#9197;</button>
+        <button class="btn small" id="shufBtn" type="button" title="shuffle" aria-label="shuffle">shuffle</button>
+      </div>
+    </div>
+
+    <div class="volrow">
+      <span>vol</span>
+      <input type="range" id="vol" min="0" max="100" value="75" aria-label="volume">
+    </div>
+
+    <div class="keypad" id="keypad"></div>
+
+    <div class="tray">
+      <span class="fly"></span>
+      <p><b>the firefly</b> &mdash; <span class="long">drag it onto a strand to choose a song. leave it at the middle, or drop it on empty silk, and the machine takes it from here: the whole dial plays on, all night, on its own.</span><span class="short">drag it onto a strand to choose a song &mdash; leave it be and the machine plays on, all night.</span></p>
+      <button class="sfx" id="sfxBtn" type="button">chimes: on</button>
+    </div>
+  </div>
+
+  <footer>
+    <div class="fnote">the all&#8209;night &mdash; nothing on this dial is for sale.</div>
+    <div class="flinks">
+      <a href="https://www.cafedreamr.art/">the terminal</a> &middot;
+      <a href="https://www.cafedreamr.art/PLAYLIST/SPIDER-LULLABY/">her music web</a> &middot;
+      <a href="https://www.cafedreamr.art/LORE/THEWEB/">the drawers</a> &middot;
+      <a href="https://www.cafedreamr.art/MIKI/MIXTAPE/">the mixtape</a> &middot;
+      <a href="https://letterbird.co/mikitv">contact</a>
+    </div>
+  </footer>
+</main>
+
+<audio id="audio" preload="none"></audio>
+
+<script src="../../LORE/THEWEB/spider.js"></script>
+<script src="/PASSPORT/cd-passport.js"></script>
+<script>window.CD && CD.boot({page:"music"});</script>
+<script>
+(function () {
+"use strict";
+
+/* ============================================================
+   the all-night — the front of the machine
+   ------------------------------------------------------------
+   TRACKS   every song the realm has recorded, in one list.
+              ch  the channel(s) it belongs to
+              n   the name on the dial
+              u   the hosted mp3
+              d   the length printed before the file has loaded
+   CHANNELS the buttons on the front of the machine; the first
+            one (the dial) is all of them, and is where it starts.
+   LINKS    where the little frosted nav goes.
+   ============================================================ */
+
+var TRACKS = [
+  /* --- miki's ep: the thirteen takes ---------------------------------- */
+  { ch:"ep", n:"the season's song",                 u:"https://user.uploads.dev/file/f52f86270fb079b3cc5f60c81fd40171.mp3", d:"2:59" },
+  { ch:"ep", n:"thirty-two pages",                  u:"https://user.uploads.dev/file/de47a7eea05461001ff4777e2c595686.mp3", d:"2:55" },
+  { ch:"ep", n:"reverse spy glasses",               u:"https://user.uploads.dev/file/86e90c005055b921019574334ace7fba.mp3", d:"2:57" },
+  { ch:"ep", n:"milo already knows",                u:"https://user.uploads.dev/file/f9822b60477c81763e6a3cd49cf27691.mp3", d:"2:56" },
+  { ch:"ep", n:"the squirrel mafia brigade",        u:"https://user.uploads.dev/file/b3e46323f6955b5be990b09fd90eb63f.mp3", d:"3:00" },
+  { ch:"ep", n:"the realms keep popping up",        u:"https://user.uploads.dev/file/8b48af3fcab826b741a15e91194e8f2e.mp3", d:"2:59" },
+  { ch:"ep", n:"most of the vocals",                u:"https://user.uploads.dev/file/010720c45190569a523bb7cb820e463f.mp3", d:"3:00" },
+  { ch:"ep", n:"miki tv",                           u:"https://user.uploads.dev/file/edb2752ee3ab09842215249688597969.mp3", d:"2:58" },
+  { ch:"ep", n:"prototype",                         u:"https://user.uploads.dev/file/b60520fcca8268ca01f63feecdd4e1bf.mp3", d:"3:01" },
+  { ch:"ep", n:"the ground twin",                   u:"https://user.uploads.dev/file/7a9a35dac9934ed0ff2aec6f159a8f5d.mp3", d:"2:25" },
+  { ch:"ep", n:"the storm twin",                    u:"https://user.uploads.dev/file/109046f5195c66c2d11e020ce1be42c6.mp3", d:"2:48" },
+  { ch:"ep", n:"light apple pie",                   u:"https://user.uploads.dev/file/6c61597963912a7d4b2740e210b3196c.mp3", d:"2:56" },
+  { ch:"ep", n:"the loudest family",                u:"https://user.uploads.dev/file/f21fd7662d17eca1ac1696717e6b4d57.mp3", d:"2:59" },
+
+  /* --- the new ones: the turn ----------------------------------------- */
+  { ch:"new", n:"the lost",                         u:"https://user.uploads.dev/file/92e292d18702486a972767cd9acc9380.mp3", d:"2:31" },
+  { ch:"new", n:"children of god",                  u:"https://user.uploads.dev/file/74eafa49f6745a98186b875a9fc5fef9.mp3", d:"2:47" },
+  { ch:"new", n:"still looking",                    u:"https://user.uploads.dev/file/4e9f5b985b5540ecdd7d9f09182ff098.mp3", d:"2:29" },
+
+  /* --- the family: one for each of them -------------------------------- */
+  { ch:"family", n:"the keys to most of the doors \u00b7 star", u:"https://user.uploads.dev/file/15a3a77a92ff37592714bfe5d7ac1d3e.mp3", d:"2:33" },
+  { ch:"family", n:"the room keeps it \u00b7 chari",             u:"https://user.uploads.dev/file/061074268fc5f580450f16e1d9d7c465.mp3", d:"3:00" },
+  { ch:"family", n:"one ear off \u00b7 miki",                    u:"https://user.uploads.dev/file/adb570c06713f0a773944d1cebf83bbc.mp3", d:"2:08" },
+  { ch:"family", n:"nothing on the list today \u00b7 milo",       u:"https://user.uploads.dev/file/467fee6b1f6c84c1c038ea2470d750be.mp3", d:"2:32" },
+  { ch:"family", n:"the correct way to hold a cup \u00b7 hans",   u:"https://user.uploads.dev/file/8726c86784df6596d6cb89b5ce9908a9.mp3", d:"2:00" },
+  { ch:"family", n:"a web holding the light \u00b7 charlotte",    u:"https://user.uploads.dev/file/12c627331ecec173705a9dffb262a235.mp3", d:"2:57" },
+  { ch:"family", n:"one chair, for you \u00b7 pearl",             u:"https://user.uploads.dev/file/c5008cc9e74b8e8ebcf0da18ae6897b0.mp3", d:"2:38" },
+  { ch:"family", n:"no address to give \u00b7 wren",              u:"https://user.uploads.dev/file/e2e7fdbc655d954aeda5e6a04a190baf.mp3", d:"2:41" },
+  { ch:"family", n:"the boundary walk \u00b7 slay",               u:"https://user.uploads.dev/file/d5d3394ce03cd8faadd1e3077a9b44c0.mp3", d:"3:01" },
+  { ch:"family", n:"the lookout \u00b7 sylvestre",                u:"https://user.uploads.dev/file/4fbbf1df9ddb4ef4a02e8ad3222352a4.mp3", d:"2:54" },
+  { ch:"family", n:"he cannot reach the till \u00b7 bobby",       u:"https://user.uploads.dev/file/cf5b8886849cf732b9f5a320ba7d62fc.mp3", d:"2:59" },
+  { ch:"family", n:"official squirrel business",                  u:"https://user.uploads.dev/file/3b3eddf75e6d7489430ad6d9dd89aedf.mp3", d:"2:30" },
+  { ch:"family", n:"it would be my pleasure, sir \u00b7 bobby ii", u:"https://user.uploads.dev/file/5957d1b62c60cd7ce67b5ba9e74137ea.mp3", d:"3:03" },
+  { ch:"family", n:"it would be my pleasure, sir \u00b7 chipper",  u:"https://user.uploads.dev/file/88132182077662d901c7f8cec0f089ee.mp3", d:"2:48" },
+
+  /* --- her web: charlotte's songs ------------------------------------- */
+  { ch:"web", n:"HolyGhost",     u:"https://user.uploads.dev/file/0ce7791efa8bba7cc94269acbd8a52f6.mp3", d:"" },
+  { ch:"web", n:"Charlotte",     u:"https://user.uploads.dev/file/48c984200c45bfb49e454abb7ec21535.mp3", d:"" },
+  { ch:"web", n:"Spidey",        u:"https://user.uploads.dev/file/e25ee65895445235e1c9e3faf3330fa6.mp3", d:"" },
+  { ch:"web", n:"Firefly Waltz", u:"https://user.uploads.dev/file/a8d478cc55b60c43ad9f04fd370e0109.mp3", d:"" },
+  { ch:"web", n:"Violet Dusk",   u:"https://user.uploads.dev/file/c23962d9101eefe2e5e7c15213d06907.mp3", d:"" },
+  { ch:"web", n:"Silver Air",    u:"https://user.uploads.dev/file/e04e9ec4a8b31b4e1d424fe21309f652.mp3", d:"" },
+  { ch:"web", n:"Lullaby Dream", u:"https://user.uploads.dev/file/4fcc6b2de63cd5d3f5f813f7989331ee.mp3", d:"" },
+  { ch:"web", n:"Twin Marimbas", u:"https://user.uploads.dev/file/5ff0196e4260c04e2dc035b0974ad836.mp3", d:"" },
+  { ch:"web", n:"The Wayunki",   u:"https://user.uploads.dev/file/bf1998b2012f0a711c9d479c32c19675.mp3", d:"" },
+
+  /* --- the drawers: caught in the web --------------------------------- */
+  { ch:"drawers", n:"salutations",             u:"https://user.uploads.dev/file/5326de83fb8dca806250c1007aa0f3de.mp3", d:"0:28" },
+  { ch:"drawers", n:"spinning's my game",      u:"https://user.uploads.dev/file/40fb9fec6321c9031291c92093bf6161.mp3", d:"0:50" },
+  { ch:"drawers", n:"the recording",           u:"https://user.uploads.dev/file/d4066dc259bf038cda46803fe3169771.mp3", d:"1:00" },
+  { ch:"drawers", n:"salutations, violets",    u:"https://user.uploads.dev/file/7fc39dbc9f5097b8363af6cacdbc25be.mp3", d:"1:18" },
+  { ch:"drawers", n:"the game room",           u:"https://user.uploads.dev/file/a5eefd3810bc66e1eb4f78f27fdeebdb.mp3", d:"1:48" },
+
+  /* --- the mixtape: miki's own five ----------------------------------- */
+  { ch:"mix", n:"mikis lore",                  u:"https://user.uploads.dev/file/d239b939d3f683a9f4a11c3123ed1521.mp3", d:"3:48" },
+  { ch:"mix", n:"mikis lore \u00b7 the edge version", u:"https://user.uploads.dev/file/191eee85363f3ce35b6ef198c3e4c938.mp3", d:"3:40" },
+  { ch:"mix", n:"not of this world",           u:"https://user.uploads.dev/file/7e3c1c1eef3cd7cfedaea40f2a4a1bb8.mp3", d:"1:45" },
+  { ch:"mix", n:"not of this world 2.0",       u:"https://user.uploads.dev/file/b647d35a5c6fab89bbdeff3c0292ca09.mp3", d:"3:11" },
+  { ch:"mix", n:"cageless",                    u:"https://user.uploads.dev/file/9fef5e1ffd50189334ebacc2813cc55b.mp3", d:"4:36" },
+
+  /* --- the machine: what vendi plays ---------------------------------- */
+  { ch:"machine", n:"vendi tape \u00b7 the fast one",  u:"https://user.uploads.dev/file/28af5cd9bbb9d30691a4ba39bf359455.mp3", d:"" },
+  { ch:"machine", n:"vendi vinyl \u00b7 the moody one", u:"https://user.uploads.dev/file/e3e1ae23acf8d8ef21687528565069d9.mp3", d:"" },
+  { ch:"machine", n:"vendi cd \u00b7 goin' bananas",   u:"https://user.uploads.dev/file/057dbc8e97da4d4d3c778d891d81d945.mp3", d:"" },
+  { ch:"machine", n:"vendi synth \u00b7 the neon one", u:"https://user.uploads.dev/file/f8ffbf4d0e0f82f67bbdcbbbf92f0e07.mp3", d:"" },
+  { ch:"machine", n:"vendi disk \u00b7 the glitch one", u:"https://user.uploads.dev/file/fca98a622483e14baae8ae083580f86a.mp3", d:"" },
+  { ch:"machine", n:"vendi phones \u00b7 the deep one", u:"https://user.uploads.dev/file/42d2f4cc59e9fa3436b563d61629f727.mp3", d:"" },
+
+  /* --- the long day: the realm, on tape ------------------------------- */
+  { ch:"day", n:"miki's workshop",  u:"https://user.uploads.dev/file/2606abfca5cef14efb301fd252cc8f25.mp3", d:"" },
+  { ch:"day", n:"the slow drip",    u:"https://user.uploads.dev/file/05c8b1687079da7febc8db547fcff262.mp3", d:"" },
+  { ch:"day", n:"the hum",          u:"https://user.uploads.dev/file/4e27fadec762eb08be99aeda7df9d63d.mp3", d:"" },
+  { ch:"day", n:"the lift",         u:"https://user.uploads.dev/file/a89c2a041d104cac648d73eb07928aba.mp3", d:"" },
+  { ch:"day", n:"the wide open",    u:"https://user.uploads.dev/file/b984dcaa6d344ab079a0e9cc09554164.mp3", d:"" },
+  { ch:"day", n:"this is the day",  u:"https://user.uploads.dev/file/50841e31e82541aac3db8447039e698e.mp3", d:"" },
+
+  /* --- the zine: printed and playable --------------------------------- */
+  { ch:"zine", n:"absolution and a dream \u00b7 issue no. 1", u:"https://user.uploads.dev/file/f42622ebdd75ef50547bad2ba0965880.mp3", d:"2:07" },
+  { ch:["zine"], n:"the lost \u00b7 issue no. 4",             u:"https://user.uploads.dev/file/92e292d18702486a972767cd9acc9380.mp3", d:"2:31" }
+];
+
+var CHANNELS = [
+  { id:"dial",    n:"the all-night dial", k:"all-night",  s:"everything, one stream" },
+  { id:"ep",      n:"miki's ep",          k:"miki's ep",  s:"thirteen takes" },
+  { id:"new",     n:"the new ones",       k:"new ones",   s:"the lost, children of god, still looking" },
+  { id:"family",  n:"the family",         k:"the family", s:"one for each of them" },
+  { id:"web",     n:"her web",            k:"her web",    s:"charlotte's songs" },
+  { id:"drawers", n:"the drawers",        k:"drawers",    s:"caught in the web" },
+  { id:"mix",     n:"the mixtape",        k:"mixtape",    s:"miki's own five" },
+  { id:"machine", n:"the machine",        k:"machine",    s:"what vendi plays" },
+  { id:"day",     n:"the long day",       k:"long day",   s:"the realm, on tape" },
+  { id:"zine",    n:"the zine",           k:"the zine",   s:"printed and playable" }
+];
+
+var LINKS = {
+  terminal: "https://www.cafedreamr.art/",
+  web:      "https://www.cafedreamr.art/PLAYLIST/SPIDER-LULLABY/",
+  menu:     "https://www.cafedreamr.art/MENU/",
+  contact:  "https://letterbird.co/mikitv"
+};
+
+/* ------------------------------------------------------------
+   machinery below. nothing here needs editing.
+   ------------------------------------------------------------ */
+
+var KEY = "cd_radio_station";
+var CFG = { idleResume: 60000, fadeMs: 900, hop: 2.39996323 };
+var TAU = Math.PI * 2;
+var RINGS = [0.16, 0.30, 0.44, 0.58, 0.72, 0.86, 0.99];
+var SPOKES = 12;
+/* the hub is kept as bare silk: every strand begins at its rim, so charlotte
+   sits in a clear middle instead of on top of the knot */
+var HUB = 26;
+function spiderSpan() {
+  return Math.max(48, Math.min(R * 0.85, Math.min(W, H) * 0.55));
+}
+var HUES = [285, 195, 45, 330, 150, 260, 205, 20];
+var REDUCE = false;
+try { REDUCE = !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches); } catch (e) {}
+
+function $(s) { return document.querySelector(s); }
+function pad2(n) { return (n < 10 ? "0" : "") + n; }
+function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+function clamp(v, a, b) { return v < a ? a : (v > b ? b : v); }
+function mmss(s) {
+  if (!isFinite(s) || s < 0) { return "0:00"; }
+  return Math.floor(s / 60) + ":" + pad2(Math.floor(s % 60));
+}
+function isArr(v) { return Object.prototype.toString.call(v) === "[object Array]"; }
+function hasCh(tr, id) { return isArr(tr.ch) ? tr.ch.indexOf(id) >= 0 : tr.ch === id; }
+function tracksOf(id) { return id === "dial" ? TRACKS : TRACKS.filter(function (t) { return hasCh(t, id); }); }
+function chanName(id) {
+  for (var i = 0; i < CHANNELS.length; i++) { if (CHANNELS[i].id === id) { return CHANNELS[i].n; } }
+  return id;
+}
+function chanSub(id) {
+  for (var i = 0; i < CHANNELS.length; i++) { if (CHANNELS[i].id === id) { return CHANNELS[i].s; } }
+  return "";
+}
+
+/* ---------------- dom ---------------- */
+var glassEl = $("#glass"), webCv = $("#web"), flyCv = $("#fly");
+var wctx = webCv.getContext("2d"), fctx = flyCv.getContext("2d");
+var audio = $("#audio");
+var ledEl = $("#led"), ledSub = $("#ledSub"), pbar = $("#pbar"), pbarFill = $("#pbarFill");
+var playBtn = $("#playBtn"), prevBtn = $("#prevBtn"), nextBtn = $("#nextBtn"), shufBtn = $("#shufBtn");
+var keypadEl = $("#keypad"), volEl = $("#vol"), marqueeTrack = $("#marqueeTrack");
+var glassHint = $("#glassHint"), signHint = $("#signHint"), glassTitle = $("#glassTitle");
+var spiderLayer = $("#spiderLayer"), sfxBtn = $("#sfxBtn");
+
+/* ---------------- state ---------------- */
+var W = 0, H = 0, DPR = 1, cx = 0, cy = 0, R = 0, t = 0;
+var chanId = "dial";
+var nodes = [];
+var queue = [], qi = 0;
+var shuffle = true, vol = 0.75, sfxOn = true;
+var booted = false, held = false, grabbing = false, dragMoved = false;
+var downX = 0, downY = 0, hover = null;
+var wisps = [];
+var lastAct = Date.now();
+var fadeT = null, fading = false;
+var errStreak = 0;
+var spider = null;
+var firefly = { x: 0, y: 0, tx: 0, ty: 0, ph: 0, held: false, bob: Math.random() * TAU };
+
+function store() {
+  try { return JSON.parse(localStorage.getItem(KEY) || "{}") || {}; } catch (e) { return {}; }
+}
+function save() {
+  try {
+    localStorage.setItem(KEY, JSON.stringify({
+      ch: chanId, vol: vol, shuffle: shuffle ? 1 : 0, sfx: sfxOn ? 1 : 0,
+      u: queue[qi] ? queue[qi].u : ""
+    }));
+  } catch (e) {}
+}
+
+/* ---------------- sound (the machine's own little chimes) ---------------- */
+var AC = null;
+function ac() {
+  try {
+    AC = AC || new (window.AudioContext || window.webkitAudioContext)();
+    if (AC && AC.state === "suspended") { AC.resume(); }
+  } catch (e) { AC = AC || null; }
+  return AC;
+}
+function blip(f, dur, vol2, type) {
+  if (!sfxOn) { return; }
+  var a = ac(); if (!a) { return; }
+  var o = a.createOscillator(), g = a.createGain();
+  o.type = type || "sine"; o.frequency.value = f;
+  g.gain.setValueAtTime(vol2, a.currentTime);
+  g.gain.exponentialRampToValueAtTime(0.0001, a.currentTime + dur);
+  o.connect(g); g.connect(a.destination);
+  o.start(); o.stop(a.currentTime + dur + 0.02);
+}
+function hiss(dur, freq, vol2) {
+  if (!sfxOn) { return; }
+  var a = ac(); if (!a) { return; }
+  var n = Math.floor(a.sampleRate * dur);
+  var buf = a.createBuffer(1, n, a.sampleRate), d = buf.getChannelData(0);
+  for (var i = 0; i < d.length; i++) { d[i] = Math.random() * 2 - 1; }
+  var src = a.createBufferSource(); src.buffer = buf;
+  var f = a.createBiquadFilter(); f.type = "bandpass"; f.frequency.value = freq; f.Q.value = 0.7;
+  var g = a.createGain();
+  g.gain.setValueAtTime(vol2, a.currentTime);
+  g.gain.exponentialRampToValueAtTime(0.0001, a.currentTime + dur);
+  src.connect(f); f.connect(g); g.connect(a.destination);
+  src.start(); src.stop(a.currentTime + dur + 0.02);
+}
+function tuneSfx() { hiss(0.34, 1200, 0.06); blip(420, 0.12, 0.05, "triangle"); }
+function pickSfx() { blip(880, 0.28, 0.045, "sine"); setTimeout(function () { blip(1320, 0.4, 0.03, "sine"); }, 80); }
+
+/* ---------------- canvas ---------------- */
+function sizeCanvas(cv, c) {
+  cv.width = Math.max(2, Math.round(W * DPR));
+  cv.height = Math.max(2, Math.round(H * DPR));
+  c.setTransform(DPR, 0, 0, DPR, 0, 0);
+}
+function resize() {
+  var r = glassEl.getBoundingClientRect();
+  if (r.width < 8 || r.height < 8) { return; }
+  DPR = Math.min(window.devicePixelRatio || 1, 2);
+  W = r.width; H = r.height;
+  sizeCanvas(webCv, wctx); sizeCanvas(flyCv, fctx);
+  cx = W / 2; cy = H / 2; R = Math.min(W, H) * 0.43;
+  HUB = Math.min(spiderSpan() * 0.30, R * 0.24);
+  layoutNodes();
+  sizeSpider();
+  if (!firefly.held) { perch(); }
+}
+window.addEventListener("resize", function () { resize(); });
+
+function layoutNodes() {
+  var list = tracksOf(chanId), n = list.length;
+  var big = n <= 16;
+  nodes = [];
+  for (var i = 0; i < n; i++) {
+    var ring, ang;
+    if (big) {
+      ring = 1 + (i % 3);
+      ang = -Math.PI / 2 + (i / Math.max(1, n)) * TAU + ring * 0.52 + i * 0.11;
+    } else {
+      ring = 1 + (i % (RINGS.length - 1));
+      ang = -Math.PI / 2 + i * CFG.hop;
+    }
+    var f = RINGS[ring];
+    nodes.push({
+      tr: list[i], i: i, ring: ring, ang: ang, hue: HUES[i % HUES.length],
+      ph: (i * 1.7) % TAU, hov: 0, cur: false,
+      x: cx + Math.cos(ang) * R * f, y: cy + Math.sin(ang) * R * f
+    });
+  }
+}
+
+function sizeSpider() {
+  if (!spider) { return; }
+  var s = spiderSpan();
+  var el = spider.el;
+  el.setAttribute("width", s); el.setAttribute("height", s);
+  el.style.width = s + "px"; el.style.height = s + "px";
+  el.style.position = "absolute";
+  el.style.left = (cx - s / 2) + "px";
+  el.style.top = (cy - s / 2) + "px";
+}
+function buildSpider() {
+  if (!window.CharlotteSpider) { return; }
+  try {
+    spider = window.CharlotteSpider.create({ size: 200, hang: false, label: "charlotte, resting in the middle of the web" });
+    spiderLayer.appendChild(spider.el);
+    spider.setMode("rest");
+    sizeSpider();
+  } catch (e) { spider = null; }
+}
+
+/* ---------------- firefly ---------------- */
+function nodeFor(tr) {
+  for (var i = 0; i < nodes.length; i++) { if (nodes[i].tr === tr) { return nodes[i]; } }
+  return null;
+}
+function perch() {
+  var nd = nodeFor(queue[qi]);
+  if (nd) { firefly.tx = nd.x; firefly.ty = nd.y + 2; }
+  else { firefly.tx = cx + Math.cos(t * 0.3) * R * 0.5; firefly.ty = cy + Math.sin(t * 0.4) * R * 0.4; }
+}
+function drawFirefly() {
+  fctx.clearRect(0, 0, W, H);
+  var x = firefly.x, y = firefly.y + Math.sin(firefly.bob) * 1.6;
+  var bright = held || grabbing ? 1 : 0.85;
+  var g = fctx.createRadialGradient(x, y, 0, x, y, 34);
+  g.addColorStop(0, "rgba(255,232,160," + (0.9 * bright) + ")");
+  g.addColorStop(0.28, "rgba(255,205,100," + (0.5 * bright) + ")");
+  g.addColorStop(1, "rgba(255,200,90,0)");
+  fctx.fillStyle = g;
+  fctx.beginPath(); fctx.arc(x, y, 34, 0, TAU); fctx.fill();
+
+  var flap = 0.5 + 0.5 * Math.sin(t * 40 + firefly.ph);
+  fctx.fillStyle = "rgba(255,250,235,0.75)";
+  fctx.beginPath();
+  fctx.ellipse(x - 2.4, y - 1.8, 2 + flap * 1.1, 1.2, -0.5, 0, TAU);
+  fctx.ellipse(x + 2.4, y - 1.8, 2 + flap * 1.1, 1.2, 0.5, 0, TAU);
+  fctx.fill();
+  fctx.fillStyle = "#2a2036";
+  fctx.beginPath(); fctx.ellipse(x, y, 1.8, 2.7, 0, 0, TAU); fctx.fill();
+  fctx.fillStyle = "rgba(255,246,210,0.98)";
+  fctx.beginPath(); fctx.arc(x, y - 0.3, 1.1, 0, TAU); fctx.fill();
+  if (grabbing) {
+    fctx.strokeStyle = "rgba(255,217,138,.7)";
+    fctx.lineWidth = 1;
+    fctx.setLineDash([3, 4]);
+    fctx.beginPath(); fctx.arc(x, y, 20, 0, TAU); fctx.stroke();
+    fctx.setLineDash([]);
+  }
+}
+
+/* ---------------- the web ---------------- */
+function drawBg() {
+  var g = wctx.createRadialGradient(cx, cy * 0.86, R * 0.15, cx, cy, Math.max(W, H) * 0.8);
+  g.addColorStop(0, "rgba(58,26,92,.85)");
+  g.addColorStop(0.5, "rgba(24,12,44,.9)");
+  g.addColorStop(1, "rgba(5,3,12,.96)");
+  wctx.fillStyle = g;
+  wctx.fillRect(0, 0, W, H);
+  var m = wctx.createRadialGradient(cx, cy, 0, cx, cy, R * 1.15);
+  m.addColorStop(0, "rgba(255,45,149,.07)");
+  m.addColorStop(0.55, "rgba(180,140,255,.05)");
+  m.addColorStop(1, "rgba(0,0,0,0)");
+  wctx.fillStyle = m;
+  wctx.fillRect(0, 0, W, H);
+  var v = wctx.createRadialGradient(cx, cy, R * 0.5, cx, cy, Math.max(W, H) * 0.78);
+  v.addColorStop(0, "rgba(0,0,0,0)");
+  v.addColorStop(1, "rgba(0,0,0,.5)");
+  wctx.fillStyle = v;
+  wctx.fillRect(0, 0, W, H);
+}
+function drawWeb() {
+  var a0 = -Math.PI / 2, r0 = HUB;
+  wctx.lineCap = "round";
+  for (var i = 0; i < SPOKES; i++) {
+    var a = a0 + i * TAU / SPOKES;
+    var sx = cx + Math.cos(a) * r0, sy = cy + Math.sin(a) * r0;
+    var grad = wctx.createLinearGradient(sx, sy, cx + Math.cos(a) * R, cy + Math.sin(a) * R);
+    grad.addColorStop(0, "rgba(203,178,255,0.20)");
+    grad.addColorStop(1, "rgba(224,163,200,0.46)");
+    wctx.strokeStyle = grad;
+    wctx.lineWidth = 1;
+    wctx.beginPath(); wctx.moveTo(sx, sy);
+    wctx.lineTo(cx + Math.cos(a) * R, cy + Math.sin(a) * R);
+    wctx.stroke();
+  }
+  var radii = [r0];
+  for (var ri = 1; ri < RINGS.length; ri++) { radii.push(R * RINGS[ri]); }
+  for (var qi = 0; qi < radii.length; qi++) {
+    var rr = radii[qi];
+    wctx.strokeStyle = qi === 0 ? "rgba(203,178,255,.34)" : "rgba(203,178,255,.26)";
+    wctx.lineWidth = 1;
+    for (var j = 0; j < SPOKES; j++) {
+      var a1 = a0 + j * TAU / SPOKES, a2 = a0 + (j + 1) * TAU / SPOKES;
+      var p1x = cx + Math.cos(a1) * rr, p1y = cy + Math.sin(a1) * rr;
+      var p2x = cx + Math.cos(a2) * rr, p2y = cy + Math.sin(a2) * rr;
+      var midA = (a1 + a2) / 2, sag = rr * 0.05;
+      var mx = cx + Math.cos(midA) * (rr - sag), my = cy + Math.sin(midA) * (rr - sag);
+      wctx.beginPath(); wctx.moveTo(p1x, p1y);
+      wctx.quadraticCurveTo(mx, my, p2x, p2y);
+      wctx.stroke();
+    }
+  }
+  var hgr = Math.max(10, r0 * 0.62);
+  var hg = wctx.createRadialGradient(cx, cy, 0, cx, cy, hgr);
+  hg.addColorStop(0, "rgba(255,217,138,.30)");
+  hg.addColorStop(0.5, "rgba(203,178,255,.16)");
+  hg.addColorStop(1, "rgba(203,178,255,0)");
+  wctx.fillStyle = hg;
+  wctx.beginPath(); wctx.arc(cx, cy, hgr, 0, TAU); wctx.fill();
+}
+function drawNodes() {
+  var big = nodes.length <= 16;
+  for (var i = 0; i < nodes.length; i++) {
+    var nd = nodes[i];
+    var pulse = 0.5 + 0.5 * Math.sin(t * 1.7 + nd.ph);
+    var r = nd.cur ? (big ? 6.6 : 4.6) : (big ? 4.6 : 2.9);
+    r *= 1 + nd.hov * 0.5;
+    var col = "hsl(" + nd.hue + ",78%,72%)";
+    var gl = wctx.createRadialGradient(nd.x, nd.y, 0, nd.x, nd.y, r * 3.6);
+    gl.addColorStop(0, "hsla(" + nd.hue + ",88%,74%," + (0.34 + nd.hov * 0.3 + pulse * 0.08) + ")");
+    gl.addColorStop(1, "hsla(" + nd.hue + ",88%,74%,0)");
+    wctx.fillStyle = gl;
+    wctx.beginPath(); wctx.arc(nd.x, nd.y, r * 3.6, 0, TAU); wctx.fill();
+    wctx.fillStyle = "hsla(" + nd.hue + ",86%,80%," + (0.6 + nd.hov * 0.4) + ")";
+    wctx.beginPath(); wctx.arc(nd.x, nd.y, r, 0, TAU); wctx.fill();
+    if (nd.cur) {
+      wctx.strokeStyle = "hsla(" + nd.hue + ",92%,82%,.9)";
+      wctx.lineWidth = 1.4;
+      wctx.beginPath(); wctx.arc(nd.x, nd.y, r + 4 + Math.sin(t * 3) * 1.6, 0, TAU); wctx.stroke();
+    }
+    if (nd.hov > 0.12 || nd.cur) {
+      var lab = nd.tr.n;
+      wctx.font = "9px 'Space Mono',monospace";
+      wctx.textAlign = "center";
+      var a = nd.cur ? 1 : nd.hov;
+      wctx.shadowColor = "rgba(4,2,10,.95)"; wctx.shadowBlur = 6;
+      wctx.fillStyle = nd.cur ? "hsla(" + nd.hue + ",95%,88%," + a + ")" : "rgba(240,232,255," + a + ")";
+      wctx.fillText(lab, nd.x, nd.y - r - 9);
+      wctx.shadowBlur = 0;
+    }
+    var want = (hover === nd ? 1 : 0);
+    nd.hov += (want - nd.hov) * 0.18;
+  }
+}
+function spawnWisps(nd) {
+  if (REDUCE) { return; }
+  for (var i = 0; i < 22; i++) {
+    var a = Math.random() * TAU, rr = 6 + Math.random() * 26;
+    wisps.push({
+      x: nd.x + Math.cos(a) * rr, y: nd.y + Math.sin(a) * rr,
+      vx: Math.cos(a) * (0.2 + Math.random() * 0.5), vy: -0.3 - Math.random() * 0.9,
+      life: 0, max: 0.7 + Math.random() * 0.9, size: 1 + Math.random() * 1.8,
+      hue: Math.random() < 0.4 ? 45 : nd.hue
+    });
+  }
+}
+function drawWisps(dt) {
+  for (var i = wisps.length - 1; i >= 0; i--) {
+    var w = wisps[i];
+    w.life += dt;
+    if (w.life >= w.max) { wisps.splice(i, 1); continue; }
+    var k = w.life / w.max;
+    w.x += w.vx; w.y += w.vy;
+    var a = 1 - k;
+    wctx.fillStyle = "hsla(" + w.hue + ",88%,84%," + (a * 0.9) + ")";
+    wctx.shadowColor = "hsla(" + w.hue + ",95%,78%," + a + ")"; wctx.shadowBlur = 8;
+    wctx.beginPath(); wctx.arc(w.x, w.y, w.size * (1 - k * 0.3), 0, TAU); wctx.fill();
+    wctx.shadowBlur = 0;
+  }
+}
+function drawScene(dt) {
+  if (W < 8 || H < 8) { return; }
+  wctx.clearRect(0, 0, W, H);
+  drawBg();
+  drawWeb();
+  drawNodes();
+  drawWisps(dt);
+}
+
+/* ---------------- audio ---------------- */
+var ICON_PLAY = "&#9654;", ICON_PAUSE = "&#10074;&#10074;";
+
+function fadeTo(v, ms) {
+  clearInterval(fadeT);
+  var from = audio.volume, t0 = Date.now();
+  fadeT = setInterval(function () {
+    var k = clamp((Date.now() - t0) / ms, 0, 1);
+    try { audio.volume = clamp(from + (v - from) * k, 0, 1); } catch (e) {}
+    if (k >= 1) { clearInterval(fadeT); }
+  }, 40);
+}
+function queueIndexOf(tr) {
+  for (var i = 0; i < queue.length; i++) { if (queue[i] === tr) { return i; } }
+  return -1;
+}
+function shuffled(list) {
+  var a = list.slice();
+  for (var i = a.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1)), s = a[i]; a[i] = a[j]; a[j] = s;
+  }
+  return a;
+}
+function setQueue(list, keepTrack) {
+  var keep = keepTrack ? queue[qi] : null;
+  var ordered = list.slice();
+  queue = shuffle ? shuffled(ordered) : ordered;
+  qi = 0;
+  if (keep) {
+    var at = queueIndexOf(keep);
+    if (at >= 0) { qi = at; }
+  }
+}
+function playIndex(i, fromUser) {
+  if (!queue.length) { return; }
+  qi = ((i % queue.length) + queue.length) % queue.length;
+  var tr = queue[qi];
+  fading = false;
+  errStreak = 0;
+  try {
+    audio.src = tr.u;
+    audio.load();
+  } catch (e) {}
+  try { audio.volume = 0; } catch (e) {}
+  var p = audio.play();
+  if (p && p.catch) {
+    p.catch(function () {
+      try { audio.volume = vol; } catch (e) {}
+      if (glassHint.textContent.indexOf("you chose") !== 0) {
+        glassHint.textContent = "the browser is holding the sound back \u2014 press play";
+        glassHint.classList.remove("off");
+      }
+      paint();
+    });
+  }
+  fadeTo(vol, CFG.fadeMs);
+  var nd = nodeFor(tr);
+  if (nd) { perch(); if (!REDUCE) { spawnWisps(nd); } }
+  if (spider) { try { spider.stir(fromUser ? 1.6 : 1.1); } catch (e) {} }
+  paint();
+  save();
+}
+function nextTrack(auto) {
+  if (!queue.length) { return; }
+  playIndex(qi + 1, false);
+}
+function prevTrack() {
+  if (!queue.length) { return; }
+  if (audio.currentTime > 4) { try { audio.currentTime = 0; } catch (e) {} paint(); return; }
+  playIndex(qi - 1, true);
+}
+function togglePlay() {
+  markAct();
+  if (!booted) { boot(); return; }
+  if (audio.paused) { playIndex(qi, true); }
+  else { audio.pause(); }
+}
+function boot() {
+  booted = true;
+  glassHint.classList.add("off");
+  signHint.textContent = "the firefly chooses \u00b7 leave it alone";
+  if (!queue.length) { setQueue(tracksOf(chanId)); }
+  playIndex(qi, true);
+}
+
+audio.addEventListener("play", function () { paint(); });
+audio.addEventListener("pause", function () { paint(); });
+audio.addEventListener("ended", function () { nextTrack(true); });
+audio.addEventListener("error", function () {
+  errStreak++;
+  if (errStreak <= 4 && queue.length > 1) { setTimeout(function () { nextTrack(false); }, 600); }
+  else { ledSub.textContent = "that take will not load \u2014 skip on"; }
+});
+audio.addEventListener("loadedmetadata", function () {
+  var tr = queue[qi];
+  if (tr && isFinite(audio.duration) && audio.duration > 0) { tr.d = mmss(audio.duration); }
+  paint();
+});
+audio.addEventListener("timeupdate", function () {
+  var d = isFinite(audio.duration) && audio.duration > 0 ? audio.duration : 0;
+  var pct = d ? (audio.currentTime / d * 100) : 0;
+  pbarFill.style.width = clamp(pct, 0, 100) + "%";
+  if (d && !fading && d - audio.currentTime < 1.1 && d > 4) { fading = true; fadeTo(0, 900); }
+});
+
+/* ---------------- paint ---------------- */
+function paint() {
+  var tr = queue[qi];
+  var on = !audio.paused && !audio.ended && booted;
+  for (var i = 0; i < nodes.length; i++) { nodes[i].cur = (tr && nodes[i].tr === tr); }
+  playBtn.innerHTML = on ? ICON_PAUSE : ICON_PLAY;
+  playBtn.classList.toggle("on", on);
+  playBtn.setAttribute("aria-label", on ? "pause" : "play");
+  playBtn.title = on ? "pause" : "play";
+  glassTitle.textContent = chanName(chanId);
+  if (tr) {
+    ledEl.textContent = (on ? "\u25b6 " : (booted ? "\u2016 " : "\u00b7 ")) + pad2(qi + 1) + "/" + pad2(queue.length) + "  " + tr.n;
+    ledSub.textContent = (tr.d || "--:--") + " \u00b7 " + chanName(chanId) + (shuffle ? " \u00b7 shuffle" : "");
+    document.title = (on ? "\u25b6 " : "") + tr.n + " \u2014 the all-night";
+    if ("mediaSession" in navigator) {
+      try {
+        navigator.mediaSession.metadata = new MediaMetadata({ title: tr.n, artist: "cafedreamr", album: chanName(chanId) });
+        navigator.mediaSession.playbackState = on ? "playing" : "paused";
+      } catch (e) {}
+    }
+  } else {
+    ledEl.textContent = "the all-night \u2014 " + tracksOf("dial").length + " songs";
+    ledSub.textContent = "press play";
+  }
+  if (on) { glassHint.classList.add("off"); }
+}
+
+/* ---------------- keypad / controls ---------------- */
+function buildKeypad() {
+  keypadEl.innerHTML = "";
+  for (var i = 0; i < CHANNELS.length; i++) {
+    (function (c, n) {
+      var list = tracksOf(c.id);
+      var b = document.createElement("button");
+      b.type = "button"; b.className = "key"; b.setAttribute("data-id", c.id);
+      b.title = c.n + " \u2014 " + c.s;
+      b.innerHTML = "<b>" + pad2(n) + "</b>" + esc(c.k) + "<i>" + list.length + " songs</i>";
+      b.addEventListener("click", function () { tune(c.id); });
+      keypadEl.appendChild(b);
+    })(CHANNELS[i], i);
+  }
+  syncKeypad();
+}
+function syncKeypad() {
+  var ks = keypadEl.querySelectorAll(".key");
+  for (var i = 0; i < ks.length; i++) { ks[i].classList.toggle("on", ks[i].getAttribute("data-id") === chanId); }
+}
+function tune(id, silent) {
+  chanId = id;
+  setQueue(tracksOf(id), false);
+  layoutNodes();
+  syncKeypad();
+  perch();
+  if (!silent) { tuneSfx(); }
+  save();
+  if (booted) { playIndex(0, true); }
+  else { paint(); }
+  glassHint.textContent = chanName(id) + " \u00b7 " + chanSub(id);
+  glassHint.classList.remove("off");
+  if (booted) { setTimeout(function () { glassHint.classList.add("off"); }, 2600); }
+}
+
+function markAct() { lastAct = Date.now(); }
+
+/* ---------------- pointer: the firefly ---------------- */
+function localPos(e) {
+  var r = webCv.getBoundingClientRect();
+  return { x: e.clientX - r.left, y: e.clientY - r.top };
+}
+function hitNode(x, y, r) {
+  var best = null, bd = r;
+  for (var i = 0; i < nodes.length; i++) {
+    var d = Math.hypot(nodes[i].x - x, nodes[i].y - y);
+    if (d < bd) { bd = d; best = nodes[i]; }
+  }
+  return best;
+}
+function pickNode(nd) {
+  var i = queueIndexOf(nd.tr);
+  if (i < 0) { setQueue(tracksOf(chanId), false); i = queueIndexOf(nd.tr); }
+  if (i < 0) { return; }
+  if (!booted) { booted = true; }
+  playIndex(i, true);
+  pickSfx();
+  glassHint.textContent = "you chose " + nd.tr.n;
+  glassHint.classList.remove("off");
+  setTimeout(function () { glassHint.classList.add("off"); }, 2400);
+  markAct();
+}
+function releaseAuto() {
+  glassHint.textContent = "the machine takes it from here";
+  glassHint.classList.remove("off");
+  setTimeout(function () { glassHint.classList.add("off"); }, 2400);
+  perch();
+}
+
+glassEl.addEventListener("pointerdown", function (e) {
+  markAct();
+  var p = localPos(e);
+  downX = p.x; downY = p.y; dragMoved = false;
+  var d = Math.hypot(p.x - firefly.x, p.y - firefly.y);
+  if (d < (W < 640 ? 64 : 52)) {
+    grabbing = true; firefly.held = true;
+    glassEl.classList.add("grabbing");
+    try { glassEl.setPointerCapture(e.pointerId); } catch (err) {}
+  }
+});
+glassEl.addEventListener("pointermove", function (e) {
+  var p = localPos(e);
+  if (!grabbing) {
+    hover = hitNode(p.x, p.y, W < 640 ? 30 : 24);
+    return;
+  }
+  if (!dragMoved && Math.hypot(p.x - downX, p.y - downY) > 5) { dragMoved = true; }
+  firefly.x = p.x; firefly.y = p.y;
+});
+function endDrag(e) {
+  if (!grabbing && !e) { return; }
+  var p = e ? localPos(e) : { x: firefly.x, y: firefly.y };
+  glassEl.classList.remove("grabbing");
+  if (grabbing) {
+    grabbing = false; firefly.held = false;
+    var hit = hitNode(p.x, p.y, W < 640 ? 34 : 26);
+    if (hit) { pickNode(hit); }
+    else { releaseAuto(); }
+    return;
+  }
+  if (e) {
+    var hit2 = hitNode(p.x, p.y, W < 640 ? 34 : 26);
+    if (hit2) { pickNode(hit2); }
+    else if (Math.hypot(p.x - cx, p.y - cy) < R * 0.18) { releaseAuto(); }
+  }
+}
+glassEl.addEventListener("pointerup", endDrag);
+glassEl.addEventListener("pointercancel", endDrag);
+glassEl.addEventListener("pointerleave", function (e) { if (!grabbing) { hover = null; } });
+
+volEl.addEventListener("input", function () {
+  vol = clamp(parseFloat(volEl.value) / 100, 0, 1);
+  if (!fading) { try { audio.volume = vol; } catch (e) {} }
+  save();
+  markAct();
+});
+playBtn.addEventListener("click", function () { togglePlay(); blip(560, 0.08, 0.05, "triangle"); });
+prevBtn.addEventListener("click", function () { markAct(); prevTrack(); blip(340, 0.1, 0.05, "square"); });
+nextBtn.addEventListener("click", function () { markAct(); nextTrack(false); blip(700, 0.1, 0.05, "square"); });
+shufBtn.addEventListener("click", function () {
+  markAct(); shuffle = !shuffle;
+  shufBtn.classList.toggle("on", shuffle);
+  var cur = queue[qi];
+  queue = shuffle ? shuffled(tracksOf(chanId)) : tracksOf(chanId).slice();
+  var idx = queueIndexOf(cur); qi = idx >= 0 ? idx : 0;
+  paint(); save(); blip(620, 0.1, 0.05, "triangle");
+});
+sfxBtn.addEventListener("click", function () {
+  sfxOn = !sfxOn;
+  sfxBtn.textContent = "chimes: " + (sfxOn ? "on" : "off");
+  if (sfxOn) { blip(900, 0.12, 0.05, "sine"); }
+  save();
+});
+pbar.addEventListener("click", function (e) {
+  if (!isFinite(audio.duration) || audio.duration <= 0) { return; }
+  var r = pbar.getBoundingClientRect();
+  var k = clamp((e.clientX - r.left) / r.width, 0, 1);
+  try { audio.currentTime = k * audio.duration; } catch (err) {}
+  markAct();
+});
+
+/* keyboard */
+window.addEventListener("keydown", function (e) {
+  markAct();
+  if (e.code === "Space") { e.preventDefault(); togglePlay(); }
+  else if (e.code === "ArrowRight") { e.preventDefault(); if (e.shiftKey) { nextTrack(false); } else { try { audio.currentTime += 15; } catch (err) {} } }
+  else if (e.code === "ArrowLeft") { e.preventDefault(); if (e.shiftKey) { prevTrack(); } else { try { audio.currentTime -= 15; } catch (err) {} } }
+  else if (e.key === "s") { shufBtn.click(); }
+});
+
+/* first gesture: browsers insist on one before a page may make a sound */
+["pointerdown", "keydown"].forEach(function (ev) {
+  window.addEventListener(ev, function once() {
+    window.removeEventListener(ev, once);
+    ac();
+    if (!booted) { boot(); }
+  }, { passive: true });
+});
+
+/* left alone, the machine plays on */
+setInterval(function () {
+  if (!booted) { return; }
+  if (audio.paused && Date.now() - lastAct > CFG.idleResume) { playIndex(qi, false); }
+}, 5000);
+["pointerdown", "keydown", "pointermove", "wheel", "touchstart"].forEach(function (ev) {
+  window.addEventListener(ev, markAct, { passive: true });
+});
+
+/* ---------------- loop ---------------- */
+var last = performance.now();
+function frame(now) {
+  var dt = Math.min(0.05, (now - last) / 1000) || 0.016;
+  last = now;
+  t += dt;
+  if (spider) { try { spider.step(dt); } catch (e) {} }
+  if (!firefly.held && !grabbing) {
+    var k = 1 - Math.pow(0.0025, dt);
+    firefly.x += (firefly.tx - firefly.x) * k;
+    firefly.y += (firefly.ty - firefly.y) * k;
+  }
+  firefly.bob += dt * 2.4;
+  drawScene(dt);
+  drawFirefly();
+  requestAnimationFrame(frame);
+}
+
+/* ---------------- boot ---------------- */
+function init() {
+  var mem = store();
+  if (mem.ch && tracksOf(mem.ch).length) { chanId = mem.ch; }
+  if (typeof mem.vol === "number") { vol = clamp(mem.vol, 0, 1); }
+  if (typeof mem.shuffle === "number") { shuffle = !!mem.shuffle; }
+  if (typeof mem.sfx === "number") { sfxOn = !!mem.sfx; }
+  volEl.value = Math.round(vol * 100);
+  try { audio.volume = vol; } catch (e) {}
+  shufBtn.classList.toggle("on", shuffle);
+  sfxBtn.textContent = "chimes: " + (sfxOn ? "on" : "off");
+
+  setQueue(tracksOf(chanId), false);
+  if (mem.u) { for (var i = 0; i < queue.length; i++) { if (queue[i].u === mem.u) { qi = i; break; } } }
+
+  var txt = "you're listening to the all-night \u00b7 cafedreamr radio \u00b7 " + TRACKS.length +
+    " songs on one web \u00b7 pick up the firefly, or leave the machine alone and it plays on \u00b7 nothing on this dial is for sale \u00b7 ";
+  marqueeTrack.innerHTML = "<span>" + esc(txt) + "</span><span>" + esc(txt) + "</span>";
+
+  buildKeypad();
+  buildSpider();
+  resize();
+  firefly.x = cx; firefly.y = cy; firefly.ph = Math.random() * TAU;
+  perch();
+  firefly.x = firefly.tx; firefly.y = firefly.ty;
+  paint();
+  if (window.CD && CD.stamp) { try { CD.stamp("radio:all-night"); } catch (e) {} }
+
+  requestAnimationFrame(frame);
+  setTimeout(resize, 60);
+  setTimeout(resize, 400);
+  if (document.fonts && document.fonts.ready && document.fonts.ready.then) { document.fonts.ready.then(function () { resize(); }); }
+  if (window.ResizeObserver) { try { new ResizeObserver(function () { resize(); }).observe(glassEl); } catch (e) {} }
+}
+if (document.readyState === "loading") { document.addEventListener("DOMContentLoaded", init); }
+else { init(); }
+
+})();
+</script>
+</body>
+</html>
