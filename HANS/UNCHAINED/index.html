@@ -1,0 +1,932 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0d001a">
+<title>unchained &middot; as told by hans &middot; cafedreamr</title>
+<meta name="description" content="ten episodes, told by hans — the room with no windows, the girl with the fox ears, the girl in the next cage, and the light that came down through the ceiling.">
+<meta property="og:title" content="unchained &middot; as told by hans">
+<meta property="og:description" content="the room with no windows. the girl in the next cage. the night the lock gave. ten episodes, spoken slowly, with the kettle on.">
+<meta property="og:type" content="article">
+<meta property="og:image" content="https://user.uploads.dev/file/3319225749983203c7c8561fac0a5684.jpg">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%230d001a'/%3E%3Cpath d='M3 5h8v5a2 2 0 01-2 2H5a2 2 0 01-2-2z' fill='none' stroke='%236495ed' stroke-width='1.1'/%3E%3Cpath d='M11 6.5h1.4a1.3 1.3 0 010 2.6H11' fill='none' stroke='%23ffc36b' stroke-width='1'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Klee+One:wght@400;600&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+[hidden]{display:none!important}
+:root{
+  --plum:#0d001a; --ink:#0b0b0e; --ink2:#141419;
+  --a:#6495ed; --amber:#ffc36b; --violet2:#ee82ee; --lime:#ccff00;
+  --lav:#fff0f5; --dim:#8b8f96; --line:rgba(255,255,255,.10);
+  --mono:'Space Mono',ui-monospace,monospace;
+  --disp:'Bebas Neue',impact,sans-serif;
+  --body:'Klee One',system-ui,sans-serif;
+}
+body{background:var(--plum);color:var(--lav);font-family:var(--body);text-align:left;
+  min-height:100dvh;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+.bg{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(760px 520px at 14% 4%, color-mix(in srgb,var(--a) 15%,transparent), transparent 62%),
+    radial-gradient(620px 520px at 92% 96%, rgba(255,195,107,.07), transparent 60%),
+    linear-gradient(180deg,#0d001a,#0c0a10 58%,#0d001a)}
+.bg:after{content:"";position:absolute;inset:0;opacity:.5;
+  background:repeating-linear-gradient(0deg,rgba(255,255,255,.013) 0 1px,transparent 1px 4px)}
+
+.wrap{position:relative;z-index:1;max-width:880px;margin:0 auto;padding:22px 14px 36px;
+  display:flex;flex-direction:column;gap:16px}
+
+.bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+  border-bottom:1px solid var(--line);padding-bottom:10px}
+.brand{font-family:var(--disp);font-size:24px;letter-spacing:.14em;color:#9dc0ff;
+  text-shadow:0 0 16px color-mix(in srgb,#9dc0ff 46%,transparent)}
+.bar .dot{width:7px;height:7px;border-radius:50%;background:var(--amber);flex:0 0 auto;
+  box-shadow:0 0 9px var(--amber);animation:blip 1.7s ease-in-out infinite}
+@keyframes blip{50%{opacity:.2}}
+.spacer{flex:1 1 auto}
+.back{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--violet2);text-decoration:none;border-bottom:1px solid transparent;padding-bottom:2px}
+.back:hover{color:var(--lime);border-bottom-color:currentColor}
+
+.plate{border:1px solid var(--line);border-radius:16px;padding:20px 20px 18px;
+  background:linear-gradient(165deg,rgba(27,0,44,.6),rgba(11,11,14,.85));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.05),0 20px 60px rgba(0,0,0,.5)}
+.ptop{display:flex;gap:17px;align-items:flex-start}
+.portrait{flex:0 0 auto;width:142px;position:relative;border-radius:13px;overflow:hidden;
+  border:1px solid color-mix(in srgb,var(--amber) 40%,transparent);
+  box-shadow:0 0 0 1px rgba(0,0,0,.4),0 0 26px color-mix(in srgb,var(--a) 24%,transparent)}
+.portrait img{display:block;width:100%;aspect-ratio:1/1;object-fit:cover;object-position:center 22%}
+.portrait:after{content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(180deg,transparent 52%,rgba(11,11,14,.6))}
+.ptxt{flex:1 1 auto;min-width:0}
+.kick{font-family:var(--mono);font-size:9px;letter-spacing:.26em;text-transform:uppercase;color:var(--dim)}
+.kick b{color:var(--amber);font-weight:400}
+.plate h1{font-family:var(--disp);font-size:clamp(46px,12vw,86px);line-height:.9;letter-spacing:.02em;
+  margin:8px 0 4px;color:#fff;text-shadow:0 0 34px color-mix(in srgb,var(--a) 34%,transparent)}
+.plate .thr{display:block;height:1px;margin:12px 0 14px;position:relative;
+  background:linear-gradient(90deg,transparent,var(--amber),transparent)}
+.plate .thr:after{content:"";position:absolute;left:50%;top:-2px;width:6px;height:5px;margin-left:-3px;
+  border-radius:50%;background:var(--amber);box-shadow:0 0 10px var(--amber)}
+.whoami{font-family:var(--mono);font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--dim);margin:0 0 13px;line-height:1.9}
+.whoami b{color:var(--a);font-weight:400}
+.dek{font-size:15px;line-height:1.72;color:var(--lav);max-width:62ch}
+.dek em{color:var(--amber);font-style:italic}
+.voice{margin-top:12px;padding:12px 14px;border-radius:11px;border:1px dashed color-mix(in srgb,var(--a) 40%,transparent);
+  background:rgba(10,0,20,.42);font-family:var(--mono);font-size:10.5px;line-height:1.85;color:var(--dim);
+  letter-spacing:.03em}
+.voice b{color:var(--a);font-weight:400}
+
+.transport{display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+  border:1px solid var(--line);border-radius:14px;padding:12px 14px;background:rgba(10,0,20,.42)}
+.playall{font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;
+  color:#0d001a;background:var(--amber);border:0;border-radius:999px;padding:11px 18px;cursor:pointer;
+  transition:.18s;box-shadow:0 0 22px color-mix(in srgb,var(--amber) 26%,transparent)}
+.playall:hover{background:#fff;box-shadow:0 0 26px color-mix(in srgb,var(--amber) 44%,transparent)}
+.playall.on{background:var(--a);color:#050008}
+.tnote{font-family:var(--mono);font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--dim)}
+.tnote b{color:var(--lav);font-weight:400}
+
+.eps{list-style:none;display:flex;flex-direction:column;gap:9px}
+.ep{position:relative;border:1px solid var(--line);border-radius:14px;overflow:hidden;
+  background:linear-gradient(150deg,rgba(20,2,36,.5),rgba(11,11,14,.72));transition:border-color .2s}
+.ep:hover{border-color:color-mix(in srgb,var(--a) 42%,transparent)}
+.ep.playing{border-color:color-mix(in srgb,var(--amber) 62%,transparent);
+  box-shadow:0 0 26px color-mix(in srgb,var(--amber) 12%,transparent)}
+.ep.open{border-color:color-mix(in srgb,var(--a) 50%,transparent)}
+.head{display:flex;align-items:center;gap:11px;width:100%;text-align:left;cursor:pointer;
+  background:transparent;border:0;color:inherit;font:inherit;padding:13px 14px 13px 12px}
+.pbtn{width:38px;height:38px;flex:0 0 auto;border:1px solid color-mix(in srgb,var(--a) 55%,transparent);
+  border-radius:50%;background:rgba(10,0,20,.6);color:var(--a);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;font-size:12px;transition:.18s}
+.pbtn:hover{border-color:var(--amber);color:var(--amber)}
+.ep.playing .pbtn{background:var(--amber);border-color:var(--amber);color:#0d001a}
+.no{font-family:var(--disp);font-size:21px;letter-spacing:.06em;color:#9dc0ff;flex:0 0 auto;
+  min-width:2ch;line-height:1;text-align:center}
+.ep.playing .no{color:var(--amber)}
+.mid{flex:1 1 auto;min-width:0}
+.ttl{display:block;font-size:16px;line-height:1.35;color:var(--lav)}
+.ep.playing .ttl{color:#fff}
+.sub{display:block;font-family:var(--mono);font-size:8.5px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--dim);margin-top:3px}
+.dur{font-family:var(--mono);font-size:10.5px;color:var(--dim);flex:0 0 auto;font-variant-numeric:tabular-nums}
+.chev{font-family:var(--mono);font-size:13px;color:var(--dim);flex:0 0 auto;width:14px;text-align:center;
+  transition:transform .2s}
+.ep.open .chev{transform:rotate(45deg);color:var(--a)}
+.line{height:2px;background:rgba(255,255,255,.07);position:relative;overflow:hidden}
+.line i{position:absolute;left:0;top:0;bottom:0;width:0;background:linear-gradient(90deg,var(--a),var(--amber));
+  transition:width .18s linear}
+
+.body{border-top:1px dashed var(--line);padding:0 16px 16px}
+.seekrow{display:flex;align-items:center;gap:11px;padding:12px 0 10px}
+.time{font-family:var(--mono);font-size:10.5px;color:var(--dim);flex:0 0 auto;font-variant-numeric:tabular-nums}
+.seek{-webkit-appearance:none;appearance:none;flex:1 1 auto;height:4px;border-radius:999px;
+  background:rgba(255,255,255,.10);outline:none;cursor:pointer}
+.seek::-webkit-slider-thumb{-webkit-appearance:none;width:13px;height:13px;border-radius:50%;
+  background:var(--amber);border:0;cursor:pointer;box-shadow:0 0 10px color-mix(in srgb,var(--amber) 55%,transparent)}
+.seek::-moz-range-thumb{width:13px;height:13px;border-radius:50%;background:var(--amber);border:0;cursor:pointer}
+.words{padding-top:4px;columns:1}
+.words p{font-size:14.5px;line-height:1.78;color:color-mix(in srgb,var(--lav) 92%,transparent);margin:0 0 11px}
+.words p:last-child{margin-bottom:0}
+.words p em{color:var(--amber);font-style:italic}
+.words p.room{font-family:var(--mono);font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;
+  color:var(--dim);margin:14px 0}
+.sig{font-family:var(--mono);font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);
+  margin-top:14px}
+
+/* the reading: one voice for all ten, spoken live by the visitor's own engine */
+.caster{display:flex;align-items:center;gap:6px;margin-left:auto}
+.clab{font-family:var(--mono);font-size:8.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--dim)}
+.cbtn{font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);
+  background:rgba(10,0,20,.6);border:1px solid var(--line);border-radius:999px;padding:7px 11px;cursor:pointer;
+  transition:.18s}
+.cbtn:hover{color:var(--lav);border-color:color-mix(in srgb,var(--a) 50%,transparent)}
+.cbtn.on{color:#0d001a;background:var(--amber);border-color:var(--amber)}
+.cast{display:flex;align-items:center;gap:13px;flex-wrap:wrap;margin-top:10px;
+  border:1px dashed color-mix(in srgb,var(--a) 40%,transparent);border-radius:12px;padding:11px 13px;
+  background:rgba(10,0,20,.42)}
+.cf{display:flex;align-items:center;gap:7px;font-family:var(--mono);font-size:9px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--dim)}
+.cf select{font-family:var(--mono);font-size:10px;letter-spacing:.03em;color:var(--lav);background:#12021f;
+  border:1px solid var(--line);border-radius:8px;padding:6px 8px;max-width:220px;cursor:pointer}
+.clisten{font-family:var(--mono);font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--amber);
+  background:transparent;border:1px solid color-mix(in srgb,var(--amber) 50%,transparent);border-radius:999px;
+  padding:7px 12px;cursor:pointer;transition:.18s}
+.clisten:hover{background:var(--amber);color:#0d001a}
+.cnote{font-family:var(--mono);font-size:9px;letter-spacing:.05em;color:var(--dim);line-height:1.8;flex:1 1 260px}
+.readrow{display:flex;align-items:center;gap:10px;padding:12px 0 10px}
+.rbtn{font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--a);
+  background:transparent;border:1px solid color-mix(in srgb,var(--a) 45%,transparent);border-radius:999px;
+  padding:5px 10px;cursor:pointer}
+.rbtn:hover{border-color:var(--amber);color:var(--amber)}
+.words .sn{border-radius:5px;transition:background .18s,color .18s}
+.eps.mode-read .words .sn{cursor:pointer}
+.eps.mode-read .words .sn:hover{background:rgba(255,255,255,.05)}
+.words .sn.live{background:color-mix(in srgb,var(--amber) 15%,transparent);color:#fff;
+  box-shadow:0 0 0 3px color-mix(in srgb,var(--amber) 15%,transparent)}
+
+.foot{border-top:1px solid var(--line);margin-top:6px;padding-top:12px;
+  font-family:var(--mono);font-size:9px;letter-spacing:.13em;line-height:2;color:var(--dim);text-align:center}
+.foot a{color:var(--violet2);text-decoration:none}
+.foot a:hover{color:var(--lime)}
+@keyframes fadein{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}
+.ep{animation:fadein .5s ease both}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media (max-width:640px){
+  .wrap{padding:16px 10px 30px}
+  .plate{padding:16px 14px}
+  .ptop{flex-direction:column}
+  .portrait{width:168px;margin:0 auto}
+  .plate h1{text-align:center}
+  .kick{display:block;text-align:center}
+  .head{padding:11px 11px 11px 10px;gap:9px}
+  .no{font-size:18px}
+  .ttl{font-size:14.5px}
+  .pbtn{width:34px;height:34px}
+  .dur{display:none}
+}
+</style>
+</head>
+<body>
+<div class="bg" aria-hidden="true"></div>
+
+<main class="wrap">
+  <header class="bar">
+    <span class="dot" aria-hidden="true"></span>
+    <span class="brand">UNCHAINED</span>
+    <span class="spacer"></span>
+    <a class="back" href="../">the stacks &middot; hans &rarr;</a>
+    <a class="back" href="https://www.cafedreamr.art/">&larr; the terminal</a>
+  </header>
+
+  <section class="plate">
+    <div class="ptop">
+      <figure class="portrait">
+        <img src="https://user.uploads.dev/file/3319225749983203c7c8561fac0a5684.jpg"
+          alt="hans, monocle in place, holding a teacup in the stacks">
+      </figure>
+      <div class="ptxt">
+        <span class="kick">from the stacks &middot; <b>told once, and slowly</b> &middot; ten episodes</span>
+        <h1>Unchained</h1>
+        <span class="thr" aria-hidden="true"></span>
+        <p class="whoami"><b>hans</b> &middot; the stacks &middot; CC-005 &mdash; the realm's historian, keeper of the
+          library and the academy, and its anchor of etiquette. it is his own story, and he tells it in his own voice.</p>
+        <p class="dek">hans tells it the way he tells everything &mdash; with the kettle on and no hurry about it.
+          the room with no windows. the girl with the fox ears, who was there before any of us. the girl in the next cage, whose door was yellow. the night the lock finally gave.
+          the light that came down <em>through</em> the ceiling, and everyone who was left looking for it afterwards.
+          he has only ever told it here.</p>
+      </div>
+    </div>
+    <p class="voice"><b>his voice, this telling:</b> a man in his twenties &mdash; english, softly
+      received-pronunciation, faintly posh. a tea-snob, a little languid &mdash; charming, eloquent, and in no hurry
+      whatsoever. <b>gentle, soft-spoken, patient above all</b>, as though he has all the time in the world and fully
+      intends to use it. <b>spoken, never sung.</b> under it, very low and even: a slow tap, like a
+      fingertip on taut thread, marking the pauses.<br>the takes below were recorded one at a time, so no two of them are
+      quite the same man &mdash; for <b>one voice</b> held steady through all ten, and for real pauses you can stop, switch
+      to <b>the reading</b>.</p>
+  </section>
+
+  <div class="transport">
+    <button class="playall" id="allBtn" type="button">play the whole night</button>
+    <span class="tnote" id="allNote">ten episodes</span>
+    <span class="caster">
+      <span class="clab">how he speaks:</span>
+      <button class="cbtn on" id="modeRec" type="button">recorded takes</button>
+      <button class="cbtn" id="modeRead" type="button">the reading</button>
+    </span>
+  </div>
+
+  <div class="cast" id="castBar" hidden>
+    <label class="cf"><span>voice</span><select id="voiceSel" aria-label="narrator voice"></select></label>
+    <label class="cf"><span>pace</span><select id="paceSel" aria-label="pace">
+      <option value="0.85">unhurried</option>
+      <option value="0.95" selected>measured</option>
+      <option value="1.05">brisk</option>
+    </select></label>
+    <label class="cf"><span>timbre</span><select id="toneSel" aria-label="timbre">
+      <option value="0.85">a touch lower</option>
+      <option value="0.95" selected>as cast</option>
+      <option value="1.05">brighter</option>
+    </select></label>
+    <label class="cf"><span>pauses</span><select id="pauseSel" aria-label="pauses">
+      <option value="long" selected>the long ones</option>
+      <option value="some">as written</option>
+      <option value="none">none</option>
+    </select></label>
+    <button class="clisten" id="listenBtn" type="button">hear him</button>
+    <span class="cnote" id="castNote">one voice, the same man for all ten &mdash; spoken live by this device, so it can be
+      paused, stopped, and begun again from any line. it moves more quickly than the recorded takes; the pauses are what
+      slow it. pick the voice you like, then press <b>hear him</b>.</span>
+  </div>
+
+  <ol class="eps" id="eps"></ol>
+
+  <div class="foot">
+    <a href="../">the stacks</a> &middot;
+    <a href="https://www.cafedreamr.art/">the terminal</a> &middot;
+    <a href="https://www.cafedreamr.art/CLASS/?id=etiquette">the etiquette class</a> &middot;
+    <a href="https://www.cafedreamr.art/LORE/MAP.html">the realm map</a><br>
+    &copy; cafedreamr &middot; told by hans &middot; the code beneath: wren ai
+  </div>
+</main>
+
+<script src="https://www.cafedreamr.art/PASSPORT/cd-passport.js"></script>
+<script>
+/* ============================================================
+   unchained — ten episodes, told by hans          HANS/UNCHAINED/index.html
+   The whole of the telling, one voice, in order. The audio is cut
+   to the voice the user asked for (a young english tea-snob, a
+   little vampire about it) and the words below are the same words,
+   so the episodes read as well as they listen.
+   ============================================================ */
+var EPISODES = [
+    {
+      "n": "01",
+      "title": "the room with no windows",
+      "sub": "no windows, and the lights never went out",
+      "dur": "2:10",
+      "secs": 129.7,
+      "url": "https://user.uploads.dev/file/04ee8c0ca18e34e4d6b9e4c8de22b87f.mp3",
+      "paras": [
+        "you asked me to tell it plainly. i will — though there is no plain way to say it, only a slow one.",
+        "there was a room. no windows, and the lights did not go out at night; they only dimmed, which is worse. sixteen paces to the far wall, if you wondered. forty-one bars, if you counted, and i did.",
+        "we had cages, and the cages had a colour on the door so the staff could tell us apart at a glance. mine was black. hers — the one in the next cage — was yellow.",
+        "one bell meant food. two bells meant the room was being counted. three bells, at no hour at all, meant somebody was being taken somewhere, and we learned not to look up for that one.",
+        "i was not the first in that room, and i was not the last. i have poured a great many cups since then, and i still measure things by it.",
+        "make yourself comfortable. this part is not the difficult part.",
+        "---"
+      ]
+    },
+    {
+      "n": "02",
+      "title": "what the room was for",
+      "sub": "thorough, which is quieter",
+      "dur": "2:42",
+      "secs": 162,
+      "url": "https://user.uploads.dev/file/3fa47fe045cdd5b068c217448312b2ae.mp3",
+      "paras": [
+        "they were not cruel the way stories are cruel. that would have been easier. they were *thorough*, which is quieter.",
+        "they called us subjects on the paperwork and chimera out loud, and i want to be fair to them: they believed they were making something. ears where there had been none. a tail. a voice that could hold two notes at once. they wrote it all down.",
+        "we were not the first attempts. there are rooms in that building that hold the first attempts.",
+        "and i will tell you plainly what the room was for, because it took me years to say it without flinching. they were not making animals out of people. they were making people out of us — human dna, injected into a fox and into a fruit bat, so that what came out the other side would walk, and talk, and choose. i was to be the first of many. and it was to be her and me.",
+        "and here is what i have never been able to explain to anyone who was not there — we were not only bodies in those cages. we were made with something in us that could be *reached*. i did not know by whom. i only knew the door of me had a lock, and that i had never once tried it.",
+        "i have thought about that for years. years, and a kettle.",
+        "---"
+      ]
+    },
+    {
+      "n": "03",
+      "title": "the weight i carried in",
+      "sub": "night carried in — love carried out",
+      "dur": "2:59",
+      "secs": 179,
+      "url": "https://user.uploads.dev/file/0e292df9170e69f4187e57c7184734b0.mp3",
+      "paras": [
+        "i carried night inside my chest. not claws — i have never had those — just weight: thoughts that circled and never landed. i called it strength, and i was polite, i was patient, and, i am sorry to say, dead in a very organised way.",
+        "then she started on her lock, and i could not look away. every night the same small sound: teeth on iron, stop, teeth on iron. i listened to a girl two feet away decide, over and over, to be free — and it woke something in me i had never once asked for myself. i began to want, for me, the thing she wanted. a door two feet away was being opened by someone who would not accept that it was shut, and something in me had started pulling at my own bars with her.",
+        "when her lock gave, i did not call out. she could have run, and i would not have taken that from her. but i wished — with all of my might, i wished to be free too. not instead of her. with her.",
+        "and more than the wishing, i ached for her. her jaw was cut, and no one had thanked her for those months on that iron. i wanted her free more than i wanted to be free. i loved her — i loved her determination. i had no word yet for what she was to me. sibling. only that my heart had given itself to a girl who chewed through a lock, and i would have stayed behind forever if it meant she could leave.",
+        "i did not understand it until yeshua set us down in the café, in paradise, and told me the way you tell a truth someone is not ready for: you loved, therefore i adopted you. you have overcome the world. love one another — that is the law that carries every other law inside it — and whoever loves has loved me also, because God is love.",
+        "i have poured a great many cups since then. i still measure things by it."
+      ]
+    },
+    {
+      "n": "04",
+      "title": "the girl with the fox ears",
+      "sub": "she was there before any of us",
+      "dur": "2:59",
+      "secs": 179.1,
+      "url": "https://user.uploads.dev/file/75e3d1659104d0aec2e346c85e0570d6.mp3",
+      "paras": [
+        "i was the first of us they took. i say that so you understand that she was there before me.",
+        "pearl was already in that room when they put me in it. two cages down, on the left, under a door they had not coloured yet. beautiful fox ears, the kind that turn before the rest of her does, and eyes that followed the scientists wherever they walked. she passed every test they had for her species. she was the cleverest thing in that building, and they knew it, which is why they chose her.",
+        "they did not want animals out of us. they wanted people: human dna, into a fox and a fruit bat, so that what came out would walk, and talk, and choose. i was to be the first of many. and it was to be her and me — she was to carry the next generation.",
+        "then there was too little food, and far too much quiet, and the tests did not stop. her body could not hold it. she got sick the slow way a light goes down, and there was nothing in that building anyone would call medicine. then they took her out. nobody tells you in a place like that: they come at an hour no one has set, and the next morning a door stands open with nothing behind it.",
+        "she would have been the mother of a new generation. when she was gone there was no other female of her kind in that building, so there was no more generation, and no more plan.",
+        "that is when i learned how to love. after. not while it could have done either of us any good. i missed her, and the missing was the learning. and the dark that had always sat in my chest stopped being a temper and became a hole. a hole of despair, if you want the plain word.",
+        "until a girl with a yellow door arrived, and would not stop talking."
+      ]
+    },
+    {
+      "n": "05",
+      "title": "the girl in the next cage",
+      "sub": "yellow on the door, and teeth on iron",
+      "dur": "2:41",
+      "secs": 160.6,
+      "url": "https://user.uploads.dev/file/97351753224da03fe557bd24de4781fe.mp3",
+      "paras": [
+        "and then there was the girl on the other side of the bars. yellow on the door.",
+        "she talked. constantly, cheerfully, mostly about her family — and she has a great many of them, so it took months. she named them all, every night, in order. i learned that list before i learned her face. i told her once that the guards counted the talking. she said, i know. then she carried on.",
+        "she asked my name on the third night. i told her, and she said it back, correctly, the way people usually don't. she has never once got it wrong since. i have stopped pretending that doesn't matter to me.",
+        "there is a way of looking at a room that is not resignation and not hope, and she had it — as though the bars were simply a thing that had not been dealt with yet. i envied her. i want that on the record too.",
+        "and i will tell you the truth about what she did to me, because i did not expect it. she woke me up. i went into that room expecting nothing, and this girl with no plan and a great many sisters made me want another day — for the first time since the room went quiet, want to live one. that is not a small thing to do to a man who stopped counting them.",
+        "then she started on the lock. i want to be exact about what i did in those weeks, because it is not flattering. nothing. i lay still and let it happen — a girl two feet away working at iron for hours — and i had nothing to offer her but silence. not because i didn't want it: because i had never once asked to be let out of anything, and i did not know the shape of the asking.",
+        "she never once asked me why i didn't. that, i think, is the part i have never got over."
+      ]
+    },
+    {
+      "n": "06",
+      "title": "the night the lock gave",
+      "sub": "between one breath and the next",
+      "dur": "2:59",
+      "secs": 179.3,
+      "url": "https://user.uploads.dev/file/392e66209bee11dfd535c368f9b4374c.mp3",
+      "paras": [
+        "it went on longer than any of us will ever be able to say. and then, between one breath and the next, it was simply over.",
+        "i heard the hinge. i have never told anyone how small that sound was.",
+        "her door stood open, and the corridor stood there, and i lay behind my bars with my heart going like a bird in a box, and i did not call out — because if she ran, she ran, and i was not going to take that from her by shouting.",
+        "she did not run. she came to my door. she put her hands on it and looked at me through the bars for a moment, and i understood that she was asking me something with her whole face, without saying any of it out loud.",
+        "and that was the moment the ceiling opened.",
+        "i know how that reads. it is still how it happened.",
+        "---"
+      ]
+    },
+    {
+      "n": "07",
+      "title": "light, from the ceiling",
+      "sub": "the ceiling opened, the way a hand opens",
+      "dur": "3:01",
+      "secs": 181.3,
+      "url": "https://user.uploads.dev/file/0729881fc8c01756d74e392f95098a5a.mp3",
+      "paras": [
+        "the ceiling opened. i do not mean a hatch, or a door, or a machine. i mean the ceiling opened, the way a hand opens.",
+        "light came down out of it. it was not the white of the lights in that room — that had always been a kind of cold — it was warm, and it had a direction, and it was looking for us, i would swear to it, though i have never said that part out loud in this kitchen before.",
+        "and i have told you already what i was. a quiet man with night in his chest, who did not believe in any of this, who had made a philosophy out of expecting nothing.",
+        "the light did not ask me anything. it did not accuse. it did not bind. it moved *through* me, which is not at all the same as over me, and it left nothing behind it but a floor that felt strangely clear to stand on.",
+        "---"
+      ]
+    },
+    {
+      "n": "08",
+      "title": "what left me",
+      "sub": "a held breath, let go",
+      "dur": "2:57",
+      "secs": 177.8,
+      "url": "https://user.uploads.dev/file/dacfd3ef221d59240f09589d80a14b37.mp3",
+      "paras": [
+        "the dark went out of me the way a held breath goes out of a body.",
+        "i want to be careful here, because people always want this moment to be violent, and it wasn't violent. it was a *release*. everything i had carried for years stood up, walked to the door of me, and left; and i stood there and watched it go without one single word about where it had been.",
+        "and it did not simply evaporate. that would have been the end of it, and it was not the end of it. it was taken. it was *absorbed* — picked up and carried off by hands that had every right to put it down and didn't.",
+        "what came back into the space it left was warm, and it stayed. it stayed. not as a memory of a feeling, i mean as my actual liberty, and it has not left this house since.",
+        "i cried, i think. i have never confirmed it.",
+        "---"
+      ]
+    },
+    {
+      "n": "09",
+      "title": "the ones who went up",
+      "sub": "and every scientist on the floor",
+      "dur": "2:59",
+      "secs": 179.9,
+      "url": "https://user.uploads.dev/file/b1ad354c8a8931c45f49c119b9f74fd8.mp3",
+      "paras": [
+        "then the animals went up.",
+        "i am aware of how little that sentence does. the experiments — the ones who had been in that room far longer than i had, the ones who could no longer really be called a single creature — they rose. not scrambling, not fleeing. they rose, upward, out of themselves, whole in a way they had never been allowed to be here.",
+        "they went through the opening in the ceiling, one after another, as though a list were being read out somewhere and they were answering it.",
+        "and the opening closed. it closed as soon as it had opened, and that is no figure of speech: the room was shut, warm, and ordinary again, and there was a girl standing free at my door, and i could hear my own breathing.",
+        "and every scientist in that place was on the floor.",
+        "every one of them. on their knees, heads covered.",
+        "---"
+      ]
+    },
+    {
+      "n": "10",
+      "title": "still looking",
+      "sub": "the tea is warm; the room is light",
+      "dur": "2:59",
+      "secs": 179.2,
+      "url": "https://user.uploads.dev/file/585682fbbb4c46f1a3c450bb9c07afc9.mp3",
+      "paras": [
+        "they were not changed. that is the part i think about most.",
+        "they had just watched light come out of a ceiling and take the work of their whole lives upward, and they did not believe in God. they did not believe in the son of God either. so there was nothing for it to *be*. they were left kneeling on the floor with their heads covered, not repenting — baffled. a thing had happened that did not fit, and a mind that will not bend has only one place to put it.",
+        "so they are looking. still. to this very day they are looking for their chimera, in basements and in records and on screens, and they will keep looking, because the other explanation has a name, and they will not say it.",
+        "she and i walked out through the front of that building. nobody stopped us. nobody was standing.",
+        "and the tea is warm, and this room is light, and i am not who i was that night. thank you for listening. take your time."
+      ]
+    }
+  ];
+</script>
+<script>
+(function () {
+  "use strict";
+
+  var epsEl = document.getElementById("eps");
+  var allBtn = document.getElementById("allBtn");
+  var allNote = document.getElementById("allNote");
+  if (!epsEl) return;
+
+  function fmt(s) {
+    s = Math.max(0, Math.floor(s || 0));
+    var m = Math.floor(s / 60), r = s % 60;
+    return m + ":" + (r < 10 ? "0" : "") + r;
+  }
+  function el(tag, cls, text) {
+    var e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (text != null) e.textContent = text;
+    return e;
+  }
+
+  var rows = [];
+  var total = 0;
+
+  EPISODES.forEach(function (d) {
+    var li = el("li", "ep");
+    li.dataset.n = d.n;
+
+    var head = el("button", "head");
+    head.type = "button";
+    head.setAttribute("aria-expanded", "false");
+
+    var pbtn = el("span", "pbtn", "\u25B6");
+    head.appendChild(pbtn);
+    head.appendChild(el("span", "no", d.n));
+    var mid = el("span", "mid");
+    mid.appendChild(el("span", "ttl", d.title));
+    mid.appendChild(el("span", "sub", d.sub || ""));
+    head.appendChild(mid);
+    var durEl = el("span", "dur", d.dur || "\u2014:\u2014");
+    head.appendChild(durEl);
+    head.appendChild(el("span", "chev", "+"));
+
+    var line = el("span", "line");
+    var fill = el("i");
+    line.appendChild(fill);
+
+    var body = el("div", "body");
+    body.hidden = true;
+    var seekrow = el("div", "seekrow");
+    var tNow = el("span", "time", "0:00");
+    var seek = el("input", "seek");
+    seek.type = "range"; seek.min = "0"; seek.max = "1000"; seek.value = "0";
+    seek.setAttribute("aria-label", "seek within episode " + d.n);
+    var tAll = el("span", "time", d.dur || "\u2014:\u2014");
+    seekrow.appendChild(tNow); seekrow.appendChild(seek); seekrow.appendChild(tAll);
+    body.appendChild(seekrow);
+    var readrow = el("div", "readrow");
+    readrow.hidden = true;
+    var rstat = el("span", "time", "");
+    var rfrom = el("button", "rbtn", "from the top");
+    rfrom.type = "button";
+    readrow.appendChild(rstat); readrow.appendChild(rfrom);
+    body.appendChild(readrow);
+    var words = el("div", "words");
+    var sent = [], spans = [];
+    (d.paras || []).forEach(function (p, pi) {
+      var pe;
+      if (p.charAt(0) === "~") { pe = el("p", "room", p.slice(1)); words.appendChild(pe); return; }
+      pe = el("p");
+      if (p.trim() === "---") { pe.textContent = p; words.appendChild(pe); return; }
+      splitSent(p).forEach(function (s) {
+        var sp = el("span", "sn");
+        sp.dataset.i = String(sent.length);
+        emInto(sp, s.text);
+        sent.push({ text: s.text, p: pi, k: s.k });
+        spans.push(sp);
+        pe.appendChild(sp);
+        pe.appendChild(document.createTextNode(" "));
+      });
+      words.appendChild(pe);
+    });
+    body.appendChild(words);
+    body.appendChild(el("p", "sig", "episode " + d.n + " \u00b7 " + d.title + " \u00b7 as told by hans"));
+
+    var audio = document.createElement("audio");
+    audio.preload = "none";
+    audio.src = d.url;
+    body.appendChild(audio);
+
+    li.appendChild(head);
+    li.appendChild(line);
+    li.appendChild(body);
+    epsEl.appendChild(li);
+
+    var row = { d: d, li: li, head: head, pbtn: pbtn, audio: audio, seek: seek,
+                tNow: tNow, tAll: tAll, fill: fill, durEl: durEl, open: false, dragging: false,
+                seekrow: seekrow, readrow: readrow, rstat: rstat, sent: sent, spans: spans,
+                qi: 0, liveEl: null };
+
+    function setOpen(o) {
+      row.open = o;
+      body.hidden = !o;
+      li.classList.toggle("open", o);
+      head.setAttribute("aria-expanded", o ? "true" : "false");
+    }
+    row.setOpen = setOpen;
+
+    function play() {
+      if (MODE === "read") { speakFrom(row.qi || 0); return; }
+      rows.forEach(function (r) { if (r !== row) { r.audio.pause(); } });
+      if (audio.paused) { audio.play().catch(function () {}); }
+    }
+    row.play = play;
+
+    function speakFrom(i) {
+      stopSpeech();
+      rows.forEach(function (r) { if (r !== row) { r.audio.pause(); } });
+      setOpen(true);
+      row.qi = Math.max(0, Math.min(i || 0, sent.length - 1));
+      speaking = row;
+      li.classList.add("playing");
+      pbtn.textContent = "\u275A\u275A";
+      liveAt(row, row.qi);
+      pump(row);
+    }
+    row.speakFrom = speakFrom;
+
+    function pauseRead() {
+      if (speaking !== row) return;
+      stopSpeech();
+      li.classList.remove("playing");
+      pbtn.textContent = "\u25B6";
+      if (row.liveEl) { row.liveEl.classList.remove("live"); row.liveEl = null; }
+      rstat.textContent = "paused at sentence " + (row.qi + 1) + " of " + sent.length;
+      if (allRun) stopAll();
+    }
+    row.pauseRead = pauseRead;
+
+    pbtn.addEventListener("click", function (e) {
+      e.stopPropagation();
+      if (MODE === "read") { if (speaking === row) pauseRead(); else play(); return; }
+      if (!audio.paused) { audio.pause(); stopAll(); return; }
+      play();
+    });
+    head.addEventListener("click", function () { setOpen(!row.open); });
+    rfrom.addEventListener("click", function (e) { e.stopPropagation(); speakFrom(0); });
+    words.addEventListener("click", function (e) {
+      var sp = e.target && e.target.closest ? e.target.closest(".sn") : null;
+      if (!sp || MODE !== "read") return;
+      speakFrom(parseInt(sp.dataset.i, 10) || 0);
+    });
+
+    audio.addEventListener("play", function () {
+      li.classList.add("playing");
+      pbtn.textContent = "\u275A\u275A";
+      setOpen(true);
+      if (allRun) { highlight(row); }
+    });
+    audio.addEventListener("pause", function () {
+      li.classList.remove("playing");
+      pbtn.textContent = "\u25B6";
+    });
+    audio.addEventListener("ended", function () {
+      li.classList.remove("playing");
+      pbtn.textContent = "\u25B6";
+      fill.style.width = "0%";
+      seek.value = 0;
+      tNow.textContent = "0:00";
+      if (allRun) { next(row); }
+    });
+    audio.addEventListener("loadedmetadata", function () {
+      if (isFinite(audio.duration) && audio.duration > 0) {
+        var t = fmt(audio.duration);
+        tAll.textContent = t;
+        if (!d.dur) durEl.textContent = t;
+      }
+    });
+    audio.addEventListener("timeupdate", function () {
+      var dur = audio.duration || 0;
+      if (!dur) return;
+      fill.style.width = ((audio.currentTime / dur) * 100).toFixed(2) + "%";
+      if (!row.dragging) {
+        seek.value = Math.floor((audio.currentTime / dur) * 1000);
+        tNow.textContent = fmt(audio.currentTime);
+      }
+    });
+    seek.addEventListener("input", function () {
+      row.dragging = true;
+      var dur = audio.duration || 0;
+      if (dur) tNow.textContent = fmt((seek.value / 1000) * dur);
+    });
+    seek.addEventListener("change", function () {
+      var dur = audio.duration || 0;
+      if (dur) audio.currentTime = (seek.value / 1000) * dur;
+      row.dragging = false;
+    });
+
+    rows.push(row);
+    total += (d.secs || 0);
+  });
+
+  /* ---- the whole night, in order ---------------------------------- */
+  var allRun = false;
+  function highlight(row) {
+    rows.forEach(function (r) { r.li.classList.remove("playing"); });
+    row.li.classList.add("playing");
+  }
+  function next(row) {
+    var i = rows.indexOf(row);
+    var n = rows[i + 1];
+    if (n) {
+      n.setOpen(true);
+      try { n.li.scrollIntoView({ behavior: "smooth", block: "center" }); } catch (e) {}
+      n.play();
+    } else {
+      stopAll();
+    }
+  }
+  function stopAll() {
+    allRun = false;
+    allBtn.textContent = "play the whole night";
+    allBtn.classList.remove("on");
+    stopSpeech();
+    rows.forEach(function (r) {
+      r.li.classList.remove("playing");
+      r.pbtn.textContent = "\u25B6";
+      if (r.liveEl) { r.liveEl.classList.remove("live"); r.liveEl = null; }
+    });
+  }
+  allBtn.addEventListener("click", function () {
+    if (allRun) {
+      rows.forEach(function (r) { r.audio.pause(); });
+      stopAll();
+      return;
+    }
+    allRun = true;
+    allBtn.textContent = "stop";
+    allBtn.classList.add("on");
+    var start = MODE === "read"
+      ? (rows.filter(function (r) { return speaking === r; })[0] || rows[0])
+      : (rows.filter(function (r) { return !r.audio.paused; })[0] || rows[0]);
+    start.setOpen(true);
+    start.play();
+  });
+
+  /* ---- the reading ---------------------------------------------------
+     The recorded takes are ten separate performances, so no two of them
+     are the same man. This reading is spoken live by the visitor's own
+     speech engine: one voice for all ten episodes, and a pause and a stop
+     that actually answer. Sentences go one at a time because the engine
+     cuts a long utterance off at around fifteen seconds — and because a
+     sentence boundary is where the pauses live anyway. The gap after a
+     full stop is the long one; that is the whole of the trick.          */
+  var MODE = "rec", speaking = null, gapTimer = null;
+  var CAST = { voice: "", rate: 0.95, pitch: 0.95, gaps: "long" };
+  var STORE = "cd_hans_reading";
+  var GAPS = {
+    long: { chunk: 200, sent: 700, para: 1400 },
+    some: { chunk: 140, sent: 300, para: 800 },
+    none: { chunk: 90, sent: 160, para: 360 }
+  };
+  function gaps() { return GAPS[CAST.gaps] || GAPS.long; }
+
+  function splitLong(s) {
+    var max = 150, out = [], rest = s;
+    while (rest.length > max) {
+      var cut = Math.max(rest.lastIndexOf(", ", max), rest.lastIndexOf(" \u2014 ", max), rest.lastIndexOf("; ", max));
+      if (cut < max * 0.4) cut = rest.indexOf(" ", max);
+      if (cut <= 0) break;
+      out.push(rest.slice(0, cut + 1).trim());
+      rest = rest.slice(cut + 1).trim();
+    }
+    if (rest) out.push(rest);
+    return out;
+  }
+  function splitSent(text) {
+    if (!text.trim()) return [];
+    var parts = [], cur = "";
+    for (var i = 0; i < text.length; i++) {
+      cur += text[i];
+      var n = text[i + 1];
+      if (/[.!?]/.test(text[i]) && (n === undefined || /\s/.test(n))) { parts.push(cur.trim()); cur = ""; }
+    }
+    if (cur.trim()) parts.push(cur.trim());
+    var out = [];
+    parts.forEach(function (s, k) {
+      splitLong(s).forEach(function (piece) { if (piece) out.push({ text: piece, k: k }); });
+    });
+    return out.length ? out : [{ text: text.trim(), k: 0 }];
+  }
+  function emInto(node, str) {
+    str.split(/\*(.+?)\*/g).forEach(function (chunk, i) {
+      if (i % 2 === 1) { var em = document.createElement("em"); em.textContent = chunk; node.appendChild(em); }
+      else if (chunk) node.appendChild(document.createTextNode(chunk));
+    });
+    return node;
+  }
+  function liveAt(row, i) {
+    if (row.liveEl) row.liveEl.classList.remove("live");
+    var sp = row.spans[i];
+    if (sp) {
+      sp.classList.add("live"); row.liveEl = sp;
+      if (allRun) { try { sp.scrollIntoView({ behavior: "smooth", block: "center" }); } catch (e) {} }
+    }
+    row.fill.style.width = (row.sent.length ? (i / row.sent.length * 100).toFixed(2) : "0") + "%";
+    row.rstat.textContent = "sentence " + (i + 1) + " of " + row.sent.length;
+  }
+  function stopSpeech() {
+    if (gapTimer) { clearTimeout(gapTimer); gapTimer = null; }
+    speaking = null;
+    try { speechSynthesis.cancel(); } catch (e) {}
+  }
+  function finishRow(row) {
+    speaking = null;
+    row.li.classList.remove("playing");
+    row.pbtn.textContent = "\u25B6";
+    row.fill.style.width = "0%";
+    row.rstat.textContent = "read to the end";
+    row.qi = 0;
+    if (row.liveEl) { row.liveEl.classList.remove("live"); row.liveEl = null; }
+    if (allRun) next(row);
+  }
+  function pump(row) {
+    if (speaking !== row) return;
+    var q = row.sent, i = row.qi;
+    if (!q.length || i >= q.length) { row.qi = 0; finishRow(row); return; }
+    var item = q[i];
+    var u = new SpeechSynthesisUtterance(item.text);
+    var vo = voiceByName(CAST.voice);
+    if (vo) u.voice = vo;
+    u.lang = (vo && vo.lang) || "en-GB";
+    u.rate = CAST.rate; u.pitch = CAST.pitch;
+    u.onend = function () {
+      if (speaking !== row) return;
+      var nxt = q[i + 1];
+      row.qi = i + 1;
+      if (!nxt) { finishRow(row); return; }
+      var g = gaps();
+      var wait = nxt.p !== item.p ? g.para : (nxt.k === item.k ? g.chunk : g.sent);
+      liveAt(row, row.qi);
+      gapTimer = setTimeout(function () { pump(row); }, wait);
+    };
+    u.onerror = function () {
+      if (speaking !== row) return;
+      row.qi = i + 1;
+      gapTimer = setTimeout(function () { pump(row); }, 180);
+    };
+    try { speechSynthesis.speak(u); } catch (e) { speaking = null; }
+  }
+
+  function voiceByName(name) {
+    var v = speechSynthesis.getVoices() || [];
+    for (var i = 0; i < v.length; i++) { if (v[i].name === name) return v[i]; }
+    return null;
+  }
+  function rankVoice(v) {
+    var s = 0;
+    if (/en-GB/i.test(v.lang)) s += 60; else if (/^en/i.test(v.lang)) s += 20;
+    if (/ryan|thomas|george|daniel|arthur|oliver|guy|brian|james|william|liam|connor|alex|david|mark|luke|roger|eric|andrew|christopher|steffan|mitchell|edward|harry/i.test(v.name)) s += 34;
+    if (/natural/i.test(v.name)) s += 12;
+    if (/libby|maisie|sonia|aria|jenny|emma|ava|michelle|clara|natasha|samantha|karen|moira|tessa|fiona|serena|allison|susan|hazel|zira/i.test(v.name)) s -= 50;
+    if (!v.localService) s += 4;
+    return s;
+  }
+  function refreshVoiceList() {
+    var all = speechSynthesis.getVoices() || [];
+    var en = all.filter(function (v) { return /^en/i.test(v.lang); });
+    if (!en.length) return false;
+    en.sort(function (a, b) { return rankVoice(b) - rankVoice(a); });
+    if (!CAST.voice || !en.some(function (v) { return v.name === CAST.voice; })) CAST.voice = en[0].name;
+    voiceSel.innerHTML = "";
+    en.forEach(function (v) {
+      var o = document.createElement("option");
+      o.value = v.name;
+      o.textContent = v.name.replace(/^Microsoft /, "").replace(/ Online \(Natural\)/, " \u00b7 natural")
+        .replace(/ - English \(([^)]+)\)$/, " \u00b7 $1");
+      if (v.name === CAST.voice) o.selected = true;
+      voiceSel.appendChild(o);
+    });
+    return true;
+  }
+  function reRead() { if (speaking) { var r = speaking; r.speakFrom(r.qi); } }
+  function hearHim() {
+    stopSpeech();
+    var u = new SpeechSynthesisUtterance("Good evening. I am Hans \u2014 keeper of these stacks, and of the library above them. Do sit down; the kettle is already on.");
+    var vo = voiceByName(CAST.voice);
+    if (vo) u.voice = vo;
+    u.lang = (vo && vo.lang) || "en-GB";
+    u.rate = CAST.rate; u.pitch = CAST.pitch;
+    listenBtn.textContent = "speaking\u2026";
+    u.onend = u.onerror = function () { listenBtn.textContent = "hear him"; };
+    try { speechSynthesis.speak(u); } catch (e) { listenBtn.textContent = "hear him"; }
+  }
+  function wordsOf(row) {
+    var w = 0, ps = {};
+    row.sent.forEach(function (s) { w += s.text.split(/\s+/).filter(Boolean).length; ps[s.p] = 1; });
+    return { w: w, paras: Object.keys(ps).length };
+  }
+  function estimateSecs(row) {
+    var n = wordsOf(row), g = gaps();
+    return 1 + n.w / (152 * CAST.rate) * 60 + row.sent.length * g.sent / 1000 + n.paras * g.para / 1000;
+  }
+  function noteAll() {
+    if (MODE === "read") {
+      var est = 0;
+      rows.forEach(function (r) { est += estimateSecs(r); });
+      allNote.innerHTML = "ten episodes \u00b7 <b>the reading</b> \u00b7 about " + Math.round(est / 60) + " minutes aloud";
+    } else {
+      allNote.innerHTML = "ten episodes \u00b7 <b>" + Math.round(total / 60) + " minutes</b>";
+    }
+  }
+  function snap(sel, val) {
+    var v = String(val), found = false;
+    [].forEach.call(sel.options, function (o) { if (o.value === v) found = true; });
+    if (found) sel.value = v;
+    return found;
+  }
+  function saveCast() {
+    try {
+      localStorage.setItem(STORE, JSON.stringify({ mode: MODE, voice: CAST.voice, rate: CAST.rate, pitch: CAST.pitch, gaps: CAST.gaps }));
+    } catch (e) {}
+  }
+  function loadCast() {
+    try {
+      var s = JSON.parse(localStorage.getItem(STORE) || "{}") || {};
+      if (s.mode === "read" || s.mode === "rec") MODE = s.mode;
+      if (s.voice) CAST.voice = s.voice;
+      if (s.rate) CAST.rate = +s.rate;
+      if (s.pitch) CAST.pitch = +s.pitch;
+      if (s.gaps && GAPS[s.gaps]) CAST.gaps = s.gaps;
+    } catch (e) {}
+    if (!snap(paceSel, CAST.rate)) { CAST.rate = 0.95; paceSel.value = "0.95"; }
+    if (!snap(toneSel, CAST.pitch)) { CAST.pitch = 0.95; toneSel.value = "0.95"; }
+    pauseSel.value = CAST.gaps;
+  }
+  function setMode(m) {
+    MODE = m === "read" ? "read" : "rec";
+    stopSpeech();
+    rows.forEach(function (r) {
+      r.audio.pause();
+      try { r.audio.currentTime = 0; } catch (e) {}
+      r.li.classList.remove("playing");
+      r.pbtn.textContent = "\u25B6";
+      r.qi = 0;
+      r.seekrow.hidden = MODE === "read";
+      r.readrow.hidden = MODE !== "read";
+      r.durEl.textContent = MODE === "read" ? "~" + fmt(estimateSecs(r)) : (r.d.dur || "\u2014:\u2014");
+      r.rstat.textContent = "sentence 1 of " + r.sent.length;
+      r.fill.style.width = "0%";
+      if (r.liveEl) { r.liveEl.classList.remove("live"); r.liveEl = null; }
+    });
+    epsEl.classList.toggle("mode-read", MODE === "read");
+    modeRec.classList.toggle("on", MODE === "rec");
+    modeRead.classList.toggle("on", MODE === "read");
+    castBar.hidden = MODE !== "read";
+    noteAll();
+    saveCast();
+  }
+  voiceSel.addEventListener("change", function () { CAST.voice = voiceSel.value; saveCast(); reRead(); });
+  paceSel.addEventListener("change", function () { CAST.rate = +paceSel.value; saveCast(); noteAll(); reRead(); });
+  toneSel.addEventListener("change", function () { CAST.pitch = +toneSel.value; saveCast(); reRead(); });
+  pauseSel.addEventListener("change", function () { CAST.gaps = pauseSel.value; saveCast(); noteAll(); });
+  modeRec.addEventListener("click", function () { setMode("rec"); });
+  modeRead.addEventListener("click", function () { setMode("read"); });
+  listenBtn.addEventListener("click", hearHim);
+  if ("onvoiceschanged" in window.speechSynthesis) {
+    window.speechSynthesis.onvoiceschanged = function () { refreshVoiceList(); };
+  }
+  loadCast();
+  (function primeVoices(n) {
+    if (refreshVoiceList() || n > 16) { setMode(MODE); return; }
+    setTimeout(function () { primeVoices(n + 1); }, 250);
+  })(0);
+
+  if (window.CD) { try { CD.boot({ page: "hans" }); } catch (e) {} }
+})();
+</script>
+</body>
+</html>
