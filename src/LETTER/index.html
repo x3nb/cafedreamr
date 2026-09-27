@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0b0b0e">
+<title>the cafe's letter &middot; cafedreamr</title>
+<meta name="description" content="the cafe writes its own newsletter — a short, warm, dry letter about the realm, written fresh whenever you ask. one issue a day, no two alike.">
+<meta property="og:title" content="the cafe's letter &middot; cafedreamr">
+<meta property="og:description" content="the house writes one issue a day, on request.">
+<meta property="og:type" content="website">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' shape-rendering='crispEdges'%3E%3Cpath d='M3 0h10a3 3 0 013 3v10a3 3 0 01-3 3H3a3 3 0 01-3-3V3a3 3 0 013-3z' fill='%230b0b0e'/%3E%3Crect x='3' y='3' width='10' height='10' fill='%23f4f0e5'/%3E%3Crect x='4' y='5' width='8' height='1' fill='%23191420'/%3E%3Crect x='5' y='3' width='6' height='1' fill='%23191420'/%3E%3Crect x='4' y='8' width='8' height='1' fill='%236b21bd'/%3E%3Crect x='4' y='11' width='5' height='1' fill='%236b21bd'/%3E%3C/svg%3E">
+
+<!-- ============================================================
+     PARKED — the cafe's letter is not running (this round)
+     ------------------------------------------------------------
+     the user: "the house isn't running the newsletter. let's
+     remove the newsletter for the time being."
+     the terminal no longer answers #letter, so this wrapper has
+     nothing to show: the iframe below will sit empty. every entry
+     point to it was taken out of the terminal (the boot screen's
+     line, the home panel's line, the #letter route), so nothing
+     links here any more either.
+     the letter itself is not deleted — the whole of it (its CSS,
+     markup and script, plus the four small edits that removed it)
+     is in PARKED-letter-src.js, beside this file. put that back
+     and this page works again with no change here.
+     ============================================================ -->
+
+<!-- ============================================================
+     the cafe's letter — the wrapper
+     ------------------------------------------------------------
+     the letter is written by the house itself, which means it can
+     only be written where the words are: the generator behind the
+     terminal. this page is just the envelope — it opens that same
+     page with #letter, which skips the machine entirely and leaves
+     nothing on screen but the sheet.
+
+     >>> if the generator is ever renamed, change the name in the
+         iframe src and in #rawLink below (and nowhere else).
+     ============================================================ -->
+<style>
+  :root{
+    --ink:#0b0b0e;--ink2:#141419;--cream:#f4f0e5;--lav:#fff0f5;--dim:#8b83a0;
+    --lime:#ccff00;--violet:#bf40bf;--pink:#ff2d95;
+    --mono:'Space Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;height:100%}
+  body{background:var(--ink);color:var(--lav);font-family:var(--mono);
+    display:flex;flex-direction:column;overflow:hidden}
+  body:before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+    background:radial-gradient(90% 60% at 50% 0%,rgba(191,64,191,.18),transparent 62%)}
+  .bar{position:relative;z-index:2;display:flex;align-items:center;gap:12px;
+    padding:11px 14px;border-bottom:1px solid rgba(255,255,255,.09);
+    background:rgba(11,11,14,.86);backdrop-filter:blur(6px)}
+  .bar .tag{font-size:9px;letter-spacing:.24em;text-transform:uppercase;color:var(--dim);
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .bar a{font-size:9px;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;
+    color:var(--lav);border:1px solid rgba(255,255,255,.14);border-radius:999px;
+    padding:7px 12px;white-space:nowrap;transition:.18s}
+  .bar a:hover{border-color:var(--lime);color:var(--lime)}
+  .bar .spacer{flex:1;min-width:0}
+  .bar a.raw{color:var(--dim)}
+  .bar a.raw:hover{border-color:var(--violet);color:var(--violet)}
+  .sheetWrap{position:relative;z-index:1;flex:1;min-height:0}
+  iframe{display:block;width:100%;height:100%;border:0;background:transparent}
+  .sorry{position:relative;z-index:2;padding:9px 14px;border-top:1px solid rgba(255,255,255,.09);
+    font-size:9.5px;line-height:1.7;letter-spacing:.06em;color:var(--dim);background:rgba(11,11,14,.86)}
+  .sorry a{color:var(--lav);text-decoration:none;border-bottom:1px solid rgba(255,255,255,.2)}
+  .sorry a:hover{color:var(--lime);border-color:var(--lime)}
+  @media (max-width:560px){
+    .bar .tag{display:none}
+    .bar a{padding:7px 10px;letter-spacing:.12em}
+  }
+</style>
+</head>
+<body>
+
+<div class="bar">
+  <a href="https://www.cafedreamr.art/">&larr; the terminal</a>
+  <span class="spacer"></span>
+  <span class="tag">the cafe's letter &middot; written by the house</span>
+  <span class="spacer"></span>
+  <a class="raw" id="rawLink" href="https://perchance.org/keep-bookmarked#letter" target="_blank" rel="noopener">own tab &rarr;</a>
+</div>
+
+<div class="sheetWrap">
+  <iframe id="sheet" title="the cafe's letter"
+    src="https://null.perchance.org/keep-bookmarked#letter"
+    allow="clipboard-write; fullscreen"
+    referrerpolicy="no-referrer"></iframe>
+</div>
+
+<p class="sorry">the sheet is written by the house whenever you open it, so it takes a moment, and it is different every time &mdash; that is the whole idea. if the sheet stays blank, <a href="https://perchance.org/keep-bookmarked#letter" target="_blank" rel="noopener">open it in its own tab</a>.</p>
+
+<noscript><p class="sorry">this page hands the letter over to the house, and that needs javascript. you can also read the zine instead: <a href="https://www.cafedreamr.art/MIKI/ZINE/">the rack</a>.</p></noscript>
+
+<script>
+/* ?invite on this page: while the letter is being read, the machine hands the
+   visitor an invitation — a ticket falls into view over the sheet and slips
+   away again. the wrapper cannot put a query on another site's url, so it goes
+   into the hash instead: #letter?invite. without it the ticket still arrives,
+   once per visit, a few seconds after the house has finished writing. */
+(function () {
+  if (!/[?&]invite\b/.test(location.search)) return;
+  var f = document.getElementById("sheet");
+  if (f) f.src += "?invite";
+  var raw = document.getElementById("rawLink");
+  if (raw) raw.href += "?invite";
+})();
+</script>
+
+</body>
+</html>
