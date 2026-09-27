@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0b0b0e">
+<title>an invitation &middot; cafedreamr</title>
+<meta name="description" content="a ticket, engraved with its own number, falls into view and is gone again in about twenty-three seconds.">
+<meta property="og:title" content="an invitation &middot; cafedreamr">
+<meta property="og:description" content="a ticket falls into view. it does not stay long.">
+<meta property="og:type" content="website">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' shape-rendering='crispEdges'%3E%3Crect width='16' height='16' rx='3' fill='%230b0b0e'/%3E%3Crect x='2' y='4' width='12' height='8' fill='%23e9d27a'/%3E%3Crect x='9' y='4' width='1' height='8' fill='%230b0b0e'/%3E%3Crect x='3' y='6' width='5' height='1' fill='%230b0b0e'/%3E%3Crect x='3' y='9' width='3' height='1' fill='%230b0b0e'/%3E%3Crect x='11' y='6' width='2' height='1' fill='%230b0b0e'/%3E%3Crect x='11' y='9' width='2' height='1' fill='%230b0b0e'/%3E%3C/svg%3E">
+
+<!-- ============================================================
+     the invitation — the wrapper, and nothing else
+     ------------------------------------------------------------
+     this page is the one an external link should point at: it is
+     deliberately bare. no bar, no menu, no way into the cafe but
+     the ticket itself — a visitor arrives here from somewhere
+     else, a ticket falls into view on its own, and the only door
+     in the room is the link printed on it. the ticket is drawn by
+     the terminal itself (the rosette comes off the serial, the
+     fall is its timeline), so this page just hands a full-height
+     frame to the generator with #invitation, which skips the
+     machine and leaves nothing on screen but the ticket.
+     once it has slipped away the generator offers the door in its
+     own words, so nobody is left staring at a black page.
+
+     >>> if the generator is ever renamed, change the name in the
+         iframe src below (and nowhere else).
+     ============================================================ -->
+<style>
+  :root{ --ink:#0b0b0e; }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;height:100%;background:var(--ink);overflow:hidden}
+  iframe{display:block;width:100%;height:100%;border:0;background:transparent}
+  .sorry{position:fixed;left:0;right:0;bottom:0;margin:0;padding:10px 14px;text-align:center;
+    font-family:'Space Mono',ui-monospace,monospace;font-size:9.5px;line-height:1.7;letter-spacing:.08em;
+    color:#8b83a0;background:rgba(11,11,14,.88)}
+  .sorry a{color:#f3e3a8;text-decoration:none;border-bottom:1px solid rgba(243,227,168,.35)}
+</style>
+</head>
+<body>
+
+<iframe id="ticket" title="an invitation from the cafe"
+  src="https://null.perchance.org/keep-bookmarked#invitation"
+  allow="fullscreen"
+  referrerpolicy="no-referrer"></iframe>
+
+<noscript><p class="sorry">the ticket is drawn in the machine, and that needs javascript.
+  the rooms are still open: <a href="https://www.cafedreamr.art/">the terminal</a>.</p></noscript>
+
+</body>
+</html>
