@@ -1,0 +1,938 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#050807">
+<title>the garden gate &middot; milo &middot; cafedreamr</title>
+<meta name="description" content="Milo keeps the garden. Two lamps at the gate: leave a prayer, or leave an inspiration. What you leave stays yours for a day, then it rises over the rows and becomes a star &mdash; and anyone can sit under it and read it.">
+<meta property="og:title" content="the garden gate &middot; cafedreamr">
+<meta property="og:description" content="leave it at the gate. a prayer, or an inspiration. it is a note for a day, and then it is a star.">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%23050807'/%3E%3Cpath d='M8 13.2V6.4' stroke='%2398fb98' stroke-width='1.1' stroke-linecap='round'/%3E%3Cpath d='M8 7.4C6.2 7.4 5 6.2 5 4.4c1.8 0 3 1.2 3 3z' fill='%23c8ffc8'/%3E%3Cpath d='M8 7.4c1.8 0 3-1.2 3-3-1.8 0-3 1.2-3 3z' fill='%2398fb98'/%3E%3Ccircle cx='12.6' cy='3.6' r='1' fill='%23ffe6b0'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Klee+One:wght@400;600&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Vampiro+One&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   milo — cafedreamr/MILO/index.html
+   the garden gate: a prayer lamp and an inspiration lamp, a wall
+   that holds a note for one day, and a sky the whole realm can
+   read. milo keeps it. yeshua is the light the stars go up to.
+
+   EDIT SURFACE — everything changeable lives in the GARDEN object
+   at the bottom of the file (supabase url + key, the day length,
+   the limits, the etiquette list, and MILO's own words: his two
+   stars and the lines he answers with). the page reads and works
+   without javascript for the explaining half; the wall and the
+   sky are the scripted half.
+
+   tone law (same as everywhere else here): lowercase, plain, warm,
+   unhurried, no exclamation marks, nobody measured and found
+   lacking. this page holds other people's worst nights, so the
+   copy stays quiet and the machine stays out of the way.
+
+   the one rule of the room: what you leave is yours until it
+   rises. a note is readable by nobody but you for one day (the
+   database itself will not hand it out before then), and after
+   that it belongs to the sky, unsigned unless you signed it.
+   ============================================================ */
+:root{
+  --ink:#050807; --ink2:#0a120e; --ink3:#0e1a14;
+  --mint:#98fb98; --mint2:#c8ffc8; --moss:#3f7a55;
+  --lav:#fff0f5; --cream:#e9e6de; --dim:#9db3a6;
+  --amber:#ffc861; --amber2:#ffe6b0;
+  --violet:#9d71e4; --purple2:#c0a6ff; --rose:#e0a3c8;
+  --line:rgba(255,255,255,.10);
+  --pline:rgba(152,251,152,.26);
+  --mono:'Space Mono', ui-monospace, monospace;
+  --disp:'Bebas Neue', impact, sans-serif;
+  --logo:'Vampiro One', cursive;
+  --body:'Klee One', system-ui, sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--ink); color:var(--lav); font-family:var(--body);
+  text-align:left; min-height:100vh; overflow-x:hidden;
+  -webkit-tap-highlight-color:transparent; -webkit-font-smoothing:antialiased;
+}
+[hidden]{display:none!important}
+a{color:inherit}
+::selection{background:rgba(152,251,152,.26)}
+button{font:inherit;color:inherit}
+
+/* ---------------- the night outside ---------------- */
+.bg{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;
+  background:
+    radial-gradient(900px 620px at 50% -14%, rgba(157,113,228,.18), transparent 62%),
+    radial-gradient(780px 560px at 88% 6%, rgba(152,251,152,.10), transparent 64%),
+    radial-gradient(720px 520px at 6% 46%, rgba(192,166,255,.09), transparent 62%),
+    radial-gradient(900px 520px at 50% 108%, rgba(255,200,97,.10), transparent 66%),
+    linear-gradient(180deg,#0a0620 0%, #06100f 44%, #03060a 100%)}
+.bg .dust{position:absolute;inset:0}
+.bg .grain{position:absolute;inset:0;opacity:.45;mix-blend-mode:overlay;
+  background-image:radial-gradient(rgba(255,255,255,.055) 1px, transparent 1px);
+  background-size:3px 3px}
+.bg .scan{position:absolute;inset:0;opacity:.22;
+  background:repeating-linear-gradient(to bottom, rgba(255,255,255,.03) 0 1px, transparent 1px 3px)}
+/* the rows, low and dark, at the bottom of the world */
+.rows{position:absolute;left:-10%;right:-10%;bottom:0;height:150px;opacity:.55;
+  background:
+    repeating-linear-gradient(90deg, rgba(152,251,152,.16) 0 2px, transparent 2px 7.5%),
+    linear-gradient(180deg, transparent, rgba(152,251,152,.07));
+  -webkit-mask-image:linear-gradient(180deg,transparent,#000 72%);
+  mask-image:linear-gradient(180deg,transparent,#000 72%)}
+.rows:after{content:"";position:absolute;inset:0;
+  background:radial-gradient(60% 120% at 50% 100%, rgba(255,200,97,.16), transparent 70%)}
+.lampglow{position:absolute;left:50%;top:-4%;width:min(80vw,720px);aspect-ratio:1;
+  transform:translateX(-50%);border-radius:50%;opacity:.5;
+  background:radial-gradient(circle, rgba(152,251,152,.10) 0%, rgba(157,113,228,.07) 46%, transparent 72%)}
+@media (prefers-reduced-motion:reduce){ .bg .dust{display:none} }
+
+/* ---------------- shell ---------------- */
+.stage{position:relative;z-index:1;max-width:880px;margin:0 auto;padding:20px 16px 44px}
+.marquee{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;flex-wrap:wrap;
+  border:1px solid var(--pline);border-radius:16px 16px 6px 6px;
+  background:linear-gradient(180deg,rgba(152,251,152,.10),rgba(157,113,228,.04));
+  padding:13px 16px;position:relative;overflow:hidden}
+.marquee:before{content:"";position:absolute;left:0;right:0;top:0;height:2px;
+  background:linear-gradient(90deg,var(--mint),var(--purple2),var(--amber));opacity:.9}
+.mtitle{display:flex;align-items:baseline;gap:11px;flex-wrap:wrap;min-width:0;position:relative;z-index:1}
+.brand{font-family:var(--logo);font-size:27px;letter-spacing:.05em;color:var(--mint2);
+  white-space:nowrap;line-height:1.1;text-decoration:none;
+  text-shadow:0 0 12px rgba(152,251,152,.6), 0 0 40px rgba(152,251,152,.22), 2px 0 0 rgba(157,113,228,.4), -2px 0 0 rgba(255,200,97,.3)}
+.tag{font-family:var(--mono);font-size:9px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--dim);border:1px solid var(--line);border-radius:999px;padding:4px 9px;white-space:nowrap}
+.mact{display:flex;gap:8px;position:relative;z-index:1;flex-wrap:wrap}
+.pill{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--lav);text-decoration:none;border:1px solid var(--pline);border-radius:999px;
+  padding:8px 12px;white-space:nowrap;transition:.18s;background:rgba(5,8,7,.55);display:inline-block}
+.pill:hover,.pill:focus-visible{border-color:var(--mint);color:var(--mint);
+  box-shadow:0 0 16px rgba(152,251,152,.26);outline:none}
+
+/* ---------------- hero ---------------- */
+.hero{position:relative;margin-top:30px}
+.kick{font-family:var(--mono);font-size:8.5px;letter-spacing:.26em;text-transform:uppercase;
+  color:var(--mint);margin:0 0 12px;display:flex;align-items:center;gap:9px}
+.kick:before{content:"";width:26px;height:1px;background:var(--mint);opacity:.6;flex:0 0 auto}
+.htitle{font-family:var(--disp);font-size:clamp(38px,8.6vw,76px);letter-spacing:.035em;line-height:.94;
+  margin:0 0 12px;color:var(--lav);text-shadow:0 0 34px rgba(152,251,152,.24)}
+.htitle em{font-style:normal;color:var(--mint);text-shadow:0 0 30px rgba(152,251,152,.5)}
+.hsub{font-family:var(--mono);font-size:9.5px;letter-spacing:.19em;text-transform:uppercase;
+  color:var(--amber2);margin:0 0 20px}
+.lede{font-size:15px;line-height:1.85;color:#dfe8e2;max-width:64ch;margin:0 0 15px}
+.lede b{color:var(--lav);font-weight:600}
+.lede i{color:var(--purple2);font-style:italic}
+.lede .n{font-family:var(--mono);color:var(--mint)}
+
+/* ---------------- the two lamps ---------------- */
+.lamps{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:22px 0 0}
+.lamp{position:relative;text-align:left;cursor:pointer;border-radius:14px;padding:18px 17px 16px;
+  border:1px solid var(--line);background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(5,8,7,.55));
+  transition:.2s;overflow:hidden}
+.lamp:before{content:"";position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--c);opacity:.85}
+.lamp .bulb{position:absolute;right:14px;top:14px;width:12px;height:12px;border-radius:50%;
+  background:var(--c);box-shadow:0 0 10px var(--c), 0 0 30px var(--c);opacity:.85;animation:bulb 4.5s ease-in-out infinite}
+@keyframes bulb{0%,100%{opacity:.7}50%{opacity:1}}
+.lamp .lt{display:block;font-family:var(--disp);font-size:26px;letter-spacing:.05em;line-height:1;margin-bottom:7px;color:var(--c)}
+.lamp .ld{display:block;font-size:13px;line-height:1.7;color:#cfdad3;max-width:34ch}
+.lamp:hover,.lamp:focus-visible{border-color:var(--c);box-shadow:0 0 26px rgba(0,0,0,.4), 0 0 20px var(--c2);outline:none;transform:translateY(-1px)}
+.lamp.p{--c:var(--amber2);--c2:rgba(255,200,97,.22)}
+.lamp.i{--c:var(--mint);--c2:rgba(152,251,152,.2)}
+@media (prefers-reduced-motion:reduce){ .lamp .bulb{animation:none} }
+
+/* ---------------- the gate (writing) ---------------- */
+.sec{margin-top:44px;position:relative}
+.snum{font-family:var(--mono);font-size:8.5px;letter-spacing:.26em;text-transform:uppercase;
+  color:var(--mint);margin:0 0 9px;display:flex;align-items:center;gap:9px}
+.snum:before{content:"";width:20px;height:1px;background:var(--mint);opacity:.55;flex:0 0 auto}
+h2.st{font-family:var(--disp);font-size:clamp(26px,5.4vw,40px);letter-spacing:.04em;line-height:1;
+  margin:0 0 14px;color:var(--lav)}
+h2.st em{font-style:normal;color:var(--mint)}
+p{font-size:14.5px;line-height:1.82;color:#dfe8e2;max-width:66ch;margin:0 0 13px}
+p.small{font-size:13.5px;color:var(--dim)}
+
+.gate{border:1px solid var(--pline);border-radius:14px;padding:16px;
+  background:linear-gradient(180deg,rgba(152,251,152,.05),rgba(5,8,7,.55));position:relative}
+.kinds{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.kind{font-family:var(--mono);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;
+  border:1px solid var(--line);background:rgba(5,8,7,.5);border-radius:999px;
+  padding:9px 14px;cursor:pointer;transition:.18s}
+.kind:hover,.kind:focus-visible{outline:none;border-color:var(--dim)}
+.kind[aria-pressed="true"]{border-color:var(--c,var(--mint));color:var(--c,var(--mint));
+  box-shadow:0 0 16px var(--k, rgba(152,251,152,.18))}
+.kind.p{--c:var(--amber2);--k:rgba(255,200,97,.18)}
+.kind.i{--c:var(--mint);--k:rgba(152,251,152,.18)}
+.flabel{display:block;font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--dim);margin:0 0 8px}
+textarea#gBody{width:100%;min-height:132px;resize:vertical;border-radius:11px;
+  border:1px solid var(--line);background:rgba(3,6,5,.72);color:var(--lav);
+  font-family:var(--mono);font-size:13.5px;line-height:1.75;padding:13px 14px;transition:.18s}
+textarea#gBody:focus{outline:none;border-color:var(--mint);box-shadow:0 0 0 3px rgba(152,251,152,.09)}
+textarea#gBody::placeholder{color:rgba(157,179,166,.6)}
+.gfoot{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:9px}
+.count{font-family:var(--mono);font-size:9px;letter-spacing:.12em;color:var(--dim)}
+.count.warn{color:var(--amber2)}
+.sign{display:flex;align-items:center;gap:9px;margin-top:13px;flex-wrap:wrap}
+.sign input{flex:1 1 190px;min-width:0;border-radius:999px;border:1px solid var(--line);
+  background:rgba(3,6,5,.6);color:var(--lav);font-family:var(--mono);font-size:12px;padding:10px 14px}
+.sign input:focus{outline:none;border-color:var(--mint)}
+.sign span{font-family:var(--mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim)}
+.gcta{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:16px}
+.btn{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;
+  text-decoration:none;border-radius:999px;padding:15px 22px;border:1px solid var(--pline);
+  background:rgba(5,8,7,.6);color:var(--lav);transition:.18s;display:inline-block;cursor:pointer}
+.btn:hover,.btn:focus-visible{border-color:var(--mint);color:var(--mint);
+  box-shadow:0 0 18px rgba(152,251,152,.24);outline:none}
+.btn.hot{border-color:rgba(152,251,152,.55);color:#04220f;background:var(--mint);font-weight:700}
+.btn.hot:hover,.btn.hot:focus-visible{background:#b6ffb6;border-color:#b6ffb6;color:#04220f;
+  box-shadow:0 0 26px rgba(152,251,152,.4)}
+.btn[disabled]{opacity:.5;cursor:progress}
+.gnote{font-family:var(--mono);font-size:9.5px;line-height:1.8;letter-spacing:.05em;
+  color:var(--dim);margin:11px 0 0;max-width:60ch}
+.gnote b{color:var(--lav);font-weight:400}
+.status{font-family:var(--mono);font-size:10.5px;line-height:1.8;letter-spacing:.06em;
+  margin:13px 0 0;color:var(--mint);min-height:1em}
+.status.err{color:var(--amber2)}
+.working:after{content:"";display:inline-block;width:1.1em;text-align:left;animation:dots 1.2s steps(4,end) infinite}
+@keyframes dots{0%{content:""}25%{content:"."}50%{content:".."}75%{content:"..."}}
+.trap{position:absolute!important;left:-9999px!important;width:1px;height:1px;opacity:0;pointer-events:none}
+
+/* ---------------- the wall (your notes, still notes) ---------------- */
+.wall{display:grid;grid-template-columns:repeat(auto-fill,minmax(216px,1fr));gap:12px;margin-top:6px}
+.note{position:relative;border-radius:11px;padding:15px 15px 13px;
+  background:linear-gradient(180deg,#f4efe2,#e6dfcf);color:#201c14;
+  box-shadow:0 12px 26px rgba(0,0,0,.42);transform:rotate(-1.1deg)}
+.note:nth-child(even){transform:rotate(1.3deg)}
+.note:before{content:"";position:absolute;left:50%;top:-7px;width:11px;height:11px;margin-left:-5.5px;
+  border-radius:50%;background:var(--mint);box-shadow:0 0 9px rgba(152,251,152,.8), 0 2px 3px rgba(0,0,0,.4)}
+.note .nk{font-family:var(--mono);font-size:8px;letter-spacing:.2em;text-transform:uppercase;
+  color:#6d6650;display:block;margin-bottom:8px}
+.note .nb{font-size:13.5px;line-height:1.7;white-space:pre-wrap;word-break:break-word;margin:0 0 11px;color:#201c14;max-width:none}
+.note .nn{font-family:var(--mono);font-size:9px;color:#6d6650;display:block;margin-bottom:10px}
+.note .nf{display:flex;align-items:center;justify-content:space-between;gap:9px;
+  font-family:var(--mono);font-size:8.5px;letter-spacing:.12em;color:#6d6650;
+  border-top:1px solid rgba(32,28,20,.16);padding-top:9px;text-transform:uppercase}
+.note .wd{background:none;border:1px dashed rgba(32,28,20,.4);color:#5a5340;border-radius:999px;
+  padding:6px 10px;font-family:var(--mono);font-size:8.5px;letter-spacing:.12em;
+  text-transform:uppercase;cursor:pointer;transition:.18s}
+.note .wd:hover,.note .wd:focus-visible{border-style:solid;color:#8a2b3a;border-color:#8a2b3a;outline:none}
+.empty{font-family:var(--mono);font-size:10px;letter-spacing:.1em;line-height:1.9;color:var(--dim);
+  border:1px dashed var(--line);border-radius:11px;padding:20px 16px;text-align:center}
+
+/* ---------------- the sky ---------------- */
+.skyhead{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:0 0 10px}
+.skylines{font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;line-height:1.9;
+  color:var(--dim);margin:0;text-transform:uppercase}
+.skylines b{color:var(--lav);font-weight:400}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-family:var(--mono);font-size:9px;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--dim)}
+.legend span{display:inline-flex;align-items:center;gap:7px}
+.legend i{width:9px;height:9px;border-radius:50%;display:inline-block}
+.legend .lp i{background:var(--amber2);box-shadow:0 0 8px var(--amber2)}
+.legend .li i{background:var(--mint);box-shadow:0 0 8px var(--mint)}
+.sky{position:relative;height:clamp(330px,54vh,470px);border-radius:14px;overflow:hidden;
+  border:1px solid rgba(192,166,255,.22);
+  background:
+    radial-gradient(70% 56% at 50% 116%, rgba(255,200,97,.16), transparent 70%),
+    radial-gradient(120% 90% at 50% -30%, rgba(157,113,228,.16), transparent 64%),
+    linear-gradient(180deg,#070a18 0%, #050a10 58%, #04070b 100%)}
+.sky .ridge{position:absolute;left:0;right:0;bottom:0;height:64px;opacity:.6;
+  background:repeating-linear-gradient(90deg, rgba(152,251,152,.2) 0 2px, transparent 2px 6.5%);
+  -webkit-mask-image:linear-gradient(180deg,transparent,#000);mask-image:linear-gradient(180deg,transparent,#000)}
+/* the sky's own dust: faint lights behind the ones the realm left */
+.sky .pins{position:absolute;inset:0;opacity:.55;animation:tw 9s ease-in-out infinite;
+  background-image:
+    radial-gradient(1.5px 1.5px at 8% 14%, rgba(255,255,255,.75), transparent),
+    radial-gradient(1.2px 1.2px at 19% 42%, rgba(192,166,255,.7), transparent),
+    radial-gradient(1.7px 1.7px at 27% 9%,  rgba(255,255,255,.6), transparent),
+    radial-gradient(1.1px 1.1px at 34% 63%, rgba(200,255,200,.6), transparent),
+    radial-gradient(1.4px 1.4px at 43% 26%, rgba(255,240,245,.7), transparent),
+    radial-gradient(1.2px 1.2px at 52% 74%, rgba(255,255,255,.45), transparent),
+    radial-gradient(1.6px 1.6px at 58% 37%, rgba(192,166,255,.65), transparent),
+    radial-gradient(1.1px 1.1px at 66% 12%, rgba(255,255,255,.55), transparent),
+    radial-gradient(1.3px 1.3px at 71% 58%, rgba(200,255,200,.55), transparent),
+    radial-gradient(1.5px 1.5px at 79% 31%, rgba(255,240,245,.6), transparent),
+    radial-gradient(1.2px 1.2px at 84% 68%, rgba(255,255,255,.5), transparent),
+    radial-gradient(1.4px 1.4px at 91% 18%, rgba(192,166,255,.6), transparent),
+    radial-gradient(1.1px 1.1px at 12% 71%, rgba(255,255,255,.45), transparent),
+    radial-gradient(1.3px 1.3px at 93% 52%, rgba(255,255,255,.5), transparent),
+    radial-gradient(1.2px 1.2px at 47% 88%, rgba(200,255,200,.45), transparent)}
+.star{position:absolute;transform:translate(-50%,-50%);border:0;background:none;padding:0;
+  width:26px;height:26px;display:grid;place-items:center;cursor:pointer;z-index:2;
+  border-radius:50%;-webkit-tap-highlight-color:transparent}
+.star .dot{width:var(--s,7px);height:var(--s,7px);border-radius:50%;background:var(--c,var(--amber2));
+  box-shadow:0 0 9px var(--c,var(--amber2)), 0 0 24px var(--c,var(--amber2)), 0 0 46px var(--c2, rgba(255,200,97,.4));
+  opacity:.9;animation:tw 5s ease-in-out infinite;animation-delay:var(--dl,0s)}
+.star.k-prayer{--c:var(--amber2);--c2:rgba(255,200,97,.42)}
+.star.k-inspiration{--c:var(--mint);--c2:rgba(152,251,152,.4)}
+.star.milo .dot:after{content:"";display:block}
+.star:hover .dot,.star:focus-visible .dot{opacity:1;transform:scale(1.35)}
+.star:focus-visible{outline:1px dashed rgba(255,255,255,.45);outline-offset:1px}
+.star.on{z-index:3}
+.star.on .dot{opacity:1;transform:scale(1.7)}
+.star.on:after{content:"";position:absolute;inset:-6px;border-radius:50%;
+  border:1px solid rgba(255,255,255,.4);animation:ring 2.4s ease-out infinite}
+@keyframes tw{0%,100%{opacity:.55}50%{opacity:1}}
+@keyframes ring{0%{transform:scale(.7);opacity:.7}100%{transform:scale(1.5);opacity:0}}
+@media (prefers-reduced-motion:reduce){ .star .dot{animation:none} .star.on:after{animation:none;opacity:.4} }
+.skyempty{position:absolute;left:0;right:0;bottom:14px;text-align:center;
+  font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);z-index:1}
+
+.reading{margin-top:12px;border:1px solid rgba(192,166,255,.24);border-radius:13px;padding:16px;
+  background:linear-gradient(180deg,rgba(157,113,228,.08),rgba(5,8,7,.5))}
+.reading .rk{font-family:var(--mono);font-size:8.5px;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--dim);margin:0 0 10px;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.reading .rk b{color:var(--mint);font-weight:400}
+.reading .rb{font-size:15.5px;line-height:1.85;color:var(--lav);white-space:pre-wrap;
+  word-break:break-word;margin:0 0 12px}
+.reading .rn{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;color:var(--dim)}
+.msays{margin-top:14px;border-top:1px solid var(--line);padding-top:13px;display:flex;gap:11px;align-items:flex-start}
+.msays .face{flex:0 0 auto;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;
+  border:1px solid rgba(152,251,152,.5);color:var(--mint);background:rgba(152,251,152,.08);font-size:12px}
+.msays p{margin:0;font-size:14px;line-height:1.8;color:var(--mint2)}
+.msays p em{font-family:var(--mono);font-style:normal;font-size:9.5px;letter-spacing:.1em;
+  color:var(--dim);display:block;margin-top:7px}
+.rclose{margin-top:14px;display:flex;gap:9px;flex-wrap:wrap}
+.chip{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;
+  border:1px solid var(--line);background:rgba(5,8,7,.5);border-radius:999px;padding:10px 14px;cursor:pointer;transition:.18s}
+.chip:hover,.chip:focus-visible{border-color:var(--mint);color:var(--mint);outline:none}
+
+/* ---------------- etiquette + verse ---------------- */
+.rulebox{border:1px solid rgba(255,200,97,.24);border-radius:13px;padding:16px;
+  background:linear-gradient(180deg,rgba(255,200,97,.05),rgba(5,8,7,.5))}
+.rulebox h3{font-family:var(--mono);font-size:9px;letter-spacing:.22em;text-transform:uppercase;
+  margin:0 0 11px;color:var(--amber);font-weight:400}
+.rulebox ul{margin:0;padding:0;list-style:none}
+.rulebox li{font-size:13.5px;line-height:1.75;color:#dfe8e2;padding-left:17px;position:relative;margin-bottom:8px}
+.rulebox li:last-child{margin-bottom:0}
+.rulebox li:before{content:"\2740";position:absolute;left:0;top:0;color:var(--mint);font-size:10px}
+.verse{margin:26px 0 0;padding:16px 18px;border-radius:12px;position:relative;
+  border:1px solid rgba(192,166,255,.24);
+  background:linear-gradient(180deg,rgba(157,113,228,.07),rgba(5,8,7,.5))}
+.verse:before{content:"\201C";position:absolute;left:9px;top:2px;font-size:44px;line-height:1;
+  color:rgba(192,166,255,.3);font-family:var(--disp)}
+.verse blockquote{margin:0;padding-left:24px;font-size:14.5px;line-height:1.8;color:var(--purple2);font-style:italic}
+.verse figcaption{margin-top:10px;padding-left:24px;font-family:var(--mono);font-size:8.5px;
+  letter-spacing:.2em;text-transform:uppercase;color:var(--dim)}
+
+/* ---------------- footer ---------------- */
+footer{margin-top:52px;border-top:1px solid var(--line);padding:16px 0 0;
+  font-family:var(--mono);font-size:9.5px;line-height:2;letter-spacing:.06em;color:var(--dim)}
+footer a{color:var(--dim);text-decoration:none;border-bottom:1px solid rgba(255,255,255,.14)}
+footer a:hover{color:var(--mint);border-color:var(--mint)}
+footer .dot{opacity:.5;padding:0 7px}
+
+@media (max-width:640px){
+  .stage{padding:14px 13px 32px}
+  .marquee{padding:11px 13px}
+  .brand{font-size:23px}
+  .mact{width:100%}
+  .pill{flex:1 1 auto;text-align:center}
+  .lamps{grid-template-columns:1fr}
+  .btn{width:100%;text-align:center}
+  .gcta{gap:8px}
+  .sky{height:clamp(300px,46vh,400px)}
+  .star{width:32px;height:32px}
+}
+</style>
+</head>
+<body>
+
+<div class="bg" aria-hidden="true">
+  <canvas class="dust" id="dust"></canvas>
+  <span class="lampglow"></span><span class="rows"></span>
+  <span class="grain"></span><span class="scan"></span>
+</div>
+
+<main class="stage">
+
+  <header class="marquee">
+    <div class="mtitle">
+      <a class="brand" href="https://www.cafedreamr.art/">cafedreamr</a>
+      <span class="tag">milo &middot; the garden</span>
+    </div>
+    <nav class="mact">
+      <a class="pill" href="https://www.cafedreamr.art/PLAY/">the long day</a>
+      <a class="pill" href="https://www.cafedreamr.art/LORE/MAP.html">the realm map</a>
+      <a class="pill" href="https://www.cafedreamr.art/SUPPORT/">support</a>
+      <a class="pill" href="https://www.cafedreamr.art/">the terminal</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <p class="kick">realm 04 &middot; paradise garden &middot; milo keeps it</p>
+    <h1 class="htitle">leave it at <em>the gate.</em></h1>
+    <p class="hsub">two lamps &middot; a prayer &middot; an inspiration</p>
+
+    <p class="lede">the garden is the part of the realm that faces the dark. milo is out here most nights &mdash;
+      in the hammock strung between the rows, or down on his knees in the mint with his sleeves pushed up,
+      doing the thing he never explains. he has never once asked anybody what they were carrying. he just
+      moves the watering can and makes room on the bench.</p>
+
+    <p class="lede">so there are two lamps at the gate now. at one you can leave a <b>prayer</b>: whatever you
+      are carrying, named plainly, because naming it is most of the work. at the other you can leave an
+      <b>inspiration</b>: something small and true that helped you, that somebody else might need at two in
+      the morning. both are left the same way, and both go up the same way.</p>
+  </section>
+
+  <section class="sec" id="gate">
+    <p class="snum">01 &middot; the two lamps</p>
+    <h2 class="st">which one <em>tonight?</em></h2>
+    <div class="lamps">
+      <button class="lamp p" type="button" id="lampPrayer">
+        <span class="bulb" aria-hidden="true"></span>
+        <span class="lt">a prayer</span>
+        <span class="ld">what you are carrying. say it the way you would actually say it &mdash; nobody here grades the wording.</span>
+      </button>
+      <button class="lamp i" type="button" id="lampInspire">
+        <span class="bulb" aria-hidden="true"></span>
+        <span class="lt">an inspiration</span>
+        <span class="ld">something small that helped. &ldquo;i drank water and went outside&rdquo; counts, and it counts a lot.</span>
+      </button>
+    </div>
+
+    <div class="gate" style="margin-top:14px">
+      <div class="kinds" role="group" aria-label="what you are leaving">
+        <button class="kind p" type="button" id="kindPrayer" aria-pressed="true">a prayer</button>
+        <button class="kind i" type="button" id="kindInspire" aria-pressed="false">an inspiration</button>
+      </div>
+      <label class="flabel" id="gLabel" for="gBody">what are you carrying?</label>
+      <textarea id="gBody" maxlength="600" placeholder="write it the way you would say it out loud. no one reads it but you until it rises."></textarea>
+      <div class="gfoot">
+        <span class="count" id="gCount">0 / 600</span>
+        <span class="count" id="gRate" hidden>give it a moment before the next one</span>
+      </div>
+      <div class="sign">
+        <input id="gName" type="text" maxlength="40" autocomplete="off" placeholder="sign it, or leave it blank">
+        <span>optional</span>
+      </div>
+      <div class="trap" aria-hidden="true">
+        <label for="gTrap">leave this empty</label>
+        <input id="gTrap" type="text" tabindex="-1" autocomplete="off">
+      </div>
+      <div class="gcta">
+        <button class="btn hot" type="button" id="gLeave">leave it at the gate</button>
+        <button class="btn" type="button" id="gClear">start again</button>
+      </div>
+      <p class="gnote">what happens next: it sits on the wall below as a <b>note</b> for one day, and only you can
+        read it &mdash; the garden will not hand it to anybody else, and it is not hiding it from you. after a day
+        it rises, becomes a <b>star</b> over the rows, and then it belongs to everyone. you can take a note back
+        any time before it rises.</p>
+      <p class="status" id="gStatus" role="status" aria-live="polite"></p>
+    </div>
+  </section>
+
+  <section class="sec" id="wallSec">
+    <p class="snum">02 &middot; the wall</p>
+    <h2 class="st">still <em>yours</em></h2>
+    <p class="small" style="margin-bottom:16px">your notes, pinned on the herb wall, waiting out their day. nobody else
+      can read these.</p>
+    <div id="wall" class="wall"></div>
+    <div class="empty" id="wallEmpty">nothing of yours is waiting tonight. leave something at the gate and it will
+      sit here, where you can still take it back.</div>
+  </section>
+
+  <section class="sec" id="skySec">
+    <p class="snum">03 &middot; the sky</p>
+    <h2 class="st">over the <em>rows</em></h2>
+    <div class="skyhead">
+      <p class="skylines">the garden faces the light &middot; <b>1 peter 5:7</b><br>
+        <span id="skyCount">the sky is being read</span></p>
+      <div class="legend">
+        <span class="lp"><i></i>a prayer</span>
+        <span class="li"><i></i>an inspiration</span>
+        <span><i style="background:var(--lav);box-shadow:0 0 8px var(--lav)"></i>milo's own</span>
+      </div>
+    </div>
+    <div class="sky" id="sky" aria-label="the shared sky">
+      <span class="pins" aria-hidden="true"></span>
+      <span class="ridge" aria-hidden="true"></span>
+      <p class="skyempty" id="skyEmpty" hidden>the sky is quiet tonight</p>
+    </div>
+    <div id="reading" hidden></div>
+    <p class="small" style="margin-top:14px">tap any light and it will tell you what somebody left. nothing in the
+      sky carries a name unless the person wrote one, and nothing that is not kind stays up there.</p>
+  </section>
+
+  <section class="sec">
+    <p class="snum">04 &middot; the etiquette</p>
+    <h2 class="st">what belongs <em>here</em></h2>
+    <div class="rulebox">
+      <h3>the only four rules the garden has</h3>
+      <ul>
+        <li>a prayer is a plain sentence, addressed however you like. there is no correct way to do this, and no
+          hurry in it either.</li>
+        <li>an inspiration is something that actually worked. small is not a failure &mdash; small is usually the
+          whole thing.</li>
+        <li>no names of other people, no addresses, no screenshots of anybody's private life. the sky is
+          anonymous by default and it should stay that way.</li>
+        <li>if something is unkind, it comes down. the garden keeps itself quiet, and milo reads everything before
+          it rises.</li>
+      </ul>
+    </div>
+    <p style="margin-top:16px">if tonight is heavier than a page can help with, the café has a whole room for that &mdash;
+      <a href="https://www.cafedreamr.art/SUPPORT/" style="color:var(--mint)">support</a> &middot; and the door is
+      never locked. you do not have to explain yourself to leave something here. you do not have to come back
+      and check on it either. it will go up on its own.</p>
+  </section>
+
+  <figure class="verse">
+    <blockquote>Casting all your care upon him; for he careth for you.</blockquote>
+    <figcaption>1 peter 5:7 &middot; the line milo leaves on the gatepost</figcaption>
+  </figure>
+
+  <footer>
+    <div>&copy; <span id="yearEl">2026</span> cafedreamr &middot; all rights reserved.</div>
+    <div>
+      <a href="https://www.cafedreamr.art/">the terminal</a><span class="dot">&middot;</span><a
+        href="https://www.cafedreamr.art/PLAY/">the long day</a><span class="dot">&middot;</span><a
+        href="https://www.cafedreamr.art/LORE/MAP.html">the realm map</a><span class="dot">&middot;</span><a
+        href="https://www.cafedreamr.art/SUPPORT/">support the realm</a>
+    </div>
+    <div style="margin-top:6px;opacity:.75">milo &middot; keeper of the zen &middot; realm 04 &middot; the stars go up to yeshua.</div>
+  </footer>
+
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://www.cafedreamr.art/PASSPORT/cd-passport.js"></script>
+<script>
+/* ============================================================
+   GARDEN — the edit surface.
+   ------------------------------------------------------------
+   url · key   the supabase project the terminal already runs on.
+               the key is the public anon key: it can only do what
+               the table's row-level security allows (read stars
+               that have risen, leave one, take back one that has
+               not). leave either blank and the garden runs on this
+               browser alone — the wall and the sky both still work,
+               they are simply yours.
+   day         how long a note stays a note. 24 hours.
+   max         how long a note may be.
+   wait        seconds between one person's notes.
+   stars       the newest this many are drawn.
+   MILO_OWN    milo's own stars, always up there so the sky is
+               never empty on a quiet night.
+   MILO_SAYS   what he answers a star with. one is chosen per
+               star, and it always chooses the same one — his
+               reply does not shuffle.
+   ============================================================ */
+var GARDEN = {
+  url: "https://xzhsscjdaffzldnqwpxl.supabase.co",
+  key: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh6aHNzY2pkYWZmemxkbnF3cHhsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY3NTY0NzcsImV4cCI6MjEwMjMzMjQ3N30.dc7UFaby8qmFue6UNr2QodurIPFGQBtAMz1EmBizt5g",
+  day: 24 * 60 * 60 * 1000,
+  max: 600,
+  wait: 45,
+  stars: 400
+};
+
+var MILO_OWN = [
+  { id: "milo-1", kind: "prayer", name: "milo",
+    body: "for whoever is reading this at two in the morning: you are not behind. the garden is not in a hurry either, and it is still growing the same mint it grew last year." },
+  { id: "milo-2", kind: "inspiration", name: "milo",
+    body: "if your hands are shaking, do the smallest true thing on the list. the kettle. the window. one row. it counts, and it is enough for today." },
+  { id: "milo-3", kind: "prayer", name: "milo",
+    body: "for the ones who came in tired tonight, and for the ones who did not come in at all. a slow morning for all of you. the tea will still be warm." }
+];
+
+var MILO_SAYS = {
+  prayer: [
+    "he is not tired of hearing it. say it again tomorrow if you need to.",
+    "you named it. that is the hard part, and you did it in one sentence.",
+    "casting all your care upon him; for he careth for you. \u2014 1 peter 5:7",
+    "be careful for nothing; but in every thing by prayer and supplication with thanksgiving let your requests be made known unto God. \u2014 philippians 4:6",
+    "and the peace of God, which passeth all understanding, shall keep your hearts and minds through Christ Jesus. \u2014 philippians 4:7",
+    "I know the thoughts that I think toward you, saith the LORD, thoughts of peace, and not of evil, to give you an expected end. \u2014 jeremiah 29:11",
+    "leave the rest here. it will keep. i am not going anywhere.",
+    "that is a real one. the garden has heard worse and it is still green."
+  ],
+  inspiration: [
+    "good. that is a real one. somebody is going to need exactly that tomorrow.",
+    "I will meditate in thy precepts, and have respect unto thy ways. \u2014 psalm 119:15",
+    "abide in me, and I in you. \u2014 john 15:4",
+    "keep it small and keep it going. the rows do not grow in a day either.",
+    "the tea is already on. sit as long as you like.",
+    "write it on the wall where you will trip over it. that is how i got through my first year.",
+    "that worked for you, which means it is true. leave it up for whoever is behind you."
+  ]
+};
+
+(function () {
+  "use strict";
+
+  var $ = function (id) { return document.getElementById(id); };
+  var DAY = GARDEN.day, MAX = GARDEN.max;
+  var NOTES_KEY = "cd_milo_notes", LAST_KEY = "cd_milo_last", NAME_KEY = "cd_play_name";
+  var esc = function (s) {
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  };
+  function hash32(s) {
+    var h = 0x811c9dc5;
+    for (var i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); }
+    return h >>> 0;
+  }
+  function pick(arr, seed) { return arr[hash32(seed + "#says") % arr.length]; }
+  function uuid() {
+    try { if (window.crypto && crypto.randomUUID) return crypto.randomUUID(); } catch (e) {}
+    return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
+      var r = Math.random() * 16 | 0; return (c === "x" ? r : (r & 0x3 | 0x8)).toString(16);
+    });
+  }
+  function relTime(ms) {
+    var d = Date.now() - ms, m = Math.round(d / 60000);
+    if (m < 1) return "just now";
+    if (m < 60) return m + (m === 1 ? " minute" : " minutes") + " ago";
+    var h = Math.round(m / 60);
+    if (h < 36) return h + (h === 1 ? " hour" : " hours") + " ago";
+    var dd = Math.round(h / 24);
+    return dd + (dd === 1 ? " day" : " days") + " ago";
+  }
+  function untilTime(ms) {
+    var d = ms - Date.now();
+    if (d <= 0) return "rising now";
+    var h = Math.floor(d / 3600000), m = Math.floor((d % 3600000) / 60000);
+    if (h >= 1) return "rises in " + h + "h " + (m < 10 ? "0" : "") + m + "m";
+    return "rises in " + Math.max(1, m) + "m";
+  }
+
+  /* ---------------- this browser's notes ---------------- */
+  var notes = [];
+  function loadNotes() {
+    try { var v = JSON.parse(localStorage.getItem(NOTES_KEY) || "[]"); notes = v instanceof Array ? v : []; }
+    catch (e) { notes = []; }
+    var cut = Date.now() - DAY * 3;
+    notes = notes.filter(function (n) { return n && n.body && n.created > cut; });
+  }
+  function saveNotes() { try { localStorage.setItem(NOTES_KEY, JSON.stringify(notes)); } catch (e) {} }
+  function pending() { var now = Date.now(); return notes.filter(function (n) { return n.created + DAY > now; }); }
+  function graduatedLocal() {
+    var now = Date.now();
+    return notes.filter(function (n) { return n.created + DAY <= now && !n.cloudId; });
+  }
+
+  /* ---------------- the shared sky ---------------- */
+  var sb = null;
+  try { if (window.supabase && GARDEN.url && GARDEN.key) sb = window.supabase.createClient(GARDEN.url, GARDEN.key); }
+  catch (e) { sb = null; }
+
+  function fetchStars() {
+    if (!sb) return Promise.resolve([]);
+    return sb.from("prayers").select("id,kind,body,name,created_at,visible_at")
+      .order("created_at", { ascending: false }).limit(GARDEN.stars)
+      .then(function (res) {
+        if (res.error) throw res.error;
+        var rows = res.data || [], now = Date.now();
+        return rows.filter(function (r) { return r.visible_at && new Date(r.visible_at).getTime() <= now + 60000; });
+      });
+  }
+  function leaveCloud(kind, body, name, id, visibleAt) {
+    if (!sb || !GARDEN.url || !GARDEN.key) return Promise.resolve(null);
+    var row = { id: id, kind: kind, body: body, visible_at: new Date(visibleAt).toISOString() };
+    if (name) row.name = name;
+    return sb.from("prayers").insert(row).then(function (res) {
+      if (res.error) throw res.error;
+      return id;
+    });
+  }
+  function withdrawCloud(id) {
+    if (!sb || !id) return Promise.resolve();
+    return sb.from("prayers").delete().eq("id", id).then(function () {});
+  }
+
+  /* ---------------- the sky, drawn ---------------- */
+  var cloud = [], drawn = {}, selected = null;
+  function allStars() {
+    var out = [], seen = {};
+    MILO_OWN.forEach(function (m) { out.push({ id: m.id, kind: m.kind, body: m.body, name: m.name, milo: true, when: null }); });
+    cloud.forEach(function (r) {
+      if (seen[r.id]) return; seen[r.id] = 1;
+      out.push({ id: r.id, kind: r.kind, body: r.body, name: r.name, when: r.created_at ? new Date(r.created_at).getTime() : null });
+    });
+    graduatedLocal().forEach(function (n) {
+      if (n.cloudId || seen[n.id]) return; seen[n.id] = 1;
+      out.push({ id: n.id, kind: n.kind, body: n.body, name: n.name, when: n.created });
+    });
+    return out;
+  }
+  function place(id) {
+    var gx = hash32(id + ":x") % 26, gy = hash32(id + ":y") % 13;
+    var jx = (hash32(id + ":jx") % 1000) / 1000, jy = (hash32(id + ":jy") % 1000) / 1000;
+    var x = (gx + jx) / 26 * 100;
+    var y = 7 + (gy + jy) / 13 * 82;
+    return { x: Math.min(97, Math.max(3, x)), y: Math.min(94, Math.max(5, y)) };
+  }
+  function drawSky() {
+    var skyEl = $("sky"), stars = allStars();
+    [].forEach.call(skyEl.querySelectorAll(".star"), function (el) { el.remove(); });
+    stars.forEach(function (s, i) {
+      var p = place(s.id);
+      var seed = (hash32(s.id + ":size") % 1000) / 1000;
+      var dl = ((hash32(s.id + ":dl") % 1000) / 1000 * 5).toFixed(2);
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "star k-" + (s.kind === "inspiration" ? "inspiration" : "prayer") + (s.milo ? " milo" : "");
+      b.style.left = p.x.toFixed(2) + "%";
+      b.style.top = p.y.toFixed(2) + "%";
+      b.style.zIndex = String(1 + (hash32(s.id) % 5));
+      if (s.milo) { b.style.setProperty("--c", "rgba(255,240,245,.96)"); b.style.setProperty("--c2", "rgba(192,166,255,.45)"); }
+      b.setAttribute("data-id", s.id);
+      b.setAttribute("aria-label", (s.kind === "inspiration" ? "an inspiration" : "a prayer") + " \u2014 tap to read");
+      var dot = document.createElement("span");
+      dot.className = "dot";
+      dot.style.setProperty("--s", (s.milo ? 8 : 8 + Math.round(seed * 4)) + "px");
+      dot.style.setProperty("--dl", dl + "s");
+      b.appendChild(dot);
+      b.addEventListener("click", function () { openStar(s.id); });
+      skyEl.appendChild(b);
+      drawn[s.id] = s;
+    });
+    var prayers = stars.filter(function (s) { return s.kind !== "inspiration"; }).length;
+    var inspo = stars.length - prayers;
+    $("skyCount").innerHTML = stars.length + (stars.length === 1 ? " star" : " stars") + " in the garden &middot; <b>"
+      + prayers + "</b> " + (prayers === 1 ? "prayer" : "prayers") + " &middot; <b>" + inspo + "</b> "
+      + (inspo === 1 ? "inspiration" : "inspirations");
+    $("skyEmpty").hidden = stars.length > 0;
+  }
+
+  function openStar(id) {
+    var s = drawn[id] || allStars().filter(function (x) { return x.id === id; })[0];
+    if (!s) return;
+    selected = id;
+    [].forEach.call(document.querySelectorAll(".star"), function (el) {
+      el.classList.toggle("on", el.getAttribute("data-id") === id);
+    });
+    var box = $("reading");
+    var kindWord = s.kind === "inspiration" ? "an inspiration" : "a prayer";
+    var byline = s.milo ? "left by milo" : (s.name ? "signed " + esc(s.name) : "left unsigned");
+    if (s.when) byline += " &middot; rose " + relTime(s.when);
+    var ring = pick(MILO_SAYS[s.kind === "inspiration" ? "inspiration" : "prayer"], s.id);
+    box.innerHTML =
+      '<div class="reading">'
+      + '<p class="rk"><b>' + kindWord + '</b> &middot; ' + byline + '</p>'
+      + '<p class="rb">' + esc(s.body) + '</p>'
+      + '<div class="msays"><span class="face" aria-hidden="true">\u2740</span>'
+      + '<p>' + esc(ring) + '<em>milo, from the rows</em></p></div>'
+      + '<div class="rclose"><button class="chip" type="button" id="rCloseBtn">close</button>'
+      + '<button class="chip" type="button" id="rNextBtn">another star</button></div>'
+      + '</div>';
+    box.hidden = false;
+    $("rCloseBtn").addEventListener("click", closeStar);
+    $("rNextBtn").addEventListener("click", function () {
+      var ids = allStars().map(function (x) { return x.id; });
+      if (!ids.length) return;
+      var i = ids.indexOf(selected);
+      openStar(ids[(i + 1) % ids.length]);
+    });
+  }
+  function closeStar() {
+    selected = null;
+    $("reading").hidden = true;
+    $("reading").innerHTML = "";
+    [].forEach.call(document.querySelectorAll(".star.on"), function (el) { el.classList.remove("on"); });
+  }
+
+  /* ---------------- the wall ---------------- */
+  function drawWall() {
+    var pend = pending().sort(function (a, b) { return b.created - a.created; });
+    var wall = $("wall");
+    $("wallEmpty").hidden = pend.length > 0;
+    wall.innerHTML = pend.map(function (n) {
+      return '<article class="note">'
+        + '<span class="nk">' + (n.kind === "inspiration" ? "an inspiration" : "a prayer")
+        + (n.cloudId ? "" : " &middot; kept here") + '</span>'
+        + '<p class="nb">' + esc(n.body) + '</p>'
+        + (n.name ? '<span class="nn">signed ' + esc(n.name) + '</span>' : '<span class="nn">unsigned</span>')
+        + '<div class="nf"><span>' + untilTime(n.created + DAY) + '</span>'
+        + '<button class="wd" type="button" data-wd="' + esc(n.id) + '">take it back</button></div>'
+        + '</article>';
+    }).join("");
+    [].forEach.call(wall.querySelectorAll("[data-wd]"), function (b) {
+      b.addEventListener("click", function () { withdraw(b.getAttribute("data-wd")); });
+    });
+  }
+  function withdraw(id) {
+    var n = notes.filter(function (x) { return x.id === id; })[0];
+    if (!n) return;
+    notes = notes.filter(function (x) { return x.id !== id; });
+    saveNotes();
+    drawWall();
+    if (n.cloudId) {
+      withdrawCloud(n.cloudId).then(refresh, refresh);
+    } else { refresh(); }
+  }
+
+  /* ---------------- leaving one ---------------- */
+  function setKind(k) {
+    var isPrayer = k !== "inspiration";
+    $("kindPrayer").setAttribute("aria-pressed", isPrayer ? "true" : "false");
+    $("kindInspire").setAttribute("aria-pressed", isPrayer ? "false" : "true");
+    $("gLabel").textContent = isPrayer ? "what are you carrying?" : "what helped, that somebody else might need?";
+    $("gBody").placeholder = isPrayer
+      ? "write it the way you would say it out loud. no one reads it but you until it rises."
+      : "something small and true that worked. one line is plenty.";
+    try { $("gBody").focus(); } catch (e) {}
+  }
+  function kindNow() { return $("kindInspire").getAttribute("aria-pressed") === "true" ? "inspiration" : "prayer"; }
+
+  function statusMsg(text, err) {
+    var el = $("gStatus");
+    el.textContent = text || "";
+    el.classList.toggle("err", !!err);
+  }
+
+  function leave() {
+    var kind = kindNow();
+    var body = ($("gBody").value || "").replace(/\s+$/,"").replace(/^\s+/,"");
+    var name = ($("gName").value || "").replace(/\s+$/,"").replace(/^\s+/,"").slice(0, 40);
+    if ($("gTrap").value) { statusMsg("left at the gate."); $("gBody").value = ""; return; }
+    if (body.length < 2) { statusMsg("there is nothing on the page yet \u2014 write one line first.", true); return; }
+    if (body.length > MAX) { statusMsg("that is longer than the box allows. the garden is a small room.", true); return; }
+    var last = 0;
+    try { last = parseInt(localStorage.getItem(LAST_KEY) || "0", 10) || 0; } catch (e) {}
+    if (Date.now() - last < GARDEN.wait * 1000) { statusMsg("give it a moment before the next one.", true); return; }
+
+    var btn = $("gLeave");
+    btn.disabled = true;
+    statusMsg("leaving it\u2026");
+    $("gStatus").classList.add("working");
+    var id = uuid();
+    var created = Date.now();
+    var visibleAt = created + DAY;
+    var note = { id: id, kind: kind, body: body, name: name, created: created, cloudId: null };
+
+    leaveCloud(kind, body, name, id, visibleAt).then(function (cloudId) {
+      note.cloudId = cloudId || null;
+      notes.push(note);
+      saveNotes();
+      try { localStorage.setItem(LAST_KEY, String(created)); } catch (e) {}
+      if (name) { try { localStorage.setItem(NAME_KEY, name); } catch (e) {} }
+      $("gBody").value = "";
+      $("gStatus").classList.remove("working");
+      btn.disabled = false;
+      statusMsg(cloudId
+        ? "put down at the gate. it is yours until " + new Date(visibleAt).toLocaleString() + " \u2014 then it goes up."
+        : "put down at the gate, and kept in your own sky. the shared one is resting tonight.");
+      if (window.CD && CD.stamp) {
+        CD.stamp("garden:" + kind, { label: kind === "inspiration"
+          ? "left an inspiration at the garden gate" : "left a prayer at the garden gate" });
+      }
+      drawWall();
+      scrollTo2($("wallSec"));
+    }, function (err) {
+      note.cloudId = null;
+      notes.push(note);
+      saveNotes();
+      try { localStorage.setItem(LAST_KEY, String(created)); } catch (e) {}
+      $("gBody").value = "";
+      $("gStatus").classList.remove("working");
+      btn.disabled = false;
+      statusMsg("put down at the gate, and kept in your own sky. the shared one is resting tonight.");
+      drawWall();
+      scrollTo2($("wallSec"));
+    });
+  }
+  function scrollTo2(el) {
+    if (!el) return;
+    try { el.scrollIntoView({ behavior: "smooth", block: "start" }); } catch (e) { el.scrollIntoView(); }
+  }
+
+  /* ---------------- refreshing ---------------- */
+  function refresh() {
+    return fetchStars().then(function (rows) {
+      cloud = rows;
+      drawSky();
+      drawWall();
+      if (selected) {
+        var still = allStars().filter(function (s) { return s.id === selected; })[0];
+        if (still) openStar(selected); else closeStar();
+      }
+    }, function () {
+      drawSky();
+      drawWall();
+    });
+  }
+
+  /* ---------------- the dust ---------------- */
+  (function dust() {
+    var cv = $("dust");
+    if (!cv || !cv.getContext) return;
+    if (window.matchMedia && matchMedia("(prefers-reduced-motion:reduce)").matches) return;
+    var ctx = cv.getContext("2d"), W = 0, H = 0, dots = [];
+    function size() {
+      W = cv.width = Math.floor(innerWidth * devicePixelRatio);
+      H = cv.height = Math.floor(innerHeight * devicePixelRatio);
+      var n = Math.round(Math.min(120, innerWidth / 9));
+      dots = [];
+      for (var i = 0; i < n; i++) dots.push(newDot());
+    }
+    function newDot() {
+      return { x: Math.random() * W, y: Math.random() * H,
+        r: (Math.random() * 1.1 + 0.3) * devicePixelRatio,
+        s: (Math.random() * 0.22 + 0.06) * devicePixelRatio,
+        a: Math.random() * 0.45 + 0.12,
+        h: Math.random() < 0.2 ? "#c8ffc8" : (Math.random() < 0.6 ? "#fff0f5" : "#c0a6ff") };
+    }
+    function frame() {
+      ctx.clearRect(0, 0, W, H);
+      for (var i = 0; i < dots.length; i++) {
+        var d = dots[i];
+        d.y -= d.s;
+        if (d.y < -4) { dots[i] = newDot(); dots[i].y = H + 4; continue; }
+        ctx.globalAlpha = d.a; ctx.fillStyle = d.h;
+        ctx.beginPath(); ctx.arc(d.x, d.y, d.r, 0, 6.283); ctx.fill();
+      }
+      ctx.globalAlpha = 1;
+      requestAnimationFrame(frame);
+    }
+    size();
+    addEventListener("resize", size);
+    frame();
+  })();
+
+  /* ---------------- wiring ---------------- */
+  $("yearEl").textContent = String(new Date().getFullYear());
+  $("lampPrayer").addEventListener("click", function () { setKind("prayer"); scrollTo2($("gate")); });
+  $("lampInspire").addEventListener("click", function () { setKind("inspiration"); scrollTo2($("gate")); });
+  $("kindPrayer").addEventListener("click", function () { setKind("prayer"); });
+  $("kindInspire").addEventListener("click", function () { setKind("inspiration"); });
+  $("gLeave").addEventListener("click", leave);
+  $("gClear").addEventListener("click", function () {
+    $("gBody").value = ""; $("gName").value = ""; statusMsg(""); updateCount(); $("gBody").focus();
+  });
+  function updateCount() {
+    var n = ($("gBody").value || "").length;
+    var el = $("gCount");
+    el.textContent = n + " / " + MAX;
+    el.classList.toggle("warn", n > MAX * 0.9);
+  }
+  $("gBody").addEventListener("input", updateCount);
+  $("gBody").addEventListener("keydown", function (e) {
+    if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) { e.preventDefault(); leave(); }
+  });
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape" && selected) closeStar(); });
+
+  try {
+    var saved = localStorage.getItem(NAME_KEY);
+    if (saved) $("gName").value = saved;
+  } catch (e) {}
+
+  loadNotes();
+  updateCount();
+  drawWall();
+  drawSky();
+  refresh();
+  setInterval(function () { if (!document.hidden) refresh(); }, 90000);
+  document.addEventListener("visibilitychange", function () { if (!document.hidden) refresh(); });
+
+  if (window.CD && CD.boot) { try { CD.boot({ page: "milo" }); } catch (e) {} }
+})();
+</script>
+
+</body>
+</html>
