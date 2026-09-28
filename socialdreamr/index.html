@@ -56,6 +56,10 @@ button:disabled:hover{background:#000;color:#fff}
 <div class="sd">
   <div><span class="sdStamp">SOCIALDREAMR</span></div>
   <p class="sdTag">a lobby for talking and passing tracks around. everyone gets one link — yours prints under everything you say.</p>
+  <div class="sdRow" style="margin-bottom:16px;max-width:420px;">
+    <button id="sdCopy" type="button">Copy invite</button>
+    <button id="sdClear" type="button">Clear stack</button>
+  </div>
   <div class="sdBox">
     <h2>Your card</h2>
     <div class="sdRow">
@@ -286,6 +290,23 @@ byId("sdText").addEventListener("keydown", (e) => { if (e.key === "Enter") { e.p
 byId("sdStageX").addEventListener("click", stageClear);
 byId("sdAttach").addEventListener("click", () => byId("sdFile").click());
 byId("sdFile").addEventListener("change", attach);
+byId("sdCopy").addEventListener("click", function () {
+  const link = location.href.split("#")[0];
+  const done = function () { sys("invite copied - pass it on."); };
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(link).then(done, function () { sys(link); });
+  else sys(link);
+});
+async function clearStack(btn) {
+  if (!joined) { sys("walk in first."); return; }
+  if (!btn.dataset.sure) { btn.dataset.sure = "1"; btn.textContent = "Sure?";
+    setTimeout(function () { btn.textContent = "Clear stack"; delete btn.dataset.sure; }, 4000); return; }
+  btn.textContent = "Clear stack"; delete btn.dataset.sure;
+  const r = await sb.from("messages").delete().neq("id", 0);
+  if (r.error) { sys("could not clear - run the newest sql."); return; }
+  byId("sdFeed").innerHTML = "";
+  sys("stack cleared - fresh wall.");
+}
+byId("sdClear").addEventListener("click", function () { clearStack(this); });
 roster([]);
 </script>
 </body>
