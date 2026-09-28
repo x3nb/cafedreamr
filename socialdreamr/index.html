@@ -41,7 +41,7 @@ button:disabled:hover{background:#000;color:#fff}
 .sdMsg audio{width:100%;height:34px;margin-top:8px;display:block}
 .sdTrack{border:3px solid #000;margin-top:8px;padding:8px}
 .sdTrack .tt{font-weight:700;font-size:11px;letter-spacing:.06em;margin-bottom:6px;overflow-wrap:anywhere}
-.sdSys{font-size:11px;color:#000;background:#f2f2f2;border:2px dashed #000;padding:6px 8px;text-align:center}
+.sdMsg.wait{border:3px dashed #000;padding:8px}.sdMsg button.mini{font-size:9px;padding:4px 8px;margin:6px 6px 0 0}.sdSys{font-size:11px;color:#000;background:#f2f2f2;border:2px dashed #000;padding:6px 8px;text-align:center}
 .sdStage{display:none;border:3px dashed #000;padding:8px 10px;margin-bottom:10px;font-size:12px;align-items:center;gap:10px}
 .sdStage.on{display:flex}
 .sdStage.busy .st{animation:blink 1s infinite}
@@ -68,6 +68,7 @@ button:disabled:hover{background:#000;color:#fff}
       <button id="sdJoin" type="button">Walk in</button>
       <button id="sdReset" type="button">Reset</button>
     </div>
+    <div class="sdRow" style="margin-top:8px;max-width:420px;"><input id="sdMod" maxlength="64" placeholder="MOD CODE (OWNERS)" aria-label="mod code" autocomplete="off"><button id="sdModGo" type="button">Mod</button></div>
     <p class="sdNote" id="sdNote">Put your name up and walk in.</p>
   </div>
   <div class="sdGrid">
@@ -140,12 +141,12 @@ function msgHtml(m) {
     }
   }
   if (m.audio) h += '<div class="sdTrack"><div class="tt">' + esc(m.atitle || "TRACK") + '</div><audio controls preload="none" src="' + esc(m.audio) + '"></audio></div>';
-  return h;
+  if (isMod || m.name === myName()) h += ' <button class="mini" data-del="' + m.id + '">drop</button>'; if (isMod && m.approved === false) h += ' <button class="mini" data-ok="' + m.id + '">let in</button>'; return h;
 }
-function addMsg(m) {
+function addMsg(m) { if (m.approved === false && !isMod) return;
   const f = byId("sdFeed"), near = f.scrollHeight - f.scrollTop - f.clientHeight < 60;
   const d = document.createElement("div");
-  d.className = "sdMsg";
+  d.className = "sdMsg" + (m.approved === false ? " wait" : "");
   d.dataset.id = m.id;
   d.innerHTML = msgHtml(m);
   if (!f.querySelector('[data-id="' + m.id + '"]')) f.appendChild(d);
@@ -167,7 +168,7 @@ function setOpen(open) {
 }
 
 const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-let chan = null, staged = null, lastSend = 0, joined = false;
+let chan = null, staged = null, lastSend = 0, joined = false, isMod = false, moderated = false, admHash = '';
 
 async function loadRecent() {
   const { data, error } = await sb.from("messages").select("*").order("created_at", {ascending: false}).limit(30);
@@ -184,6 +185,7 @@ function paintPresence() {
   roster(list);
 }
 async function join() {
+  try { const st = await sb.from('settings').select('*'); (st.data || []).forEach(function (r) { if (r.key === 'moderated') moderated = (r.value === 'true'); if (r.key === 'admin_hash') admHash = r.value || ''; }); } catch (e) {}
   if (joined) return;
   const me = {name: myName(), site: mySite()};
   store("sdName", byId("sdName").value);
@@ -192,6 +194,8 @@ async function join() {
   chan.on("presence", {event: "sync"}, paintPresence);
   chan.on("presence", {event: "join"}, paintPresence);
   chan.on("presence", {event: "leave"}, paintPresence);
+  chan.on("postgres_changes", {event: "UPDATE", schema: "public", table: "messages"}, function (p) { if (!p.new) return; const ex = byId("sdFeed").querySelector("[data-id='" + p.new.id + "']"); if (p.new.approved && !ex) addMsg(p.new); else if (p.new.approved && ex) ex.innerHTML = msgHtml(p.new); else if (!p.new.approved && ex && !isMod) ex.remove(); });
+  chan.on("postgres_changes", {event: "DELETE", schema: "public", table: "messages"}, function (p) { if (!p.old) return; const ex = byId("sdFeed").querySelector("[data-id='" + p.old.id + "']"); if (ex) ex.remove(); });
   chan.on("postgres_changes", {event: "INSERT", schema: "public", table: "messages"}, (p) => { if (p.new) addMsg(p.new); });
   const st = await new Promise((resolve) => {
     let done = false;
@@ -221,7 +225,7 @@ async function diagnose(st) {
   sys(msg);
 }
 async function leave() {
-  joined = false;
+  joined = false, isMod = false, moderated = false, admHash = '';
   if (chan) { try { await chan.untrack(); } catch (e) {} try { await sb.removeChannel(chan); } catch (e) {} chan = null; }
   setOpen(false); roster([]);
   sys("you stepped out");
@@ -232,7 +236,7 @@ async function sendIt() {
   if (!v && !staged) return;
   if (Date.now() - lastSend < 1500) { sys("easy — one at a time."); return; }
   lastSend = Date.now();
-  const row = {name: myName(), site: mySite(), text: v || ""};
+  const row = {name: myName(), site: mySite(), text: v || "", approved: !moderated};
   if (staged) { row.audio = staged.url; row.atitle = staged.title; }
   byId("sdText").value = ""; stageClear();
   const { error } = await sb.from("messages").insert(row);
@@ -273,6 +277,7 @@ async function attach() {
   stageTrack(title);
 }
 
+try { if (sessionStorage.getItem("sdmod") === "1") isMod = true; } catch (e) {}
 const sn = load("sdName"), ss = load("sdSite");
 if (sn) byId("sdName").value = sn;
 if (ss) byId("sdSite").value = ss;
@@ -307,6 +312,9 @@ async function clearStack(btn) {
   sys("stack cleared - fresh wall.");
 }
 byId("sdClear").addEventListener("click", function () { clearStack(this); });
+async function sha(s) { const b = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(s)); return Array.prototype.map.call(new Uint8Array(b), function (x) { return x.toString(16).padStart(2, "0"); }).join(""); }
+byId("sdFeed").addEventListener("click", function (e) { const del = e.target.closest("[data-del]"), ok = e.target.closest("[data-ok]"); if (del) sb.from("messages").delete().eq("id", Number(del.dataset.del)); else if (ok) sb.from("messages").update({approved: true}).eq("id", Number(ok.dataset.ok)); });
+byId("sdModGo").addEventListener("click", async function () { const v = (byId("sdMod").value || "").trim(); if (!v || !joined) { sys("walk in first, then the code."); return; } if (admHash && await sha(v) === admHash) { isMod = true; try { sessionStorage.setItem("sdmod", "1"); } catch (e) {} byId("sdMod").value = ""; byId("sdFeed").innerHTML = ""; loadRecent(); sys("modded up."); } else sys("wrong code."); });
 roster([]);
 </script>
 </body>
