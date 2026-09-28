@@ -189,7 +189,16 @@ async function join() {
   chan.on("presence", {event: "join"}, paintPresence);
   chan.on("presence", {event: "leave"}, paintPresence);
   chan.on("postgres_changes", {event: "INSERT", schema: "public", table: "messages"}, (p) => { if (p.new) addMsg(p.new); });
-  const st = await chan.subscribe();
+  const st = await new Promise((resolve) => {
+    let done = false;
+    const to = setTimeout(() => { if (!done) { done = true; resolve("TIMED_OUT"); } }, 10000);
+    chan.subscribe((s) => {
+      if (done || typeof s !== "string") return;
+      if (s === "SUBSCRIBED" || s === "TIMED_OUT" || s === "CHANNEL_ERROR" || s === "CLOSED") {
+        done = true; clearTimeout(to); resolve(s);
+      }
+    });
+  });
   if (st !== "SUBSCRIBED") { chan = null; await diagnose(st); return; }
   await chan.track(me);
   joined = true;
