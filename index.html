@@ -735,6 +735,23 @@ body{min-height:100dvh}
 .cntWho .av{width:12px;height:12px}
 .cntWho.stale{opacity:.4}
 .cntWho small{color:var(--dim);font-size:8px}
+.cntRoom{position:fixed;inset:0;z-index:90;background:rgba(4,4,7,.96);overflow-y:auto;padding:22px 14px 30px;display:flex}
+.cntRoom[hidden]{display:none}
+.cntRoomIn{width:min(720px,100%);margin:auto}
+.cntRoomHead{display:flex;align-items:baseline;gap:10px;padding-bottom:10px}
+.cntRoomTitle{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#fff}
+.cntRoomN{font-family:var(--mono);font-size:9px;letter-spacing:.1em;color:var(--dim)}
+.cntRoomHead button{font-family:var(--mono);font-size:8.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--lav);background:transparent;border:1px solid var(--line);border-radius:7px;padding:8px 11px;cursor:pointer;transition:.18s}
+.cntRoomHead button:hover{border-color:var(--lime);color:#fff}
+.cntRoomHead #cntLink{margin-left:auto}
+.cntRoom .cntFeed{height:min(54vh,440px)}
+.cntRoom .cntSide{max-height:min(54vh,440px)}
+@media (max-width:640px){
+.cntRoom .cntMain{grid-template-columns:1fr}
+.cntRoom .cntSide{max-height:none}
+.cntRoom #cntRoster{display:flex;gap:10px;overflow-x:auto}
+.cntRoom .cntWho{flex:0 0 auto;padding-bottom:2px}
+}
 .cast{position:relative;display:block;text-decoration:none;overflow:hidden;padding:9px 10px 10px 12px;
   border:1px solid var(--line);border-radius:11px;color:var(--lav);transition:.18s;
   background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.012))}
@@ -1112,6 +1129,13 @@ html.inviteOnly .stage{padding-top:0}
           aria-expanded="false" aria-controls="trayCounterBody">
           <span class="trk">the counter</span><span class="rule"></span><span class="trn" id="counterN"></span><span class="chev">&#8250;</span></button>
         <div class="trayBody" id="trayCounterBody">
+          <p class="cntNote">the family chat lives in its own room now &mdash; masks, kinds, the whole loud table.</p>
+          <div class="cntRow"><button id="cntDoor" type="button">take a seat &rarr;</button></div>
+        </div>
+
+        <div class="cntRoom" id="counterRoom" hidden role="dialog" aria-modal="true" aria-label="the counter, the family chat">
+          <div class="cntRoomIn">
+          <div class="cntRoomHead"><button type="button" id="cntBack">&larr; back</button><span class="cntRoomTitle">the counter</span><span class="cntRoomN" id="roomN"></span><button type="button" id="cntLink">copy link</button></div>
           <p class="cntNote" id="counterNote">the family chat &mdash; pick a mask, pick a kind, sit down. it talks fastest on the perchance terminal.</p>
           <div class="cntMasks" id="cntMasks"></div>
           <div class="cntRow">
@@ -1175,6 +1199,7 @@ html.inviteOnly .stage{padding-top:0}
         <div class="trayBody" id="trayFamilyBody">
           <p class="castNote" id="castNote">&mdash;</p>
           <div class="castGrid" id="castGrid"></div>
+          </div>
         </div>
 
         <button class="tray" id="trayOutsideHead" type="button" data-tray="outside" data-noun="ways out"
@@ -2457,6 +2482,7 @@ const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
         + "<span>" + escHtml(p.name) + " <small>" + escHtml(p.mask) + " · " + escHtml(p.kind) + "</small></span></div>";
     }).join("") || "<div class=\"cntWho\">quiet in here</div>";
     byId("counterN").textContent = (who || []).length + " here";
+    byId("roomN").textContent = (who || []).length + " here";
   }
   function cntSetOpen(open) {
     byId("cntText").disabled = !open;
@@ -2717,6 +2743,30 @@ const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
   }
 
   function renderReel() { renderCarry(); renderSave(); renderFamily(); }
+
+  function cntRoomOpen() {
+    byId("counterRoom").hidden = false;
+    try { document.body.style.overflow = "hidden"; } catch (e) {}
+    try { history.replaceState(null, "", "#counter"); } catch (e) {}
+    setTimeout(function () { try { byId("cntText").focus({preventScroll: true}); } catch (e) {} }, 60);
+  }
+  function cntRoomClose() {
+    byId("counterRoom").hidden = true;
+    try { document.body.style.overflow = ""; } catch (e) {}
+    try { history.replaceState(null, "", location.pathname + location.search); } catch (e) {}
+  }
+  byId("cntDoor").addEventListener("click", cntRoomOpen);
+  byId("cntBack").addEventListener("click", cntRoomClose);
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && byId("counterRoom").hidden === false) cntRoomClose();
+  });
+  byId("cntLink").addEventListener("click", function () {
+    var link = "https://perchance.org/" + (window.generatorName || "") + "#counter";
+    var done = function () { toast("link copied · bring someone kind."); };
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(link).then(done, function () { toast(link); });
+    else toast(link);
+  });
+  try { if ((location.hash || "") === "#counter") cntRoomOpen(); } catch (e) {}
 
   /* ---------- the reel's own wiring ---------- */
   if (window.CD && window.CD.onChange) {
