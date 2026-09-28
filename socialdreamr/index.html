@@ -68,7 +68,7 @@ button:disabled:hover{background:#000;color:#fff}
       <button id="sdJoin" type="button">Walk in</button>
       <button id="sdReset" type="button">Reset</button>
     </div>
-    <div class="sdRow" style="margin-top:8px;max-width:420px;"><input id="sdMod" maxlength="64" placeholder="MOD CODE (OWNERS)" aria-label="mod code" autocomplete="off"><button id="sdModGo" type="button">Mod</button></div>
+    <div class="sdRow" style="margin-top:8px;max-width:420px;"><input id="sdMod" maxlength="64" placeholder="MOD CODE (OWNERS)" aria-label="mod code" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false"><button id="sdModGo" type="button">Mod</button></div>
     <p class="sdNote" id="sdNote">Put your name up and walk in.</p>
   </div>
   <div class="sdGrid">
@@ -314,7 +314,7 @@ async function clearStack(btn) {
 byId("sdClear").addEventListener("click", function () { clearStack(this); });
 async function sha(s) { const b = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(s)); return Array.prototype.map.call(new Uint8Array(b), function (x) { return x.toString(16).padStart(2, "0"); }).join(""); }
 byId("sdFeed").addEventListener("click", function (e) { const del = e.target.closest("[data-del]"), ok = e.target.closest("[data-ok]"); if (del) sb.from("messages").delete().eq("id", Number(del.dataset.del)); else if (ok) sb.from("messages").update({approved: true}).eq("id", Number(ok.dataset.ok)); });
-byId("sdModGo").addEventListener("click", async function () { const v = (byId("sdMod").value || "").trim(); if (!v || !joined) { sys("walk in first, then the code."); return; } if (admHash && await sha(v) === admHash) { isMod = true; try { sessionStorage.setItem("sdmod", "1"); } catch (e) {} byId("sdMod").value = ""; byId("sdFeed").innerHTML = ""; loadRecent(); sys("modded up."); } else sys("wrong code."); });
+byId("sdModGo").addEventListener("click", async function () { const v = (byId("sdMod").value || "").trim().toLowerCase(); if (!v || !joined) { sys("walk in first, then the code."); return; } if (admHash && await sha(v) === admHash) { isMod = true; try { sessionStorage.setItem("sdmod", "1"); } catch (e) {} byId("sdMod").value = ""; byId("sdFeed").innerHTML = ""; loadRecent(); sys("modded up."); } else sys("wrong code."); });
 roster([]);
 </script>
 </body>
