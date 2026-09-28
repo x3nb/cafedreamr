@@ -1,351 +1,266 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>socialdreamr</title>
+<meta name="description" content="socialdreamr — a brutalist lobby for chatting and sharing mp3s. put your name up, drop your link, pass tracks around.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 <style>
-.socialdreamr{--amber:#ffc857;--plum:#0d001a;--ink:#0b0b0e;--lav:#fff0f5;--dim:#7d848b;--line:rgba(255,255,255,.1);--mono:'Space Mono',ui-monospace,Menlo,monospace;max-width:860px;margin:0 auto;padding:22px 14px 40px;color:var(--lav);font-family:var(--mono);text-align:left}
-.sdHead{display:flex;align-items:baseline;gap:10px;padding-bottom:4px}
-.sdTitle{font-size:15px;letter-spacing:.24em;text-transform:uppercase;color:#fff}
-.sdHere{font-size:9px;letter-spacing:.1em;color:var(--dim)}
-.sdHead button{margin-left:auto;font-family:var(--mono);font-size:8.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--lav);background:transparent;border:1px solid var(--line);border-radius:7px;padding:8px 11px;cursor:pointer}
-.sdHead button:hover{border-color:var(--amber);color:#fff}
-.sdSub{font-size:9px;letter-spacing:.09em;line-height:1.7;color:var(--dim);padding-bottom:14px}
-.sdCard{border:1px solid var(--line);border-radius:12px;background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.012));padding:12px;margin-bottom:12px}
-.sdRow{display:flex;gap:6px;flex-wrap:wrap}
-.sdRow input{flex:1;min-width:0;font-family:var(--mono);font-size:10px;color:var(--lav);outline:none;background:rgba(255,255,255,.05);border:1px solid var(--line);border-radius:7px;padding:9px 10px}
-.sdRow input:focus{border-color:var(--amber)}
-.sdRow button,.sdSendRow button{font-family:var(--mono);font-size:8.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--lav);background:transparent;border:1px solid var(--line);border-radius:7px;padding:9px 12px;cursor:pointer}
-.sdRow button:hover,.sdSendRow button:hover{border-color:var(--amber);color:#fff}
-.sdRow button:disabled,.sdSendRow button:disabled{opacity:.45;cursor:default}
-.sdNote{font-size:8.5px;letter-spacing:.08em;line-height:1.7;color:var(--dim);padding-top:8px}
-.sdNote b{color:var(--lav);font-weight:400}
-.sdMain{display:grid;grid-template-columns:1fr 170px;gap:10px;margin-bottom:12px}
-.sdFeed{height:min(56vh,460px);overflow-y:auto;border:1px solid var(--line);border-radius:12px;background:rgba(0,0,0,.3);padding:10px;display:flex;flex-direction:column;gap:10px}
-.sdSide{border:1px solid var(--line);border-radius:12px;background:rgba(0,0,0,.3);padding:10px;max-height:min(56vh,460px);overflow-y:auto}
-.sdSideK{font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);padding-bottom:8px}
-.sdWho{display:flex;align-items:center;gap:7px;font-size:9px;padding-bottom:8px;overflow-wrap:anywhere}
-.sdWho a{color:var(--lav);text-decoration:none;border-bottom:1px solid var(--line)}
-.sdWho a:hover{border-color:var(--amber);color:#fff}
-.sdWho.stale{opacity:.4}
-.sdDot{flex:0 0 auto;width:11px;height:11px;border-radius:50%;background:var(--cc,#ffc857);box-shadow:0 0 8px var(--cc,#ffc857)}
-.sdMsg{display:flex;gap:8px;align-items:flex-start;font-size:9.5px;line-height:1.55;overflow-wrap:anywhere}
-.sdMsg .sdDot{margin-top:3px;width:14px;height:14px}
-.sdMsg .who{color:var(--cc,#ffc857);text-decoration:none;border-bottom:1px solid transparent}
-.sdMsg a.who:hover{border-color:currentColor}
-.sdMsg.mine .tx{color:#fff}
-.sdMsg .at{color:var(--dim);font-size:8px;margin-left:auto;flex:0 0 auto}
-.sdMsg audio{width:100%;height:30px;margin-top:6px;display:block}
-.sdTrack{border:1px solid var(--line);border-radius:8px;padding:7px 8px;margin-top:6px;background:rgba(255,255,255,.03)}
-.sdTrack .tt{font-size:8.5px;letter-spacing:.08em;color:var(--lav);padding-bottom:4px;overflow-wrap:anywhere}
-.sdLink{display:block;border:1px solid var(--line);border-radius:8px;padding:7px 8px;margin-top:6px;text-decoration:none}
-.sdLink:hover{border-color:var(--amber)}
-.sdLink .lt{font-size:9px;color:#fff;display:block;overflow-wrap:anywhere}
-.sdLink .lu{font-size:8px;color:var(--dim);display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.sdMsg .tx a{color:#c0a6ff}
-.sdSys{font-size:8.5px;letter-spacing:.1em;color:var(--dim);text-align:center}
-.sdSendRow{display:flex;gap:6px}
-.sdSendRow input{flex:1;min-width:0;font-family:var(--mono);font-size:10px;color:var(--lav);outline:none;background:rgba(255,255,255,.05);border:1px solid var(--line);border-radius:7px;padding:9px 10px}
-.sdSendRow input:focus{border-color:var(--amber)}
-.sdStage{display:none;align-items:center;gap:8px;font-size:8.5px;letter-spacing:.06em;color:var(--lav);border:1px dashed var(--line);border-radius:8px;padding:7px 9px;margin-bottom:8px;overflow-wrap:anywhere}
+*{box-sizing:border-box}
+html,body{background:#fff}
+body{margin:0;color:#000;font-family:'Space Mono',ui-monospace,Menlo,monospace;-webkit-font-smoothing:antialiased}
+.sd{max-width:900px;margin:0 auto;padding:28px 16px 60px}
+.sdStamp{display:inline-block;background:#000;color:#fff;font-weight:700;font-size:22px;letter-spacing:.14em;padding:10px 16px;margin-bottom:6px}
+.sdTag{font-size:12px;margin:0 0 20px;max-width:60ch}
+.sdGrid{display:grid;grid-template-columns:1fr 200px;gap:16px}
+.sdBox{border:3px solid #000;background:#fff;box-shadow:6px 6px 0 #000;padding:14px;margin-bottom:16px}
+.sdBox h2{font-size:12px;letter-spacing:.2em;margin:0 0 10px;text-transform:uppercase}
+.sdRow{display:flex;gap:8px;flex-wrap:wrap}
+.sdRow input{flex:1;min-width:0;font-family:inherit;font-size:13px;color:#000;background:#fff;border:3px solid #000;padding:10px 12px;border-radius:0;outline:none}
+.sdRow input:focus{background:#f2f2f2}
+button{font-family:inherit;font-weight:700;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#fff;background:#000;border:3px solid #000;padding:10px 16px;border-radius:0;cursor:pointer}
+button:hover{background:#fff;color:#000}
+button:disabled{opacity:.35;cursor:default}
+button:disabled:hover{background:#000;color:#fff}
+.sdNote{font-size:11px;margin:10px 0 0}
+.sdFeed{height:min(58vh,480px);overflow-y:auto;display:flex;flex-direction:column;gap:14px}
+.sdSideK{font-size:11px;letter-spacing:.2em;text-transform:uppercase;margin:0 0 10px}
+.sdWho{font-size:12px;margin-bottom:10px;overflow-wrap:anywhere}
+.sdWho a{color:#000;text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:3px}
+.sdWho .st{color:#555;font-size:10px}
+.sdMsg{font-size:13px;line-height:1.6;overflow-wrap:anywhere;border-top:2px solid #000;padding-top:10px}
+.sdMsg:first-child{border-top:none;padding-top:0}
+.sdMsg .who{font-weight:700;color:#000}
+.sdMsg a.who{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:3px}
+.sdMsg .at{color:#555;font-size:10px;margin-left:8px}
+.sdMsg .tx a{color:#000;text-decoration:underline;text-decoration-thickness:2px}
+.sdMsg audio{width:100%;height:34px;margin-top:8px;display:block}
+.sdTrack{border:3px solid #000;margin-top:8px;padding:8px}
+.sdTrack .tt{font-weight:700;font-size:11px;letter-spacing:.06em;margin-bottom:6px;overflow-wrap:anywhere}
+.sdSys{font-size:11px;color:#000;background:#f2f2f2;border:2px dashed #000;padding:6px 8px;text-align:center}
+.sdStage{display:none;border:3px dashed #000;padding:8px 10px;margin-bottom:10px;font-size:12px;align-items:center;gap:10px}
 .sdStage.on{display:flex}
 .sdStage.busy .st{animation:blink 1s infinite}
-.sdStage button{margin-left:auto;font-family:var(--mono);font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);background:none;border:none;cursor:pointer}
-.sdStage button:hover{color:#fff}
-@keyframes blink{50%{opacity:.35}}
-@media (max-width:640px){.sdMain{grid-template-columns:1fr}.sdSide{max-height:none}#sdRoster{display:flex;gap:12px;overflow-x:auto}.sdWho{flex:0 0 auto;padding-bottom:2px}}
+.sdStage button{margin-left:auto;padding:6px 10px}
+@keyframes blink{50%{opacity:.3}}
+.sdSend{display:flex;gap:8px}
+.sdSend input{flex:1;min-width:0;font-family:inherit;font-size:13px;border:3px solid #000;padding:10px 12px;border-radius:0;outline:none}
+@media (max-width:640px){.sdGrid{grid-template-columns:1fr}.sdStamp{font-size:17px}}
 </style>
-<div class="socialdreamr">
-  <div class="sdHead"><span class="sdTitle">socialdreamr</span><span class="sdHere" id="sdHere"></span><button id="sdCopy" type="button">copy invite</button></div>
-  <div class="sdSub">a night lobby for talking and passing tracks around. everyone gets one link — yours shows under everything you say.</div>
-  <div class="sdCard">
+</head>
+<body>
+<div class="sd">
+  <div><span class="sdStamp">SOCIALDREAMR</span></div>
+  <p class="sdTag">a lobby for talking and passing tracks around. everyone gets one link — yours prints under everything you say.</p>
+  <div class="sdBox">
+    <h2>Your card</h2>
     <div class="sdRow">
-      <input id="sdName" maxlength="24" placeholder="your name" aria-label="your name" autocomplete="off">
-      <input id="sdSite" maxlength="200" placeholder="your link — site, social, whatever" aria-label="your link" autocomplete="off" inputmode="url">
-      <button id="sdJoin" type="button">walk in</button>
+      <input id="sdName" maxlength="24" placeholder="YOUR NAME" aria-label="your name" autocomplete="off">
+      <input id="sdSite" maxlength="200" placeholder="YOUR LINK (SITE, SOCIAL, WHATEVER)" aria-label="your link" autocomplete="off" inputmode="url">
+      <button id="sdJoin" type="button">Walk in</button>
     </div>
-    <div class="sdNote" id="sdNote">put your name up and walk in. nothing here leaves this lobby except what you post.</div>
+    <p class="sdNote" id="sdNote">Put your name up and walk in.</p>
   </div>
-  <div class="sdMain">
-    <div class="sdFeed" id="sdFeed" aria-live="polite"></div>
-    <div class="sdSide"><div class="sdSideK">here now</div><div id="sdRoster"></div></div>
+  <div class="sdGrid">
+    <div class="sdBox"><div class="sdFeed" id="sdFeed" aria-live="polite"></div></div>
+    <div class="sdBox"><p class="sdSideK">Here now</p><div id="sdRoster"></div></div>
   </div>
-  <div class="sdCard">
-    <div class="sdStage" id="sdStage"><span class="st" id="sdStageT"></span><button id="sdStageX" type="button">drop it</button></div>
-    <div class="sdSendRow">
+  <div class="sdBox">
+    <h2>Say it / play it</h2>
+    <div class="sdStage" id="sdStage"><span class="st" id="sdStageT"></span><button id="sdStageX" type="button">Drop</button></div>
+    <div class="sdSend">
       <input id="sdText" maxlength="300" placeholder="say something, or paste an mp3 link" aria-label="chat message" autocomplete="off" disabled>
-      <button id="sdAttach" type="button" disabled>mp3</button>
-      <button id="sdSend" type="button" disabled>send</button>
+      <button id="sdAttach" type="button" disabled>MP3</button>
+      <button id="sdSend" type="button" disabled>Send</button>
     </div>
     <input id="sdFile" type="file" accept="audio/mpeg,audio/mp3,.mp3" hidden>
   </div>
 </div>
-<script type="text/x-server-plugin">
-var PEERS = {}, RECENT = [];
-function cleanStr(s, n) {
-  if (typeof s !== "string") return "";
-  return s.trim().slice(0, n);
+<script type="module">
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+const SUPABASE_URL = "https://xzhsscjdaffzldnqwpxl.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh6aHNzY2pkYWZmemxkbnF3cHhsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY3NTY0NzcsImV4cCI6MjEwMjMzMjQ3N30.dc7UFaby8qmFue6UNr2QodurIPFGQBtAMz1EmBizt5g";
+
+const byId = (id) => document.getElementById(id);
+const esc = (s) => String(s == null ? "" : s).replace(/[&<>"']/g, (c) => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"}[c]));
+function sys(s) {
+  const f = byId("sdFeed"), d = document.createElement("div");
+  d.className = "sdSys"; d.textContent = s;
+  f.appendChild(d);
+  while (f.children.length > 80) f.removeChild(f.firstChild);
+  f.scrollTop = f.scrollHeight;
 }
-function cleanLink(u, n) {
-  if (typeof u !== "string") return "";
-  u = u.trim().slice(0, n);
-  if (!/^https?:\/\/[^ \t\n<>"]+$/.test(u)) return "";
-  return u;
-}
-function rosterOut() {
-  var out = [], t = Date.now(), id;
-  for (id in PEERS) {
-    if (Date.now() - PEERS[id].seen > 90000) continue;
-    out.push({name: PEERS[id].name, site: PEERS[id].site, seen: PEERS[id].seen, t: t});
+function linkify(s) {
+  const parts = String(s).split(/(https?:\/\/[^\s<>"]+)/g);
+  let out = "";
+  for (let i = 0; i < parts.length; i++) {
+    if (i % 2 === 1) out += '<a href="' + esc(parts[i]) + '" target="_blank" rel="noopener noreferrer">' + esc(parts[i]) + "</a>";
+    else out += esc(parts[i]);
   }
   return out;
 }
-function prune() {
-  var id, n = 0, changed = false;
-  for (id in PEERS) {
-    n++;
-    if (Date.now() - PEERS[id].seen > 90000) { delete PEERS[id]; changed = true; }
-  }
-  return changed || n > 0;
+function mp3url(s) {
+  const m = /https?:\/\/[^\s<>"]+?\.mp3(\?[^\s<>"]*)?/i.exec(String(s));
+  return m ? m[0] : "";
 }
-function publishRoster() {
-  pubsub.publish("lobby", JSON.stringify({t: "roster", who: rosterOut()}));
+function store(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+function load(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+function myName() { return (byId("sdName").value || "").trim().slice(0, 24) || "visitor"; }
+function mySite() {
+  let v = (byId("sdSite").value || "").trim().slice(0, 200);
+  if (v && !/^https?:\/\//i.test(v)) v = "https://" + v;
+  return /^https?:\/\/[^ \t\n<>"]+$/.test(v) ? v : "";
 }
-self.onopen = function (e) {
-  e.conn.subscribe("lobby");
-};
-self.onmessage = function (e) {
-  var msg = null;
-  try { msg = JSON.parse(e.data); } catch (err) { return; }
-  if (!msg || typeof msg.t !== "string") return;
-  var id = e.conn.id, t = Date.now();
-  if (msg.t === "hello" || msg.t === "beat") {
-    var name = cleanStr(msg.name, 24) || "visitor";
-    var site = cleanLink(msg.site, 200);
-    var p = PEERS[id];
-    if (!p) PEERS[id] = {name: name, site: site, seen: t, lastChat: 0, window: []};
-    else { p.name = name; p.site = site; p.seen = t; }
-    if (msg.t === "hello") e.conn.send(JSON.stringify({t: "recent", msgs: RECENT}));
-    if (msg.t === "hello" || prune()) publishRoster();
-    return;
+function whoHtml(name, site) {
+  if (site) return '<a class="who" href="' + esc(site) + '" target="_blank" rel="noopener noreferrer">' + esc(name) + "</a>";
+  return '<span class="who">' + esc(name) + "</span>";
+}
+function fmtTime(at) {
+  try { return new Date(at).toLocaleTimeString([], {hour: "2-digit", minute: "2-digit"}); } catch (e) { return ""; }
+}
+function msgHtml(m) {
+  let h = "<div>" + whoHtml(m.name, m.site) + '<span class="at">' + esc(fmtTime(m.created_at)) + "</span></div>";
+  if (m.text) {
+    const found = mp3url(m.text);
+    if (found && m.text.trim() === found.trim()) {
+      h += '<div class="sdTrack"><div class="tt">' + esc(found.split("/").pop().split("?")[0] || "TRACK") + '</div><audio controls preload="none" src="' + esc(found) + '"></audio></div>';
+    } else {
+      h += '<div class="tx">' + linkify(m.text) + "</div>";
+      if (found) h += '<div class="sdTrack"><div class="tt">TRACK</div><audio controls preload="none" src="' + esc(found) + '"></audio></div>';
+    }
   }
-  if (msg.t === "share") {
-    var q = PEERS[id];
-    if (!q) return;
-    if (t - q.lastChat < 1500) return;
-    var w = q.window;
-    while (w.length && t - w[0] > 10000) w.shift();
-    if (w.length >= (e.conn.isProxy ? 3 : 5)) return;
-    var text = cleanStr(msg.text, 300);
-    var audio = cleanLink(msg.audio, 2000);
-    var atitle = cleanStr(msg.atitle, 80);
-    var link = cleanLink(msg.link, 500);
-    var ltitle = cleanStr(msg.ltitle, 80);
-    if (!text && !audio && !link) return;
-    q.lastChat = t; w.push(t); q.seen = t;
-    var out = {t: "msg", name: q.name, site: q.site, text: text, audio: audio, atitle: atitle, link: link, ltitle: ltitle, at: t};
-    RECENT.push(out);
-    if (RECENT.length > 30) RECENT.shift();
-    pubsub.publish("lobby", JSON.stringify(out));
+  if (m.audio) h += '<div class="sdTrack"><div class="tt">' + esc(m.atitle || "TRACK") + '</div><audio controls preload="none" src="' + esc(m.audio) + '"></audio></div>';
+  return h;
+}
+function addMsg(m) {
+  const f = byId("sdFeed"), near = f.scrollHeight - f.scrollTop - f.clientHeight < 60;
+  const d = document.createElement("div");
+  d.className = "sdMsg";
+  d.dataset.id = m.id;
+  d.innerHTML = msgHtml(m);
+  if (!f.querySelector('[data-id="' + m.id + '"]')) f.appendChild(d);
+  while (f.children.length > 80) f.removeChild(f.firstChild);
+  if (near) f.scrollTop = f.scrollHeight;
+}
+function roster(list) {
+  const r = byId("sdRoster");
+  r.innerHTML = list.map((p) => {
+    const nm = p.site ? '<a href="' + esc(p.site) + '" target="_blank" rel="noopener noreferrer">' + esc(p.name) + "</a>" : esc(p.name);
+    return '<div class="sdWho">' + nm + "</div>";
+  }).join("") || '<div class="sdWho"><span class="st">quiet in here</span></div>';
+}
+function setOpen(open) {
+  byId("sdText").disabled = !open;
+  byId("sdAttach").disabled = !open;
+  byId("sdSend").disabled = !open;
+  byId("sdJoin").textContent = open ? "Step out" : "Walk in";
+}
+
+const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+let chan = null, staged = null, lastSend = 0, joined = false;
+
+async function loadRecent() {
+  const { data, error } = await sb.from("messages").select("*").order("created_at", {ascending: false}).limit(30);
+  if (error) { sys("couldn't pull the recent stack — check the sql setup."); return; }
+  (data || []).reverse().forEach(addMsg);
+  byId("sdFeed").scrollTop = byId("sdFeed").scrollHeight;
+}
+function paintPresence() {
+  if (!chan) return;
+  const state = chan.presenceState();
+  const list = [];
+  for (const id in state) (state[id] || []).forEach((p) => { if (p.name) list.push(p); });
+  list.sort((a, b) => String(a.name).localeCompare(String(b.name)));
+  roster(list);
+}
+async function join() {
+  if (joined) return;
+  const me = {name: myName(), site: mySite()};
+  store("sdName", byId("sdName").value);
+  store("sdSite", byId("sdSite").value);
+  chan = sb.channel("socialdreamr-lobby", {config: {presence: {key: "x" + Math.random().toString(36).slice(2)}}});
+  chan.on("presence", {event: "sync"}, paintPresence);
+  chan.on("presence", {event: "join"}, paintPresence);
+  chan.on("presence", {event: "leave"}, paintPresence);
+  chan.on("postgres_changes", {event: "INSERT", schema: "public", table: "messages"}, (p) => { if (p.new) addMsg(p.new); });
+  const st = await chan.subscribe();
+  if (st !== "SUBSCRIBED") { sys("the door stuck — try again."); chan = null; return; }
+  await chan.track(me);
+  joined = true;
+  setOpen(true);
+  sys("you walked in as " + me.name);
+  loadRecent();
+}
+async function leave() {
+  joined = false;
+  if (chan) { try { await chan.untrack(); } catch (e) {} try { await sb.removeChannel(chan); } catch (e) {} chan = null; }
+  setOpen(false); roster([]);
+  sys("you stepped out");
+}
+async function sendIt() {
+  if (!joined || !chan) return;
+  const v = (byId("sdText").value || "").trim().slice(0, 300);
+  if (!v && !staged) return;
+  if (Date.now() - lastSend < 1500) { sys("easy — one at a time."); return; }
+  lastSend = Date.now();
+  const row = {name: myName(), site: mySite(), text: v || ""};
+  if (staged) { row.audio = staged.url; row.atitle = staged.title; }
+  byId("sdText").value = ""; stageClear();
+  const { error } = await sb.from("messages").insert(row);
+  if (error) sys("that didn't land — try again.");
+}
+function stageBusy(label) {
+  byId("sdStage").classList.add("on", "busy");
+  byId("sdStageT").textContent = label;
+}
+function stageTrack(title) {
+  byId("sdStage").classList.add("on");
+  byId("sdStage").classList.remove("busy");
+  byId("sdStageT").textContent = "TRACK READY: " + title;
+}
+function stageClear() {
+  staged = null;
+  byId("sdStage").classList.remove("on", "busy");
+}
+async function attach() {
+  const f = byId("sdFile").files && byId("sdFile").files[0];
+  byId("sdFile").value = "";
+  if (!f || !joined) return;
+  const okType = (f.type || "").indexOf("audio/") === 0 || /\.mp3$/i.test(f.name || "");
+  if (!okType) { sys("mp3s only for the decks."); return; }
+  if (f.size > 24 * 1024 * 1024) { sys("too big — keep it under ~24mb."); return; }
+  const title = ((f.name || "track").replace(/\.[^.]*$/, "") || "track").slice(0, 80);
+  stageBusy("lifting " + title + " …");
+  const ext = /\.mp3$/i.test(f.name || "") ? ".mp3" : "";
+  const path = Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 8) + ext;
+  const { error } = await sb.storage.from("tracks").upload(path, f, {contentType: f.type || "audio/mpeg"});
+  if (error) {
+    sys(error.message && /row-level|policy|permission/i.test(error.message) ? "storage said no — run the bucket half of the sql setup." : "that file wouldn't lift — try again.");
+    stageClear(); return;
   }
-};
-self.onclose = function (e) {
-  if (PEERS[e.conn.id]) { delete PEERS[e.conn.id]; publishRoster(); }
-};
+  const { data } = sb.storage.from("tracks").getPublicUrl(path);
+  if (!data || !data.publicUrl) { sys("that file wouldn't lift — try again."); stageClear(); return; }
+  staged = {url: data.publicUrl, title: title};
+  stageTrack(title);
+}
+
+const sn = load("sdName"), ss = load("sdSite");
+if (sn) byId("sdName").value = sn;
+if (ss) byId("sdSite").value = ss;
+byId("sdName").addEventListener("change", () => store("sdName", byId("sdName").value));
+byId("sdSite").addEventListener("change", () => store("sdSite", byId("sdSite").value));
+byId("sdJoin").addEventListener("click", () => { if (joined) leave(); else join(); });
+byId("sdSend").addEventListener("click", sendIt);
+byId("sdText").addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); sendIt(); } });
+byId("sdStageX").addEventListener("click", stageClear);
+byId("sdAttach").addEventListener("click", () => byId("sdFile").click());
+byId("sdFile").addEventListener("change", attach);
+roster([]);
 </script>
-<script>
-(function () {
-  "use strict";
-  function byId(id) { return document.getElementById(id); }
-  function esc(s) {
-    return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
-      return {"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"}[c];
-    });
-  }
-  function toast(s) {
-    var f = byId("sdFeed"), d = document.createElement("div");
-    d.className = "sdSys"; d.textContent = s;
-    f.appendChild(d);
-    while (f.children.length > 60) f.removeChild(f.firstChild);
-    f.scrollTop = f.scrollHeight;
-  }
-  function hue(name) {
-    var h = 0, s = name || "";
-    for (var i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) | 0;
-    var stops = ["#ffc857", "#ff2d95", "#00e5ff", "#ccff00", "#bf40bf", "#98fb98", "#6495ed", "#ffb8d9"];
-    return stops[(h >>> 0) % stops.length];
-  }
-  function linkify(s) {
-    var parts = String(s).split(/(https?:\/\/[^\s<>"]+)/g), out = "";
-    for (var i = 0; i < parts.length; i++) {
-      if (i % 2 === 1) out += '<a href="' + esc(parts[i]) + '" target="_blank" rel="noopener noreferrer">' + esc(parts[i]) + "</a>";
-      else out += esc(parts[i]);
-    }
-    return out;
-  }
-  function mp3url(s) {
-    var m = /https?:\/\/[^\s<>"]+?\.mp3(\?[^\s<>"]*)?/i.exec(String(s));
-    return m ? m[0] : "";
-  }
-  function store(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
-  function load(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
-  function myName() { return (byId("sdName").value || "").trim().slice(0, 24) || "visitor"; }
-  function mySite() {
-    var v = (byId("sdSite").value || "").trim().slice(0, 200);
-    if (v && !/^https?:\/\//i.test(v)) v = "https://" + v;
-    return /^https?:\/\/[^ \t\n<>"]+$/.test(v) ? v : "";
-  }
-  var sock = null, beatT = 0, backoff = 1000, want = false, staged = null;
-  function whoHtml(name, site) {
-    var cc = hue(name);
-    if (site) return '<a class="who" style="--cc:' + cc + '" href="' + esc(site) + '" target="_blank" rel="noopener noreferrer">' + esc(name) + "</a>";
-    return '<span class="who" style="--cc:' + cc + '">' + esc(name) + "</span>";
-  }
-  function msgHtml(m) {
-    var cc = hue(m.name), at = "";
-    try { at = new Date(m.at).toLocaleTimeString([], {hour: "2-digit", minute: "2-digit"}); } catch (e) {}
-    var h = '<span class="sdDot" style="--cc:' + cc + '"></span><span><span>' + whoHtml(m.name, m.site) + "</span>";
-    if (m.text) {
-      var found = mp3url(m.text);
-      if (found && m.text.trim() === found.trim()) h += '<div class="sdTrack"><div class="tt">' + esc(m.atitle || found.split("/").pop().split("?")[0] || "track") + '</div><audio controls preload="none" src="' + esc(found) + '"></audio></div>';
-      else {
-        h += ' <span class="tx">' + linkify(m.text) + "</span>";
-        if (found) h += '<div class="sdTrack"><div class="tt">track</div><audio controls preload="none" src="' + esc(found) + '"></audio></div>';
-      }
-    }
-    if (m.audio) h += '<div class="sdTrack"><div class="tt">' + esc(m.atitle || "track") + '</div><audio controls preload="none" src="' + esc(m.audio) + '"></audio></div>';
-    if (m.link) h += '<a class="sdLink" href="' + esc(m.link) + '" target="_blank" rel="noopener noreferrer"><span class="lt">' + esc(m.ltitle || m.link) + '</span><span class="lu">' + esc(m.link) + "</span></a>";
-    h += "</span>" + '<span class="at">' + esc(at) + "</span>";
-    return h;
-  }
-  function addMsg(m, mine) {
-    var f = byId("sdFeed"), near = f.scrollHeight - f.scrollTop - f.clientHeight < 60;
-    var d = document.createElement("div");
-    d.className = "sdMsg" + (mine ? " mine" : "");
-    d.innerHTML = msgHtml(m);
-    f.appendChild(d);
-    while (f.children.length > 60) f.removeChild(f.firstChild);
-    if (mine || near) f.scrollTop = f.scrollHeight;
-  }
-  function roster(who) {
-    var t = Date.now(), r = byId("sdRoster");
-    r.innerHTML = (who || []).map(function (p) {
-      var stale = (t - p.seen > 75000) ? " stale" : "", cc = hue(p.name);
-      var nm = p.site ? '<a href="' + esc(p.site) + '" target="_blank" rel="noopener noreferrer">' + esc(p.name) + "</a>" : esc(p.name);
-      return '<div class="sdWho' + stale + '"><span class="sdDot" style="--cc:' + cc + '"></span><span>' + nm + "</span></div>";
-    }).join("") || '<div class="sdWho">quiet in here</div>';
-    byId("sdHere").textContent = (who || []).length ? (who || []).length + " here" : "";
-  }
-  function setOpen(open) {
-    byId("sdText").disabled = !open;
-    byId("sdAttach").disabled = !open;
-    byId("sdSend").disabled = !open;
-    byId("sdJoin").textContent = open ? "step out" : "walk in";
-  }
-  function sendObj(o) { if (sock) { try { sock.send(JSON.stringify(o)); } catch (e) {} } }
-  function hello() { sendObj({t: "hello", name: myName(), site: mySite()}); }
-  function beat() { sendObj({t: "beat", name: myName(), site: mySite()}); }
-  function join() {
-    var mk = null;
-    try { mk = (typeof root !== "undefined" && root && typeof root.createServerSocket === "function") ? root.createServerSocket() : null; } catch (e) { mk = null; }
-    if (!mk) {
-      byId("sdNote").innerHTML = "this lobby only talks on its <b>perchance page</b> — this copy is standing outside.";
-      return;
-    }
-    sock = mk; want = true;
-    try { sock.binaryType = "arraybuffer"; } catch (e) {}
-    sock.addEventListener("open", function () {
-      backoff = 1000; hello();
-      if (beatT) clearInterval(beatT);
-      beatT = setInterval(beat, 20000);
-      setOpen(true);
-      toast("you walked in as " + myName());
-    });
-    sock.addEventListener("message", function (ev) {
-      var m = null;
-      try { m = JSON.parse(ev.data); } catch (e) { return; }
-      if (!m) return;
-      if (m.t === "msg") addMsg(m, m.name === myName());
-      else if (m.t === "roster") roster(m.who);
-      else if (m.t === "recent") (m.msgs || []).forEach(function (x) { addMsg(x, x.name === myName()); });
-    });
-    sock.addEventListener("close", function (ev) {
-      if (beatT) { clearInterval(beatT); beatT = 0; }
-      setOpen(false); sock = null;
-      if (ev && ev.code === 4403) {
-        byId("sdNote").innerHTML = "this lobby only talks on its <b>perchance page</b> — this copy is standing outside.";
-        want = false; return;
-      }
-      if (!want) return;
-      var wait = backoff + Math.floor(Math.random() * 800);
-      backoff = Math.min(30000, backoff * 2);
-      toast("the line dropped · trying again");
-      setTimeout(function () { if (want) join(); }, wait);
-    });
-  }
-  function leave() {
-    want = false;
-    if (beatT) { clearInterval(beatT); beatT = 0; }
-    if (sock) { try { sock.close(1000, "out"); } catch (e) {} sock = null; }
-    setOpen(false); toast("you stepped out");
-  }
-  function stageBusy(label) {
-    var s = byId("sdStage");
-    s.classList.add("on"); s.classList.add("busy");
-    byId("sdStageT").textContent = label;
-  }
-  function stageTrack(title) {
-    var s = byId("sdStage");
-    s.classList.add("on"); s.classList.remove("busy");
-    byId("sdStageT").textContent = "track ready: " + title;
-  }
-  function stageClear() {
-    staged = null;
-    byId("sdStage").classList.remove("on", "busy");
-  }
-  function sendIt() {
-    var v = (byId("sdText").value || "").trim().slice(0, 300);
-    if ((!v && !staged) || !sock) return;
-    var o = {t: "share", text: v};
-    if (staged) { o.audio = staged.url; o.atitle = staged.title; }
-    sendObj(o);
-    byId("sdText").value = ""; stageClear();
-  }
-  var sn = load("sdName"), ss = load("sdSite");
-  if (sn) byId("sdName").value = sn;
-  if (ss) byId("sdSite").value = ss;
-  byId("sdName").addEventListener("change", function () { store("sdName", byId("sdName").value); beat(); });
-  byId("sdSite").addEventListener("change", function () { store("sdSite", byId("sdSite").value); beat(); });
-  byId("sdJoin").addEventListener("click", function () { if (sock) leave(); else join(); });
-  byId("sdSend").addEventListener("click", sendIt);
-  byId("sdText").addEventListener("keydown", function (e) { if (e.key === "Enter") { e.preventDefault(); sendIt(); } });
-  byId("sdStageX").addEventListener("click", stageClear);
-  byId("sdAttach").addEventListener("click", function () { byId("sdFile").click(); });
-  byId("sdFile").addEventListener("change", function () {
-    var f = byId("sdFile").files && byId("sdFile").files[0];
-    byId("sdFile").value = "";
-    if (!f || !sock) return;
-    var okType = (f.type || "").indexOf("audio/") === 0 || /\.mp3$/i.test(f.name || "");
-    if (!okType) { toast("mp3s only for the decks."); return; }
-    if (f.size > 24 * 1024 * 1024) { toast("too big — keep it under ~24mb."); return; }
-    var title = (f.name || "track").replace(/\.[^.]*$/, "").slice(0, 80) || "track";
-    stageBusy("lifting " + title + " …");
-    var up = null;
-    try { up = (typeof root !== "undefined" && root && root.uploadPlugin) ? root.uploadPlugin : null; } catch (e) { up = null; }
-    if (!up) { toast("uploads aren't awake here — paste an mp3 link instead."); stageClear(); return; }
-    up(f).then(function (r) {
-      if (!r || r.error || !r.url) {
-        toast(r && r.error === "file_too_big" ? "too big — keep it under ~24mb." : r && r.error === "over_daily_allowance" ? "the decks are full today — try later." : "that file wouldn't lift — try again.");
-        stageClear(); return;
-      }
-      staged = {url: r.url, title: title};
-      stageTrack(title);
-    }, function () { toast("that file wouldn't lift — try again."); stageClear(); });
-  });
-  byId("sdCopy").addEventListener("click", function () {
-    var link = "https://perchance.org/" + (window.generatorName || "") + "";
-    var done = function () { toast("invite copied — pass it on."); };
-    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(link).then(done, function () { toast(link); });
-    else toast(link);
-  });
-  try {
-    if (window.generatorIsUnsaved) byId("sdNote").innerHTML = "put your name up and walk in. <b>rehearsal:</b> only this tab can hear you until the generator is saved.";
-  } catch (e) {}
-  roster([]);
-})();
-</script>
+</body>
+</html>
