@@ -62,6 +62,7 @@ button:disabled:hover{background:#000;color:#fff}
       <input id="sdName" maxlength="24" placeholder="YOUR NAME" aria-label="your name" autocomplete="off">
       <input id="sdSite" maxlength="200" placeholder="YOUR LINK (SITE, SOCIAL, WHATEVER)" aria-label="your link" autocomplete="off" inputmode="url">
       <button id="sdJoin" type="button">Walk in</button>
+      <button id="sdReset" type="button">Reset</button>
     </div>
     <p class="sdNote" id="sdNote">Put your name up and walk in.</p>
   </div>
@@ -83,9 +84,8 @@ button:disabled:hover{background:#000;color:#fff}
 <script type="module">
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-const SUPABASE_URL = "https://uerclxpqxnoyfszitrpx.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVlcmNseHBxeG5veWZzeml0cnB4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA1NjY3NjksImV4cCI6MjEwNjE0Mjc2OX0.b-xhN_MbUW8jYieuljmlijWV5FYcvrsNafJRUSID3jI";
-  
+const SUPABASE_URL = "https://xzhsscjdaffzldnqwpxl.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh6aHNzY2pkYWZmemxkbnF3cHhsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY3NTY0NzcsImV4cCI6MjEwMjMzMjQ3N30.dc7UFaby8qmFue6UNr2QodurIPFGQBtAMz1EmBizt5g";
 
 const byId = (id) => document.getElementById(id);
 const esc = (s) => String(s == null ? "" : s).replace(/[&<>"']/g, (c) => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"}[c]));
@@ -190,12 +190,22 @@ async function join() {
   chan.on("presence", {event: "leave"}, paintPresence);
   chan.on("postgres_changes", {event: "INSERT", schema: "public", table: "messages"}, (p) => { if (p.new) addMsg(p.new); });
   const st = await chan.subscribe();
-  if (st !== "SUBSCRIBED") { sys("the door stuck — try again."); chan = null; return; }
+  if (st !== "SUBSCRIBED") { chan = null; await diagnose(st); return; }
   await chan.track(me);
   joined = true;
   setOpen(true);
   sys("you walked in as " + me.name);
   loadRecent();
+}
+async function diagnose(st) {
+  let msg = "the door stuck (" + st + "). ";
+  try {
+    const r = await fetch(SUPABASE_URL + "/rest/v1/messages?select=id&limit=1", {headers: {apikey: SUPABASE_ANON_KEY}});
+    if (r.status === 401 || r.status === 403) msg += "the key was rejected — recheck the anon key.";
+    else if (r.ok || r.status === 404) msg += "key is fine, so realtime is being blocked — check adblock or brave shields for this site.";
+    else msg += "supabase answered " + r.status + " — send me that number.";
+  } catch (e) { msg += "supabase is unreachable — check connection or vpn."; }
+  sys(msg);
 }
 async function leave() {
   joined = false;
@@ -256,6 +266,12 @@ if (ss) byId("sdSite").value = ss;
 byId("sdName").addEventListener("change", () => store("sdName", byId("sdName").value));
 byId("sdSite").addEventListener("change", () => store("sdSite", byId("sdSite").value));
 byId("sdJoin").addEventListener("click", () => { if (joined) leave(); else join(); });
+byId("sdReset").addEventListener("click", async () => {
+  if (joined) await leave();
+  byId("sdName").value = ""; byId("sdSite").value = "";
+  try { localStorage.removeItem("sdName"); localStorage.removeItem("sdSite"); } catch (e) {}
+  sys("card wiped — fresh start.");
+});
 byId("sdSend").addEventListener("click", sendIt);
 byId("sdText").addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); sendIt(); } });
 byId("sdStageX").addEventListener("click", stageClear);
