@@ -1,7 +1,0 @@
-$meta
-  title = socialdreamr
-  description = a small night lobby for chatting and sharing tracks. put your name up, drop your link, pass mp3s around.
-  tags = chat, music, social, hangout
-
-createServerSocket = {import:server-plugin}
-uploadPlugin = {import:upload-plugin}
