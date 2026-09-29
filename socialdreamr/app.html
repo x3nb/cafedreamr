@@ -92,13 +92,12 @@
 <script type="module">
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-const FLOAT_IMG = "https://caferdreamr.art/socialdreamr/images/logoface-clear.png";
-const BG_VIDEO = "https://cafedreamr.art/socialdreamr/images/punchcloudsloop.mp4";
+const FLOAT_IMG = "float.jpg";
+const BG_VIDEO = "milo.mp4";
 const BG_VIDEO2 = "https://user.uploads.dev/file/f653d6460d65ac1b00035daf23504f77.mp4";
 const BG_MUSIC = "https://user.uploads.dev/file/589a939a0764a9c70d834861836e3d55.mp3";
-const SUPABASE_URL = "https://uerclxpqxnoyfszitrpx.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVlcmNseHBxeG5veWZzeml0cnB4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA1NjY3NjksImV4cCI6MjEwNjE0Mjc2OX0.b-xhN_MbUW8jYieuljmlijWV5FYcvrsNafJRUSID3jI";
-
+const SUPABASE_URL = "https://xzhsscjdaffzldnqwpxl.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh6aHNzY2pkYWZmemxkbnF3cHhsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY3NTY0NzcsImV4cCI6MjEwMjMzMjQ3N30.dc7UFaby8qmFue6UNr2QodurIPFGQBtAMz1EmBizt5g";
 
 const byId = (id) => document.getElementById(id);
 const esc = (s) => String(s == null ? "" : s).replace(/[&<>"']/g, (c) => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"}[c]));
@@ -617,8 +616,23 @@ function betaBuild() {
   });
   
 }
-byId("sdBetaOpen").addEventListener("click", function () { betaBuild(); betaLoad(); byId("sdBetaOut").hidden = true; byId("sdBeta").hidden = false; });
-byId("sdBetaShut").addEventListener("click", function () { byId("sdBeta").hidden = true; });
+const betaOpenBtn = byId("sdBetaOpen");
+const betaModal = byId("sdBeta");
+const betaCloseBtn = byId("sdBetaShut");
+const betaDoneBtn = byId("sdBetaDone");
+const betaOut = byId("sdBetaOut");
+if (betaOpenBtn && betaModal) {
+  betaOpenBtn.addEventListener("click", function () {
+    betaBuild(); betaLoad();
+    byId("sdBetaOut").hidden = true;
+    betaModal.removeAttribute("hidden");
+  });
+}
+if (betaCloseBtn && betaModal) {
+  betaCloseBtn.addEventListener("click", function () {
+    betaModal.setAttribute("hidden", "true");
+  });
+}
 byId("sdBetaDone").addEventListener("click", function () {
   const picks = [];
   for (let i = 0; i < BETA_Q.length; i++) {
@@ -633,7 +647,9 @@ byId("sdBetaDone").addEventListener("click", function () {
   const lines = ["BETATEST — " + new Date().toISOString().slice(0, 10), "name: " + nm, "contact: " + ct, "score: " + score + "/" + graded];
   BETA_Q.forEach(function (q, i) { lines.push((i + 1) + ". " + q.q + " → " + q.opts[picks[i]]); });
   byId("sdBetaSum").value = lines.join("\n");
-  byId("sdBetaOut").hidden = false;
+  if (betaDoneBtn && betaOut) {
+    betaOut.removeAttribute("hidden");
+  }
   if (BETA_FORM_URL && betaOpen && betaCount < 10) byId("sdBetaFormWrap").hidden = false;
   sys(score === graded ? "full marks, tester." : "logged. thanks, tester.");
 });
