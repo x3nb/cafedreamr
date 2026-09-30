@@ -442,19 +442,19 @@
     const foundWords = new Set();
     const GRID_SIZE = 10;
     
-    const gridData = [
-      ['C','H','I','M','E','R','A','X','Q','C'],
-      ['R','X','Y','C','A','T','S','M','W','H'],
-      ['O','Z','P','R','L','K','J','N','V','R'],
-      ['S','A','B','O','C','D','E','F','G','I'],
-      ['S','U','W','S','X','Y','Z','A','B','S'],
-      ['F','R','I','E','N','D','S','H','I','T'],
-      ['M','O','P','Q','R','S','T','U','V','W'],
-      ['X','Y','Z','A','B','C','D','E','F','G'],
-      ['H','I','J','K','L','M','N','O','P','Q'],
-      ['R','S','T','U','V','W','X','Y','Z','A']
-    ];
-
+      const gridData = [
+  ['C','H','I','M','E','R','A','X','Q','Z'], // CHIMERA (Row 0, Cols 0-6)
+  ['Q','W','E','R','T','Y','U','I','O','P'],
+  ['A','S','D','F','G','H','J','K','L','M'],
+  ['C','R','O','S','S','B','V','C','X','Z'], // CROSS (Row 3, Cols 0-4)
+  ['C','A','T','S','X','Y','Z','A','B','S'], // CATS (Row 4, Cols 0-3)
+  ['F','R','I','E','N','D','S','H','I','T'], // FRIENDS (Row 5, Cols 0-6)
+  ['C','H','R','I','S','T','V','W','X','Y'], // CHRIST (Row 6, Cols 0-5)
+  ['X','Y','Z','A','B','C','D','E','F','G'],
+  ['H','I','J','K','L','M','N','O','P','Q'],
+  ['R','S','T','U','V','W','X','Y','Z','A']
+];
+  
     let selectedCells = [];
     let activeUsername = "";
     let isUserAway = false;
