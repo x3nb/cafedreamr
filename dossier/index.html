@@ -1079,8 +1079,7 @@ html.inviteOnly .stage{padding-top:0}
         </div>
         <a class="realmnow" href="https://www.cafedreamr.art/LORE/HOURS/" target="_blank" rel="noopener noreferrer">
           <span class="dot"></span><span class="rt" id="realmNowTime">&mdash;</span><span id="realmNowText">the realm, right now</span><span class="rgo">&rarr;</span></a>
-        <button class="evsGo" id="evsGo" type="button" aria-controls="counterRoom">
-          <span class="egdot"></span><span class="egt">the counter is open</span><span class="egw" id="evsGoN"></span><span class="egc">&rarr;</span></button>
+        
         <!-- the save state: the card the whole realm keeps, framed as a save
              file. the ledger half is drawn by PASSPORT/cd-passport.js so it
              stays in step with every other page; the reel, the last time on,
@@ -1104,33 +1103,6 @@ html.inviteOnly .stage{padding-top:0}
           </div>
           <p class="saveNote">the card is kept on this machine, so the reel, the stamps and the jellies all wait here &middot; the code carries the whole record to another one.</p>
         </div>
-        <div class="evs" id="counterHere">
-          <div class="evHead">
-            <span class="evk">the counter</span><span class="rule"></span>
-          </div>
-          <p class="cntNote">the family chat &mdash; pick a name, sit down, be kind. it talks fastest on the perchance terminal.</p>
-          <div class="cntRow"><button id="cntDoor" type="button">take a seat &rarr;</button></div>
-        </div>
-
-        <div class="cntRoom" id="counterRoom" hidden role="dialog" aria-modal="true" aria-label="the counter, the family chat">
-          <div class="cntRoomIn">
-          <div class="cntRoomHead"><button type="button" id="cntBack">&larr; back</button><span class="cntRoomTitle">the counter</span><span class="cntRoomN" id="roomN"></span><button type="button" id="cntLink">copy link</button></div>
-          <p class="cntNote" id="counterNote">the family chat &mdash; pick a name, sit down, be kind. it talks fastest on the perchance terminal.</p>
-                    <div class="cntRow">
-            <input id="cntName" maxlength="24" placeholder="your name" aria-label="your name" autocomplete="off">
-            <button id="cntJoin" type="button">sit down</button>
-          </div>
-          <div class="cntMain">
-            <div class="cntFeed" id="cntFeed" aria-live="polite"></div>
-            <div class="cntSide"><div class="cntRosterK">here now</div><div id="cntRoster"></div></div>
-          </div>
-          <div class="cntRow">
-            <input id="cntText" maxlength="300" placeholder="say something kind" aria-label="chat message" autocomplete="off" disabled>
-            <button id="cntSend" type="button" disabled>send</button>
-          </div>
-          </div>
-        </div>
-
         <button class="tray" id="trayRealmHead" type="button" data-tray="realm" data-noun="doors"
           aria-expanded="false" aria-controls="trayRealmBody">
           <span class="trk">the realm</span><span class="rule"></span><span class="trn"></span><span class="chev">&#8250;</span></button>
@@ -1337,77 +1309,7 @@ html.inviteOnly .stage{padding-top:0}
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://www.cafedreamr.art/PASSPORT/cd-passport.js"></script>
-<script type="text/x-server-plugin">
-var PEERS = {};
-var RECENT = [];
-var MASKS = {star:1, chari:1, miki:1, milo:1, hans:1, charlotte:1, pearl:1, slay:1, sylvestre:1};
-var KINDS = {cat:1, bat:1, chimera:1};
-function cleanStr(s, max) {
-  if (typeof s !== "string") return "";
-  var o = "", i, c;
-  for (i = 0; i < s.length && o.length < max; i++) {
-    c = s.charCodeAt(i);
-    if (c === 10 || c === 9 || c >= 32) o += s.charAt(i);
-  }
-  return o;
-}
-function rosterOut() {
-  var t = Date.now(), out = [], id;
-  for (id in PEERS) {
-    var p = PEERS[id];
-    if (t - p.seen > 75000) continue;
-    out.push({mask: p.mask, kind: p.kind, name: p.name, seen: p.seen});
-  }
-  out.sort(function (a, b) { return a.name < b.name ? -1 : 1; });
-  return out;
-}
-function publishRoster() {
-  pubsub.publish("counter", JSON.stringify({t: "roster", who: rosterOut()}));
-}
-function prune() {
-  var t = Date.now(), id, changed = false;
-  for (id in PEERS) { if (t - PEERS[id].seen > 75000) { delete PEERS[id]; changed = true; } }
-  return changed;
-}
-self.onopen = function (e) {
-  e.conn.subscribe("counter");
-};
-self.onmessage = function (e) {
-  var msg = null;
-  try { msg = JSON.parse(e.data); } catch (err) { return; }
-  if (!msg || typeof msg.t !== "string") return;
-  var id = e.conn.id, t = Date.now();
-  if (msg.t === "hello" || msg.t === "beat") {
-    var mask = MASKS[msg.mask] ? msg.mask : "chari";
-    var kind = KINDS[msg.kind] ? msg.kind : "chimera";
-    var name = cleanStr(msg.name, 24) || "visitor";
-    var p = PEERS[id];
-    if (!p) PEERS[id] = {mask: mask, kind: kind, name: name, seen: t, lastChat: 0, window: []};
-    else { p.mask = mask; p.kind = kind; p.name = name; p.seen = t; }
-    if (msg.t === "hello") e.conn.send(JSON.stringify({t: "recent", msgs: RECENT}));
-    if (msg.t === "hello" || prune()) publishRoster();
-    return;
-  }
-  if (msg.t === "chat") {
-    var q = PEERS[id];
-    if (!q) return;
-    if (t - q.lastChat < 1500) return;
-    var w = q.window;
-    while (w.length && t - w[0] > 10000) w.shift();
-    if (w.length >= (e.conn.isProxy ? 3 : 5)) return;
-    var text = cleanStr(msg.text, 300);
-    if (!text) return;
-    q.lastChat = t; w.push(t); q.seen = t;
-    var out = {t: "chat", mask: q.mask, kind: q.kind, name: q.name, text: text, at: t};
-    RECENT.push(out);
-    if (RECENT.length > 30) RECENT.shift();
-    pubsub.publish("counter", JSON.stringify(out));
-  }
-};
-self.onclose = function (e) {
-  if (PEERS[e.conn.id]) { delete PEERS[e.conn.id]; publishRoster(); }
-};
-</script>
+
 <script>
 (function () {
   function paint(){ if (window.CD) [].forEach.call(document.querySelectorAll(".cdcard"), function (el) { CD.renderHUD(el); }); }
@@ -1594,10 +1496,16 @@ const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
   const STAR_CLOCK_MS = 3 * 60 * 1000;
   let starClockArm = null, starClockTick = null, starClockShown = "";
 
+  /* standard time on every clock: plain 12-hour hours, never military. */
+  function stdClock(d) {
+    var h24 = d.getHours(), m = d.getMinutes();
+    return (h24 % 12 || 12) + ":" + (m < 10 ? "0" : "") + m + " " + (h24 < 12 ? "AM" : "PM");
+  }
   function starClockParts() {
     const d = new Date();
     return {
-      hh: String(d.getHours()).padStart(2, "0"),
+      hh: String(d.getHours() % 12 || 12),
+      ap: d.getHours() < 12 ? "AM" : "PM",
       mm: String(d.getMinutes()).padStart(2, "0"),
       weekday: d.toLocaleDateString(undefined, { weekday: "long" }),
       day: d.getDate(),
@@ -1605,8 +1513,8 @@ const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
       year: d.getFullYear()
     };
   }
-  function starClockLine(p) { return "It's " + p.hh + ":" + p.mm + " on " + p.weekday + ", " + p.day + " " + p.month + " " + p.year + "."; }
-  function starClockHtml(p) { return "It's <b class=\"tm\">" + p.hh + ":" + p.mm + "</b> on " + p.weekday + ", " + p.day + " " + p.month + " " + p.year + "."; }
+  function starClockLine(p) { return "It's " + p.hh + ":" + p.mm + " " + p.ap + " on " + p.weekday + ", " + p.day + " " + p.month + " " + p.year + "."; }
+  function starClockHtml(p) { return "It's <b class=\"tm\">" + p.hh + ":" + p.mm + " " + p.ap + "</b> on " + p.weekday + ", " + p.day + " " + p.month + " " + p.year + "."; }
   function disarmStarClock() {
     clearTimeout(starClockArm); starClockArm = null;
     clearInterval(starClockTick); starClockTick = null;
@@ -1684,13 +1592,13 @@ const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 
   function eventsLineHtml(kind) {
     const at = kind === "tea" ? classAt() : 0, now = Date.now();
-    if (at && now < at) return 'the etiquette class begins in <b class="k" id="starClassK">' + mmss(at - now) + '</b> <span class="dsep">·</span> the counter is open ↓';
-    if (at && now < at + CLASS_WINDOW_MIN * 60000) return 'the bell has gone <span class="dsep">·</span> the counter is open ↓';
-    return "the counter is open ↓ — take a seat";
+    if (at && now < at) return 'the etiquette class begins in <b class="k" id="starClassK">' + mmss(at - now) + '</b> <span class="dsep">·</span> the lobby is open';
+    if (at && now < at + CLASS_WINDOW_MIN * 60000) return 'the bell has gone <span class="dsep">·</span> the lobby is open';
+    return "the lobby is open — walk in";
   }
   function showEventsLine(kind) {
     stopClassTick();
-    starRemind.innerHTML = '<span id="starLine"><a class="evlink" href="#counter" id="starEventsGo">' + eventsLineHtml(kind) + '</a></span> <span class="dsep">·</span> <a class="q" href="#" id="drinkAgain" title="again?" aria-label="order the same thing again">' + KETTLE_SVG + '</a>';
+    starRemind.innerHTML = '<span id="starLine"><a class="evlink" href="https://www.cafedreamr.art/socialdreamr/" target="_blank" rel="noopener noreferrer" id="starEventsGo">' + eventsLineHtml(kind) + '</a></span> <span class="dsep">·</span> <a class="q" href="#" id="drinkAgain" title="again?" aria-label="order the same thing again">' + KETTLE_SVG + '</a>';
     starRemind.hidden = false;
     requestAnimationFrame(() => starRemind.classList.add("on"));
     const again = document.getElementById("drinkAgain");
@@ -1700,8 +1608,6 @@ const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
       stopClassTick(); starRemind.classList.remove("on"); starRemind.hidden = true;
       showDrinkChoices();
     });
-    const go = document.getElementById("starEventsGo");
-    if (go) go.addEventListener("click", (e) => { e.preventDefault(); if (window.__goEvents) window.__goEvents(); });
     if (kind === "tea" && classAt() && Date.now() < classAt()) classTick = setInterval(() => {
       const line = document.getElementById("starLine");
       if (!line) { stopClassTick(); return; }
@@ -2260,22 +2166,7 @@ const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
     });
   })();
 
-  /* ---------- the events signpost --------------------------------------
-     the events list sits below the stamp card, so the top of the panel
-     carries a lit nudge down to it: one tap scrolls the block into view,
-     flashes it, and chimes once. star's own line after a drink calls the
-     same handler, so both routes land in the same place.
-     ------------------------------------------------------------------- */
-  (function () {
-    var btn = document.getElementById("evsGo");
-    if (!btn) return;
-    function goEvents() {
-      cntRoomOpen();
-      beep(700, 0.05, "triangle"); setTimeout(function () { beep(980, 0.07, "sine"); }, 100);
-    }
-    btn.addEventListener("click", goEvents);
-    window.__goEvents = goEvents;
-  })();
+  
 
   /* ---------- the reel: the machine reads as a serial, not a menu ----------
      language borrowed from serialised video, in four pieces:
@@ -2542,183 +2433,7 @@ const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 
   function renderReel() { renderCarry(); renderSave(); renderFamily(); }
 
-  /* ---------- 5. the counter: the family chat ---------- */
-  var CNT_MASKS = [
-    {id: "star", cc: "#8a2be2"}, {id: "chari", cc: "#e6e6fa"},
-    {id: "miki", cc: "#ccff00"}, {id: "milo", cc: "#98fb98"},
-    {id: "hans", cc: "#6495ed"}, {id: "pearl", cc: "#ffb8d9"},
-    {id: "slay", cc: "#45c9f0"}, {id: "sylvestre", cc: "#45c9f0"}
-  ];
-  var CNT_KINDS = ["cat", "bat", "chimera"];
-  var cntMask = "miki", cntKind = "chimera", cntSock = null, cntBeatT = 0, cntBackoff = 1000, cntWant = false;
-  function cntCC(id) {
-    for (var i = 0; i < CNT_MASKS.length; i++) if (CNT_MASKS[i].id === id) return CNT_MASKS[i].cc;
-    return "#ccff00";
-  }
-  function cntHue(name) {
-    var h = 0, s = name || "";
-    for (var i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) | 0;
-    return CNT_MASKS[(h >>> 0) % CNT_MASKS.length].cc;
-  }
-  function cntShape(name) {
-    var h = 0, s = name || "";
-    for (var i = 0; i < s.length; i++) h = (h * 37 + s.charCodeAt(i)) | 0;
-    return CNT_KINDS[(h >>> 0) % CNT_KINDS.length];
-  }
-  function cntAv(name) {
-    return "<span class=\"av k-" + cntShape(name) + "\" style=\"--cc:" + cntHue(name) + "\"></span>";
-  }
-  function cntStore(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
-  function cntLoad(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
-  function cntName() {
-    var v = (byId("cntName").value || "").trim().slice(0, 24);
-    return v || "visitor";
-  }
-  function cntFeedSys(s) {
-    var f = byId("cntFeed");
-    var d = document.createElement("div");
-    d.className = "cntSys"; d.textContent = s;
-    f.appendChild(d);
-    while (f.children.length > 60) f.removeChild(f.firstChild);
-    f.scrollTop = f.scrollHeight;
-  }
-  function cntFeedMsg(m, mine) {
-    var f = byId("cntFeed");
-    var nearBottom = f.scrollHeight - f.scrollTop - f.clientHeight < 60;
-    var d = document.createElement("div");
-    d.className = "cntMsg" + (mine ? " mine" : "");
-    var at = "";
-    try { at = new Date(m.at).toLocaleTimeString([], {hour: "2-digit", minute: "2-digit"}); } catch (e) {}
-    d.innerHTML = cntAv(m.name)
-      + "<span><span class=\"who\" style=\"--cc:" + cntHue(m.name) + "\">" + escHtml(m.name) + "</span>"
-      + " <span class=\"tx\">" + escHtml(m.text) + "</span></span>"
-      + "<span class=\"at\">" + escHtml(at) + "</span>";
-    f.appendChild(d);
-    while (f.children.length > 60) f.removeChild(f.firstChild);
-    if (mine || nearBottom) f.scrollTop = f.scrollHeight;
-  }
-  function cntRoster(who) {
-    var r = byId("cntRoster");
-    var t = Date.now();
-    r.innerHTML = (who || []).map(function (p) {
-      var stale = (t - p.seen > 75000) ? " stale" : "";
-      return "<div class=\"cntWho" + stale + "\">" + cntAv(p.name)
-        + "<span>" + escHtml(p.name) + "</span></div>";
-    }).join("") || "<div class=\"cntWho\">quiet in here</div>";
-    byId("roomN").textContent = (who || []).length + " here";
-    byId("evsGoN").textContent = (who || []).length + " here";
-  }
-  function cntSetOpen(open) {
-    byId("cntText").disabled = !open;
-    byId("cntSend").disabled = !open;
-    byId("cntJoin").textContent = open ? "stand up" : "sit down";
-  }
-  function cntSendObj(o) {
-    if (cntSock) { try { cntSock.send(JSON.stringify(o)); } catch (e) {} }
-  }
-  function cntJoin() {
-    var mk = null;
-    try { mk = (typeof root !== "undefined" && root && typeof root.createServerSocket === "function") ? root.createServerSocket() : null; } catch (e) { mk = null; }
-    if (!mk) {
-      byId("counterNote").innerHTML = "the counter only talks on the <b>perchance terminal</b> &mdash; this copy of the page is standing outside.";
-      return;
-    }
-    cntSock = mk;
-    cntWant = true;
-    try { cntSock.binaryType = "arraybuffer"; } catch (e) {}
-    cntSock.addEventListener("open", function () {
-      cntBackoff = 1000;
-      cntSendObj({t: "hello", mask: cntMask, kind: cntKind, name: cntName()});
-      if (cntBeatT) clearInterval(cntBeatT);
-      cntBeatT = setInterval(function () {
-        cntSendObj({t: "beat", mask: cntMask, kind: cntKind, name: cntName()});
-      }, 20000);
-      cntSetOpen(true);
-      cntFeedSys("you sat down as " + cntName());
-    });
-    cntSock.addEventListener("message", function (ev) {
-      var m = null;
-      try { m = JSON.parse(ev.data); } catch (e) { return; }
-      if (!m) return;
-      if (m.t === "chat") cntFeedMsg(m, m.name === cntName());
-      else if (m.t === "roster") cntRoster(m.who);
-      else if (m.t === "recent") (m.msgs || []).forEach(function (x) { cntFeedMsg(x, x.name === cntName()); });
-    });
-    cntSock.addEventListener("close", function (ev) {
-      if (cntBeatT) { clearInterval(cntBeatT); cntBeatT = 0; }
-      cntSetOpen(false);
-      cntSock = null;
-      if (ev && ev.code === 4403) {
-        byId("counterNote").innerHTML = "the counter only talks on the <b>perchance terminal</b> &mdash; this copy of the page is standing outside.";
-        cntWant = false;
-        return;
-      }
-      if (!cntWant) return;
-      var wait = cntBackoff + Math.floor(Math.random() * 800);
-      cntBackoff = Math.min(30000, cntBackoff * 2);
-      cntFeedSys("the line dropped · trying again");
-      setTimeout(function () { if (cntWant) cntJoin(); }, wait);
-    });
-  }
-  function cntLeave() {
-    cntWant = false;
-    if (cntBeatT) { clearInterval(cntBeatT); cntBeatT = 0; }
-    if (cntSock) { try { cntSock.close(1000, "standing"); } catch (e) {} cntSock = null; }
-    cntSetOpen(false);
-    cntFeedSys("you stood up");
-  }
-  (function cntBoot() {
-    var sn = cntLoad("cntName");
-    if (sn) byId("cntName").value = sn;
-    byId("cntName").addEventListener("change", function () {
-      cntStore("cntName", byId("cntName").value);
-      cntSendObj({t: "beat", mask: cntMask, kind: cntKind, name: cntName()});
-    });
-    byId("cntJoin").addEventListener("click", function () {
-      if (cntSock) cntLeave();
-      else cntJoin();
-    });
-    var sendIt = function () {
-      var v = (byId("cntText").value || "").trim();
-      if (!v || !cntSock) return;
-      cntSendObj({t: "chat", text: v.slice(0, 300)});
-      byId("cntText").value = "";
-    };
-    byId("cntSend").addEventListener("click", sendIt);
-    byId("cntText").addEventListener("keydown", function (e) {
-      if (e.key === "Enter") { e.preventDefault(); sendIt(); }
-    });
-    try {
-      if (window.generatorIsUnsaved) {
-        byId("counterNote").innerHTML = "the family chat &mdash; pick a name, sit down. <b>rehearsal:</b> only this tab can hear you until the generator is saved.";
-      }
-    } catch (e) {}
-    cntRoster([]);
-  })();
-
-  function cntRoomOpen() {
-    byId("counterRoom").hidden = false;
-    try { document.body.style.overflow = "hidden"; } catch (e) {}
-    try { history.replaceState(null, "", "#counter"); } catch (e) {}
-    setTimeout(function () { try { byId("cntText").focus({preventScroll: true}); } catch (e) {} }, 60);
-  }
-  function cntRoomClose() {
-    byId("counterRoom").hidden = true;
-    try { document.body.style.overflow = ""; } catch (e) {}
-    try { history.replaceState(null, "", location.pathname + location.search); } catch (e) {}
-  }
-  byId("cntDoor").addEventListener("click", cntRoomOpen);
-  byId("cntBack").addEventListener("click", cntRoomClose);
-  document.addEventListener("keydown", function (e) {
-    if (e.key === "Escape" && byId("counterRoom").hidden === false) cntRoomClose();
-  });
-  byId("cntLink").addEventListener("click", function () {
-    var link = "https://perchance.org/" + (window.generatorName || "") + "#counter";
-    var done = function () { toast("link copied · bring someone kind."); };
-    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(link).then(done, function () { toast(link); });
-    else toast(link);
-  });
-  try { if ((location.hash || "") === "#counter") cntRoomOpen(); } catch (e) {}
+  
 
   /* ---------- the reel's own wiring ---------- */
   if (window.CD && window.CD.onChange) {
@@ -2826,11 +2541,11 @@ const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
     [0,  "deep night &mdash; the twins still have the amps on"],
     [3,  "the small hours &mdash; the lamps are low and the machines are honest"],
     [4,  "before dawn &mdash; milo is picking mint in the dark"],
-    [7,  "the cafe is open &mdash; pearl is at the counter"],
+    [7,  "the cafe is open &mdash; pearl has the door"],
     [12, "high afternoon &mdash; the garden and the academy are both busy"],
     [16, "the second shift &mdash; the twins are awake and the amps are on"],
     [17, "the koi hour &mdash; milo and chari at the pond"],
-    [18, "supper &mdash; most of them at the counter"],
+    [18, "supper &mdash; nobody here keeps a temper past supper"],
     [19, "star's hour &mdash; the bible is out and the window is hers"],
     [21, "the long evening &mdash; hans' lamp is on in the archive"]
   ];
@@ -2840,7 +2555,7 @@ const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
     const now = new Date(), mins = now.getHours() * 60 + now.getMinutes();
     let row = HOURS_NOW[0];
     for (const r of HOURS_NOW) if (mins >= r[0] * 60) row = r;
-    timeEl.textContent = String(now.getHours()).padStart(2, "0") + ":" + String(now.getMinutes()).padStart(2, "0");
+    timeEl.textContent = stdClock(now);
     textEl.innerHTML = row[1];
   }
   paintRealmNow();
@@ -3189,7 +2904,7 @@ const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
   function pad2(n) { return (n < 10 ? "0" : "") + n; }
   function dayKey(d) { d = d || new Date(); return d.getFullYear() + "-" + pad2(d.getMonth() + 1) + "-" + pad2(d.getDate()); }
   function dateLine(d) { d = d || new Date(); return DAY_NAMES[d.getDay()] + " " + d.getDate() + " " + MONTH_NAMES[d.getMonth()] + " " + d.getFullYear(); }
-  function clockNow() { const d = new Date(); return pad2(d.getHours()) + ":" + pad2(d.getMinutes()); }
+  function clockNow() { return stdClock(new Date()); }
 
   /* ============================================================
      the invitation
@@ -3251,7 +2966,7 @@ const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
   }
   function invWhen(t) {
     const d = new Date(t);
-    const clock = pad2(d.getHours()) + ":" + pad2(d.getMinutes());
+    const clock = stdClock(d);
     return dayKey(d) === dayKey() ? "taken " + clock : "taken " + dateLine(d);
   }
   /* an overshooting ease-out is exactly what a thing falling into place does:
