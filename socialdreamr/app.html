@@ -3,106 +3,143 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Real-Time Chat Lounge</title>
+  <title>Lounge Chat</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
+
     body {
-      background: #0f051d;
-      color: #e0d8f0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: #0b0213;
+      background-image: radial-gradient(circle at 50% 0%, #20083b 0%, #0b0213 70%);
+      color: #e2d9f3;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       display: flex;
       justify-content: center;
+      align-items: center;
+      min-height: 100vh;
       padding: 20px;
     }
 
-    /* MAIN CONTAINER & SIDEBAR LAYOUT */
+    /* CONTAINER & LAYOUT */
     .chat-container {
       display: flex;
       gap: 16px;
       width: 100%;
-      max-width: 850px;
+      max-width: 900px;
+      height: 600px;
     }
 
     .chat-card {
       flex: 1;
-      background: #15092b;
+      background: rgba(21, 9, 43, 0.85);
+      backdrop-filter: blur(12px);
       border: 1px solid #32165c;
-      border-radius: 8px;
-      padding: 16px;
+      border-radius: 12px;
+      padding: 18px;
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
     }
 
+    /* HEADER */
     header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-bottom: 1px solid #32165c;
-      padding-bottom: 10px;
+      border-bottom: 1px solid #29124a;
+      padding-bottom: 12px;
+      margin-bottom: 12px;
+    }
+
+    header h2 {
+      font-size: 18px;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: 0.5px;
     }
 
     button.mini {
-      background: #2a114d;
+      background: #250e42;
       border: 1px solid #5a299d;
-      color: #e0d8f0;
-      padding: 4px 10px;
-      border-radius: 4px;
+      color: #c4b5fd;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
       cursor: pointer;
+      transition: all 0.2s ease;
     }
 
     button.mini:hover {
       background: #bf40bf;
       color: #fff;
+      box-shadow: 0 0 10px rgba(191, 64, 191, 0.5);
     }
 
     /* AVATAR SELECTOR */
     .avatar-selector {
       display: flex;
-      gap: 8px;
+      gap: 6px;
     }
 
     .avatar-opt {
-      font-size: 20px;
-      padding: 6px;
+      font-size: 18px;
+      padding: 4px 8px;
       border: 1px solid #32165c;
       border-radius: 6px;
-      background: #1c0c38;
+      background: #14072b;
       cursor: pointer;
-      transition: all 0.15s ease;
+      transition: all 0.2s ease;
     }
 
     .avatar-opt.selected {
       border-color: #00e5ff;
-      background: #bf40bf;
-      box-shadow: 0 0 8px #00e5ff;
+      background: #2b1055;
+      box-shadow: 0 0 8px rgba(0, 229, 255, 0.4);
     }
 
-    /* CHAT BOX & MESSAGES */
+    /* CHAT BOX */
     #chatBox {
-      height: 350px;
+      flex: 1;
       overflow-y: auto;
       display: flex;
       flex-direction: column;
-      gap: 10px;
-      padding-right: 6px;
+      gap: 12px;
+      padding-right: 8px;
     }
 
+    /* Custom Scrollbars */
+    #chatBox::-webkit-scrollbar, .user-list::-webkit-scrollbar {
+      width: 6px;
+    }
+    #chatBox::-webkit-scrollbar-track, .user-list::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    #chatBox::-webkit-scrollbar-thumb, .user-list::-webkit-scrollbar-thumb {
+      background: #2a114d;
+      border-radius: 3px;
+    }
+
+    /* MESSAGES */
     .msg-item {
       position: relative;
-      background: #1c0c38;
-      border: 1px solid #2e145b;
-      border-radius: 6px;
-      padding: 8px 28px 8px 12px; /* Extra right padding for X button */
+      background: #1a0b33;
+      border: 1px solid #2c1354;
+      border-radius: 8px;
+      padding: 10px 32px 10px 12px;
+      transition: border-color 0.15s ease;
+    }
+
+    .msg-item:hover {
+      border-color: #431f7a;
     }
 
     .msg-close {
       position: absolute;
-      top: 6px;
-      right: 8px;
+      top: 8px;
+      right: 10px;
       background: transparent;
       border: none;
-      color: #a08cc0;
+      color: #7b639e;
       font-size: 16px;
       font-weight: bold;
       cursor: pointer;
@@ -114,13 +151,14 @@
 
     .msg-close:hover {
       color: #ff4d4d;
-      background: rgba(255, 77, 77, 0.1);
+      background: rgba(255, 77, 77, 0.15);
     }
 
     .msg-header {
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
+      margin-bottom: 4px;
     }
 
     .msg-avatar {
@@ -129,47 +167,49 @@
     }
 
     .msg-user {
-      font-size: 12px;
+      font-size: 13px;
       color: #00e5ff;
-      font-weight: bold;
+      font-weight: 600;
     }
 
     .msg-text {
-      margin-top: 4px;
       font-size: 14px;
+      color: #f1ebfc;
+      line-height: 1.4;
+      word-break: break-word;
     }
 
-    /* EMOJI REACTIONS BAR */
+    /* REACTION BAR */
     .sdReactions {
       display: flex;
-      gap: 4px;
-      margin-top: 6px;
+      gap: 6px;
+      margin-top: 8px;
       flex-wrap: wrap;
     }
 
     .sdReactionBtn {
-      background: #1e0d36;
-      border: 1px solid #4a2875;
-      color: #e0d8f0;
-      padding: 2px 6px;
-      font-size: 11px;
-      border-radius: 3px;
+      background: #120724;
+      border: 1px solid #351761;
+      color: #c4b5fd;
+      padding: 3px 8px;
+      font-size: 12px;
+      border-radius: 4px;
       cursor: pointer;
-      transition: all 0.1s ease;
+      transition: all 0.15s ease;
     }
 
     .sdReactionBtn:hover {
-      background: #bf40bf;
+      background: #2b1055;
       border-color: #00e5ff;
       color: #fff;
     }
 
     /* TYPING INDICATOR */
     .sdTyping {
-      font-size: 11px;
+      font-size: 12px;
       color: #bf40bf;
-      min-height: 16px;
-      margin: 2px 0 2px 4px;
+      min-height: 18px;
+      margin-top: 6px;
       font-style: italic;
     }
 
@@ -186,7 +226,8 @@
     /* INPUT ROW */
     .input-row {
       display: flex;
-      gap: 8px;
+      gap: 10px;
+      margin-top: 8px;
     }
 
     input[type="text"] {
@@ -194,47 +235,53 @@
       background: #0d0418;
       border: 1px solid #32165c;
       color: #fff;
-      padding: 8px 12px;
-      border-radius: 4px;
+      padding: 10px 14px;
+      border-radius: 6px;
+      font-size: 14px;
+      transition: border-color 0.2s ease;
     }
 
     input[type="text"]:focus {
-      outline: 1px solid #bf40bf;
+      outline: none;
+      border-color: #bf40bf;
+      box-shadow: 0 0 8px rgba(191, 64, 191, 0.3);
     }
 
-    /* SIDEBAR STYLES */
+    /* SIDEBAR */
     .online-sidebar {
-      width: 200px;
-      background: #15092b;
+      width: 220px;
+      background: rgba(21, 9, 43, 0.85);
+      backdrop-filter: blur(12px);
       border: 1px solid #32165c;
-      border-radius: 8px;
-      padding: 16px;
+      border-radius: 12px;
+      padding: 18px;
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
     }
 
     .sidebar-header {
       font-size: 14px;
-      font-weight: bold;
+      font-weight: 700;
       color: #bf40bf;
-      border-bottom: 1px solid #32165c;
-      padding-bottom: 8px;
+      border-bottom: 1px solid #29124a;
+      padding-bottom: 12px;
+      margin-bottom: 12px;
     }
 
     .user-list {
       list-style: none;
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 10px;
       overflow-y: auto;
-      max-height: 380px;
+      flex: 1;
     }
 
     .user-item {
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
       font-size: 13px;
       color: #e0d8f0;
     }
@@ -244,15 +291,15 @@
       height: 8px;
       background-color: #00e5ff;
       border-radius: 50%;
-      box-shadow: 0 0 6px #00e5ff;
+      box-shadow: 0 0 8px #00e5ff;
     }
 
     .user-item .user-avatar {
-      font-size: 14px;
+      font-size: 15px;
     }
 
     .user-item.is-me {
-      font-weight: bold;
+      font-weight: 700;
       color: #bf40bf;
     }
   </style>
@@ -275,7 +322,6 @@
 
       <div id="chatBox"></div>
 
-      <!-- TYPING INDICATOR DISPLAY -->
       <div id="sdTypingIndicator" class="sdTyping"></div>
 
       <div class="input-row">
@@ -284,7 +330,6 @@
       </div>
     </div>
 
-    <!-- ONLINE USERS SIDEBAR -->
     <aside class="online-sidebar">
       <div class="sidebar-header">
         Online Users (<span id="onlineCount">0</span>)
@@ -296,7 +341,6 @@
   <script type="module">
     import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
 
-    // Replace with your actual Supabase credentials
     const SUPABASE_URL = "https://your-supabase-url.supabase.co";
     const SUPABASE_KEY = "your-anon-key";
     const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -309,7 +353,7 @@
 
     function myName() { return myUsername; }
 
-    // --- 1. AVATAR SELECTION --- //
+    // --- AVATAR SELECTION --- //
     window.selectAvatar = function(emoji) {
       myAvatar = emoji;
       document.querySelectorAll(".avatar-opt").forEach(btn => {
@@ -325,7 +369,7 @@
       }
     };
 
-    // --- 2. WEB AUDIO VINYL CRACKLE --- //
+    // --- VINYL CRACKLE AUDIO --- //
     let audioCtx = null;
     let crackleNode = null;
     let crackleGain = null;
@@ -388,7 +432,7 @@
 
     document.getElementById("sdCrackle").addEventListener("click", toggleVinylCrackle);
 
-    // --- 3. EMOJI REACTIONS LOGIC --- //
+    // --- EMOJI REACTIONS --- //
     window.reactToMsg = async function(msgId, emoji) {
       const { error } = await sb.from("message_reactions").insert({
         message_id: msgId,
@@ -436,7 +480,7 @@
       return html;
     }
 
-    // --- 4. MESSAGE RENDERING & DELETION --- //
+    // --- MESSAGE SENDING & DELETION --- //
     window.deleteMessage = async function(msgId) {
       if (typeof sb !== 'undefined') {
         await sb.from('messages').delete().eq('id', msgId);
@@ -461,7 +505,35 @@
       `;
     }
 
-    // --- 5. REALTIME PRESENCE, ONLINE USERS & TYPING INDICATOR --- //
+    async function sendMessage() {
+      const input = document.getElementById("msgInput");
+      const text = input.value.trim();
+      if (!text) return;
+
+      const { data, error } = await sb.from("messages").insert([{
+        user_name: myName(),
+        avatar: myAvatar,
+        content: text
+      }]).select();
+
+      if (!error && data && data.length > 0) {
+        input.value = "";
+        clearTimeout(typingTimeout);
+        setTypingState(false);
+      }
+    }
+
+    document.getElementById("sendBtn").addEventListener("click", sendMessage);
+
+    async function loadMessages() {
+      const { data, error } = await sb.from("messages").select("*").order("id", { ascending: true });
+      if (error) return;
+      const chatBox = document.getElementById("chatBox");
+      chatBox.innerHTML = (data || []).map(renderMessage).join("");
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    // --- REALTIME PRESENCE, TYPING & ONLINE SIDEBAR --- //
     let presenceChannel = null;
     let typingTimeout = null;
     let isCurrentlyTyping = false;
@@ -506,6 +578,19 @@
             });
           }
         });
+
+      // Realtime listener for incoming messages
+      sb.channel('public:messages')
+        .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' }, payload => {
+          const chatBox = document.getElementById("chatBox");
+          chatBox.insertAdjacentHTML("beforeend", renderMessage(payload.new));
+          chatBox.scrollTop = chatBox.scrollHeight;
+        })
+        .on('postgres_changes', { event: 'DELETE', schema: 'public', table: 'messages' }, payload => {
+          const msgEl = document.getElementById(`msg-${payload.old.id}`);
+          if (msgEl) msgEl.remove();
+        })
+        .subscribe();
     }
 
     function renderOnlineUsers() {
@@ -564,13 +649,13 @@
     inputEl.addEventListener("input", handleTypingEvent);
     inputEl.addEventListener("keydown", (e) => {
       if (e.key === "Enter" && !e.shiftKey) {
-        clearTimeout(typingTimeout);
-        setTypingState(false);
+        sendMessage();
       }
     });
 
-    // Initialize
+    // Initialize App
     initPresenceChannel();
+    loadMessages();
     loadReactions();
   </script>
 </body>
