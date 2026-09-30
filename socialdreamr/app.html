@@ -62,7 +62,7 @@
       z-index: 10;
     }
 
-    /* ENTRY SCREEN & PUZZLE */
+    /* ENTRY SCREEN & PUZZLE OVERLAY */
     #entryOverlay {
       position: fixed;
       inset: 0;
@@ -70,7 +70,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      background: rgba(8, 3, 14, 0.92);
+      background: rgba(8, 3, 14, 0.95);
       backdrop-filter: blur(20px);
       padding: 20px;
     }
@@ -132,13 +132,17 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      background: rgba(255, 255, 255, 0.03);
+      background: rgba(255, 255, 255, 0.05);
       border-radius: 4px;
       font-size: 13px;
       font-weight: 700;
       cursor: pointer;
       color: #c4b5fd;
       transition: all 0.15s ease;
+    }
+
+    .grid-cell:hover {
+      background: rgba(191, 64, 191, 0.3);
     }
 
     .grid-cell.selected {
@@ -439,17 +443,21 @@
   </div>
 
   <script>
+    // --- SAFE SUPABASE CLIENT INITIALIZATION --- //
     // --- SUPABASE CLIENT SETUP --- //
     const SUPABASE_URL = "https://uerclxpqxnoyfszitrpx.supabase.co";
     const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVlcmNseHBxeG5veWZzeml0cnB4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA1NjY3NjksImV4cCI6MjEwNjE0Mjc2OX0.b-xhN_MbUW8jYieuljmlijWV5FYcvrsNafJRUSID3jI";
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    let supabase = null;
+
+    if (window.supabase && !SUPABASE_URL.includes("YOUR_PROJECT_ID")) {
+      supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    }
 
     // --- PUZZLE SETUP --- //
     const WORDS = ["CHIMERA", "CROSS", "FRIENDS", "CATS", "CHRIST"];
     const foundWords = new Set();
     const GRID_SIZE = 10;
     
-    // Updated Grid - No overlaps/cancellations
     const gridData = [
       ['C','H','I','M','E','R','A','X','Q','Z'],
       ['Q','W','E','R','T','Y','U','I','O','P'],
@@ -470,6 +478,7 @@
 
     function initGrid() {
       const gridEl = document.getElementById("wordGrid");
+      if (!gridEl) return;
       gridEl.innerHTML = "";
       for (let r = 0; r < GRID_SIZE; r++) {
         for (let c = 0; c < GRID_SIZE; c++) {
@@ -506,7 +515,8 @@
       WORDS.forEach(word => {
         if ((currentWord === word || reversedWord === word) && !foundWords.has(word)) {
           foundWords.add(word);
-          document.getElementById(`badge-${word}`).classList.add("found");
+          const badge = document.getElementById(`badge-${word}`);
+          if (badge) badge.classList.add("found");
           
           selectedCells.forEach(item => {
             item.cell.classList.remove("selected");
@@ -532,41 +542,41 @@
       const password = document.getElementById("regPass").value;
       activeUsername = document.getElementById("regUser").value.trim() || "Dreamr";
 
-      // 1. Supabase Auth Sign Up
-      const { data, error } = await supabase.auth.signUp({
-        email: email,
-        password: password,
-        options: { data: { username: activeUsername } }
-      });
+      if (supabase) {
+        const { data, error } = await supabase.auth.signUp({
+          email: email,
+          password: password,
+          options: { data: { username: activeUsername } }
+        });
 
-      if (error) {
-        alert("Registration Error: " + error.message);
-        return;
+        if (error) {
+          alert("Registration Error: " + error.message);
+          return;
+        }
+
+        initSupabaseChat();
+        initSupabaseMosaic();
+        initPresence();
+      } else {
+        renderUserFeedFallback();
       }
 
       document.getElementById("entryOverlay").style.display = "none";
       document.getElementById("userBadge").textContent = `@${activeUsername}`;
-      
-      // Initialize Chat & Realtime Engine
-      initSupabaseChat();
-      initSupabaseMosaic();
-      initPresence();
+      addSystemMessage(`${activeUsername} entered the lounge.`);
     }
 
-    // --- SUPABASE REALTIME CHAT --- //
+    // --- CHAT FUNCTIONS --- //
     async function initSupabaseChat() {
-      // Fetch initial chat history
+      if (!supabase) return;
       const { data: history } = await supabase
         .from('messages')
         .select('*')
         .order('created_at', { ascending: true })
         .limit(50);
 
-      if (history) {
-        history.forEach(renderChatMessage);
-      }
+      if (history) history.forEach(renderChatMessage);
 
-      // Listen for incoming messages in real-time
       supabase
         .channel('public:messages')
         .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' }, payload => {
@@ -582,10 +592,11 @@
 
       input.value = "";
 
-      await supabase.from('messages').insert({
-        username: activeUsername,
-        content: text
-      });
+      if (supabase) {
+        await supabase.from('messages').insert({ username: activeUsername, content: text });
+      } else {
+        renderChatMessage({ username: activeUsername, content: text });
+      }
     }
 
     function renderChatMessage(msg) {
@@ -600,19 +611,26 @@
       chatStream.scrollTop = chatStream.scrollHeight;
     }
 
-    // --- SUPABASE MOSAIC STORAGE & REALTIME --- //
+    function addSystemMessage(text) {
+      const chatStream = document.getElementById("chatStream");
+      const msg = document.createElement("div");
+      msg.className = "chat-msg";
+      msg.style.opacity = "0.7";
+      msg.innerHTML = `<div class="msg-body" style="font-style: italic; font-size: 12px;">${text}</div>`;
+      chatStream.appendChild(msg);
+      chatStream.scrollTop = chatStream.scrollHeight;
+    }
+
+    // --- MOSAIC FUNCTIONS --- //
     async function initSupabaseMosaic() {
-      // Fetch existing background tiles
+      if (!supabase) return;
       const { data: tiles } = await supabase
         .from('tiles')
         .select('*')
         .order('created_at', { ascending: true });
 
-      if (tiles) {
-        tiles.forEach(tile => addBackgroundTile(tile.image_url));
-      }
+      if (tiles) tiles.forEach(tile => addBackgroundTile(tile.image_url));
 
-      // Listen for newly uploaded tiles
       supabase
         .channel('public:tiles')
         .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'tiles' }, payload => {
@@ -625,32 +643,21 @@
       const file = e.target.files[0];
       if (!file) return;
 
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${Date.now()}_${Math.random().toString(36).substring(2, 7)}.${fileExt}`;
-      const filePath = `mosaics/${fileName}`;
+      if (supabase) {
+        const fileExt = file.name.split('.').pop();
+        const fileName = `${Date.now()}_${Math.random().toString(36).substring(2, 7)}.${fileExt}`;
+        const filePath = `mosaics/${fileName}`;
 
-      // 1. Upload to Supabase Storage Bucket ('background_tiles')
-      const { error: uploadErr } = await supabase.storage
-        .from('background_tiles')
-        .upload(filePath, file);
+        const { error: uploadErr } = await supabase.storage.from('background_tiles').upload(filePath, file);
+        if (uploadErr) return alert("Upload error: " + uploadErr.message);
 
-      if (uploadErr) {
-        alert("Upload error: " + uploadErr.message);
-        return;
+        const { data: urlData } = supabase.storage.from('background_tiles').getPublicUrl(filePath);
+        await supabase.from('tiles').insert({ image_url: urlData.publicUrl, uploaded_by: activeUsername });
+      } else {
+        const reader = new FileReader();
+        reader.onload = (event) => addBackgroundTile(event.target.result);
+        reader.readAsDataURL(file);
       }
-
-      // 2. Get Public URL
-      const { data: urlData } = supabase.storage
-        .from('background_tiles')
-        .getPublicUrl(filePath);
-
-      const publicUrl = urlData.publicUrl;
-
-      // 3. Save URL to Database
-      await supabase.from('tiles').insert({
-        image_url: publicUrl,
-        uploaded_by: activeUsername
-      });
     }
 
     function addBackgroundTile(src) {
@@ -661,37 +668,29 @@
       mosaic.appendChild(img);
       uploadedCount++;
 
-      // Trigger rooting animation when grid reaches full screen capacity
       const capacity = Math.ceil((window.innerWidth * window.innerHeight) / (140 * 140));
       if (uploadedCount >= capacity) {
         mosaic.classList.add("mosaic-rooting");
       }
     }
 
-    // --- SUPABASE PRESENCE (ACTIVE / AWAY) --- //
+    // --- PRESENCE ENGINE --- //
     function initPresence() {
+      if (!supabase) return;
       presenceChannel = supabase.channel('room_presence', {
         config: { presence: { key: activeUsername } }
       });
 
       presenceChannel
-        .on('presence', { event: 'sync' }, () => {
-          const state = presenceChannel.presenceState();
-          renderUserFeed(state);
-        })
+        .on('presence', { event: 'sync' }, () => renderUserFeed(presenceChannel.presenceState()))
         .subscribe(async (status) => {
           if (status === 'SUBSCRIBED') {
             await presenceChannel.track({ username: activeUsername, status: 'active' });
           }
         });
 
-      window.addEventListener("blur", () => {
-        presenceChannel.track({ username: activeUsername, status: 'away' });
-      });
-
-      window.addEventListener("focus", () => {
-        presenceChannel.track({ username: activeUsername, status: 'active' });
-      });
+      window.addEventListener("blur", () => presenceChannel.track({ username: activeUsername, status: 'away' }));
+      window.addEventListener("focus", () => presenceChannel.track({ username: activeUsername, status: 'active' }));
     }
 
     function renderUserFeed(presenceState) {
@@ -712,7 +711,16 @@
       });
     }
 
-    // --- MENU TOGGLE --- //
+    function renderUserFeedFallback() {
+      const feed = document.getElementById("userFeed");
+      feed.innerHTML = `
+        <li class="user-node">
+          <span class="status-dot active"></span>
+          <span>${escapeHTML(activeUsername)} (active)</span>
+        </li>
+      `;
+    }
+
     function toggleMenu() {
       document.getElementById("leftMenu").classList.toggle("active");
     }
@@ -723,8 +731,8 @@
       );
     }
 
-    // Init word search on load
-    initGrid();
+    // Initialize the grid on page load
+    window.addEventListener("DOMContentLoaded", initGrid);
   </script>
 </body>
 </html>
