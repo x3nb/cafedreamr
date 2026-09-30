@@ -100,13 +100,13 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const FLOAT_IMG = "float.jpg";
-const BG_VIDEO = "holocafeloop.mp4";
+const BG_VIDEO = "milo.mp4";
 const BG_VIDEO2 = "https://user.uploads.dev/file/f653d6460d65ac1b00035daf23504f77.mp4";
 const BG_MUSIC = "https://user.uploads.dev/file/589a939a0764a9c70d834861836e3d55.mp3";
 const TUNES = [
   {t: "cafedreamr lounge", u: "https://user.uploads.dev/file/589a939a0764a9c70d834861836e3d55.mp3", f: "cafedreamr-lounge.mp3"},
   {t: "staying grounded, in christ", u: "https://user.uploads.dev/file/0e8cbd6a7d96bc86b14dd93432c0ef6a.mp3", f: "staying-grounded-in-christ.mp3"},
-  {t: "bat whispers (instrumental)", u: "https://user.uploads.dev/file/48b7edbc54d1e9a505fbced7d9e0f8d2.mp3", f: "bat-whispers-instrumental.mp3"},
+  {t: "bat whispers (instrumental)", u: "https://user.uploads.dev/file/a95b7ff1490583727a873f9e9be21703.mp3", f: "bat-whispers-instrumental.mp3"},
   {t: "staying grounded (instrumental)", u: "https://user.uploads.dev/file/605216f376218bfff8742ee30576501d.mp3", f: "staying-grounded-instrumental.mp3"}
 ];
 const SUPABASE_URL = "https://xzhsscjdaffzldnqwpxl.supabase.co";
@@ -212,12 +212,26 @@ function paintPresence() {
 }
 const bgv = document.getElementById("sdBg");
 if (bgv && !bgv.src) bgv.src = BG_VIDEO;
-let sceneryAlt = false;
-byId("sdScene").addEventListener("click", function () {
+const SCENES = [
+  {t: "milo", u: BG_VIDEO},
+  {t: "saint-germain", u: BG_VIDEO2},
+  {t: "holo cafe", u: "holocafeloop.mp4"}
+];
+let sceneI = 0, holoOk = false;
+function scenePlay(i) {
+  sceneI = (i + SCENES.length) % SCENES.length;
+  const s = SCENES[sceneI];
   if (!bgv) return;
-  sceneryAlt = !sceneryAlt;
-  try { bgv.src = sceneryAlt ? BG_VIDEO2 : BG_VIDEO; bgv.play().catch(() => {}); } catch (e) {}
-  sys(sceneryAlt ? "second view." : "back to milo.");
+  try { bgv.src = s.u; bgv.play().catch(() => {}); } catch (e) {}
+  sys(s.t + ".");
+}
+try {
+  fetch("holocafeloop.mp4", {method: "HEAD"}).then(function (r) { holoOk = r.ok; }).catch(function () {});
+} catch (e) {}
+byId("sdScene").addEventListener("click", function () {
+  let n = sceneI + 1;
+  if (SCENES[n % SCENES.length].u === "holocafeloop.mp4" && !holoOk) n++;
+  scenePlay(n);
 });
 const cafeAudio = new Audio(BG_MUSIC);
 cafeAudio.loop = true; cafeAudio.preload = "auto"; cafeAudio.volume = 0;
