@@ -4,6 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>cafedreamr.art</title>
+  <!-- SUPABASE JS CLIENT -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-javascript@2"></script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -437,27 +439,33 @@
   </div>
 
   <script>
+    // --- SUPABASE CLIENT SETUP --- //
+    const SUPABASE_URL = "https://uerclxpqxnoyfszitrpx.supabase.co";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVlcmNseHBxeG5veWZzeml0cnB4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA1NjY3NjksImV4cCI6MjEwNjE0Mjc2OX0.b-xhN_MbUW8jYieuljmlijWV5FYcvrsNafJRUSID3jI";
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
     // --- PUZZLE SETUP --- //
     const WORDS = ["CHIMERA", "CROSS", "FRIENDS", "CATS", "CHRIST"];
     const foundWords = new Set();
     const GRID_SIZE = 10;
     
-      const gridData = [
-  ['C','H','I','M','E','R','A','X','Q','Z'], // CHIMERA (Row 0, Cols 0-6)
-  ['Q','W','E','R','T','Y','U','I','O','P'],
-  ['A','S','D','F','G','H','J','K','L','M'],
-  ['C','R','O','S','S','B','V','C','X','Z'], // CROSS (Row 3, Cols 0-4)
-  ['C','A','T','S','X','Y','Z','A','B','S'], // CATS (Row 4, Cols 0-3)
-  ['F','R','I','E','N','D','S','H','I','T'], // FRIENDS (Row 5, Cols 0-6)
-  ['C','H','R','I','S','T','V','W','X','Y'], // CHRIST (Row 6, Cols 0-5)
-  ['X','Y','Z','A','B','C','D','E','F','G'],
-  ['H','I','J','K','L','M','N','O','P','Q'],
-  ['R','S','T','U','V','W','X','Y','Z','A']
-];
-  
+    // Updated Grid - No overlaps/cancellations
+    const gridData = [
+      ['C','H','I','M','E','R','A','X','Q','Z'],
+      ['Q','W','E','R','T','Y','U','I','O','P'],
+      ['A','S','D','F','G','H','J','K','L','M'],
+      ['C','R','O','S','S','B','V','C','X','Z'],
+      ['C','A','T','S','X','Y','Z','A','B','S'],
+      ['F','R','I','E','N','D','S','H','I','T'],
+      ['C','H','R','I','S','T','V','W','X','Y'],
+      ['X','Y','Z','A','B','C','D','E','F','G'],
+      ['H','I','J','K','L','M','N','O','P','Q'],
+      ['R','S','T','U','V','W','X','Y','Z','A']
+    ];
+
     let selectedCells = [];
     let activeUsername = "";
-    let isUserAway = false;
+    let presenceChannel = null;
     let uploadedCount = 0;
 
     function initGrid() {
@@ -518,59 +526,131 @@
       document.getElementById("regForm").style.display = "flex";
     }
 
-    function handleRegistration(e) {
+    async function handleRegistration(e) {
       e.preventDefault();
+      const email = document.getElementById("regEmail").value.trim();
+      const password = document.getElementById("regPass").value;
       activeUsername = document.getElementById("regUser").value.trim() || "Dreamr";
+
+      // 1. Supabase Auth Sign Up
+      const { data, error } = await supabase.auth.signUp({
+        email: email,
+        password: password,
+        options: { data: { username: activeUsername } }
+      });
+
+      if (error) {
+        alert("Registration Error: " + error.message);
+        return;
+      }
+
       document.getElementById("entryOverlay").style.display = "none";
       document.getElementById("userBadge").textContent = `@${activeUsername}`;
       
-      updatePresenceUI();
-      addSystemMessage(`${activeUsername} joined the lounge.`);
+      // Initialize Chat & Realtime Engine
+      initSupabaseChat();
+      initSupabaseMosaic();
+      initPresence();
     }
 
-    // --- MENU TOGGLE --- //
-    function toggleMenu() {
-      document.getElementById("leftMenu").classList.toggle("active");
+    // --- SUPABASE REALTIME CHAT --- //
+    async function initSupabaseChat() {
+      // Fetch initial chat history
+      const { data: history } = await supabase
+        .from('messages')
+        .select('*')
+        .order('created_at', { ascending: true })
+        .limit(50);
+
+      if (history) {
+        history.forEach(renderChatMessage);
+      }
+
+      // Listen for incoming messages in real-time
+      supabase
+        .channel('public:messages')
+        .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' }, payload => {
+          renderChatMessage(payload.new);
+        })
+        .subscribe();
     }
 
-    // --- CHAT & IMAGE MOSAIC --- //
-    function sendMessage() {
+    async function sendMessage() {
       const input = document.getElementById("messageInput");
       const text = input.value.trim();
       if (!text) return;
 
-      const chatStream = document.getElementById("chatStream");
-      const msg = document.createElement("div");
-      msg.className = "chat-msg";
-      msg.innerHTML = `
-        <div class="msg-user">${activeUsername}</div>
-        <div class="msg-body">${escapeHTML(text)}</div>
-      `;
-      chatStream.appendChild(msg);
-      chatStream.scrollTop = chatStream.scrollHeight;
       input.value = "";
+
+      await supabase.from('messages').insert({
+        username: activeUsername,
+        content: text
+      });
     }
 
-    function addSystemMessage(text) {
+    function renderChatMessage(msg) {
       const chatStream = document.getElementById("chatStream");
-      const msg = document.createElement("div");
-      msg.className = "chat-msg";
-      msg.style.opacity = "0.7";
-      msg.innerHTML = `<div class="msg-body" style="font-style: italic; font-size: 12px;">${text}</div>`;
-      chatStream.appendChild(msg);
+      const el = document.createElement("div");
+      el.className = "chat-msg";
+      el.innerHTML = `
+        <div class="msg-user">${escapeHTML(msg.username)}</div>
+        <div class="msg-body">${escapeHTML(msg.content)}</div>
+      `;
+      chatStream.appendChild(el);
       chatStream.scrollTop = chatStream.scrollHeight;
     }
 
-    function handleImageUpload(e) {
+    // --- SUPABASE MOSAIC STORAGE & REALTIME --- //
+    async function initSupabaseMosaic() {
+      // Fetch existing background tiles
+      const { data: tiles } = await supabase
+        .from('tiles')
+        .select('*')
+        .order('created_at', { ascending: true });
+
+      if (tiles) {
+        tiles.forEach(tile => addBackgroundTile(tile.image_url));
+      }
+
+      // Listen for newly uploaded tiles
+      supabase
+        .channel('public:tiles')
+        .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'tiles' }, payload => {
+          addBackgroundTile(payload.new.image_url);
+        })
+        .subscribe();
+    }
+
+    async function handleImageUpload(e) {
       const file = e.target.files[0];
       if (!file) return;
 
-      const reader = new FileReader();
-      reader.onload = function(event) {
-        addBackgroundTile(event.target.result);
-        addSystemMessage(`${activeUsername} uploaded a background mosaic tile.`);
-      };
-      reader.readAsDataURL(file);
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${Date.now()}_${Math.random().toString(36).substring(2, 7)}.${fileExt}`;
+      const filePath = `mosaics/${fileName}`;
+
+      // 1. Upload to Supabase Storage Bucket ('background_tiles')
+      const { error: uploadErr } = await supabase.storage
+        .from('background_tiles')
+        .upload(filePath, file);
+
+      if (uploadErr) {
+        alert("Upload error: " + uploadErr.message);
+        return;
+      }
+
+      // 2. Get Public URL
+      const { data: urlData } = supabase.storage
+        .from('background_tiles')
+        .getPublicUrl(filePath);
+
+      const publicUrl = urlData.publicUrl;
+
+      // 3. Save URL to Database
+      await supabase.from('tiles').insert({
+        image_url: publicUrl,
+        uploaded_by: activeUsername
+      });
     }
 
     function addBackgroundTile(src) {
@@ -588,29 +668,60 @@
       }
     }
 
+    // --- SUPABASE PRESENCE (ACTIVE / AWAY) --- //
+    function initPresence() {
+      presenceChannel = supabase.channel('room_presence', {
+        config: { presence: { key: activeUsername } }
+      });
+
+      presenceChannel
+        .on('presence', { event: 'sync' }, () => {
+          const state = presenceChannel.presenceState();
+          renderUserFeed(state);
+        })
+        .subscribe(async (status) => {
+          if (status === 'SUBSCRIBED') {
+            await presenceChannel.track({ username: activeUsername, status: 'active' });
+          }
+        });
+
+      window.addEventListener("blur", () => {
+        presenceChannel.track({ username: activeUsername, status: 'away' });
+      });
+
+      window.addEventListener("focus", () => {
+        presenceChannel.track({ username: activeUsername, status: 'active' });
+      });
+    }
+
+    function renderUserFeed(presenceState) {
+      const feed = document.getElementById("userFeed");
+      feed.innerHTML = "";
+
+      Object.keys(presenceState).forEach(key => {
+        const userPresence = presenceState[key][0];
+        if (!userPresence) return;
+
+        const li = document.createElement("li");
+        li.className = "user-node";
+        li.innerHTML = `
+          <span class="status-dot ${userPresence.status}"></span>
+          <span>${escapeHTML(userPresence.username)} (${userPresence.status})</span>
+        `;
+        feed.appendChild(li);
+      });
+    }
+
+    // --- MENU TOGGLE --- //
+    function toggleMenu() {
+      document.getElementById("leftMenu").classList.toggle("active");
+    }
+
     function escapeHTML(str) {
       return str.replace(/[&<>'"]/g, 
         tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
       );
     }
-
-    // --- PRESENCE ENGINE --- //
-    function updatePresenceUI() {
-      if (!activeUsername) return;
-      const feed = document.getElementById("userFeed");
-      const statusClass = isUserAway ? "away" : "active";
-      const statusText = isUserAway ? "away" : "active";
-
-      feed.innerHTML = `
-        <li class="user-node">
-          <span class="status-dot ${statusClass}"></span>
-          <span>${activeUsername} (${statusText})</span>
-        </li>
-      `;
-    }
-
-    window.addEventListener("blur", () => { isUserAway = true; updatePresenceUI(); });
-    window.addEventListener("focus", () => { isUserAway = false; updatePresenceUI(); });
 
     // Init word search on load
     initGrid();
