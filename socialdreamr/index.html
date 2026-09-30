@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="en">
-<head>
+<head><script src="/.nekoweb-api/static/site.js" defer></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="dark">
@@ -117,6 +117,7 @@ const TUNES = [
 ];
 const SUPABASE_URL = "https://uerclxpqxnoyfszitrpx.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVlcmNseHBxeG5veWZzeml0cnB4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA1NjY3NjksImV4cCI6MjEwNjE0Mjc2OX0.b-xhN_MbUW8jYieuljmlijWV5FYcvrsNafJRUSID3jI";
+const byId = (id) => document.getElementById(id);
 const esc = (s) => String(s == null ? "" : s).replace(/[&<>"']/g, (c) => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"}[c]));
 function sys(s) {
   const f = byId("sdFeed"), d = document.createElement("div");
