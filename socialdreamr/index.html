@@ -1,0 +1,774 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>socialdreamr</title>
+<link rel="icon" type="image/png" href="https://user.uploads.dev/file/40b40aab9ac1fe6236423c677f4edb71.png">
+<link rel="apple-touch-icon" href="https://user.uploads.dev/file/40b40aab9ac1fe6236423c677f4edb71.png">
+<meta name="theme-color" content="#14092b">
+<meta name="description" content="socialdreamr — a brutalist lobby for chatting and sharing mp3s. put your name up, drop your link, pass tracks around.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>*{box-sizing:border-box}html,body{background:#0d001a}body{margin:0;color:#f3ecff;font-family:'Space Mono',ui-monospace,Menlo,monospace;-webkit-font-smoothing:antialiased;background:radial-gradient(1200px 700px at 20% -10%,#2a1152 0%,transparent 60%),radial-gradient(1000px 700px at 110% 20%,#1b2a5e 0%,transparent 55%),linear-gradient(160deg,#0d001a,#150826 55%,#0a1030);background-attachment:fixed}::selection{background:#6495ed;color:#0d001a}.sd{max-width:900px;margin:0 auto;padding:28px 16px 60px;position:relative;z-index:1}.sdStamp{display:inline-block;color:#fff;font-weight:700;font-size:22px;letter-spacing:.14em;padding:10px 16px;margin-bottom:6px;background:linear-gradient(100deg,#bf40bf,#6495ed,#00e5ff,#bf40bf);background-size:300% 100%;box-shadow:0 0 24px rgba(191,64,191,.55),6px 6px 0 rgba(100,149,237,.5);animation:holoshift 7s linear infinite}@keyframes holoshift{to{background-position:300% 0}}.sdStamp.wob{animation:detach 23s linear forwards,holoshift 7s linear infinite}@keyframes detach{0%{transform:none}8%{transform:rotate(.4deg)}16%{transform:rotate(-.4deg)}24%{transform:rotate(.5deg) translateX(1px)}32%{transform:rotate(-.5deg)}40%{transform:rotate(.6deg) translateX(-1px)}48%{transform:rotate(-.6deg)}56%{transform:rotate(.8deg) translateX(1px)}64%{transform:rotate(-.9deg)}70%{transform:rotate(1.6deg) translate(2px,-1px)}74%{transform:rotate(-2.4deg) translate(-3px,2px)}78%{transform:rotate(2.8deg) translate(3px,-2px)}82%{transform:rotate(-4deg) translate(2px,4px)}92%{transform:rotate(-4deg) translate(2px,4px)}100%{transform:none}}@media (prefers-reduced-motion:reduce){.sdStamp,.sdStamp.wob{animation:none}}#sdBg{position:fixed;inset:0;width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.15) brightness(.85) blur(3px);opacity:.3;pointer-events:none;z-index:0}.sdTag{font-size:12px;margin:0 0 20px;max-width:60ch;color:#cbb8ee}.sdGrid{display:grid;grid-template-columns:1fr 200px;gap:16px}.sdBox{border:3px solid #8a5cff;background:rgba(20,8,40,.5);backdrop-filter:blur(14px) saturate(1.3);-webkit-backdrop-filter:blur(14px) saturate(1.3);box-shadow:6px 6px 0 rgba(100,149,237,.45),0 0 22px rgba(138,92,255,.25);padding:14px;margin-bottom:16px}.sdBox h2{font-size:12px;letter-spacing:.2em;margin:0 0 10px;text-transform:uppercase;color:#9db9ff}.sdRow{display:flex;gap:8px;flex-wrap:wrap}.sdRow input{flex:1;min-width:0;font-family:inherit;font-size:13px;color:#fff;background:rgba(20,9,43,.7);border:3px solid #8a5cff;padding:10px 12px;border-radius:0;outline:none}.sdRow input:focus{border-color:#6495ed;box-shadow:0 0 12px rgba(100,149,237,.5)}button{font-family:inherit;font-weight:700;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#fff;background:linear-gradient(100deg,#bf40bf,#6495ed);border:3px solid #0d001a;padding:10px 16px;border-radius:0;cursor:pointer;box-shadow:4px 4px 0 rgba(0,0,0,.6)}button:hover{filter:brightness(1.25)}button:disabled{opacity:.35;cursor:default;filter:none}.sdNote{font-size:11px;margin:10px 0 0;color:#cbb8ee}.sdFeed{height:min(58vh,480px);overflow-y:auto;display:flex;flex-direction:column;gap:14px;scrollbar-width:thin;scrollbar-color:#8a5cff #14092b}.sdSideK{font-size:11px;letter-spacing:.2em;text-transform:uppercase;margin:0 0 10px;color:#9db9ff}.sdWho{font-size:12px;margin-bottom:10px;overflow-wrap:anywhere}.sdWho a{color:#fff;text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:3px;text-decoration-color:#6495ed}.sdWho .st{color:#8f7fb8;font-size:10px}.sdMsg{font-size:13px;line-height:1.6;overflow-wrap:anywhere;border-top:2px solid #8a5cff;padding-top:10px}.sdMsg:first-child{border-top:none;padding-top:0}.sdMsg .who{font-weight:700;color:#fff}.sdMsg a.who{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:3px;text-decoration-color:#bf40bf}.sdMsg .at{color:#8f7fb8;font-size:10px;margin-left:8px}.sdMsg .tx a{color:#c0a6ff}.sdMsg audio{width:100%;height:34px;margin-top:8px;display:block;filter:hue-rotate(40deg) saturate(1.4)}.sdMsg.wait{border:3px dashed #bf40bf;padding:8px}.sdMsg button.mini.modonly{display:none}body.modshow .sdMsg button.mini.modonly{display:inline-block}#sdFloppy svg{vertical-align:-2px}#sdEticBtn svg{vertical-align:-2px}#sdEticBtn:hover svg{display:none}#sdEticBtn:hover:after{content:"Rules"}#sdTrackBtn svg{vertical-align:-2px}#sdTrackBtn{white-space:nowrap}#sdTunes .tn{display:flex;align-items:center;gap:8px;margin:8px 0;font-size:12px;color:#fff}#sdTunes .tn span{flex:1;min-width:0}#sdTunes .tn button{flex:none;min-width:64px}.sdRules{margin:8px 0 0;padding-left:20px;font-size:12px;line-height:1.8;color:#fff}.sdFine{font-size:10px;line-height:1.7;color:#8f7fb8;max-width:64ch;margin:26px 0 10px}.sdMsg button.mini{font-size:9px;padding:4px 8px;margin:6px 6px 0 0}.sdTrack{border:3px solid #6495ed;margin-top:8px;padding:8px;background:rgba(100,149,237,.08)}.sdTrack .tt{font-weight:700;font-size:11px;letter-spacing:.06em;margin-bottom:6px;overflow-wrap:anywhere;color:#9db9ff}.sdSys{font-size:11px;color:#f3ecff;background:rgba(191,64,191,.14);border:2px dashed #bf40bf;padding:6px 8px;text-align:center}.sdStage{display:none;border:3px dashed #6495ed;padding:8px 10px;margin-bottom:10px;font-size:12px;align-items:center;gap:10px;color:#fff}.sdStage.on{display:flex}.sdStage.busy .st{animation:blink 1s infinite}.sdStage button{margin-left:auto;padding:6px 10px}@keyframes blink{50%{opacity:.3}}.sdSend{display:flex;gap:8px}.sdSend input{flex:1;min-width:0;font-family:inherit;font-size:13px;color:#fff;background:rgba(20,9,43,.7);border:3px solid #8a5cff;padding:10px 12px;border-radius:0;outline:none}.sdSend input:focus{border-color:#6495ed;box-shadow:0 0 12px rgba(100,149,237,.5)}button.lit{filter:brightness(1.4);box-shadow:0 0 16px rgba(100,149,237,.9),4px 4px 0 rgba(0,0,0,.6)}#sdFloatLink{position:fixed;right:16px;bottom:110px;z-index:1;display:block}#sdFloat{display:block;width:120px;border:3px solid #8a5cff;box-shadow:6px 6px 0 rgba(100,149,237,.45),0 0 22px rgba(191,64,191,.5);animation:floaty 7s ease-in-out infinite}@keyframes floaty{0%,100%{transform:translateY(0) rotate(-1deg) scaleY(1)}50%{transform:translateY(-16px) rotate(1deg) scaleY(1.02)}}#sdRemote{position:fixed;right:14px;bottom:14px;z-index:50;width:190px;border:3px solid #8a5cff;background:rgba(20,8,40,.65);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);box-shadow:5px 5px 0 rgba(100,149,237,.5)}#sdRemHead{display:flex;align-items:center;gap:8px;font-size:10px;letter-spacing:.2em;color:#9db9ff;padding:7px 9px;cursor:grab;touch-action:none;user-select:none}#sdRemHead button{margin-left:auto;padding:3px 8px;font-size:10px}#sdRemBody{padding:0 9px 9px}#sdRemBody .rr{display:flex;gap:5px;align-items:center;margin-top:7px;flex-wrap:wrap}#sdRemBody .rr span{font-size:9px;letter-spacing:.14em;color:#8f7fb8;width:100%}#sdRemBody .rr button{font-size:8px;padding:6px 8px}#sdTiles{position:fixed;inset:0;z-index:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(var(--ts,90px),1fr));grid-auto-rows:var(--ts,90px);gap:4px;overflow:hidden;pointer-events:none;opacity:.28}#sdTiles div{background-size:cover;background-position:center;filter:saturate(.85) brightness(.75)}#sdTiles div:nth-child(3n){grid-row:span 2}.sdArt{display:block;margin-top:8px;border:3px solid #8a5cff;max-width:280px}.sdArt img{display:block;width:100%;max-height:240px;object-fit:cover}@media (max-width:640px){#sdTiles{grid-template-columns:repeat(auto-fill,minmax(64px,1fr));grid-auto-rows:64px}}#sdTiles div.star{background-image:none !important;display:flex;align-items:center;justify-content:center;color:#c0a6ff;font-size:18px;animation:tw 2.4s ease-in-out infinite}#sdTiles div.star:nth-child(2n){animation-delay:.8s}#sdTiles div.star:nth-child(3n){animation-delay:1.6s}@keyframes tw{50%{opacity:.3;transform:scale(.75)}}#sdBeta{position:fixed;inset:0;z-index:100;background:rgba(13,0,26,.92);display:flex;align-items:center;justify-content:center;padding:20px}#sdBeta[hidden]{display:none}.sdBetaCard{border:3px solid #8a5cff;background:rgba(20,8,40,.96);box-shadow:6px 6px 0 rgba(100,149,237,.45);padding:16px;max-width:540px;width:100%;max-height:86vh;overflow:auto}.sdBetaCard h2{font-size:12px;letter-spacing:.2em;margin:0 0 6px;text-transform:uppercase;color:#9db9ff}.sdBetaQ{margin:12px 0}.sdBetaQ p{font-size:12px;margin:0 0 6px;color:#fff}.sdBetaQ label{display:block;font-size:12px;margin:5px 0;cursor:pointer;color:#cbb8ee}#sdBetaMod button{padding:4px 8px;font-size:10px}#sdBetaSpots{flex:1}#sdBetaSum{width:100%;box-sizing:border-box;font-family:inherit;font-size:12px;color:#fff;background:rgba(20,9,43,.7);border:3px solid #8a5cff;padding:10px;margin:8px 0}#sdLight{position:fixed;inset:0;z-index:100;background:rgba(13,0,26,.92);display:flex;align-items:center;justify-content:center;padding:20px}#sdLight[hidden]{display:none}#sdLight figure{margin:0;max-width:min(860px,94vw);text-align:center}#sdLight img{max-width:100%;max-height:80vh;border:3px solid #8a5cff;box-shadow:0 0 40px rgba(191,64,191,.6)}#sdLight figcaption{color:#f3ecff;font-size:12px;margin-top:10px}#sdRemSize{position:absolute;right:0;bottom:0;cursor:nwse-resize;font-size:12px;color:#8f7fb8;padding:5px 7px;touch-action:none;user-select:none}#sdBrew.pull .mzSteam span{animation-duration:.8s}#sdBrew.pull .mzBody{border-color:#9db9ff}#sdBrew{position:fixed;left:14px;bottom:14px;z-index:60;width:134px;border:3px solid #8a5cff;background:linear-gradient(#241040,#14092b);box-shadow:5px 5px 0 rgba(100,149,237,.45);padding:8px}.mzTop{display:flex;align-items:center;gap:6px;font-size:9px;letter-spacing:.2em;color:#9db9ff;margin-bottom:6px}.mzLight{width:8px;height:8px;border-radius:50%;background:#3a2a5e}#sdBrew.on .mzLight{background:#9db9ff;box-shadow:0 0 8px #6495ed}.mzBody{position:relative;border:2px solid #4a2f96;background:#0d001a;height:88px;margin-bottom:8px;overflow:hidden}.mzHead{position:absolute;top:6px;left:50%;transform:translateX(-50%);width:44px;height:12px;background:linear-gradient(#6f5bb5,#3c2a72);border:2px solid #8a5cff}.mzHead:after{content:"";position:absolute;top:12px;left:8px;width:4px;height:10px;background:#8a5cff;box-shadow:20px 0 0 #8a5cff}.mzCup{position:absolute;bottom:6px;left:50%;transform:translateX(-50%);width:40px;height:30px;border:2px solid #9db9ff;border-top:none;clip-path:polygon(0 0,100% 0,86% 100%,14% 100%)}.mzLiq{position:absolute;bottom:0;left:0;right:0;height:0;transition:height 2.2s ease}#sdBrew.tea .mzLiq{height:70%;background:#ffc857}#sdBrew.coffee .mzLiq{height:70%;background:#8a5a2b}#sdBrew.creamy .mzLiq{background:linear-gradient(#fff8e7 25%,#ffc857)}.mzGauge{position:absolute;top:4px;right:4px;width:26px;height:26px;border:2px solid #8a5cff;border-radius:50%;background:#0d001a}.mzNeedle{position:absolute;left:50%;bottom:50%;width:2px;height:9px;background:#fff8e7;transform-origin:bottom center;transform:translateX(-50%) rotate(-60deg);transition:transform .5s ease}#sdBrew.pull .mzNeedle{transform:translateX(-50%) rotate(55deg)}#sdBrew.pull .mzBody{animation:mzshake .28s infinite}@keyframes mzshake{0%,100%{transform:translate(0,0)}25%{transform:translate(.6px,-.6px)}75%{transform:translate(-.6px,.6px)}}.mzPour{position:absolute;top:30px;left:50%;transform:translateX(-50%);width:28px;height:22px;opacity:0;transition:opacity .3s}.mzPour:before,.mzPour:after{content:"";position:absolute;top:0;width:3px;height:100%;background:#8a5a2b}.mzPour:before{left:6px}.mzPour:after{right:6px}#sdBrew.pull .mzPour{opacity:1;animation:mzp flick .18s infinite}@keyframes mzp{50%{opacity:.6}}.mzSteam span{position:absolute;bottom:42px;left:44%;width:6px;height:6px;border-radius:50%;opacity:0}.mzSteam span+span{left:54%}#sdBrew.on .mzSteam span{animation:mzpuff 2.2s ease-out infinite}#sdBrew.on .mzSteam span+span{animation-delay:1.1s}@keyframes mzpuff{0%{transform:translateY(0) scale(.6);opacity:0}30%{opacity:.8}100%{transform:translateY(-24px) translateX(5px) scale(1.1);opacity:0}}.mzBtns{display:grid;grid-template-columns:1fr 1fr;gap:5px}.mzBtns button{font-size:9px;padding:7px 2px}@media (max-width:640px){#sdBrew{transform:scale(.82);transform-origin:bottom left}}#sdCursor{position:fixed;left:0;top:0;z-index:9999;pointer-events:none}#sdCursor .liq{fill:#ffc857}#sdCursor.coffee .liq{fill:#8a5a2b}#sdSmoke{position:absolute;left:0;top:0}#sdSmoke span{position:absolute;bottom:24px;width:5px;height:5px;border-radius:50%;background:var(--sm,#b366ff);box-shadow:0 0 6px var(--sm,#b366ff);opacity:.9;animation:rise 1.8s ease-out forwards}#sdCursor.tea.creamy .liq{fill:#ffe9c4}#sdCursor.coffee.creamy .liq{fill:#d9b382}#sdSmoke span.drop{background:#fff8ea;box-shadow:0 0 6px #fff8ea;animation:drip .9s ease-in forwards}@keyframes drip{to{transform:translate(var(--dx,0px),24px);opacity:0}}#sdCursor.tea{--sm:#b366ff}#sdCursor.coffee{--sm:#39ff6a}@keyframes rise{to{transform:translate(var(--dx,4px),-26px) scale(.3);opacity:0}}.hasCursor,.hasCursor *{cursor:none !important}@media (max-width:640px){#sdFloat{width:70px;right:10px;bottom:auto;top:64px}#sdRemote{width:160px}}#sdRemBody .rl{display:flex;flex-direction:column;gap:6px;margin:7px 0}#sdRemBody .rl a{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#fff;text-decoration:none;border:2px solid #6495ed;padding:8px 9px;background:rgba(100,149,237,.1)}#sdRemBody .rl a:hover{background:linear-gradient(100deg,#bf40bf,#6495ed);border-color:#0d001a}@media (max-width:640px){.sdGrid{grid-template-columns:1fr}.sdStamp{font-size:17px}}</style>
+</head>
+<body>
+<div class="sd">
+  <video id="sdBg" autoplay muted loop playsinline></video>
+  <div id="sdTiles"></div>
+  <div id="sdBeta" hidden><div class="sdBetaCard"><h2>Betatest</h2><p class="sdNote">answer all five, then send the summary our way.</p><div class="sdRow"><span class="sdNote" id="sdBetaSpots">checking spots…</span><span id="sdBetaMod" hidden><button id="sdBetaMinus" type="button">−</button><button id="sdBetaPlus" type="button">+</button><button id="sdBetaToggle" type="button">Close wave</button></span></div><p class="sdNote" id="sdBetaClosed" hidden>wave one is full — no longer accepting betatesters at this time. thank you.</p><div id="sdBetaQ"></div><div class="sdRow"><input id="sdBetaName" maxlength="40" placeholder="YOUR NAME" aria-label="your name" autocomplete="off"><input id="sdBetaContact" maxlength="80" placeholder="CONTACT (IG, EMAIL, WHATEVER)" aria-label="contact info" autocomplete="off"></div><div class="sdRow"><button id="sdBetaDone" type="button">Finish</button><button id="sdBetaShut" type="button">Close</button></div><div id="sdBetaOut" hidden><p class="sdNote">copy the summary, then dm it to @cafedreamr with your contact info attached.</p><textarea id="sdBetaSum" rows="8" readonly></textarea><div class="sdRow"><button id="sdBetaCopy" type="button">Copy</button><a href="https://ig.me/m/cafedreamr" target="_blank" rel="noopener noreferrer"><button type="button">Message us</button></a><a href="https://tally.so/r/WOxrYe" target="_blank" rel="noopener noreferrer"><button type="button">Open form</button></a></div></div></div></div>
+  <div id="sdLight" hidden><figure><img id="sdLightImg" alt=""><figcaption id="sdLightCap"></figcaption></figure></div>
+  <a id="sdFloatLink" href="https://instagram.com/cafedreamr" target="_blank" rel="noopener noreferrer" aria-label="cafedreamr on instagram"><img id="sdFloat" alt="cafedreamr"></a>
+  <div id="sdBrew"><div class="mzTop"><span class="mzLight"></span><span>BREW</span></div><div class="mzBody"><div class="mzGauge"><div class="mzNeedle"></div></div><div class="mzHead"></div><div class="mzPour"></div><div class="mzSteam"><span></span><span></span></div><div class="mzCup"><div class="mzLiq"></div></div></div><div class="mzBtns"><button id="sdRCOff" type="button">Off</button><button id="sdRCTea" type="button">Tea</button><button id="sdRCCoffee" type="button">Coffee</button><button id="sdRCCream" type="button">Cream</button></div></div>
+  <div id="sdCursor" hidden><div id="sdSmoke"></div><svg viewBox="0 0 32 30" width="30" height="28"><path d="M5 11h19v7a9 9 0 0 1-9 9h-1a9 9 0 0 1-9-9z" fill="#14092b" stroke="#9db9ff" stroke-width="2"></path><path d="M24 13h2a4 4 0 0 1 0 8h-2" fill="none" stroke="#9db9ff" stroke-width="2"></path><rect class="liq" x="8" y="13" width="13" height="3"></rect></svg></div>
+  <div><span class="sdStamp" id="sdStamp">SOCIALDREAMR</span></div>
+  <p class="sdTag">a lobby for talking and passing tracks around. everyone gets one link — yours prints under everything you say.</p>
+  <div class="sdRow" style="margin-bottom:16px;max-width:420px;">
+    <button id="sdCopy" type="button">Copy invite</button>
+    <button id="sdEticBtn" type="button" aria-label="house rules"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h13a3 3 0 0 1 3 3v13H7a3 3 0 0 1-3-3z"></path><path d="M4 17a3 3 0 0 1 3-3h13"></path></svg></button>
+    <button id="sdFloppy" type="button" aria-label="mods"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h12l4 4v12H4z"></path><path d="M8 4v5h8V4"></path><rect x="8" y="14" width="8" height="6"></rect></svg></button>
+  </div>
+    <div class="sdRow" style="margin-bottom:16px;max-width:420px;">
+    <button id="sdScene" type="button">Scenery</button>
+    <button id="sdMute" type="button">Mute</button>
+    <button id="sdSave" type="button">Save</button>
+    <button id="sdTrackBtn" type="button" aria-label="take the tunes" style="white-space:nowrap"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 15v-2a8 8 0 0 1 16 0v2"></path><rect x="3" y="13" width="4" height="7" rx="1.5"></rect><rect x="17" y="13" width="4" height="7" rx="1.5"></rect></svg> Tunes</button>
+  </div>
+  <div class="sdBox" id="sdSavePop" hidden>
+    <h2>Keep the cafe close</h2>
+    <p class="sdNote" id="sdSaveTxt"></p>
+    <div class="sdRow"><button id="sdSaveShut" type="button">Close</button></div>
+  </div>
+<div class="sdBox" id="sdTunesPop" hidden>
+    <h2>Take the tunes</h2>
+    <div id="sdTunes"></div>
+    <div class="sdRow"><button id="sdTunesShut" type="button">Close</button></div>
+  </div>
+<div class="sdBox" id="sdEticPop" hidden>
+    <h2>House rules</h2>
+    <ol class="sdRules">
+      <li>say hi before you plug. this is a cafe, not a billboard.</li>
+      <li>one link is yours. don't drown the room.</li>
+      <li>no hate, no spam, no shock stuff.</li>
+      <li>18+ room. act like it.</li>
+      <li>mods may drop anything, no appeals over the counter.</li>
+      <li>what you post stays yours, but the room can hear it.</li>
+    </ol>
+  </div>
+  <div class="sdBox" id="sdModPop" hidden>
+    <h2>Mods</h2>
+    <div class="sdRow" style="max-width:460px;"><input id="sdMod" maxlength="64" placeholder="MOD CODE (OWNERS)" aria-label="mod code" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false"><button id="sdModGo" type="button">Mod</button><button id="sdClear" type="button">Clear stack</button></div>
+  </div>
+  <div class="sdBox">
+    <h2>Your card</h2>
+    <div class="sdRow">
+      <input id="sdName" maxlength="24" placeholder="YOUR NAME" aria-label="your name" autocomplete="off">
+      <input id="sdSite" maxlength="200" placeholder="YOUR LINK (SITE, SOCIAL, WHATEVER)" aria-label="your link" autocomplete="off" inputmode="url">
+      <button id="sdJoin" type="button">Walk in</button>
+      <button id="sdReset" type="button">Reset</button>
+    </div>
+    
+    
+    <p class="sdNote" id="sdNote">Put your name up and walk in.</p>
+  </div>
+  <div id="sdRemote"><div id="sdRemHead"><span>MENU</span><button id="sdRemHide" type="button">-</button></div><div id="sdRemBody"><div class="rl"><a href="https://www.cafedreamr.art/SUPPORT/" target="_blank" rel="noopener noreferrer">Mission</a><a href="https://www.cafedreamr.art/" target="_blank" rel="noopener noreferrer">CafeDreamr</a><a href="https://www.cafedreamr.art/PLAYLIST/RADIO/" target="_blank" rel="noopener noreferrer">Playlist</a><a href="https://www.cafedreamr.art/LORE/BOBBY/cards.html" target="_blank" rel="noopener noreferrer">Meet the OCs</a></div><div class="rr"><span>Beta</span><a href="https://tally.so/r/WOxrYe" target="_blank" rel="noopener noreferrer"><button type="button">Betatest</button></a></div></div>
+  <div id="sdRemSize">&#8600;</div>
+  </div>
+  <div class="sdGrid">
+    <div class="sdBox"><div class="sdFeed" id="sdFeed" aria-live="polite"></div></div>
+    <div class="sdBox"><p class="sdSideK">Here now</p><div id="sdRoster"></div></div>
+  </div>
+  <div class="sdBox">
+    <h2>Say it / play it</h2>
+    <div class="sdStage" id="sdStage"><span class="st" id="sdStageT"></span><button id="sdStageX" type="button">Toss</button></div>
+    <div class="sdSend">
+      <input id="sdText" maxlength="300" placeholder="say something, or share a track or some art" aria-label="chat message" autocomplete="off" disabled>
+      <button id="sdAttach" type="button" disabled>SHARE</button>
+      <button id="sdSend" type="button" disabled>Send</button>
+    </div>
+    <input id="sdFile" type="file" accept="audio/mpeg,audio/mp3,.mp3,image/png,image/jpeg,image/gif,image/webp" hidden>
+  </div>
+  <footer class="sdFine">
+    &copy; <span id="sdYear">2026</span> cafedreamr. all rights reserved.<br>
+    18+ only. by entering you confirm you are of legal age where you live.<br>
+    this room is provided as-is, no warranties. you own what you post and you are responsible for it. don't upload anything you don't have the right to share. mods may remove anything at any time.
+  </footer>
+</div>
+<script type="module">
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+const FLOAT_IMG = "float.jpg";
+const BG_VIDEO = "milo.mp4";
+const BG_VIDEO2 = "https://user.uploads.dev/file/f653d6460d65ac1b00035daf23504f77.mp4";
+const BG_MUSIC = "https://user.uploads.dev/file/589a939a0764a9c70d834861836e3d55.mp3";
+const TUNES = [
+  {t: "cafedreamr lounge", u: "https://user.uploads.dev/file/589a939a0764a9c70d834861836e3d55.mp3", f: "cafedreamr-lounge.mp3"},
+  {t: "staying grounded, in christ", u: "https://user.uploads.dev/file/0e8cbd6a7d96bc86b14dd93432c0ef6a.mp3", f: "staying-grounded-in-christ.mp3"},
+  {t: "bat whispers (instrumental)", u: "https://user.uploads.dev/file/48b7edbc54d1e9a505fbced7d9e0f8d2.mp3", f: "bat-whispers-instrumental.mp3"},
+  {t: "staying grounded (instrumental)", u: "https://user.uploads.dev/file/605216f376218bfff8742ee30576501d.mp3", f: "staying-grounded-instrumental.mp3"}
+];
+const SUPABASE_URL = "https://xzhsscjdaffzldnqwpxl.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh6aHNzY2pkYWZmemxkbnF3cHhsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY3NTY0NzcsImV4cCI6MjEwMjMzMjQ3N30.dc7UFaby8qmFue6UNr2QodurIPFGQBtAMz1EmBizt5g";
+
+const byId = (id) => document.getElementById(id);
+const esc = (s) => String(s == null ? "" : s).replace(/[&<>"']/g, (c) => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"}[c]));
+function sys(s) {
+  const f = byId("sdFeed"), d = document.createElement("div");
+  d.className = "sdSys"; d.textContent = s;
+  f.appendChild(d);
+  while (f.children.length > 80) f.removeChild(f.firstChild);
+  f.scrollTop = f.scrollHeight;
+}
+function linkify(s) {
+  const parts = String(s).split(/(https?:\/\/[^\s<>"]+)/g);
+  let out = "";
+  for (let i = 0; i < parts.length; i++) {
+    if (i % 2 === 1) out += '<a href="' + esc(parts[i]) + '" target="_blank" rel="noopener noreferrer">' + esc(parts[i]) + "</a>";
+    else out += esc(parts[i]);
+  }
+  return out;
+}
+function mp3url(s) {
+  const m = /https?:\/\/[^\s<>"]+?\.mp3(\?[^\s<>"]*)?/i.exec(String(s));
+  return m ? m[0] : "";
+}
+function store(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+function load(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+function myName() { return (byId("sdName").value || "").trim().slice(0, 24) || "visitor"; }
+function mySite() {
+  let v = (byId("sdSite").value || "").trim().slice(0, 200);
+  if (v && !/^https?:\/\//i.test(v)) v = "https://" + v;
+  return /^https?:\/\/[^ \t\n<>"]+$/.test(v) ? v : "";
+}
+function whoHtml(name, site) {
+  if (site) return '<a class="who" href="' + esc(site) + '" target="_blank" rel="noopener noreferrer">' + esc(name) + "</a>";
+  return '<span class="who">' + esc(name) + "</span>";
+}
+function fmtTime(at) {
+  try { return new Date(at).toLocaleTimeString([], {hour: "2-digit", minute: "2-digit"}); } catch (e) { return ""; }
+}
+function msgHtml(m) {
+  let h = "<div>" + whoHtml(m.name, m.site) + '<span class="at">' + esc(fmtTime(m.created_at)) + "</span></div>";
+  if (m.text) {
+    const found = mp3url(m.text);
+    if (found && m.text.trim() === found.trim()) {
+      h += '<div class="sdTrack"><div class="tt">' + esc(found.split("/").pop().split("?")[0] || "TRACK") + '</div><audio controls preload="none" src="' + esc(found) + '"></audio></div>';
+    } else {
+      h += '<div class="tx">' + linkify(m.text) + "</div>";
+      if (found) h += '<div class="sdTrack"><div class="tt">TRACK</div><audio controls preload="none" src="' + esc(found) + '"></audio></div>';
+    }
+  }
+  if (m.art) h += '<a class="sdArt" href="' + esc(m.art) + '" target="_blank" rel="noopener noreferrer"><img loading="lazy" src="' + esc(m.art) + '" alt="' + esc(m.atitle || 'shared image') + '"></a>';
+  if (m.audio) h += '<div class="sdTrack"><div class="tt">' + esc(m.atitle || "TRACK") + '</div><audio controls preload="none" src="' + esc(m.audio) + '"></audio></div>';
+  if (m.name === myName()) h += ' <button class="mini" data-del="' + m.id + '">toss</button>'; if (m.name === myName() && m.art) h += ' <button class="mini" data-unart="' + m.id + '">drop art</button>';
+  else if (isMod) h += ' <button class="mini modonly" data-del="' + m.id + '">toss</button>';
+  if (isMod && m.approved === false) h += ' <button class="mini modonly" data-ok="' + m.id + '">let in</button>';  return h;
+}
+function addMsg(m) { if (m.approved === false && !isMod) return;
+  const f = byId("sdFeed"), near = f.scrollHeight - f.scrollTop - f.clientHeight < 60;
+  const d = document.createElement("div");
+  d.className = "sdMsg" + (m.approved === false ? " wait" : "");
+  d.dataset.id = m.id;
+  tileAdd(m);
+  const ck = Object.keys(idUrl);
+  if (ck.length > 200) delete idUrl[ck[0]];
+  d.innerHTML = msgHtml(m);
+  if (!f.querySelector('[data-id="' + m.id + '"]')) f.appendChild(d);
+  while (f.children.length > 80) f.removeChild(f.firstChild);
+  if (near) f.scrollTop = f.scrollHeight;
+}
+function roster(list) {
+  const r = byId("sdRoster");
+  r.innerHTML = list.map((p) => {
+    const nm = p.site ? '<a href="' + esc(p.site) + '" target="_blank" rel="noopener noreferrer">' + esc(p.name) + "</a>" : esc(p.name);
+    return '<div class="sdWho">' + nm + "</div>";
+  }).join("") || '<div class="sdWho"><span class="st">quiet in here</span></div>';
+}
+function setOpen(open) {
+  byId("sdText").disabled = !open;
+  byId("sdAttach").disabled = !open;
+  byId("sdSend").disabled = !open;
+  byId("sdJoin").textContent = open ? "Step out" : "Walk in";
+}
+
+const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+let chan = null, staged = null, lastSend = 0, joined = false, isMod = false, moderated = false, admHash = '';
+
+async function loadRecent() {
+  const { data, error } = await sb.from("messages").select("*").order("created_at", {ascending: false}).limit(30);
+  if (error) { sys("couldn't pull the recent stack — check the sql setup."); return; }
+  (data || []).reverse().forEach(addMsg);
+  byId("sdFeed").scrollTop = byId("sdFeed").scrollHeight;
+}
+function paintPresence() {
+  if (!chan) return;
+  const state = chan.presenceState();
+  const list = [];
+  for (const id in state) (state[id] || []).forEach((p) => { if (p.name) list.push(p); });
+  list.sort((a, b) => String(a.name).localeCompare(String(b.name)));
+  roster(list);
+}
+const bgv = document.getElementById("sdBg");
+if (bgv && !bgv.src) bgv.src = BG_VIDEO;
+let sceneryAlt = false;
+byId("sdScene").addEventListener("click", function () {
+  if (!bgv) return;
+  sceneryAlt = !sceneryAlt;
+  try { bgv.src = sceneryAlt ? BG_VIDEO2 : BG_VIDEO; bgv.play().catch(() => {}); } catch (e) {}
+  sys(sceneryAlt ? "second view." : "back to milo.");
+});
+const cafeAudio = new Audio(BG_MUSIC);
+cafeAudio.loop = true; cafeAudio.preload = "auto"; cafeAudio.volume = 0;
+let cafeMuted = false, fadeT = null;
+function cafeFade(to) {
+  if (fadeT) clearInterval(fadeT);
+  fadeT = setInterval(function () {
+    let v = cafeAudio.volume + (to > cafeAudio.volume ? 0.01 : -0.02);
+    if ((to >= cafeAudio.volume && v >= to) || (to <= cafeAudio.volume && v <= to)) { v = to; clearInterval(fadeT); fadeT = null; if (to === 0) cafeAudio.pause(); }
+    cafeAudio.volume = Math.max(0, Math.min(1, v));
+  }, 120);
+}
+function cafeStart() {
+  if (cafeMuted) return;
+  try {
+    const pr = cafeAudio.play();
+    if (pr && pr.then) pr.then(() => cafeFade(0.16)).catch(() => {
+      const retry = () => cafeStart();
+      document.addEventListener("click", retry, {once: true});
+    });
+  } catch (e) {}
+}
+byId("sdMute").addEventListener("click", function () {
+  cafeMuted = !cafeMuted;
+  byId("sdMute").textContent = cafeMuted ? "Unmute" : "Mute";
+  if (cafeMuted) cafeFade(0); else cafeStart();
+});
+let installEvt = null;
+window.addEventListener("beforeinstallprompt", function (e) { e.preventDefault(); installEvt = e; });
+byId("sdSave").addEventListener("click", async function () {
+  if (installEvt) { installEvt.prompt(); try { await installEvt.userChoice; } catch (e) {} installEvt = null; return; }
+  const ua = navigator.userAgent || "", pf = navigator.platform || "";
+  byId("sdSaveTxt").textContent = /iphone|ipad|ipod/i.test(ua) ? "tap share, then add to home screen. the face will keep your spot." : /android/i.test(ua) ? "tap the browser menu (the three dots), then add to home screen or install app." : "press " + (/mac/i.test(pf) ? "cmd+d" : "ctrl+d") + " to bookmark it.";
+  byId("sdSavePop").hidden = false;
+});
+byId("sdSaveShut").addEventListener("click", function () { byId("sdSavePop").hidden = true; });
+TUNES.forEach(function (t, i) {
+  const d = document.createElement("div");
+  d.className = "tn";
+  const s = document.createElement("span");
+  s.textContent = (i + 1) + ". " + t.t;
+  const b = document.createElement("button");
+  b.type = "button"; b.textContent = "Take";
+  b.addEventListener("click", async function () {
+    sys("wrapping " + t.t + " to go.");
+    try {
+      const r = await fetch(t.u);
+      if (!r.ok) throw 0;
+      const u = URL.createObjectURL(await r.blob());
+      const a = document.createElement("a");
+      a.href = u; a.download = t.f;
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(function () { URL.revokeObjectURL(u); }, 5000);
+      sys("the track is yours.");
+    } catch (e) { window.open(t.u, "_blank"); }
+  });
+  d.appendChild(s); d.appendChild(b);
+  byId("sdTunes").appendChild(d);
+});
+byId("sdTrackBtn").addEventListener("click", function () { byId("sdTunesPop").hidden = false; });
+byId("sdTunesShut").addEventListener("click", function () { byId("sdTunesPop").hidden = true; });
+const fli = document.getElementById('sdFloat');
+if (fli && !fli.src) fli.src = FLOAT_IMG;
+function wobble() {
+  const s = document.getElementById("sdStamp");
+  if (!s) return;
+  s.classList.remove("wob");
+  void s.offsetWidth;
+  s.classList.add("wob");
+}
+async function join() {
+  try { const st = await sb.from('settings').select('*'); (st.data || []).forEach(function (r) { if (r.key === 'moderated') moderated = (r.value === 'true'); if (r.key === 'admin_hash') admHash = r.value || ''; }); } catch (e) {}
+  if (joined) return;
+  const me = {name: myName(), site: mySite()};
+  store("sdName", byId("sdName").value);
+  store("sdSite", byId("sdSite").value);
+  chan = sb.channel("socialdreamr-lobby", {config: {presence: {key: "x" + Math.random().toString(36).slice(2)}}});
+  chan.on("presence", {event: "sync"}, paintPresence);
+  chan.on("presence", {event: "join"}, paintPresence);
+  chan.on("presence", {event: "leave"}, paintPresence);
+  chan.on("postgres_changes", {event: "UPDATE", schema: "public", table: "messages"}, function (p) { if (!p.new) return; const ex = byId("sdFeed").querySelector("[data-id='" + p.new.id + "']"); if (p.new.approved && !ex) addMsg(p.new); else if (p.new.approved && ex) { ex.innerHTML = msgHtml(p.new); if (!p.new.art) tileDropMid(p.new.id); } else if (!p.new.approved && ex && !isMod) ex.remove(); });
+  chan.on("postgres_changes", {event: "DELETE", schema: "public", table: "messages"}, function (p) { if (!p.old) return; const ex = byId("sdFeed").querySelector("[data-id='" + p.old.id + "']"); if (ex) ex.remove(); tileDropMid(p.old.id); });
+  chan.on("postgres_changes", {event: "INSERT", schema: "public", table: "messages"}, (p) => { if (p.new) addMsg(p.new); });
+  const st = await new Promise((resolve) => {
+    let done = false;
+    const to = setTimeout(() => { if (!done) { done = true; resolve("TIMED_OUT"); } }, 10000);
+    chan.subscribe((s) => {
+      if (done || typeof s !== "string") return;
+      if (s === "SUBSCRIBED" || s === "TIMED_OUT" || s === "CHANNEL_ERROR" || s === "CLOSED") {
+        done = true; clearTimeout(to); resolve(s);
+      }
+    });
+  });
+  if (st !== "SUBSCRIBED") { chan = null; await diagnose(st); return; }
+  await chan.track(me);
+  joined = true;
+  setOpen(true);
+  wobble();
+sys("you walked in as " + me.name);
+  cafeStart();
+  loadRecent();
+}
+async function diagnose(st) {
+  let msg = "the door stuck (" + st + "). ";
+  try {
+    const r = await fetch(SUPABASE_URL + "/rest/v1/messages?select=id&limit=1", {headers: {apikey: SUPABASE_ANON_KEY}});
+    if (r.status === 401 || r.status === 403) msg += "the key was rejected — recheck the anon key.";
+    else if (r.ok || r.status === 404) msg += "key is fine, so realtime is being blocked — check adblock or brave shields for this site.";
+    else msg += "supabase answered " + r.status + " — send me that number.";
+  } catch (e) { msg += "supabase is unreachable — check connection or vpn."; }
+  sys(msg);
+}
+async function leave() {
+  joined = false, isMod = false, moderated = false, admHash = '';
+  if (chan) { try { await chan.untrack(); } catch (e) {} try { await sb.removeChannel(chan); } catch (e) {} chan = null; }
+  setOpen(false); roster([]);
+  try { speechSynthesis.cancel(); } catch (e) {}
+cafeFade(0);
+sys("you stepped out");
+}
+async function sendIt() {
+  if (!joined || !chan) return;
+  const v = (byId("sdText").value || "").trim().slice(0, 300);
+  if (!v && !staged) return;
+  if (Date.now() - lastSend < 1500) { sys("easy — one at a time."); return; }
+  lastSend = Date.now();
+  const row = {name: myName(), site: mySite(), text: v || "", approved: (!moderated || isMod)};
+  if (staged && staged.kind === 'art') { row.art = staged.url; row.atitle = staged.title; }
+  else if (staged) { row.audio = staged.url; row.atitle = staged.title; }
+  byId("sdText").value = ""; stageClear();
+  const { error } = await sb.from("messages").insert(row);
+  if (error) sys("that didn't land — try again.");
+}
+function stageBusy(label) {
+  byId("sdStage").classList.add("on", "busy");
+  byId("sdStageT").textContent = label;
+}
+function stageTrack(title) {
+  const kind = staged && staged.kind === 'art' ? 'IMAGE' : 'TRACK';
+  byId("sdStage").classList.add("on");
+  byId("sdStage").classList.remove("busy");
+  byId("sdStageT").textContent = kind + " READY: " + title;
+}
+function stageClear() {
+  staged = null;
+  byId("sdStage").classList.remove("on", "busy");
+}
+async function attach() {
+  const f = byId("sdFile").files && byId("sdFile").files[0];
+  byId("sdFile").value = "";
+  if (!f || !joined) return;
+  const isAud = (f.type || "").indexOf("audio/") === 0 || /\.mp3$/i.test(f.name || "");
+    const isImg = (f.type || "").indexOf("image/") === 0 || /\.(png|jpe?g|gif|webp)$/i.test(f.name || "");
+    const okType = isAud || isImg;
+  if (!okType) { sys("mp3s and images only."); return; }
+  if (f.size > 24 * 1024 * 1024) { sys("too big — keep it under ~24mb."); return; }
+  const title = ((f.name || "track").replace(/\.[^.]*$/, "") || "track").slice(0, 80);
+  stageBusy("lifting " + title + " …");
+  const ext = /\.mp3$/i.test(f.name || "") ? ".mp3" : "";
+  const path = Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 8) + ext;
+  const { error } = await sb.storage.from("tracks").upload(path, f, {contentType: f.type || "audio/mpeg"});
+  if (error) {
+    sys(error.message && /row-level|policy|permission/i.test(error.message) ? "storage said no — run the bucket half of the sql setup." : "that file wouldn't lift — try again.");
+    stageClear(); return;
+  }
+  const { data } = sb.storage.from("tracks").getPublicUrl(path);
+  if (!data || !data.publicUrl) { sys("that file wouldn't lift — try again."); stageClear(); return; }
+  staged = {url: data.publicUrl, title: title, kind: isImg ? 'art' : 'track'};
+  stageTrack(title);
+}
+
+try { if (sessionStorage.getItem("sdmod") === "1") isMod = true; } catch (e) {}
+const sn = load("sdName"), ss = load("sdSite");
+if (sn) byId("sdName").value = sn;
+if (ss) byId("sdSite").value = ss;
+byId("sdName").addEventListener("change", () => store("sdName", byId("sdName").value));
+byId("sdSite").addEventListener("change", () => store("sdSite", byId("sdSite").value));
+byId("sdJoin").addEventListener("click", () => { if (joined) leave(); else join(); });
+byId("sdReset").addEventListener("click", async () => {
+  if (joined) await leave();
+  byId("sdName").value = ""; byId("sdSite").value = "";
+  try { localStorage.removeItem("sdName"); localStorage.removeItem("sdSite"); } catch (e) {}
+  sys("card wiped — fresh start.");
+});
+byId("sdSend").addEventListener("click", sendIt);
+byId("sdText").addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); sendIt(); } });
+byId("sdStageX").addEventListener("click", stageClear);
+byId("sdAttach").addEventListener("click", () => byId("sdFile").click());
+byId("sdFile").addEventListener("change", attach);
+byId("sdCopy").addEventListener("click", function () {
+  const link = location.href.split("#")[0];
+  const done = function () { sys("invite copied - pass it on."); };
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(link).then(done, function () { sys(link); });
+  else sys(link);
+});
+async function clearStack(btn) {
+  if (!joined) { sys("walk in first."); return; }
+  if (!btn.dataset.sure) { btn.dataset.sure = "1"; btn.textContent = "Sure?";
+    setTimeout(function () { btn.textContent = "Clear stack"; delete btn.dataset.sure; }, 4000); return; }
+  btn.textContent = "Clear stack"; delete btn.dataset.sure;
+  const r = await sb.from("messages").delete().neq("id", 0);
+  if (r.error) { sys("could not clear - run the newest sql."); return; }
+  byId("sdFeed").innerHTML = ""; tileWipe();
+  sys("stack cleared - fresh wall.");
+}
+byId("sdClear").addEventListener("click", function () { clearStack(this); });
+async function sha(s) { const b = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(s)); return Array.prototype.map.call(new Uint8Array(b), function (x) { return x.toString(16).padStart(2, "0"); }).join(""); }
+byId("sdFeed").addEventListener("click", async function (e) { const del = e.target.closest("[data-del]"), ok = e.target.closest("[data-ok]"); if (del) { const r = await sb.from("messages").delete().eq("id", Number(del.dataset.del)); if (r.error) sys("could not toss - run the newest sql."); } else if (ok) { const r = await sb.from("messages").update({approved: true}).eq("id", Number(ok.dataset.ok)); if (r.error) sys("could not let in - run the newest sql."); } });
+byId("sdFloppy").addEventListener("click", function () { const p = byId("sdModPop"); p.hidden = !p.hidden; document.body.classList.toggle("modshow", !p.hidden); });
+byId("sdFeed").addEventListener("click", async function (e) { const u = e.target.closest("[data-unart]"); if (!u) return; const r = await sb.from("messages").update({art: null, atitle: null}).eq("id", Number(u.dataset.unart)); if (r.error) sys("could not pull it - run the newest sql."); });
+byId("sdModGo").addEventListener("click", async function () { const v = (byId("sdMod").value || "").trim().toLowerCase(); if (!v || !joined) { sys("walk in first, then the code."); return; } if (admHash && await sha(v) === admHash) { isMod = true; try { sessionStorage.setItem("sdmod", "1"); } catch (e) {} byId("sdMod").value = ""; byId("sdFeed").innerHTML = ""; tileWipe(); loadRecent(); sys("modded up."); } else sys("wrong code."); });
+
+let cursorMode = load('sdCursor') || 'off';
+let creamy = false;
+try { creamy = localStorage.getItem('sdCream') === '1'; } catch (e) {}
+let smokeT = null;
+const finePtr = (function () { try { return matchMedia('(hover:hover) and (pointer:fine)').matches; } catch (e) { return false; } })();
+function paintCursor() {
+  const on = cursorMode !== 'off' && finePtr;
+  const c = byId('sdCursor');
+  c.hidden = !on;
+  document.body.classList.toggle('hasCursor', on);
+  c.classList.toggle('tea', cursorMode === 'tea');
+  c.classList.toggle('coffee', cursorMode === 'coffee');
+  const rc = function (id, cond) { const b = byId(id); if (b) b.classList.toggle('lit', cond); };
+  c.classList.toggle('creamy', creamy);
+  rc('sdRCCream', creamy);
+  rc('sdRCOff', cursorMode === 'off'); rc('sdRCTea', cursorMode === 'tea'); rc('sdRCCoffee', cursorMode === 'coffee');
+  if (!on && smokeT) { clearInterval(smokeT); smokeT = null; }
+  if (on && !smokeT) smokeT = setInterval(puff, 450);
+}
+const tileRefs = {};
+const idUrl = {};
+const KEEP_IMG = 70;
+
+function tileSize() {
+  const t = byId('sdTiles');
+  if (!t) return;
+  const n = Object.keys(tileRefs).length;
+  const base = innerWidth < 640 ? 64 : 90;
+  const s = n > KEEP_IMG ? 28 : n > 40 ? 44 : n > 18 ? 64 : base;
+  t.style.setProperty('--ts', s + 'px');
+}
+function starify() {
+  const t = byId('sdTiles');
+  if (!t) return;
+  const kids = Array.from(t.children);
+  kids.forEach(function (d, i) {
+    const isStar = (kids.length - 1 - i) >= KEEP_IMG;
+    d.classList.toggle('star', isStar);
+    if (isStar && !d.textContent) d.textContent = '★';
+    if (!isStar && d.textContent) d.textContent = '';
+  });
+}
+function tileAdd(m) {
+  if (!m || !m.art) return;
+  const u = m.art;
+  idUrl[m.id] = u;
+  let r = tileRefs[u];
+  if (!r) {
+    const t = byId('sdTiles');
+    if (!t) return;
+    const d = document.createElement('div');
+    d.dataset.u = u;
+    d.style.backgroundImage = 'url("' + u.replace(/"/g, '') + '")';
+    d.title = m.name || '';
+    t.appendChild(d);
+    r = tileRefs[u] = {el: d, ids: {}, name: m.name || '', title: m.atitle || ''};
+    starify();
+  }
+  r.ids[m.id] = 1;
+  if (m.name) r.name = m.name;
+  if (m.atitle) r.title = m.atitle;
+  tileSize();
+}
+function tileDropMid(mid) {
+  const u = idUrl[mid];
+  delete idUrl[mid];
+  const r = u && tileRefs[u];
+  if (!r) return;
+  delete r.ids[mid];
+  if (Object.keys(r.ids).length === 0) { r.el.remove(); delete tileRefs[u]; starify(); }
+  tileSize();
+}
+function tileWipe() {
+  const t = byId('sdTiles');
+  if (t) t.innerHTML = '';
+  for (const k in tileRefs) delete tileRefs[k];
+  for (const k in idUrl) delete idUrl[k];
+  tileSize();
+}
+function puff() {
+  const s = byId('sdSmoke');
+  if (!s) return;
+  const p = document.createElement('span');
+  p.style.left = (10 + Math.random() * 10) + 'px';
+  p.style.setProperty('--dx', (Math.random() * 14 - 7) + 'px');
+  p.addEventListener('animationend', function () { p.remove(); });
+  s.appendChild(p);
+  while (s.children.length > 8) s.removeChild(s.firstChild);
+}
+document.addEventListener('mousemove', function (e) {
+  const c = byId('sdCursor');
+  if (!c || c.hidden) return;
+  c.style.transform = 'translate(' + (e.clientX - 10) + 'px,' + (e.clientY - 12) + 'px)';
+});
+let AC = null;
+function pourSound() {
+  try {
+    AC = AC || new (window.AudioContext || window.webkitAudioContext)();
+    if (AC.state === 'suspended') AC.resume();
+    const t = AC.currentTime, dur = 0.7;
+    const buf = AC.createBuffer(1, Math.floor(AC.sampleRate * dur), AC.sampleRate);
+    const d = buf.getChannelData(0);
+    for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / d.length);
+    const src = AC.createBufferSource();
+    src.buffer = buf;
+    const f = AC.createBiquadFilter();
+    f.type = 'bandpass';
+    f.Q.value = 1.2;
+    f.frequency.setValueAtTime(2400, t);
+    f.frequency.exponentialRampToValueAtTime(700, t + dur);
+    const g = AC.createGain();
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(0.22, t + 0.05);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    src.connect(f); f.connect(g); g.connect(AC.destination);
+    src.start(t); src.stop(t + dur);
+    [0.1, 0.28, 0.46].forEach(function (off, i) {
+      const o = AC.createOscillator();
+      o.type = 'sine';
+      o.frequency.setValueAtTime(420 - i * 90, t + off);
+      o.frequency.exponentialRampToValueAtTime(180, t + off + 0.09);
+      const og = AC.createGain();
+      og.gain.setValueAtTime(0.0001, t + off);
+      og.gain.exponentialRampToValueAtTime(0.16, t + off + 0.02);
+      og.gain.exponentialRampToValueAtTime(0.0001, t + off + 0.1);
+      o.connect(og); og.connect(AC.destination);
+      o.start(t + off); o.stop(t + off + 0.12);
+    });
+  } catch (e) {}
+}
+function pour() {
+  if (cursorMode === 'off' || !finePtr) return;
+  creamy = !creamy;
+  try { localStorage.setItem('sdCream', creamy ? '1' : '0'); } catch (e) {}
+  paintCursor();
+  if (!creamy) return;
+  pourSound();
+  const s = byId('sdSmoke');
+  for (let i = 0; i < 6; i++) {
+    setTimeout(function () {
+      if (!s) return;
+      const p = document.createElement('span');
+      p.className = 'drop';
+      p.style.left = (9 + Math.random() * 12) + 'px';
+      p.style.bottom = '38px';
+      p.style.setProperty('--dx', (Math.random() * 8 - 4) + 'px');
+      p.addEventListener('animationend', function () { p.remove(); });
+      s.appendChild(p);
+    }, i * 120);
+  }
+}
+byId('sdRCCream').addEventListener('click', pour);
+(function () {
+  const mz = byId('sdBrew');
+  if (!mz) return;
+  const sync = function () {
+    const c = byId('sdCursor');
+    if (!c) return;
+    mz.classList.toggle('tea', c.classList.contains('tea'));
+    mz.classList.toggle('coffee', c.classList.contains('coffee'));
+    mz.classList.toggle('creamy', c.classList.contains('creamy'));
+    mz.classList.toggle('on', !c.hidden);
+  };
+  new MutationObserver(sync).observe(byId('sdCursor'), {attributes: true, attributeFilter: ['class', 'hidden']});
+  sync();
+})();
+let actx = null;
+function steamSound() {
+  try {
+    actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+    const dur = 1.6, n = Math.floor(actx.sampleRate * dur);
+    const buf = actx.createBuffer(1, n, actx.sampleRate);
+    const d = buf.getChannelData(0);
+    for (let i = 0; i < n; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / n);
+    const src = actx.createBufferSource(); src.buffer = buf;
+    const f = actx.createBiquadFilter(); f.type = 'highpass'; f.frequency.value = 3000;
+    const g = actx.createGain(); g.gain.value = 0.12;
+    src.connect(f); f.connect(g); g.connect(actx.destination);
+    src.start();
+  } catch (e) {}
+}
+byId('sdRCCoffee').addEventListener('click', function () {
+  steamSound();
+  const mz = byId('sdBrew');
+  if (mz) { mz.classList.add('pull'); setTimeout(function () { mz.classList.remove('pull'); }, 2600); }
+});
+function setCursor(m) { cursorMode = m; try { localStorage.setItem('sdCursor', m); } catch (e) {} paintCursor(); }
+byId('sdRCOff').addEventListener('click', function () { setCursor('off'); });
+byId('sdRCTea').addEventListener('click', function () { setCursor('tea'); });
+byId('sdRCCoffee').addEventListener('click', function () { setCursor('coffee'); });
+(function () {
+  const rem = byId('sdRemote'), head = byId('sdRemHead');
+  let x = parseInt(load('sdRX'), 10), y = parseInt(load('sdRY'), 10);
+  if (!isNaN(x) && !isNaN(y)) { rem.style.left = x + 'px'; rem.style.top = y + 'px'; rem.style.right = 'auto'; rem.style.bottom = 'auto'; }
+  head.addEventListener('pointerdown', function (e) {
+    if (e.target.closest('button')) return;
+    e.preventDefault();
+    const r = rem.getBoundingClientRect();
+    const dx = e.clientX - r.left, dy = e.clientY - r.top;
+    try { head.setPointerCapture(e.pointerId); } catch (e2) {}
+    const mv = function (ev) {
+      const nx = Math.min(innerWidth - 60, Math.max(0, ev.clientX - dx));
+      const ny = Math.min(innerHeight - 40, Math.max(0, ev.clientY - dy));
+      rem.style.left = nx + 'px'; rem.style.top = ny + 'px'; rem.style.right = 'auto'; rem.style.bottom = 'auto';
+      x = nx; y = ny;
+    };
+    const up = function () { head.removeEventListener('pointermove', mv); head.removeEventListener('pointerup', up); try { localStorage.setItem('sdRX', x); localStorage.setItem('sdRY', y); } catch (e3) {} };
+    head.addEventListener('pointermove', mv);
+    head.addEventListener('pointerup', up);
+  });
+  byId('sdRemHide').addEventListener('click', function () { const b = byId('sdRemBody'); b.hidden = !b.hidden; this.textContent = b.hidden ? '+' : '-'; });
+})();
+(function () {
+  const rem = byId('sdRemote'), grip = byId('sdRemSize');
+  const w0 = parseInt(load('sdRW'), 10);
+  if (!isNaN(w0)) rem.style.width = Math.min(340, Math.max(140, w0)) + 'px';
+  grip.addEventListener('pointerdown', function (e) {
+    e.preventDefault();
+    const sx = e.clientX, sw = rem.getBoundingClientRect().width;
+    try { grip.setPointerCapture(e.pointerId); } catch (e2) {}
+    const mv = function (ev) { rem.style.width = Math.min(340, Math.max(140, sw + (ev.clientX - sx))) + 'px'; };
+    const up = function () { grip.removeEventListener('pointermove', mv); grip.removeEventListener('pointerup', up); try { localStorage.setItem('sdRW', Math.round(rem.getBoundingClientRect().width)); } catch (e3) {} };
+    grip.addEventListener('pointermove', mv);
+    grip.addEventListener('pointerup', up);
+  });
+})();
+paintCursor();
+byId('sdTiles').addEventListener('click', function (e) {
+  const d = e.target.closest('div');
+  if (!d || !d.dataset.u) return;
+  const r = tileRefs[d.dataset.u];
+  byId('sdLightImg').src = d.dataset.u;
+  byId('sdLightCap').textContent = (r && r.name ? r.name : '') + (r && r.title ? ' — ' + r.title : '');
+  byId('sdLight').hidden = false;
+});
+byId('sdLight').addEventListener('click', function () { byId('sdLight').hidden = true;
+const BETA_Q = [
+  {q: "how do you walk in?", opts: ["type my name, press walk in", "just start typing", "press reset"], a: 0},
+  {q: "how does art get on the wall?", opts: ["SHARE button, pick an image, send it", "paste it in the name box", "only mods can"], a: 0},
+  {q: "what does TOSS do to your message?", opts: ["removes it and its wall tile", "pins it to the top", "nothing, it is decorative"], a: 0},
+  {q: "the room looks stuck. what helps?", opts: ["step out, walk back in", "press mute", "wait for milo"], a: 0},
+  {q: "how is the vibe?", opts: ["cozy", "electric", "sleepy", "haunted (good)"], a: -1}
+];
+let betaBuilt = false;
+function betaBuild() {
+  if (betaBuilt) return; betaBuilt = true;
+  const w = byId("sdBetaQ");
+  BETA_Q.forEach(function (q, i) {
+    const d = document.createElement("div");
+    d.className = "sdBetaQ";
+    let inner = "<p>" + (i + 1) + ". " + q.q + "</p>";
+    q.opts.forEach(function (o, j) { inner += "<label><input type=\"radio\" name=\"bq" + i + "\" value=\"" + j + "\"> " + o + "</label>"; });
+    d.innerHTML = inner;
+    w.appendChild(d);
+  });
+  
+}
+const betaOpenBtn = byId("sdBetaOpen");
+const betaModal = byId("sdBeta");
+const betaCloseBtn = byId("sdBetaShut");
+const betaDoneBtn = byId("sdBetaDone");
+const betaOut = byId("sdBetaOut");
+if (betaOpenBtn && betaModal) {
+  betaOpenBtn.addEventListener("click", function () {
+    betaBuild(); betaLoad();
+    byId("sdBetaOut").hidden = true;
+    betaModal.removeAttribute("hidden");
+  });
+}
+if (betaCloseBtn && betaModal) {
+  betaCloseBtn.addEventListener("click", function () {
+    betaModal.setAttribute("hidden", "true");
+  });
+}
+byId("sdBetaDone").addEventListener("click", function () {
+  const picks = [];
+  for (let i = 0; i < BETA_Q.length; i++) {
+    const c = document.querySelector("input[name=\"bq" + i + "\"]:checked");
+    if (!c) { sys("question " + (i + 1) + " still needs an answer."); return; }
+    picks.push(Number(c.value));
+  }
+  let score = 0, graded = 0;
+  BETA_Q.forEach(function (q, i) { if (q.a >= 0) { graded++; if (picks[i] === q.a) score++; } });
+  const nm = byId("sdBetaName").value.trim() || myName() || "anon";
+  const ct = byId("sdBetaContact").value.trim() || "(no contact given)";
+  const lines = ["BETATEST — " + new Date().toISOString().slice(0, 10), "name: " + nm, "contact: " + ct, "score: " + score + "/" + graded];
+  BETA_Q.forEach(function (q, i) { lines.push((i + 1) + ". " + q.q + " → " + q.opts[picks[i]]); });
+  byId("sdBetaSum").value = lines.join("\n");
+  if (betaDoneBtn && betaOut) {
+    betaOut.removeAttribute("hidden");
+  }
+  sys(score === graded ? "full marks, tester." : "logged. thanks, tester.");
+});
+byId("sdBetaCopy").addEventListener("click", function () {
+  const t = byId("sdBetaSum");
+  const done = function () { byId("sdBetaCopy").textContent = "Copied"; setTimeout(function () { byId("sdBetaCopy").textContent = "Copy"; }, 1500); };
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(t.value).then(done).catch(function () { t.select(); document.execCommand("copy"); done(); });
+  else { t.select(); document.execCommand("copy"); done(); }
+});
+let betaCount = 0, betaOpen = true;
+async function betaLoad() {
+  try {
+    const r = await sb.from("settings").select("*");
+    (r.data || []).forEach(function (s) {
+      if (s.key === "beta_count") betaCount = Number(s.value) || 0;
+      if (s.key === "beta_open") betaOpen = s.value !== "false";
+    });
+  } catch (e) {}
+  betaPaint();
+}
+function betaFull() { return !betaOpen || betaCount >= 10; }
+function betaPaint() {
+  const full = betaFull();
+  byId("sdBetaSpots").textContent = betaCount + "/10 spots claimed";
+  byId("sdBetaClosed").hidden = !full;
+  byId("sdBetaQ").style.display = full ? "none" : "";
+  byId("sdBetaDone").style.display = full ? "none" : "";
+  byId("sdBetaOpen").textContent = full ? "Beta full" : "Betatest";
+  byId("sdBetaMod").hidden = !isMod;
+  byId("sdBetaToggle").textContent = betaOpen ? "Close wave" : "Open wave";
+}
+byId("sdBetaPlus").addEventListener("click", async function () {
+  const r = await sb.from("settings").update({value: String(betaCount + 1)}).eq("key", "beta_count");
+  if (r.error) { sys("spots would not save \u2014 run the beta sql top-up."); return; }
+  betaLoad();
+});
+byId("sdBetaMinus").addEventListener("click", async function () {
+  const r = await sb.from("settings").update({value: String(Math.max(0, betaCount - 1))}).eq("key", "beta_count");
+  if (r.error) { sys("spots would not save \u2014 run the beta sql top-up."); return; }
+  betaLoad();
+});
+byId("sdBetaToggle").addEventListener("click", async function () {
+  const r = await sb.from("settings").update({value: betaOpen ? "false" : "true"}).eq("key", "beta_open");
+  if (r.error) { sys("that would not save \u2014 run the beta sql top-up."); return; }
+  betaLoad();
+}); byId('sdLightImg').src = ''; });
+byId("sdEticBtn").addEventListener("click", function () { const p = byId("sdEticPop"); p.hidden = !p.hidden; });
+try { byId("sdYear").textContent = new Date().getFullYear(); } catch (e) {}
+roster([]);
+</script>
+</body>
+</html>
