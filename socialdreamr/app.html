@@ -3,660 +3,617 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Lounge Chat</title>
+  <title>cafedreamr.art</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      background-color: #0b0213;
-      background-image: radial-gradient(circle at 50% 0%, #20083b 0%, #0b0213 70%);
+      background-color: #08030e;
       color: #e2d9f3;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      min-height: 100dvh;
+      overflow: hidden;
       display: flex;
       justify-content: center;
       align-items: center;
-      min-height: 100vh;
+    }
+
+    /* BACKGROUND MOSAIC GRID */
+    #backgroundMosaic {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      grid-auto-rows: 140px;
+      gap: 4px;
+      opacity: 0.25;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .mosaic-tile {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 4px;
+      animation: fadeIn 0.8s ease forwards;
+    }
+
+    @keyframes rootingStream {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(140px); }
+    }
+
+    .mosaic-rooting {
+      animation: rootingStream 12s linear infinite;
+    }
+
+    /* GLASS CARD CONTAINER */
+    .glass-card {
+      background: rgba(18, 8, 36, 0.82);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+      z-index: 10;
+    }
+
+    /* ENTRY SCREEN & PUZZLE */
+    #entryOverlay {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: rgba(8, 3, 14, 0.92);
+      backdrop-filter: blur(20px);
       padding: 20px;
     }
 
-    /* CONTAINER & LAYOUT */
-    .chat-container {
-      display: flex;
-      gap: 16px;
+    .entry-card {
       width: 100%;
-      max-width: 900px;
-      height: 600px;
-    }
-
-    .chat-card {
-      flex: 1;
-      background: rgba(21, 9, 43, 0.85);
-      backdrop-filter: blur(12px);
-      border: 1px solid #32165c;
-      border-radius: 12px;
-      padding: 18px;
+      max-width: 460px;
+      padding: 28px;
       display: flex;
       flex-direction: column;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+      gap: 16px;
+      text-align: center;
     }
 
-    /* HEADER */
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 1px solid #29124a;
-      padding-bottom: 12px;
-      margin-bottom: 12px;
-    }
-
-    header h2 {
-      font-size: 18px;
+    .entry-title {
+      font-size: 20px;
       font-weight: 700;
+      letter-spacing: 1px;
       color: #fff;
+    }
+
+    .word-targets {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      margin: 8px 0;
+    }
+
+    .word-badge {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #a08cc0;
       letter-spacing: 0.5px;
     }
 
-    button.mini {
-      background: #250e42;
-      border: 1px solid #5a299d;
-      color: #c4b5fd;
-      padding: 6px 12px;
-      border-radius: 6px;
-      font-size: 12px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s ease;
+    .word-badge.found {
+      background: rgba(0, 229, 255, 0.15);
+      border-color: #00e5ff;
+      color: #00e5ff;
+      text-decoration: line-through;
     }
 
-    button.mini:hover {
+    /* WORD FIND GRID */
+    .word-grid {
+      display: grid;
+      grid-template-columns: repeat(10, 1fr);
+      gap: 4px;
+      user-select: none;
+      margin: 10px 0;
+    }
+
+    .grid-cell {
+      aspect-ratio: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 4px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      color: #c4b5fd;
+      transition: all 0.15s ease;
+    }
+
+    .grid-cell.selected {
       background: #bf40bf;
       color: #fff;
-      box-shadow: 0 0 10px rgba(191, 64, 191, 0.5);
     }
 
-    /* AVATAR SELECTOR */
-    .avatar-selector {
-      display: flex;
-      gap: 6px;
+    .grid-cell.found {
+      background: #00e5ff;
+      color: #08030e;
     }
 
-    .avatar-opt {
-      font-size: 18px;
-      padding: 4px 8px;
-      border: 1px solid #32165c;
-      border-radius: 6px;
-      background: #14072b;
+    /* REGISTRATION FORM */
+    #regForm {
+      display: none;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    input[type="text"], input[type="password"], input[type="email"] {
+      width: 100%;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      padding: 10px 14px;
+      color: #fff;
+      font-size: 13px;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: #bf40bf;
+    }
+
+    .btn-submit {
+      background: #bf40bf;
+      border: none;
+      color: #fff;
+      padding: 10px;
+      border-radius: 8px;
+      font-weight: 600;
       cursor: pointer;
-      transition: all 0.2s ease;
+      transition: opacity 0.2s;
     }
 
-    .avatar-opt.selected {
-      border-color: #00e5ff;
-      background: #2b1055;
-      box-shadow: 0 0 8px rgba(0, 229, 255, 0.4);
+    .btn-submit:hover { opacity: 0.9; }
+
+    /* APP LAYOUT */
+    .app-viewport {
+      width: 100vw;
+      height: 100dvh;
+      display: flex;
+      position: relative;
+      z-index: 10;
+      padding: 16px;
+      gap: 16px;
     }
 
-    /* CHAT BOX */
-    #chatBox {
+    /* LEFT TEACUP DRAWER */
+    .teacup-trigger {
+      position: absolute;
+      top: 24px;
+      left: 24px;
+      z-index: 50;
+      background: rgba(18, 8, 36, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 20px;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    }
+
+    .teacup-trigger:hover { transform: scale(1.08); }
+
+    .left-menu {
+      position: absolute;
+      top: 76px;
+      left: 24px;
+      z-index: 50;
+      width: 200px;
+      padding: 12px;
+      display: none;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .left-menu.active { display: flex; }
+
+    .menu-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      color: #e2d9f3;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 500;
+      background: rgba(255, 255, 255, 0.03);
+      transition: background 0.2s;
+    }
+
+    .menu-link:hover {
+      background: rgba(191, 64, 191, 0.2);
+      color: #fff;
+    }
+
+    /* CENTER CHAT */
+    .center-chat {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      margin-left: 60px;
+    }
+
+    .chat-header {
+      padding: 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .chat-stream {
       flex: 1;
       overflow-y: auto;
+      padding: 16px;
       display: flex;
       flex-direction: column;
       gap: 12px;
-      padding-right: 8px;
     }
 
-    /* Custom Scrollbars */
-    #chatBox::-webkit-scrollbar, .user-list::-webkit-scrollbar {
-      width: 6px;
-    }
-    #chatBox::-webkit-scrollbar-track, .user-list::-webkit-scrollbar-track {
-      background: transparent;
-    }
-    #chatBox::-webkit-scrollbar-thumb, .user-list::-webkit-scrollbar-thumb {
-      background: #2a114d;
-      border-radius: 3px;
-    }
-
-    /* MESSAGES */
-    .msg-item {
-      position: relative;
-      background: #1a0b33;
-      border: 1px solid #2c1354;
+    .chat-msg {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.05);
       border-radius: 8px;
-      padding: 10px 32px 10px 12px;
-      transition: border-color 0.15s ease;
-    }
-
-    .msg-item:hover {
-      border-color: #431f7a;
-    }
-
-    .msg-close {
-      position: absolute;
-      top: 8px;
-      right: 10px;
-      background: transparent;
-      border: none;
-      color: #7b639e;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-      line-height: 1;
-      padding: 2px;
-      border-radius: 3px;
-      transition: all 0.15s ease;
-    }
-
-    .msg-close:hover {
-      color: #ff4d4d;
-      background: rgba(255, 77, 77, 0.15);
-    }
-
-    .msg-header {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 4px;
-    }
-
-    .msg-avatar {
-      font-size: 16px;
-      line-height: 1;
-    }
-
-    .msg-user {
-      font-size: 13px;
-      color: #00e5ff;
-      font-weight: 600;
-    }
-
-    .msg-text {
-      font-size: 14px;
-      color: #f1ebfc;
-      line-height: 1.4;
+      padding: 10px 14px;
+      max-width: 80%;
       word-break: break-word;
     }
 
-    /* REACTION BAR */
-    .sdReactions {
-      display: flex;
-      gap: 6px;
-      margin-top: 8px;
-      flex-wrap: wrap;
+    .msg-user {
+      font-size: 11px;
+      font-weight: 700;
+      color: #00e5ff;
+      margin-bottom: 2px;
     }
 
-    .sdReactionBtn {
-      background: #120724;
-      border: 1px solid #351761;
-      color: #c4b5fd;
-      padding: 3px 8px;
-      font-size: 12px;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: all 0.15s ease;
+    .msg-body {
+      font-size: 13px;
+      line-height: 1.4;
     }
 
-    .sdReactionBtn:hover {
-      background: #2b1055;
-      border-color: #00e5ff;
-      color: #fff;
-    }
-
-    /* TYPING INDICATOR */
-    .sdTyping {
-      font-size: 12px;
-      color: #bf40bf;
-      min-height: 18px;
-      margin-top: 6px;
-      font-style: italic;
-    }
-
-    .sdTyping span {
-      animation: blink 1.4s infinite both;
-    }
-
-    @keyframes blink {
-      0% { opacity: 0.2; }
-      20% { opacity: 1; }
-      100% { opacity: 0.2; }
-    }
-
-    /* INPUT ROW */
-    .input-row {
+    .chat-input-bar {
+      padding: 14px;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
       display: flex;
       gap: 10px;
-      margin-top: 8px;
+      align-items: center;
     }
 
-    input[type="text"] {
-      flex: 1;
-      background: #0d0418;
-      border: 1px solid #32165c;
-      color: #fff;
-      padding: 10px 14px;
+    .upload-btn-label {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 8px 12px;
       border-radius: 6px;
-      font-size: 14px;
-      transition: border-color 0.2s ease;
+      cursor: pointer;
+      font-size: 12px;
+      color: #c4b5fd;
+      transition: background 0.2s;
     }
 
-    input[type="text"]:focus {
-      outline: none;
-      border-color: #bf40bf;
-      box-shadow: 0 0 8px rgba(191, 64, 191, 0.3);
-    }
+    .upload-btn-label:hover { background: rgba(191, 64, 191, 0.3); }
 
-    /* SIDEBAR */
-    .online-sidebar {
-      width: 220px;
-      background: rgba(21, 9, 43, 0.85);
-      backdrop-filter: blur(12px);
-      border: 1px solid #32165c;
-      border-radius: 12px;
-      padding: 18px;
+    /* RIGHT LIVEFEED SIDEBAR */
+    .right-sidebar {
+      width: 240px;
       display: flex;
       flex-direction: column;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+      padding: 16px;
+      gap: 16px;
     }
 
-    .sidebar-header {
-      font-size: 14px;
+    .sidebar-title {
+      font-size: 12px;
       font-weight: 700;
       color: #bf40bf;
-      border-bottom: 1px solid #29124a;
-      padding-bottom: 12px;
-      margin-bottom: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
     }
 
-    .user-list {
+    .user-feed {
       list-style: none;
       display: flex;
       flex-direction: column;
       gap: 10px;
-      overflow-y: auto;
-      flex: 1;
     }
 
-    .user-item {
+    .user-node {
       display: flex;
       align-items: center;
       gap: 8px;
       font-size: 13px;
-      color: #e0d8f0;
     }
 
     .status-dot {
       width: 8px;
       height: 8px;
-      background-color: #00e5ff;
       border-radius: 50%;
+    }
+
+    .status-dot.active {
+      background: #00e5ff;
       box-shadow: 0 0 8px #00e5ff;
     }
 
-    .user-item .user-avatar {
-      font-size: 15px;
-    }
-
-    .user-item.is-me {
-      font-weight: 700;
-      color: #bf40bf;
+    .status-dot.away {
+      background: #ffb703;
+      box-shadow: 0 0 6px #ffb703;
     }
   </style>
 </head>
 <body>
 
-  <div class="chat-container">
-    <div class="chat-card">
-      <header>
-        <h2>Lounge Chat</h2>
-        <div class="avatar-selector" id="avatarSelector">
-          <button class="avatar-opt selected" onclick="selectAvatar('👾')">👾</button>
-          <button class="avatar-opt" onclick="selectAvatar('🤖')">🤖</button>
-          <button class="avatar-opt" onclick="selectAvatar('🐱')">🐱</button>
-          <button class="avatar-opt" onclick="selectAvatar('🦊')">🦊</button>
-          <button class="avatar-opt" onclick="selectAvatar('🚀')">🚀</button>
+  <!-- BACKGROUND MOSAIC GRID -->
+  <div id="backgroundMosaic"></div>
+
+  <!-- ENTRY PUZZLE & REGISTRATION OVERLAY -->
+  <div id="entryOverlay">
+    <div class="glass-card entry-card">
+      <div id="puzzleSection">
+        <div class="entry-title">cafedreamr.art</div>
+        <p style="font-size: 12px; color: #a08cc0; margin-top: 4px;">Solve the word search puzzle to enter.</p>
+        
+        <div class="word-targets">
+          <span class="word-badge" id="badge-CHIMERA">CHIMERA</span>
+          <span class="word-badge" id="badge-CROSS">CROSS</span>
+          <span class="word-badge" id="badge-FRIENDS">FRIENDS</span>
+          <span class="word-badge" id="badge-CATS">CATS</span>
+          <span class="word-badge" id="badge-CHRIST">CHRIST</span>
         </div>
-        <button class="mini" id="sdCrackle">Vinyl</button>
-      </header>
 
-      <div id="chatBox"></div>
-
-      <div id="sdTypingIndicator" class="sdTyping"></div>
-
-      <div class="input-row">
-        <input type="text" id="msgInput" placeholder="Type a message..." />
-        <button class="mini" id="sendBtn">Send</button>
+        <div class="word-grid" id="wordGrid"></div>
       </div>
+
+      <form id="regForm" onsubmit="handleRegistration(event)">
+        <div class="entry-title">Create Profile</div>
+        <input type="text" id="regUser" placeholder="Username" required />
+        <input type="password" id="regPass" placeholder="Password" required />
+        <input type="email" id="regEmail" placeholder="Good Email Address" required />
+        <button type="submit" class="btn-submit">Enter Lounge</button>
+      </form>
     </div>
-
-    <aside class="online-sidebar">
-      <div class="sidebar-header">
-        Online Users (<span id="onlineCount">0</span>)
-      </div>
-      <ul id="onlineUsersList" class="user-list"></ul>
-    </aside>
   </div>
 
-  <script type="module">
-    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+  <!-- APP INTERFACE -->
+  <div class="app-viewport">
+    
+    <!-- LEFT TEACUP MENU -->
+    <div class="teacup-trigger" onclick="toggleMenu()">☕</div>
+    <div class="glass-card left-menu" id="leftMenu">
+      <a href="https://cafedreamr.art" target="_blank" class="menu-link">🌐 cafedreamr.art</a>
+      <a href="https://youtube.com" target="_blank" class="menu-link">▶️ YouTube</a>
+      <a href="https://instagram.com" target="_blank" class="menu-link">📸 Instagram</a>
+    </div>
 
-    const SUPABASE_URL = "https://your-supabase-url.supabase.co";
-    const SUPABASE_KEY = "your-anon-key";
-    const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
+    <!-- CENTER CHAT -->
+    <main class="glass-card center-chat">
+      <header class="chat-header">
+        <span style="font-weight: 700; font-size: 14px;"># lounge-chat</span>
+        <span style="font-size: 11px; color: #a08cc0;" id="userBadge">Guest</span>
+      </header>
 
-    let myUsername = "User_" + Math.floor(Math.random() * 1000);
-    let myAvatar = "👾";
-    const EMOJI_LIST = ["🔥", "☕", "🔊", "✨", "💜"];
-    const emojiCounts = {};
-    const onlineUsers = new Map();
+      <div class="chat-stream" id="chatStream"></div>
 
-    function myName() { return myUsername; }
+      <div class="chat-input-bar">
+        <label class="upload-btn-label">
+          📷 Upload Tile
+          <input type="file" id="imageInput" accept="image/*" style="display: none;" onchange="handleImageUpload(event)" />
+        </label>
+        <input type="text" id="messageInput" placeholder="Send a message..." onkeydown="if(event.key==='Enter') sendMessage()" />
+        <button class="btn-submit" onclick="sendMessage()">Send</button>
+      </div>
+    </main>
 
-    // --- AVATAR SELECTION --- //
-    window.selectAvatar = function(emoji) {
-      myAvatar = emoji;
-      document.querySelectorAll(".avatar-opt").forEach(btn => {
-        btn.classList.toggle("selected", btn.textContent.trim() === emoji);
-      });
+    <!-- RIGHT LIVEFEED SIDEBAR -->
+    <aside class="glass-card right-sidebar">
+      <div class="sidebar-title">Livefeed Activity</div>
+      <ul class="user-feed" id="userFeed"></ul>
+    </aside>
 
-      if (presenceChannel) {
-        presenceChannel.track({
-          username: myName(),
-          avatar: myAvatar,
-          isTyping: isCurrentlyTyping
-        });
-      }
-    };
+  </div>
 
-    // --- VINYL CRACKLE AUDIO --- //
-    let audioCtx = null;
-    let crackleNode = null;
-    let crackleGain = null;
-    let isCracklePlaying = false;
+  <script>
+    // --- PUZZLE SETUP --- //
+    const WORDS = ["CHIMERA", "CROSS", "FRIENDS", "CATS", "CHRIST"];
+    const foundWords = new Set();
+    const GRID_SIZE = 10;
+    
+    const gridData = [
+      ['C','H','I','M','E','R','A','X','Q','C'],
+      ['R','X','Y','C','A','T','S','M','W','H'],
+      ['O','Z','P','R','L','K','J','N','V','R'],
+      ['S','A','B','O','C','D','E','F','G','I'],
+      ['S','U','W','S','X','Y','Z','A','B','S'],
+      ['F','R','I','E','N','D','S','H','I','T'],
+      ['M','O','P','Q','R','S','T','U','V','W'],
+      ['X','Y','Z','A','B','C','D','E','F','G'],
+      ['H','I','J','K','L','M','N','O','P','Q'],
+      ['R','S','T','U','V','W','X','Y','Z','A']
+    ];
 
-    function initVinylCrackle() {
-      if (audioCtx) return;
-      const AudioContext = window.AudioContext || window.webkitAudioContext;
-      audioCtx = new AudioContext();
+    let selectedCells = [];
+    let activeUsername = "";
+    let isUserAway = false;
+    let uploadedCount = 0;
 
-      const bufferSize = audioCtx.sampleRate * 2;
-      const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
-      const data = buffer.getChannelData(0);
-
-      for (let i = 0; i < bufferSize; i++) {
-        if (Math.random() < 0.0012) {
-          data[i] = (Math.random() * 2 - 1) * 0.7;
-        } else if (Math.random() < 0.005) {
-          data[i] = (Math.random() * 2 - 1) * 0.25;
-        } else {
-          data[i] = 0;
+    function initGrid() {
+      const gridEl = document.getElementById("wordGrid");
+      gridEl.innerHTML = "";
+      for (let r = 0; r < GRID_SIZE; r++) {
+        for (let c = 0; c < GRID_SIZE; c++) {
+          const cell = document.createElement("div");
+          cell.className = "grid-cell";
+          cell.textContent = gridData[r][c];
+          cell.dataset.row = r;
+          cell.dataset.col = c;
+          cell.addEventListener("click", () => handleCellClick(cell, r, c));
+          gridEl.appendChild(cell);
         }
       }
-
-      crackleNode = audioCtx.createBufferSource();
-      crackleNode.buffer = buffer;
-      crackleNode.loop = true;
-
-      const filter = audioCtx.createBiquadFilter();
-      filter.type = "lowpass";
-      filter.frequency.value = 3000;
-
-      crackleGain = audioCtx.createGain();
-      crackleGain.gain.value = 0.08;
-
-      crackleNode.connect(filter);
-      filter.connect(crackleGain);
-      crackleGain.connect(audioCtx.destination);
-
-      crackleNode.start();
-      isCracklePlaying = true;
     }
 
-    function toggleVinylCrackle() {
-      if (!audioCtx) {
-        initVinylCrackle();
-        return;
-      }
-      if (audioCtx.state === "suspended") {
-        audioCtx.resume();
-        isCracklePlaying = true;
-      } else if (isCracklePlaying) {
-        crackleGain.gain.setTargetAtTime(0, audioCtx.currentTime, 0.1);
-        isCracklePlaying = false;
+    function handleCellClick(cell, r, c) {
+      if (cell.classList.contains("found")) return;
+
+      cell.classList.toggle("selected");
+      const index = selectedCells.findIndex(item => item.cell === cell);
+
+      if (index > -1) {
+        selectedCells.splice(index, 1);
       } else {
-        crackleGain.gain.setTargetAtTime(0.08, audioCtx.currentTime, 0.1);
-        isCracklePlaying = true;
+        selectedCells.push({ cell, letter: cell.textContent });
       }
+
+      checkSelectedWord();
     }
 
-    document.getElementById("sdCrackle").addEventListener("click", toggleVinylCrackle);
+    function checkSelectedWord() {
+      const currentWord = selectedCells.map(item => item.letter).join("");
+      const reversedWord = currentWord.split("").reverse().join("");
 
-    // --- EMOJI REACTIONS --- //
-    window.reactToMsg = async function(msgId, emoji) {
-      const { error } = await sb.from("message_reactions").insert({
-        message_id: msgId,
-        emoji: emoji,
-        voter_name: myName()
-      });
-      if (!error) {
-        if (!emojiCounts[msgId]) emojiCounts[msgId] = {};
-        emojiCounts[msgId][emoji] = (emojiCounts[msgId][emoji] || 0) + 1;
-        updateReactionsUI();
-      }
-    };
+      WORDS.forEach(word => {
+        if ((currentWord === word || reversedWord === word) && !foundWords.has(word)) {
+          foundWords.add(word);
+          document.getElementById(`badge-${word}`).classList.add("found");
+          
+          selectedCells.forEach(item => {
+            item.cell.classList.remove("selected");
+            item.cell.classList.add("found");
+          });
+          selectedCells = [];
 
-    async function loadReactions() {
-      const { data, error } = await sb.from("message_reactions").select("message_id, emoji");
-      if (error) return;
-
-      for (const k in emojiCounts) delete emojiCounts[k];
-      (data || []).forEach(row => {
-        if (!emojiCounts[row.message_id]) emojiCounts[row.message_id] = {};
-        emojiCounts[row.message_id][row.emoji] = (emojiCounts[row.message_id][row.emoji] || 0) + 1;
-      });
-      updateReactionsUI();
-    }
-
-    function updateReactionsUI() {
-      for (const msgId in emojiCounts) {
-        for (const emoji of EMOJI_LIST) {
-          const badge = document.getElementById(`react-${msgId}-${emoji}`);
-          const count = emojiCounts[msgId][emoji] || 0;
-          if (badge) badge.textContent = count > 0 ? ` ${count}` : "";
+          if (foundWords.size === WORDS.length) {
+            unlockRegistration();
+          }
         }
-      }
-    }
-
-    function renderReactionsBar(msgId) {
-      const msgReactions = emojiCounts[msgId] || {};
-      let html = `<div class="sdReactions">`;
-      EMOJI_LIST.forEach(emoji => {
-        const count = msgReactions[emoji] || 0;
-        const countSpan = count > 0 ? ` ${count}` : "";
-        html += `<button class="sdReactionBtn" onclick="reactToMsg(${msgId}, '${emoji}')">${emoji}<span id="react-${msgId}-${emoji}">${countSpan}</span></button>`;
       });
-      html += `</div>`;
-      return html;
     }
 
-    // --- MESSAGE SENDING & DELETION --- //
-    window.deleteMessage = async function(msgId) {
-      if (typeof sb !== 'undefined') {
-        await sb.from('messages').delete().eq('id', msgId);
-      }
-      const msgEl = document.getElementById(`msg-${msgId}`);
-      if (msgEl) msgEl.remove();
-    };
-
-    function renderMessage(m) {
-      const avatar = m.avatar || "👾"; 
-
-      return `
-        <div class="msg-item" id="msg-${m.id}">
-          <button class="msg-close" onclick="deleteMessage(${m.id})">&times;</button>
-          <div class="msg-header">
-            <span class="msg-avatar">${avatar}</span>
-            <span class="msg-user">${m.user_name}</span>
-          </div>
-          <div class="msg-text">${m.content}</div>
-          ${renderReactionsBar(m.id)}
-        </div>
-      `;
+    function unlockRegistration() {
+      document.getElementById("puzzleSection").style.display = "none";
+      document.getElementById("regForm").style.display = "flex";
     }
 
-    async function sendMessage() {
-      const input = document.getElementById("msgInput");
+    function handleRegistration(e) {
+      e.preventDefault();
+      activeUsername = document.getElementById("regUser").value.trim() || "Dreamr";
+      document.getElementById("entryOverlay").style.display = "none";
+      document.getElementById("userBadge").textContent = `@${activeUsername}`;
+      
+      updatePresenceUI();
+      addSystemMessage(`${activeUsername} joined the lounge.`);
+    }
+
+    // --- MENU TOGGLE --- //
+    function toggleMenu() {
+      document.getElementById("leftMenu").classList.toggle("active");
+    }
+
+    // --- CHAT & IMAGE MOSAIC --- //
+    function sendMessage() {
+      const input = document.getElementById("messageInput");
       const text = input.value.trim();
       if (!text) return;
 
-      const { data, error } = await sb.from("messages").insert([{
-        user_name: myName(),
-        avatar: myAvatar,
-        content: text
-      }]).select();
+      const chatStream = document.getElementById("chatStream");
+      const msg = document.createElement("div");
+      msg.className = "chat-msg";
+      msg.innerHTML = `
+        <div class="msg-user">${activeUsername}</div>
+        <div class="msg-body">${escapeHTML(text)}</div>
+      `;
+      chatStream.appendChild(msg);
+      chatStream.scrollTop = chatStream.scrollHeight;
+      input.value = "";
+    }
 
-      if (!error && data && data.length > 0) {
-        input.value = "";
-        clearTimeout(typingTimeout);
-        setTypingState(false);
+    function addSystemMessage(text) {
+      const chatStream = document.getElementById("chatStream");
+      const msg = document.createElement("div");
+      msg.className = "chat-msg";
+      msg.style.opacity = "0.7";
+      msg.innerHTML = `<div class="msg-body" style="font-style: italic; font-size: 12px;">${text}</div>`;
+      chatStream.appendChild(msg);
+      chatStream.scrollTop = chatStream.scrollHeight;
+    }
+
+    function handleImageUpload(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(event) {
+        addBackgroundTile(event.target.result);
+        addSystemMessage(`${activeUsername} uploaded a background mosaic tile.`);
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function addBackgroundTile(src) {
+      const mosaic = document.getElementById("backgroundMosaic");
+      const img = document.createElement("img");
+      img.src = src;
+      img.className = "mosaic-tile";
+      mosaic.appendChild(img);
+      uploadedCount++;
+
+      // Trigger rooting animation when grid reaches full screen capacity
+      const capacity = Math.ceil((window.innerWidth * window.innerHeight) / (140 * 140));
+      if (uploadedCount >= capacity) {
+        mosaic.classList.add("mosaic-rooting");
       }
     }
 
-    document.getElementById("sendBtn").addEventListener("click", sendMessage);
-
-    async function loadMessages() {
-      const { data, error } = await sb.from("messages").select("*").order("id", { ascending: true });
-      if (error) return;
-      const chatBox = document.getElementById("chatBox");
-      chatBox.innerHTML = (data || []).map(renderMessage).join("");
-      chatBox.scrollTop = chatBox.scrollHeight;
+    function escapeHTML(str) {
+      return str.replace(/[&<>'"]/g, 
+        tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
+      );
     }
 
-    // --- REALTIME PRESENCE, TYPING & ONLINE SIDEBAR --- //
-    let presenceChannel = null;
-    let typingTimeout = null;
-    let isCurrentlyTyping = false;
-    const typingUsers = new Set();
+    // --- PRESENCE ENGINE --- //
+    function updatePresenceUI() {
+      if (!activeUsername) return;
+      const feed = document.getElementById("userFeed");
+      const statusClass = isUserAway ? "away" : "active";
+      const statusText = isUserAway ? "away" : "active";
 
-    function initPresenceChannel() {
-      if (presenceChannel) return;
-
-      presenceChannel = sb.channel('room-presence', {
-        config: { presence: { key: myName() } }
-      });
-
-      presenceChannel
-        .on('presence', { event: 'sync' }, () => {
-          const state = presenceChannel.presenceState();
-          
-          typingUsers.clear();
-          onlineUsers.clear();
-
-          for (const id in state) {
-            const userPresence = state[id][0];
-            if (userPresence) {
-              onlineUsers.set(id, userPresence);
-            }
-
-            state[id].forEach(user => {
-              if (user.isTyping && user.username !== myName()) {
-                typingUsers.add(user.username);
-              }
-            });
-          }
-
-          renderTypingIndicator();
-          renderOnlineUsers();
-        })
-        .subscribe(async (status) => {
-          if (status === 'SUBSCRIBED') {
-            await presenceChannel.track({
-              username: myName(),
-              avatar: myAvatar,
-              isTyping: false
-            });
-          }
-        });
-
-      // Realtime listener for incoming messages
-      sb.channel('public:messages')
-        .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' }, payload => {
-          const chatBox = document.getElementById("chatBox");
-          chatBox.insertAdjacentHTML("beforeend", renderMessage(payload.new));
-          chatBox.scrollTop = chatBox.scrollHeight;
-        })
-        .on('postgres_changes', { event: 'DELETE', schema: 'public', table: 'messages' }, payload => {
-          const msgEl = document.getElementById(`msg-${payload.old.id}`);
-          if (msgEl) msgEl.remove();
-        })
-        .subscribe();
+      feed.innerHTML = `
+        <li class="user-node">
+          <span class="status-dot ${statusClass}"></span>
+          <span>${activeUsername} (${statusText})</span>
+        </li>
+      `;
     }
 
-    function renderOnlineUsers() {
-      const listEl = document.getElementById("onlineUsersList");
-      const countEl = document.getElementById("onlineCount");
-      if (!listEl || !countEl) return;
+    window.addEventListener("blur", () => { isUserAway = true; updatePresenceUI(); });
+    window.addEventListener("focus", () => { isUserAway = false; updatePresenceUI(); });
 
-      countEl.textContent = onlineUsers.size;
-      listEl.innerHTML = "";
-
-      onlineUsers.forEach((user, username) => {
-        const li = document.createElement("li");
-        li.className = `user-item ${username === myName() ? "is-me" : ""}`;
-        const userAvatar = user.avatar || "👾";
-        
-        li.innerHTML = `
-          <span class="status-dot"></span>
-          <span class="user-avatar">${userAvatar}</span>
-          <span class="user-name">${username}${username === myName() ? " (You)" : ""}</span>
-        `;
-        
-        listEl.appendChild(li);
-      });
-    }
-
-    function renderTypingIndicator() {
-      const el = document.getElementById("sdTypingIndicator");
-      if (!el) return;
-      const users = Array.from(typingUsers);
-
-      if (users.length === 0) el.innerHTML = "";
-      else if (users.length === 1) el.innerHTML = `${users[0]} is typing<span>...</span>`;
-      else if (users.length === 2) el.innerHTML = `${users[0]} and ${users[1]} are typing<span>...</span>`;
-      else el.innerHTML = `Several people are typing<span>...</span>`;
-    }
-
-    async function setTypingState(typing) {
-      if (isCurrentlyTyping === typing || !presenceChannel) return;
-      isCurrentlyTyping = typing;
-      await presenceChannel.track({
-        username: myName(),
-        avatar: myAvatar,
-        isTyping: typing
-      });
-    }
-
-    function handleTypingEvent() {
-      setTypingState(true);
-      clearTimeout(typingTimeout);
-      typingTimeout = setTimeout(() => {
-        setTypingState(false);
-      }, 2000);
-    }
-
-    const inputEl = document.getElementById("msgInput");
-    inputEl.addEventListener("input", handleTypingEvent);
-    inputEl.addEventListener("keydown", (e) => {
-      if (e.key === "Enter" && !e.shiftKey) {
-        sendMessage();
-      }
-    });
-
-    // Initialize App
-    initPresenceChannel();
-    loadMessages();
-    loadReactions();
+    // Init word search on load
+    initGrid();
   </script>
 </body>
 </html>
