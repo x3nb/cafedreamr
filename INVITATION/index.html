@@ -1,159 +1,403 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>a ticket &middot; cafedreamr</title>
-<meta name="description" content="a ticket falls into view. it does not stay long.">
-<meta name="theme-color" content="#0b0b0e">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' shape-rendering='crispEdges'%3E%3Crect width='16' height='16' fill='%230b0b0e'/%3E%3Crect x='3' y='3' width='10' height='1' fill='%23ccff00'/%3E%3Crect x='2' y='4' width='3' height='1' fill='%23ccff00'/%3E%3Crect x='6' y='4' width='4' height='1' fill='%23ff2d95'/%3E%3Crect x='11' y='4' width='3' height='1' fill='%23ccff00'/%3E%3Crect x='2' y='9' width='12' height='1' fill='%23ccff00'/%3E%3Crect x='4' y='10' width='8' height='1' fill='%23ccff00'/%3E%3C/svg%3E">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#140826">
+<title>an invitation &middot; cafedreamr</title>
+<meta name="description" content="a ticket, engraved with its own number, falls into view and is gone again in about twenty-three seconds.">
+<meta property="og:title" content="an invitation &middot; cafedreamr">
+<meta property="og:description" content="a ticket falls into view. it does not stay long.">
+<meta property="og:type" content="website">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' shape-rendering='crispEdges'%3E%3Crect width='16' height='16' rx='3' fill='%23140826'/%3E%3Crect x='2' y='4' width='12' height='8' fill='%23ff2d95'/%3E%3Crect x='9' y='4' width='1' height='8' fill='%23140826'/%3E%3Crect x='3' y='6' width='5' height='1' fill='%23140826'/%3E%3Crect x='3' y='9' width='3' height='1' fill='%23140826'/%3E%3Crect x='11' y='6' width='2' height='1' fill='%236495ed'/%3E%3Crect x='11' y='9' width='2' height='1' fill='%236495ed'/%3E%3C/svg%3E">
 <style>
 :root{
-  --ink:#0b0b0e; --ink2:#141419;
-  --lime:#ccff00; --pink:#ff2d95; --violet:#bf40bf; --violet2:#ee82ee;
-  --corn:#6495ed; --mint:#98fb98; --lav:#fff0f5; --dim:#7d848b;
+  --ink:#140826;
+  --lav:#fff0f5;
+  --dim:#9a8fb3;
   --line:rgba(255,255,255,.10);
+  --violet:#7b2cff;
+  --pink:#ff2d95;
+  --pinksoft:#ff8ac2;
+  --corn:#6495ed;
+  --cornsoft:#a9c2ff;
   --mono:'Space Mono',ui-monospace,Menlo,monospace;
   --disp:'Bebas Neue',Impact,sans-serif;
   --body:Georgia,serif;
 }
 *{box-sizing:border-box}
-[hidden]{display:none!important}
-html,body{margin:0;padding:0;background:var(--ink);color:var(--lav);font-family:var(--body);overflow-x:hidden}
-body{min-height:100dvh;line-height:1.6}
-.bg{position:fixed;inset:0;z-index:0;background:
-  radial-gradient(1200px 800px at 50% -10%, rgba(100,149,237,.16), transparent 60%),
-  radial-gradient(900px 700px at 80% 110%, rgba(255,45,149,.12), transparent 60%),
-  linear-gradient(180deg,#0d001a 0%, #0b0b0e 55%, #050508 100%)}
-.stage{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;padding:26px 14px 60px}
-.cabinet{width:100%;max-width:760px;background:linear-gradient(180deg,var(--ink2),var(--ink));
-  border:1px solid var(--line);border-radius:24px;padding:14px 14px 18px;position:relative;
-  box-shadow:0 40px 90px rgba(0,0,0,.75), inset 0 1px 0 rgba(255,255,255,.06)}
-.marquee{display:flex;align-items:center;gap:13px;padding:9px 8px 11px;border-bottom:1px dashed rgba(255,255,255,.10)}
-.brand{font-family:var(--disp);font-size:30px;letter-spacing:.12em;line-height:1;white-space:nowrap;
-  color:var(--lime);text-shadow:0 0 10px rgba(204,255,0,.45)}
-.tag{font-family:var(--mono);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);
-  flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.led{width:9px;height:9px;border-radius:50%;background:var(--pink);flex:0 0 auto;
-  box-shadow:0 0 10px var(--pink);animation:pulse 1.6s infinite ease-in-out}
-@keyframes pulse{0%,100%{opacity:.35;transform:scale(.85)}50%{opacity:1;transform:scale(1)}}
-.screen{position:relative;margin:13px 0 0;border-radius:16px;overflow:hidden;background:#000;
-  min-height:470px;display:flex;align-items:center;justify-content:center;
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.08), inset 0 0 60px rgba(0,0,0,.9), 0 0 26px rgba(191,64,191,.18)}
-.screen .void{position:absolute;inset:0;background:
-  radial-gradient(72% 82% at 50% 36%, rgba(191,64,191,.18), transparent 62%),
-  radial-gradient(60% 60% at 84% 98%, rgba(255,45,149,.12), transparent 60%)}
-.glare{position:absolute;inset:0;pointer-events:none;
-  background:linear-gradient(115deg, rgba(255,255,255,.10) 0%, transparent 38%, transparent 70%, rgba(255,45,149,.10) 100%)}
-.scan{position:absolute;inset:0;pointer-events:none;
-  background:repeating-linear-gradient(180deg, rgba(0,0,0,.32) 0 1px, rgba(0,0,0,0) 1px 3px);opacity:.5}
-.osd{position:absolute;top:0;left:0;right:0;height:44px;z-index:3;display:flex;align-items:center;
-  justify-content:space-between;padding:0 12px;pointer-events:none;
-  background:linear-gradient(180deg, rgba(6,1,12,.95) 0%, rgba(6,1,12,.5) 62%, rgba(6,1,12,0) 100%);
-  font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--lime)}
-.osd .r{color:var(--dim)}
-.osd .dot{font-style:normal;animation:pulse 1.4s infinite}
-.sbody{position:relative;z-index:2;width:100%;padding:60px 20px 26px;text-align:center}
-@keyframes drop{from{transform:translateY(-120%);opacity:0}to{transform:none;opacity:1}}
-.tk.gone{transition:transform 1.2s ease-in, opacity 1.2s;transform:translateY(130%);opacity:0}
-.tk{width:100%;max-width:520px;margin:0 auto;position:relative;display:grid;grid-template-columns:1fr 118px;gap:0;
-  background:linear-gradient(150deg,rgba(27,0,44,.92),rgba(11,11,14,.95));
-  border:1px solid var(--line);border-radius:14px;overflow:hidden;
-  box-shadow:0 24px 60px rgba(0,0,0,.8), inset 0 1px 0 rgba(255,255,255,.05);
-  animation:drop 1.1s cubic-bezier(.2,.9,.25,1.05) both}
-.tk::before{content:"";position:absolute;left:0;right:0;top:0;height:3px;
-  background:linear-gradient(90deg,var(--lime),var(--corn) 40%,var(--violet2) 72%,var(--pink))}
-.tkMain{padding:16px 18px 14px;min-width:0}
-.tkName{font-family:var(--mono);font-size:8.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);margin:2px 0 4px}
-.tkHead{font-family:var(--disp);font-size:clamp(30px,11vw,52px);letter-spacing:.04em;line-height:.95;color:var(--lime);
-  text-shadow:0 0 22px rgba(204,255,0,.4);margin:0}
-.tkSub{font-size:12.5px;font-style:italic;color:#cfc6d6;margin:4px 0 0}
-.tkRule{border-top:1px dashed rgba(255,255,255,.18);margin:12px 0 0}
-.tkMsg{font-size:13.5px;margin:10px 0 0;color:var(--lav)}
-.tkLink{color:var(--violet2);font-weight:bold}
-.tkSer{font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:var(--dim);margin:12px 0 0}
-.tkLeft{font-family:var(--mono);font-size:9px;letter-spacing:.14em;color:var(--pink);margin:4px 0 0}
-.tkStub{border-left:1px dashed rgba(255,255,255,.18);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:14px 10px}
-.tkSeal{width:76px;height:76px}
-.tkSeal .ring{fill:none;stroke:rgba(255,255,255,.14);stroke-width:1.4}
-.tkSeal .core{fill:none;stroke:var(--violet2);stroke-width:1.4;stroke-dasharray:3 4;opacity:.8}
-.tkSeal .star{fill:var(--lime);filter:drop-shadow(0 0 5px rgba(204,255,0,.7))}
-.tkVert{font-family:var(--mono);font-size:8.5px;letter-spacing:.3em;text-transform:uppercase;color:var(--dim);writing-mode:vertical-rl}
-@media (max-width:480px){.tk{grid-template-columns:1fr}.tkStub{border-left:0;border-top:1px dashed rgba(255,255,255,.18);flex-direction:row;padding:10px}}
-.gone2{margin-top:26px;font-size:14px;animation:fadein .8s ease both}
-.gone2 a{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;
-  color:var(--lime);text-decoration:none;border:1px solid rgba(204,255,0,.45);border-radius:999px;
-  padding:11px 20px;background:rgba(204,255,0,.07);box-shadow:0 0 14px -5px rgba(204,255,0,.7)}
-@keyframes fadein{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
-.foot{position:relative;z-index:2;display:flex;justify-content:space-between;width:100%;max-width:760px;
-  padding:14px 4px 0;font-family:var(--mono);font-size:9px;letter-spacing:.1em;color:var(--dim)}
-.foot a{color:var(--dim);text-decoration:none}
+html,body{margin:0;padding:0;min-height:100%;background:var(--ink);color:var(--lav);font-family:var(--body)}
+body{background:
+  radial-gradient(1200px 700px at 20% -10%,#2a1152 0%,transparent 60%),
+  radial-gradient(1000px 700px at 110% 20%,#1b2a5e 0%,transparent 55%),
+  linear-gradient(160deg,#1c0a38,#140826 55%,#0a1030)}
+.invite{position:fixed;inset:0;z-index:10;display:flex;align-items:center;justify-content:center;
+  padding:18px;overflow:auto;pointer-events:none}
+.invite[hidden]{display:none}
+.invShade{position:absolute;inset:0;pointer-events:auto;opacity:1;transition:opacity .6s ease;
+  background:radial-gradient(90% 60% at 50% 40%,rgba(123,44,255,.35),rgba(10,4,20,.92) 70%)}
+.invite.ticket .invShade{opacity:0;pointer-events:none}
+.invAsk{position:relative;margin:auto;pointer-events:auto;width:min(430px,92vw);text-align:center;
+  padding:30px 26px 24px;border-radius:15px;color:var(--lav);
+  background:linear-gradient(180deg,rgba(38,16,74,.97),rgba(16,7,32,.98));
+  border:1px solid rgba(255,45,149,.45);
+  box-shadow:0 34px 80px rgba(0,0,0,.75),inset 0 0 70px rgba(255,45,149,.06);
+  animation:invIn .44s cubic-bezier(.2,.9,.25,1) both}
+@keyframes invIn{from{opacity:0;transform:translateY(16px) scale(.965)}to{opacity:1;transform:none}}
+.invFrame{position:absolute;inset:7px;border:1px solid rgba(255,45,149,.28);border-radius:9px;pointer-events:none}
+.invKick{font-family:var(--mono);font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:var(--dim)}
+.invAsk h2{font-family:var(--disp);font-weight:400;font-size:clamp(36px,10vw,50px);line-height:1;
+  letter-spacing:.1em;margin:10px 0 2px;color:#ffd7ea;text-shadow:0 0 18px rgba(255,45,149,.4)}
+.invQ{font-size:16px;margin:6px 0 20px}
+.invBtns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.invYes{font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;cursor:pointer;
+  border:0;border-radius:999px;padding:12px 20px;color:#1b0412;
+  background:linear-gradient(180deg,#ff7ab8,#e01e7f);transition:.18s}
+.invYes:hover{box-shadow:0 0 22px rgba(255,45,149,.6)}
+.invNo{font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;cursor:pointer;
+  background:transparent;color:var(--lav);border:1px solid var(--line);border-radius:999px;padding:12px 18px;transition:.18s}
+.invNo:hover{border-color:var(--lav);color:#fff}
+.invFine{margin:16px 0 0;font-family:var(--mono);font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim)}
+.tkWrap{position:relative;margin:auto;pointer-events:auto;transform-origin:50% 50%;will-change:transform,opacity}
+.tkFlut{will-change:transform}
+.tk{position:relative;display:flex;width:min(730px,94vw);border-radius:9px;overflow:hidden;
+  color:var(--lav);text-align:left;
+  background:
+    radial-gradient(120% 160% at 6% -12%,rgba(123,44,255,.42),transparent 58%),
+    radial-gradient(130% 160% at 104% 116%,rgba(100,149,237,.24),transparent 58%),
+    linear-gradient(152deg,#230c46 0%,#150826 46%,#0d0418 100%);
+  border:1px solid rgba(255,45,149,.55);
+  box-shadow:0 44px 96px rgba(0,0,0,.82),0 8px 22px rgba(0,0,0,.5),0 0 60px rgba(255,45,149,.16)}
+.tk:after{content:"";position:absolute;inset:6px;border:1px solid rgba(255,45,149,.3);border-radius:5px;
+  pointer-events:none;z-index:3}
+.tkSheen{position:absolute;inset:0;z-index:2;pointer-events:none;overflow:hidden;border-radius:inherit}
+.tkSheen i{position:absolute;top:-40%;left:-32%;width:24%;height:180%;transform:rotate(18deg);
+  background:linear-gradient(90deg,transparent,rgba(255,45,149,.10),rgba(255,255,255,.30),rgba(100,149,237,.12),transparent);
+  animation:tkSheen 7.5s ease-in-out 1.3s infinite}
+@keyframes tkSheen{0%{left:-32%}55%{left:112%}100%{left:112%}}
+.tkDrain{position:absolute;left:0;right:0;top:0;height:2px;z-index:4;background:rgba(255,45,149,.16)}
+.tkDrain i{display:block;height:100%;transform-origin:0 50%;
+  background:linear-gradient(90deg,rgba(255,45,149,.45),#ff7ab8 62%,#ffd7ea);
+  box-shadow:0 0 10px rgba(255,45,149,.6)}
+.tkMain{position:relative;z-index:1;flex:1;min-width:0;padding:20px 24px 18px;display:flex;flex-direction:column;gap:9px}
+.tkTop{display:flex;align-items:center;gap:10px}
+.tkMicro{font-family:var(--mono);font-size:8.5px;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,138,194,.78)}
+.tkMicro.r{margin-left:auto;color:rgba(169,194,255,.55)}
+.tkHead{display:flex;align-items:center;gap:16px;margin-top:2px}
+.tkSeal{flex:none;width:86px;height:86px;overflow:visible}
+.tkRose{fill:none;stroke:#ff2d95;stroke-width:.8;opacity:.75}
+.tkCup{fill:none;stroke:#a9c2ff;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;opacity:.95}
+.tkTitle{min-width:0}
+.tkWord{display:block;font-family:var(--disp);font-weight:400;font-size:clamp(34px,7.4vw,54px);
+  line-height:.96;letter-spacing:.1em;color:#ffe9f4;text-shadow:0 0 22px rgba(255,45,149,.42)}
+.tkSub{display:block;margin-top:5px;font-size:12.5px;line-height:1.4;color:rgba(169,194,255,.7)}
+.tkRule{display:block;height:1px;
+  background:linear-gradient(90deg,rgba(255,45,149,.65),rgba(100,149,237,.25) 72%,transparent)}
+.tkMsg{margin:0;font-size:17px;line-height:1.5;color:#fbf6ff}
+.tkLink{display:inline-block;padding:2px 12px 3px;border-radius:999px;font-family:var(--mono);font-size:12.5px;
+  letter-spacing:.06em;text-decoration:none;color:#0a1030;
+  background:linear-gradient(180deg,#d6e4ff,#6495ed);box-shadow:0 0 18px rgba(100,149,237,.45);transition:.18s}
+.tkLink:hover{box-shadow:0 0 26px rgba(100,149,237,.8);transform:translateY(-1px)}
+.tkFine{font-family:var(--mono);font-size:8px;line-height:1.62;letter-spacing:.04em;
+  color:rgba(169,194,255,.6)}
+.tkFine p{margin:0}
+.tkFine p+p{margin-top:5px}
+.tkFoot{display:flex;align-items:center;gap:13px;flex-wrap:wrap;margin-top:3px}
+.tkFoot span{font-family:var(--mono);font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:rgba(169,194,255,.55)}
+.tkFoot .tkSer{color:#ff8ac2}
+.tkStub{position:relative;z-index:1;flex:none;width:176px;padding:16px 14px;
+  display:flex;flex-direction:column;align-items:center;justify-content:space-between;gap:9px;
+  border-left:1px dashed rgba(255,45,149,.5);
+  background:linear-gradient(180deg,rgba(255,45,149,.09),rgba(100,149,237,.03))}
+.tkVert{writing-mode:vertical-rl;font-family:var(--mono);font-size:8.5px;letter-spacing:.34em;
+  text-transform:uppercase;color:rgba(255,138,194,.65)}
+.tkBars{display:flex;align-items:flex-end;justify-content:center;gap:1px;height:34px}
+.tkBars i{display:block;background:#a9c2ff}
+.tkStubNo{font-family:var(--mono);font-size:11.5px;letter-spacing:.34em;color:rgba(255,138,194,.9)}
+.tkLeft{font-family:var(--mono);font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:rgba(169,194,255,.55)}
+.tkLeft b{color:#ff8ac2;font-weight:400}
+@media (max-width:600px){
+  .invite{padding:14px 12px}
+  .tk{flex-direction:column;width:min(560px,91vw)}
+  .tkMain{padding:18px 18px 22px}
+  .tkStub{width:auto;flex-direction:row;align-items:center;justify-content:space-between;
+    border-left:0;border-top:1px dashed rgba(255,45,149,.5);padding:12px 16px}
+  .tkVert{writing-mode:horizontal-tb;letter-spacing:.26em}
+  .tkSeal{width:62px;height:62px}
+  .tkHead{gap:12px}
+  .tkMsg{font-size:15.5px}
+  .invAsk{padding:26px 20px 20px}
+}
+.invGone{position:absolute;left:0;right:0;bottom:26px;margin:0;text-align:center;pointer-events:auto;
+  font-family:var(--mono);font-size:9px;letter-spacing:.2em;text-transform:uppercase;
+  color:rgba(169,194,255,.5);animation:invIn .7s ease both}
+.invGone a{margin-left:9px;color:#ff8ac2;text-decoration:none;
+  border-bottom:1px solid rgba(255,138,194,.4);padding-bottom:1px;transition:.18s}
+.invGone a:hover{color:#ffd7ea;border-color:#ffd7ea}
 </style>
 </head>
 <body>
-<div class="bg"></div>
-<div class="stage">
-  <div class="cabinet">
-    <div class="marquee">
-      <span class="brand">CAFE DREAMR</span>
-      <span class="tag">the ticket window</span>
-      <span class="led"></span>
+<div class="invite" id="invite" hidden role="dialog" aria-label="an invitation">
+  <div class="invShade" id="invShade"></div>
+  <div class="invAsk" id="invAsk" hidden>
+    <span class="invFrame" aria-hidden="true"></span>
+    <div class="invKick">from the counter &middot; no coin needed</div>
+    <h2>CAFEDREAMR</h2>
+    <p class="invQ">will you accept?</p>
+    <div class="invBtns">
+      <button class="invYes" id="invYes" type="button">i accept</button>
+      <button class="invNo" id="invNo" type="button">not yet</button>
     </div>
-    <section class="screen">
-      <div class="void"></div>
-      <div class="glare"></div>
-      <div class="scan"></div>
-      <div class="osd">
-        <span><i class="dot">&#9679;</i> dream signal live</span>
-        <span class="r">rec &middot; admit one</span>
-      </div>
-      <div class="sbody">
-        <div class="tk" id="tkEl">
-          <div class="tkMain">
-            <div class="tkName">cafe dreamr &middot; the realm &middot; admit one</div>
-            <div class="tkHead">cafedreamr</div>
-            <p class="tkSub">to the cafe, and to whatever hour you arrive in</p>
-            <div class="tkRule"></div>
-            <p class="tkMsg">a ticket, engraved with its own number, falls into view. it does not stay long.</p>
-            <p class="tkMsg">take the <a class="tkLink" id="tkLink" href="https://www.cafedreamr.art/INTERVIEW/invitation/">interview</a> to begin.</p>
-            <div class="tkRule"></div>
-            <p class="tkSer" id="tkSerial">no. 0000</p>
-            <p class="tkLeft">ink left <b id="tkLeft">23s</b></p>
+    <p class="invFine">a ticket drops out of the slot &middot; it does not stay long</p>
+  </div>
+  <div class="tkWrap" id="tkWrap" hidden>
+    <div class="tkFlut" id="tkFlut">
+      <div class="tk" id="tk">
+        <span class="tkSheen" aria-hidden="true"><i></i></span>
+        <span class="tkDrain" aria-hidden="true"><i id="tkDrainBar"></i></span>
+        <div class="tkMain">
+          <div class="tkTop">
+            <span class="tkMicro">cafe dreamr &middot; the realm</span>
+            <span class="tkMicro r">admit one</span>
           </div>
-          <div class="tkStub">
-            <svg class="tkSeal" viewBox="0 0 100 100" aria-hidden="true"><circle class="ring" cx="50" cy="50" r="46"/><circle class="ring" cx="50" cy="50" r="38"/><circle class="core" cx="50" cy="50" r="30"/><path class="star" d="M50 34l4.7 9.6 10.6 1.5-7.7 7.5 1.8 10.6-9.4-5-9.4 5 1.8-10.6-7.7-7.5 10.6-1.5z"/></svg>
-            <span class="tkVert">admit one</span>
+          <div class="tkHead">
+            <svg class="tkSeal" viewBox="0 0 100 100" aria-hidden="true">
+              <g class="tkRose" id="tkRosette" transform="translate(50 50)"></g>
+              <g class="tkCup" transform="translate(48 50) scale(.40) translate(-60 -79)">
+                <ellipse cx="60" cy="54" rx="22" ry="5.5"/>
+                <path d="M40 54 L44 98 q1 6 8 6 h16 q7 0 8 -6 L80 54"/>
+                <path d="M80 62 q14 3 12 16 q-2 13 -16 13"/>
+              </g>
+            </svg>
+            <div class="tkTitle">
+              <span class="tkWord">cafedreamr</span>
+              <span class="tkSub">to the cafe, and to whatever hour you arrive in</span>
+            </div>
+          </div>
+          <span class="tkRule" aria-hidden="true"></span>
+          <p class="tkMsg">So excited that you&rsquo;ve accepted our invitation!</p>
+          <p class="tkMsg">Click the <a class="tkLink" id="tkLink" href="https://www.cafedreamr.art/INTERVIEW/invitation/">link</a> to begin!</p>
+          <span class="tkRule" aria-hidden="true"></span>
+          <div class="tkFine">
+            <p>xen&rsquo;s first official cafedreamr site &mdash; a place to wander, and to hear new music made only for this world: written exclusively for cafedreamr by the original characters of its realm, and by others who wander in.</p>
+            <p>the first site that is also a knot of parallel universes, tied together on purpose. leave the mundane at the door, find a new story with a hold on you, and let it invite you in as family &mdash; fictional, yet legendary.</p>
+          </div>
+          <div class="tkFoot">
+            <span class="tkDest" id="tkDest">cafedreamr.art</span>
+            <span class="tkSer" id="tkSerial">no. 0000</span>
+            <span class="tkIssued" id="tkIssued">issued &mdash;</span>
+            <span class="tkGuest" id="tkGuest">guest bearer</span>
           </div>
         </div>
-        <div class="gone2" id="goneEl" hidden>
-          <p>the ink ran out.</p>
-          <p><a href="https://www.cafedreamr.art/INTERVIEW/invitation/">the interview &rarr;</a></p>
+        <div class="tkStub">
+          <span class="tkVert">admit one</span>
+          <span class="tkBars" id="tkBars" aria-hidden="true"></span>
+          <span class="tkStubNo" id="tkStubNo">0000</span>
+          <span class="tkLeft">ink left <b id="tkLeft">23s</b></span>
         </div>
       </div>
-    </section>
+    </div>
   </div>
-  <div class="foot">
-    <span>cafedreamr &middot; an invitation</span>
-    <span><a href="https://www.cafedreamr.art/">the terminal &rarr;</a></span>
-  </div>
+  <p class="invGone" id="invGone" hidden>
+    <span id="invGoneText">the ink ran out.</span>
+    <a id="invGoneLink" href="https://www.cafedreamr.art/INTERVIEW/invitation/">the interview &rarr;</a>
+  </p>
 </div>
 <script>
 (function () {
   "use strict";
-  var n = 1000 + Math.floor(Math.random() * 9000);
-  document.getElementById("tkSerial").textContent = "no. " + n;
-  var left = 23, el = document.getElementById("tkLeft");
-  var t = setInterval(function () {
-    left--;
-    if (left <= 0) {
-      clearInterval(t);
-      document.getElementById("tkEl").classList.add("gone");
-      setTimeout(function () {
-        document.getElementById("tkEl").hidden = true;
-        document.getElementById("goneEl").hidden = false;
-      }, 1200);
-    } else { el.textContent = left + "s"; }
-  }, 1000);
+  var INVITE_DROP = 2700, INVITE_HOLD = 23000, INVITE_SLIP = 1950;
+  var INVITE_KEY = "cafedreamr:invite";
+  var INVITE_LINK = "https://www.cafedreamr.art/INTERVIEW/invitation/";
+  var inviteEl = document.getElementById("invite"),
+      invShadeEl = document.getElementById("invShade"),
+      invAskEl = document.getElementById("invAsk"),
+      tkWrapEl = document.getElementById("tkWrap"),
+      tkFlutEl = document.getElementById("tkFlut"),
+      tkDrainEl = document.getElementById("tkDrainBar"),
+      tkLeftEl = document.getElementById("tkLeft"),
+      tkSerialEl = document.getElementById("tkSerial"),
+      tkStubNoEl = document.getElementById("tkStubNo"),
+      tkIssuedEl = document.getElementById("tkIssued"),
+      tkGuestEl = document.getElementById("tkGuest"),
+      tkLinkEl = document.getElementById("tkLink"),
+      tkDestEl = document.getElementById("tkDest"),
+      tkRosetteEl = document.getElementById("tkRosette"),
+      tkBarsEl = document.getElementById("tkBars"),
+      invGoneEl = document.getElementById("invGone"),
+      invGoneTxt = document.getElementById("invGoneText"),
+      invGoneLink = document.getElementById("invGoneLink");
+  var invPhase = "idle", invRaf = 0, invT = 0, invPrev = 0, invHold = INVITE_HOLD, invSecs = -1, invTimers = [];
+  function beep(f, d) {
+    try {
+      beep.ctx = beep.ctx || new (window.AudioContext || window.webkitAudioContext)();
+      var c = beep.ctx, t = c.currentTime, o = c.createOscillator(), g = c.createGain();
+      o.type = "triangle"; o.frequency.value = f;
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.exponentialRampToValueAtTime(0.12, t + 0.01);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + d);
+      o.connect(g); g.connect(c.destination); o.start(t); o.stop(t + d + 0.02);
+    } catch (e) {}
+  }
+  function invLater(fn, ms) { invTimers.push(setTimeout(fn, ms)); }
+  function invClearTimers() { invTimers.forEach(clearTimeout); invTimers = []; }
+  function invReduced() { try { return matchMedia("(prefers-reduced-motion: reduce)").matches; } catch (e) { return false; } }
+  function invPad(n, w) { var s = String(n); while (s.length < w) s = "0" + s; return s; }
+  function invSerial() { return invPad(1 + Math.floor(Math.random() * 9999), 4); }
+  function invStore() { try { return JSON.parse(localStorage.getItem(INVITE_KEY) || "null"); } catch (e) { return null; } }
+  function invSave(o) { try { localStorage.setItem(INVITE_KEY, JSON.stringify(o)); } catch (e) {} }
+  function invOutCubic(p) { return 1 - Math.pow(1 - p, 3); }
+  function invInCubic(p) { return p * p * p; }
+  function invPlace(x, y, deg, scale, opacity, skew) {
+    tkWrapEl.style.transform = "translate3d(" + x.toFixed(2) + "px," + y.toFixed(2) + "px,0) rotate(" +
+      deg.toFixed(2) + "deg) scale(" + scale.toFixed(4) + ")";
+    tkWrapEl.style.opacity = opacity.toFixed(3);
+    if (tkFlutEl) tkFlutEl.style.transform = "skewX(" + skew.toFixed(2) + "deg)";
+  }
+  function invRest(reduced) { invPlace(0, 0, reduced ? 0 : -2.35, 1, 1, 0); }
+  function invEllipsePath(rx, ry, a) {
+    var c = Math.cos(a), s = Math.sin(a), d = "";
+    for (var i = 0; i <= 64; i++) {
+      var t = (i / 64) * Math.PI * 2;
+      var x = rx * Math.cos(t), y = ry * Math.sin(t);
+      d += (i ? "L" : "M") + (x * c - y * s).toFixed(2) + " " + (x * s + y * c).toFixed(2);
+    }
+    return d;
+  }
+  function invCirclePath(r) {
+    var d = "";
+    for (var i = 0; i <= 72; i++) {
+      var t = (i / 72) * Math.PI * 2;
+      d += (i ? "L" : "M") + (Math.cos(t) * r).toFixed(2) + " " + (Math.sin(t) * r).toFixed(2);
+    }
+    return d;
+  }
+  function invRosette(serial) {
+    if (!tkRosetteEl) return;
+    var s = 7, i;
+    for (i = 0; i < serial.length; i++) s = (s * 137 + serial.charCodeAt(i)) % 99991;
+    var rnd = function () { s = (s * 1103515245 + 12345) % 2147483648; return s / 2147483648; };
+    var rx = 29 + rnd() * 3, ry = rx * (.38 + rnd() * .07);
+    var n = 14 + Math.floor(rnd() * 6), step = 180 / n, flower = "";
+    for (i = 0; i < n; i++) flower += invEllipsePath(rx, ry, (i * step * Math.PI) / 180);
+    var rings = invCirclePath(rx + 5.4) + invCirclePath(rx + 6.2) + invCirclePath(9.4 + rnd() * .8);
+    tkRosetteEl.innerHTML = '<path d="' + rings + '" opacity=".44"/><path d="' + flower + '" opacity=".6"/>';
+  }
+  function invBars(serial) {
+    if (!tkBarsEl) return;
+    var s = 11, i;
+    for (i = 0; i < serial.length; i++) s = (s * 31 + serial.charCodeAt(i)) % 100003;
+    var html = "";
+    for (i = 0; i < 52; i++) {
+      s = (s * 1103515245 + 12345) % 2147483648;
+      var q = s / 2147483648;
+      html += '<i style="width:' + (q < .34 ? 1 : q < .7 ? 2 : 3) + "px;height:" +
+        (58 + Math.round(q * 42)) + "%;opacity:" + (.4 + q * .55).toFixed(2) + '"></i>';
+    }
+    tkBarsEl.innerHTML = html;
+  }
+  function inviteShow() {
+    var serial = invSerial();
+    invSave({ at: Date.now(), n: serial });
+    if (tkSerialEl) tkSerialEl.textContent = "no. " + serial;
+    if (tkStubNoEl) tkStubNoEl.textContent = serial;
+    if (tkIssuedEl) tkIssuedEl.textContent = "issued " + new Date().toLocaleTimeString([], {hour:"2-digit",minute:"2-digit"});
+    if (tkDestEl) tkDestEl.textContent = "cafedreamr.art";
+    if (tkLinkEl) tkLinkEl.href = INVITE_LINK;
+    invRosette(serial);
+    invBars(serial);
+    inviteEl.hidden = false;
+    invAskEl.hidden = true;
+    invShadeEl.hidden = true;
+    invGoneEl.hidden = true;
+    inviteEl.classList.add("ticket");
+    tkWrapEl.hidden = false;
+    invHold = INVITE_HOLD; invSecs = -1; invT = 0; invPrev = 0;
+    if (invReduced()) { invRest(true); invPhase = "hold"; }
+    else { invPlace(0, -0.95 * innerHeight, -13, .985, 0, 0); invPhase = "drop"; }
+    beep(196, 0.05);
+    invLater(function () { beep(1180, 0.03); }, 90);
+    invLater(invLoop, 16);
+  }
+  function invLoop() {
+    invRaf = 0;
+    if (invPhase !== "drop" && invPhase !== "hold" && invPhase !== "slip") return;
+    var now = performance.now();
+    if (!invT) { invT = now; invPrev = now; }
+    var dt = now - invPrev;
+    invPrev = now;
+    var H = innerHeight;
+    if (invPhase === "drop") {
+      var p = Math.min(1, (now - invT) / INVITE_DROP);
+      var a = invOutCubic(p), fall = 1 - a;
+      var y = -0.95 * H * fall;
+      var x = Math.sin(p * 11.4) * 30 * fall;
+      var deg = -13 + 10.65 * a + Math.sin(p * 9.1) * 5.2 * fall;
+      var skew = Math.sin(p * 7.6 + 1.1) * 1.5 * fall;
+      var op = p < 0.09 ? p / 0.09 : 1;
+      var scale = .985 + .015 * a;
+      if (p > 0.84) {
+        var q = (p - 0.84) / 0.16, damp = 1 - q;
+        y += Math.sin(q * Math.PI * 2) * 4.5 * damp;
+        deg += Math.sin(q * Math.PI * 2) * .55 * damp;
+      }
+      invPlace(x, y, deg, scale, op, skew);
+      if (p >= 1) { invPhase = "hold"; invT = 0; beep(1320, 0.03); }
+    } else if (invPhase === "hold") {
+      invHold -= dt;
+      var frac = Math.max(0, invHold / INVITE_HOLD);
+      if (tkDrainEl) tkDrainEl.style.transform = "scaleX(" + frac.toFixed(4) + ")";
+      var secs = Math.max(0, Math.ceil(invHold / 1000));
+      if (secs !== invSecs) { invSecs = secs; if (tkLeftEl) tkLeftEl.textContent = secs + "s"; }
+      if (invReduced()) { invRest(true); }
+      else {
+        var w = Math.sin(now * .00055), l = Math.sin(now * .00041 + 1.7);
+        invPlace(1.4 * l, .7 * w, -2.35 + .16 * w, 1, 1, .22 * l);
+      }
+      if (invHold <= 0) { invPhase = "slip"; invT = 0; beep(494, 0.06); invLater(function () { beep(330, 0.15); }, 180); }
+    } else if (invPhase === "slip") {
+      var sp = Math.min(1, (now - invT) / INVITE_SLIP);
+      var e = invInCubic(sp);
+      var sy = 1.26 * H * e - 10 * Math.sin(Math.min(1, sp / .09) * Math.PI);
+      var sx = -32 * e + Math.sin(sp * 28) * 6 * e;
+      var sd = -2.35 + 25.4 * e + Math.sin(sp * 34) * 3.2 * e;
+      var sk = Math.sin(sp * 26) * 1.4 * e;
+      var so = sp < .5 ? 1 : 1 - (sp - .5) / .5;
+      invPlace(sx, sy, sd, 1 - .05 * e, so, sk);
+      if (sp >= 1) { inviteDone(); return; }
+    }
+    invRaf = requestAnimationFrame(invLoop);
+  }
+  function inviteDone() {
+    invPhase = "idle";
+    if (invRaf) { cancelAnimationFrame(invRaf); invRaf = 0; }
+    invClearTimers();
+    inviteEl.hidden = false;
+    inviteEl.classList.remove("ticket");
+    invAskEl.hidden = true;
+    tkWrapEl.hidden = true;
+    var s = invStore();
+    if (invGoneTxt) {
+      invGoneTxt.textContent = (s && s.n ? "no. " + s.n + " \u00b7 " : "") + "the ink ran out.";
+    }
+    if (invGoneLink) invGoneLink.href = INVITE_LINK;
+    invGoneEl.hidden = false;
+  }
+  if (/(^|[#&\/])will-you-accept\b/i.test(location.hash)) {
+    invClearTimers();
+    invPhase = "ask";
+    inviteEl.hidden = false;
+    invAskEl.hidden = false;
+    tkWrapEl.hidden = true;
+    invGoneEl.hidden = true;
+    document.getElementById("invYes").addEventListener("click", function () { inviteShow(); });
+    document.getElementById("invNo").addEventListener("click", function () { inviteDone(); });
+  } else {
+    invClearTimers();
+    invPhase = "arriving";
+    invLater(inviteShow, 900);
+  }
 })();
 </script>
 </body>
