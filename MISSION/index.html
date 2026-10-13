@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>The Mission — CafeDreamr</title>
+<meta name="description" content="All things are possible. Xen's mission: every thought can become a thing, when we believe God is helping us in everything.">
+<style>
+  :root{ --plum:#0d001a; --rose:#ff2d6b; --purple:#8a2be2; --corn:#6495ed; --steel:#8a9bb5; --dim:#5d6b85; --line:rgba(138,155,181,.22); }
+  html{color-scheme:dark}
+  body{ margin:0; background:var(--plum); color:var(--steel); font-family:Georgia,'Times New Roman',serif; min-height:100vh; }
+  body::before{ content:""; position:fixed; inset:0; pointer-events:none;
+    background: radial-gradient(70% 50% at 50% 0%, rgba(255,45,107,.14), transparent 60%),
+      radial-gradient(80% 60% at 50% 110%, rgba(138,43,226,.18), transparent 60%); }
+  .wrap{position:relative; max-width:680px; margin:0 auto; padding:28px 18px 60px}
+  .brand{font-style:italic; font-size:27.5px; color:var(--rose); text-shadow:0 0 12px rgba(255,45,107,.5); text-decoration:none}
+  .tag{display:inline-block; font-family:ui-monospace,Menlo,monospace; font-size:10.5px; letter-spacing:.22em; text-transform:uppercase; color:var(--dim); border:1px solid var(--line); border-radius:999px; padding:4px 10px; margin-left:10px; vertical-align:middle}
+  h1{font-size:clamp(34.5px,6vw,50.5px); font-weight:400; letter-spacing:.04em; color:var(--corn); margin:22px 0 4px}
+  .by{font-family:ui-monospace,Menlo,monospace; font-size:10.5px; letter-spacing:.18em; text-transform:uppercase; color:var(--dim); margin-bottom:20px}
+  .mlead{font-size:22px; line-height:1.7; color:var(--corn); font-style:italic; margin:0 0 14px}
+  p{font-size:16.5px; line-height:1.8; margin:0 0 13px}
+  .mword{font-size:27.5px; letter-spacing:.14em; color:var(--rose); text-align:center; margin:20px 0 14px}
+  .mword small{display:block; font-size:11.5px; letter-spacing:.1em; color:var(--dim); font-family:ui-monospace,Menlo,monospace; margin-top:6px}
+  hr{border:none; border-top:1px dashed var(--line); margin:20px 0}
+  .msign{text-align:right; font-style:italic; color:var(--corn)}
+  .mverse{font-family:Georgia,'Times New Roman',serif; font-style:italic; font-size:19.5px; line-height:1.65; color:var(--corn); text-align:center; margin:16px 0 4px}
+  .mref{font-family:ui-monospace,Menlo,monospace; font-size:10.5px; letter-spacing:.24em; text-transform:uppercase; color:var(--rose); text-align:center; margin:0 0 14px}
+  .ritual{border:1px solid var(--line); border-radius:12px; padding:16px; background:rgba(255,45,107,.05)}
+  .ritual h2{font-size:20.5px; font-weight:400; color:var(--corn); margin:0 0 4px}
+  .ritual .rsub{font-size:14px; color:var(--dim); font-style:italic; margin:0 0 12px}
+  .rrow{display:flex; gap:8px; flex-wrap:wrap}
+  #thoughtInput{flex:1; min-width:180px; background:rgba(13,0,26,.8); border:1px solid var(--line); border-radius:999px; padding:10px 14px; color:var(--corn); font-family:inherit; font-size:15px}
+  #thoughtInput::placeholder{color:var(--dim); font-style:italic}
+  #thoughtInput:focus{outline:none; border-color:var(--rose)}
+  .btn{font-family:ui-monospace,Menlo,monospace; font-size:11px; letter-spacing:.14em; text-transform:uppercase; border:1px solid var(--rose); color:var(--rose); background:transparent; border-radius:999px; padding:10px 16px; cursor:pointer; text-decoration:none; display:inline-block}
+  .btn:hover{background:rgba(255,45,107,.12)}
+  #thingShelf{display:flex; flex-wrap:wrap; gap:8px; margin-top:12px}
+  #thingShelf .none{font-size:14px; color:var(--dim); font-style:italic}
+  .thing{font-size:14.5px; color:var(--corn); border:1px solid var(--rose); border-radius:999px; padding:7px 12px; background:rgba(255,45,107,.08); animation:pop .45s cubic-bezier(.2,1.4,.4,1); cursor:pointer; font-family:inherit}
+  .thing small{color:var(--dim)}
+  @keyframes pop{from{transform:scale(.6); opacity:0}to{transform:scale(1); opacity:1}}
+  .foot{margin-top:26px; font-family:ui-monospace,Menlo,monospace; font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--dim); text-align:center; line-height:2.2}
+  .foot a{color:var(--corn); text-decoration:none; margin:0 6px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div><a class="brand" href="https://www.cafedreamr.art/">cafédreamr</a><span class="tag">the mission</span></div>
+  <h1>all things are possible</h1>
+  <div class="by">by xen · keeper's anthology</div>
+  <p class="mlead">CafeDreamr exists to show anyone who is interested one thing: all things are possible — especially when we believe that God is helping us in everything.</p>
+  <p>Even every thought can — and does — become <i>a thing</i>, depending on how much we believe that it is possible.</p>
+  <p>Take the word apart with me. <i>Be</i>, meaning exist. And <i>lieve</i> — not how I hear it, but how I perceive it: <i>live</i>.</p>
+  <div class="mword">BE — LIEVE<small>exist · live as if it is possible</small></div>
+  <p>When we act as if something is possible — when we live it — the thing we thought was impossible becomes possible with God.</p>
+  <p class="mverse">"For with God nothing shall be impossible."</p>
+  <p class="mref">Luke 1:37</p>
+  <p>My lore is just a creative way of expressing that. Chimera cats who escaped an experiment. A portal into other realms. Every story in this realm is the same teaching wearing a costume: what you dare to believe, you may begin to live.</p>
+  <hr>
+  <div class="ritual">
+    <h2>believe one thing possible</h2>
+    <p class="rsub">Write down one impossible thing, and believe it into a thing.</p>
+    <div class="rrow">
+      <input id="thoughtInput" maxlength="120" placeholder="one impossible thing…" aria-label="one impossible thing">
+      <button class="btn" id="believeBtn">✦ believe it into a thing</button>
+    </div>
+    <div id="thingShelf"><span class="none">nothing here yet — give me one impossible thing.</span></div>
+  </div>
+  <hr>
+  <p>So let us begin. Go and explore — every door in the anthology is interactive, and we shall see you on the inside.</p>
+  <p class="msign">— Xen</p>
+  <div class="foot">
+    <a href="https://www.cafedreamr.art/">terminal</a> ·
+    <a href="../index.html">the anthology</a><br>
+    <span>what you dare to believe, you may begin to live.</span>
+  </div>
+</div>
+<script>
+(function(){
+  "use strict";
+  var shelf = document.getElementById('thingShelf'), input = document.getElementById('thoughtInput');
+  var say = ['kept — it exists now. act as if.', 'written — now live like it is true.', 'held in Yeshua\u2019s light. it is a thing.', 'believed. now go and live it.'];
+  function esc(s){ return String(s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+  function load(){ try{ var v = localStorage.getItem('relics'); if(v==null){ v = localStorage.getItem('athenaeum-things'); if(v!=null){ try{ localStorage.setItem('relics', v); }catch(e){} } } return JSON.parse(v||'[]'); }catch(e){ return []; } }
+  function save(a){ try{ localStorage.setItem('relics', JSON.stringify(a.slice(0,60))); }catch(e){} }
+  function paint(){
+    var a = load(); shelf.innerHTML='';
+    if(!a.length){ shelf.innerHTML='<span class="none">nothing here yet — give me one impossible thing.</span>'; return; }
+    a.forEach(function(t, ix){
+      var s=document.createElement('button'); s.type='button'; s.className='thing'; s.title='believed possible — click to release it';
+      s.innerHTML='\u2726 '+esc(t.t)+' <small>\u00b7 '+esc(t.s)+'</small>';
+      s.addEventListener('click', function(){ var b=load(); b.splice(ix,1); save(b); paint(); });
+      shelf.appendChild(s);
+    });
+  }
+  function believe(){
+    var v=input.value.trim(); if(!v){ input.focus(); return; }
+    var a=load(); a.unshift({t:v, s:say[Math.floor(Math.random()*say.length)]});
+    save(a); paint(); input.value=''; input.focus();
+  }
+  document.getElementById('believeBtn').addEventListener('click', believe);
+  input.addEventListener('keydown', function(e){ if(e.key==='Enter') believe(); });
+  paint();
+})();
+</script>
+</body>
+</html>
