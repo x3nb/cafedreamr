@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0d001a">
+<title>the arcade cabinet with no name &middot; cafedreamr</title>
+<meta name="description" content="No marquee, no title, no high score. One credit left on it from before anyone can remember. Sealed until the last day.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&display=swap">
+<style>
+  :root{
+    --plum:#0d001a; --rose:#ff2d6b; --purple:#8a2be2; --violet:#bf40bf;
+    --corn:#6495ed; --steel:#8a9bb5; --dim:#5d6b85; --line:rgba(138,155,181,.22);
+    --gold:#ffd97a;
+  }
+  *{box-sizing:border-box}
+  html{color-scheme:dark}
+  body{
+    margin:0; background:var(--plum); color:var(--steel);
+    font-family:Georgia,'Times New Roman',serif; min-height:100vh;
+    display:flex; flex-direction:column; align-items:center;
+  }
+  body::before{
+    content:""; position:fixed; inset:0; pointer-events:none;
+    background:
+      radial-gradient(60% 40% at 50% 30%, rgba(255,45,107,.10), transparent 60%),
+      radial-gradient(80% 60% at 50% 115%, rgba(138,43,226,.16), transparent 60%);
+  }
+  .wrap{position:relative; width:100%; max-width:640px; padding:34px 20px 60px; text-align:center}
+  .brand{font-style:italic; font-size:24px; color:var(--rose); text-decoration:none; text-shadow:0 0 12px rgba(255,45,107,.5)}
+  .tag{display:inline-block; font-family:ui-monospace,Menlo,monospace; font-size:10px; letter-spacing:.22em; text-transform:uppercase; color:var(--dim); border:1px solid var(--line); border-radius:999px; padding:4px 10px; margin-left:10px; vertical-align:middle}
+  h1{font-family:'Bebas Neue',Impact,sans-serif; font-weight:400; font-size:clamp(30px,6vw,44px); letter-spacing:.06em; color:var(--corn); margin:26px 0 4px}
+  /* the cabinet */
+  .cab{width:min(300px,72vw); margin:26px auto 8px; filter:drop-shadow(0 0 26px rgba(138,43,226,.28))}
+  .cab .screen-glow{animation:flick 4.5s infinite}
+  @keyframes flick{0%,100%{opacity:1}92%{opacity:1}93%{opacity:.55}94%{opacity:1}96.5%{opacity:.75}97%{opacity:1}}
+  .credit{font-family:ui-monospace,Menlo,monospace; font-size:11px; letter-spacing:.3em; text-transform:uppercase; color:var(--gold); margin:2px 0 0}
+  .credit b{color:#fff0c0}
+  .lore{font-size:17px; line-height:1.85; margin:24px 0 6px}
+  .lore em{color:var(--corn)}
+  .seal{display:inline-block; margin-top:18px; font-family:ui-monospace,Menlo,monospace; font-size:11px; letter-spacing:.26em; text-transform:uppercase; color:var(--rose); border:1px solid var(--rose); border-radius:999px; padding:9px 18px; box-shadow:0 0 14px rgba(255,45,107,.35), inset 0 0 12px rgba(255,45,107,.12)}
+  .foot{margin-top:34px; font-family:ui-monospace,Menlo,monospace; font-size:11px; letter-spacing:.14em}
+  .foot a{color:var(--corn); text-decoration:none; margin:0 8px}
+  .foot a:hover{color:var(--rose)}
+  .foot span{color:var(--dim); display:block; margin-top:10px; font-style:italic; font-family:Georgia,serif; letter-spacing:0}
+  @media (prefers-reduced-motion:reduce){
+    .cab .screen-glow{animation:none}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div><a class="brand" href="https://www.cafedreamr.art/">caf&eacute;dreamr</a><span class="tag">sealed lore</span></div>
+  <h1>the arcade cabinet with no name</h1>
+
+  <svg class="cab" viewBox="0 0 200 300" role="img" aria-label="a dark arcade cabinet with a blank marquee and one credit">
+    <!-- body -->
+    <path d="M45 12 H155 L165 40 V288 H35 V40 Z" fill="#150423" stroke="#3a2a4a" stroke-width="2"/>
+    <!-- blank marquee: no title, only a faint empty plate -->
+    <rect x="52" y="22" width="96" height="26" rx="3" fill="#0a0014" stroke="#2c2140" stroke-width="1.5"/>
+    <rect x="58" y="31" width="84" height="3" rx="1.5" fill="#1e1430"/>
+    <rect x="72" y="38" width="56" height="2" rx="1" fill="#1e1430"/>
+    <!-- screen, dark but awake -->
+    <rect x="55" y="62" width="90" height="76" rx="6" fill="#05030a" stroke="#3a2a4a" stroke-width="2"/>
+    <g class="screen-glow">
+      <ellipse cx="100" cy="100" rx="34" ry="26" fill="rgba(138,43,226,.14)"/>
+      <text x="100" y="112" text-anchor="middle" font-family="ui-monospace,Menlo,monospace" font-size="30" fill="#ffd97a">1</text>
+      <text x="100" y="128" text-anchor="middle" font-family="ui-monospace,Menlo,monospace" font-size="8" letter-spacing="3" fill="#8a9bb5">CREDIT</text>
+    </g>
+    <!-- control deck -->
+    <rect x="45" y="150" width="110" height="26" rx="3" fill="#1e0b32" stroke="#3a2a4a" stroke-width="1.5"/>
+    <circle cx="80" cy="163" r="7" fill="#2a1545" stroke="#ff2d6b" stroke-width="1.5"/>
+    <circle cx="120" cy="163" r="7" fill="#2a1545" stroke="#6495ed" stroke-width="1.5"/>
+    <rect x="96" y="156" width="8" height="14" rx="3" fill="#0a0014" stroke="#5d6b85" stroke-width="1.2"/>
+    <circle cx="100" cy="156" r="4" fill="#ff2d6b"/>
+    <!-- coin door: one slot, no change -->
+    <rect x="78" y="196" width="44" height="52" rx="3" fill="#0f0620" stroke="#3a2a4a" stroke-width="1.5"/>
+    <rect x="96" y="206" width="8" height="16" rx="3" fill="#05030a" stroke="#5d6b85" stroke-width="1.2"/>
+    <circle cx="100" cy="234" r="4" fill="none" stroke="#5d6b85" stroke-width="1.2"/>
+    <!-- kick plate -->
+    <rect x="35" y="272" width="130" height="16" fill="#0a0014"/>
+  </svg>
+  <div class="credit">credit <b>1</b> &middot; no change given</div>
+
+  <p class="lore">No marquee, no title, no high score &mdash; one credit left on it from before anyone can remember. Charlotte says the other room stays shut until the last day. <em>This is the other room. That one is hers.</em></p>
+
+  <div><span class="seal">sealed &middot; until the last day</span></div>
+
+  <div class="foot">
+    <a href="https://www.cafedreamr.art/">terminal</a>&middot;<a href="https://www.cafedreamr.art/MIKI/GAMES/">games room</a>&middot;<a href="https://www.cafedreamr.art/LORE/MYSTERYGRID/">mystery grid</a>
+    <span>what you dare to believe, you may begin to live.</span>
+  </div>
+</div>
+</body>
+</html>
