@@ -62,6 +62,20 @@ h1{font-family:var(--disp);font-weight:400;font-size:46px;letter-spacing:.06em;l
 .sub em{color:var(--violet2);font-style:normal}
 .hint{font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;
   color:var(--dim);text-align:center;margin:12px 0 0}
+/* ---------- the walk: dusk to dusk ---------- */
+.walk{position:relative;display:block;width:100%;text-align:center;cursor:pointer;margin:14px 0 0;
+  border:1px dashed rgba(204,255,0,.42);border-radius:13px;padding:11px 13px 15px;overflow:hidden;
+  background:linear-gradient(180deg,rgba(204,255,0,.07),rgba(204,255,0,.02));color:var(--lav);
+  font-family:var(--body);transition:.18s}
+.walk:hover{border-color:rgba(204,255,0,.8);background:rgba(204,255,0,.10)}
+.walk.on{border-style:solid;border-color:rgba(204,255,0,.7)}
+.walk .wk{display:block;font-family:var(--mono);font-size:8.5px;letter-spacing:.22em;
+  text-transform:uppercase;color:var(--lime)}
+.walk .wt{display:block;font-family:var(--disp);font-weight:400;font-size:24px;letter-spacing:.06em;
+  color:#fff;margin-top:3px;line-height:1.1}
+.walk .ws{display:block;font-family:var(--mono);font-size:9px;letter-spacing:.1em;color:var(--dim);margin-top:4px}
+.walk .wbar{position:absolute;left:0;right:0;bottom:0;height:2px;background:rgba(255,255,255,.07)}
+.walk .wbar i{display:block;height:100%;width:0%;background:linear-gradient(90deg,var(--lime),var(--cyan))}
 /* ---------- the web ---------- */
 .webbox{margin:8px auto 0;max-width:600px}
 #web{width:100%;height:auto;display:block}
@@ -136,6 +150,12 @@ footer a:hover{color:var(--lime)}
   </header>
   <div class="webbox"><svg id="web" viewBox="0 0 600 600" role="group" aria-label="a circular web of six song-hours"></svg></div>
   <p class="hint">touch a dewdrop hour &middot; the lyrics live below it</p>
+  <button class="walk" id="walkBtn" type="button">
+    <span class="wk" id="walkKick">dusk to dusk</span>
+    <span class="wt" id="walkTitle">walk the whole day</span>
+    <span class="ws">00:00 &rarr; 21:00 &middot; six songs &middot; ~18 minutes &middot; crossfaded</span>
+    <span class="wbar"><i id="walkBar"></i></span>
+  </button>
 
   <section class="detail" id="detail" aria-live="polite">
     <div class="dkick" id="dKick">&mdash;</div>
@@ -159,7 +179,7 @@ footer a:hover{color:var(--lime)}
 /* ================= the songs ================= */
 var SONGS = [
 { hour:"00:00", key:"miki-data", name:"MIKI", tag:"CC-003", accent:"#ccff00",
-  title:"Numbered", file:"circle-miki-data.mp3",
+  title:"Numbered", file:"audio/circle-miki-data.mp3",
   note:"Midnight, the ghost hour. Miki finds code on her machine — the scientists are collecting data on a new set of specimens — and answers it the only way she knows: with the other count, the holy one. One arm of steel, one heart of skin; her head perfectly human, perfectly cat.",
   ref:"luke 12:7 — yeshua speaking",
   verse:"Indeed, the very hairs of your head are all numbered. Don't be afraid; you are worth more than many sparrows.",
@@ -169,7 +189,7 @@ var SONGS = [
 "My face is mine, my circuits hum.\nThe twins make music — here I come.\nYellow, black and chrome inspire.\nGlitch sounds like home, like going home.",
 "But every hair upon my head is numbered,\nevery tear I cried is numbered,\nnot by them with all their charts,\nby the one who holds our hearts.\nHe found me at my very worst,\nempty hands and backwards-cursed,\ntook me in and called me loved.\nData can't do what he does."] },
 { hour:"06:00", key:"star", name:"STAR", tag:"CC-001", accent:"#c0a6ff",
-  title:"The Squirrel Hour", file:"circle-star.mp3",
+  title:"The Squirrel Hour", file:"audio/circle-star.mp3",
   note:"Sunrise, six to seven, at the window. The squirrels are stealing Star's time again, and Misha — Milo's bengal — has beaten her to the lavender lounge chair, so a new tactic is required. Bible open, kettle on: her own infusion, the caffusion.",
   ref:"matthew 6:27, 11:28 — yeshua speaking",
   verse:"Who of you by worrying can add a single hour to your life? Come to me, all you who are weary and burdened, and I will give you rest.",
@@ -179,9 +199,10 @@ var SONGS = [
 "Caffusion, lavender and steam,\nmint for the waking, cardamom for the dream.\nCome to me, you weary, rest your head.\nThe chair is taken — take the window instead.",
 "Misha curls where I meant to sit,\nlavender fluff and attitude to fit,\nevery morning a new devise\nto coax a bengal out of paradise.",
 "Bible open and the pages breathe,\ncome to me is all I need.\nThe squirrels keep what they take from me,\nand I keep the sunrise, quiet and free.",
-["(chorus returns · ends on a hum)"] ] },
+["(chorus returns, then —)"],
+"Come to me, you weary, rest your head.\nThe chair is taken, take the window instead.\nTHE CHAIR IS TAKEN, TAKE THE WINDOW INSTEAD."] },
 { hour:"09:00", key:"chari", name:"CHARI", tag:"CC-002", accent:"#e6e6fa",
-  title:"First Lessons", file:"circle-chari.mp3",
+  title:"First Lessons", file:"audio/circle-chari.mp3",
   note:"Morning lessons, and the apprentice's hands still shake. Mochi and Crumb keep her comforted; Milo's breathing keeps her calm; Pearl is teaching her the Proverbs 31 way — astute, modest, knowing her worth. Afterwards she sneaks after Miki. Miki, of course, just knows.",
   ref:"john 15:4, matthew 11:29 — yeshua speaking",
   verse:"Abide in me, and I in you. Learn from me, for I am gentle and humble in heart.",
@@ -192,7 +213,7 @@ var SONGS = [
 "I follow Miki down the hall,\nshe turns around — she knows it all.\n“I just know,” she grins and goes,\ncollecting data no one knows.",
 "Prankster's laugh behind the door,\nbut I feel safer than before.\nMochi, Crumb, the morning's new.\nI'll learn the lessons, deep and true."] },
 { hour:"12:00", key:"milo", name:"MILO", tag:"CC-004", accent:"#98fb98",
-  title:"The Still Hour", file:"circle-milo.mp3",
+  title:"The Still Hour", file:"audio/circle-milo.mp3",
   note:"Midday in the herb garden. Milo tends the rows, keeps the balance, and teaches whoever sits down beside him to breathe — meditation the way he knows it: dwelling in Christ, where the kingdom already is.",
   ref:"luke 17:21, john 15:4 — yeshua speaking",
   verse:"The kingdom of God is within you. Dwell in me, and I in you.",
@@ -203,7 +224,7 @@ var SONGS = [
 "Come and sit, I'll teach you how.\nThe breath you have is here and now,\nin like the evening rain,\nout with the worry, out with the pain.",
 "Stay a while, the tea can wait.\nThe garden never comes in late."] },
 { hour:"15:00", key:"hans", name:"HANS", tag:"CC-005", accent:"#6495ed",
-  title:"The Outside of the Cup", file:"circle-hans.mp3",
+  title:"The Outside of the Cup", file:"audio/circle-hans.mp3",
   note:"After the etiquette class, over Earl Grey. Hans sings his ancestors' tea ceremonies — precise, hollow, beautiful — and his own long road through them: full vampire once, walking earth and spirit both, caught at last on solid ground. Many men, many lives; one small door out.",
   ref:"luke 11:39 — yeshua speaking",
   verse:"Now then, you clean the outside of the cup and dish, but inside you are full of greed and wickedness.",
@@ -252,7 +273,7 @@ var nodeDeg = [];
 SONGS.forEach(function(s, i){
   var deg = -90 + i * 60; nodeDeg.push(deg);
   var c = polar(R_HEART, deg), n = polar(R_NODE, deg);
-  parts.push('<line class="thread" x1="'+c[0].toFixed(1)+'" y1="'+c[1].toFixed(1)+
+  parts.push('<line class="thread" id="thread-'+i+'" x1="'+c[0].toFixed(1)+'" y1="'+c[1].toFixed(1)+
     '" x2="'+n[0].toFixed(1)+'" y2="'+n[1].toFixed(1)+'"/>');
   TIERS.forEach(function(r, j){
     var d = polar(r, deg);
@@ -319,15 +340,122 @@ SONGS.forEach(function(s, i){
   b.innerHTML = '<span class="h">' + s.hour + '</span><span class="t"><b style="color:#fff">' +
     s.title + '</b><span>' + s.name + ' · ' + s.ref.split(" — ")[0] + '</span></span><span class="d"></span>';
   b.addEventListener("click", function(){
-    select(i, true);
+    stopWalk(); select(i, true);
     document.getElementById("detail").scrollIntoView({behavior:"smooth", block:"nearest"});
   });
   li.appendChild(b); list.appendChild(li);
   var nd = document.getElementById("node-" + i);
-  nd.addEventListener("click", function(){ select(i, true); });
+  nd.addEventListener("click", function(){ stopWalk(); select(i, true); });
   nd.addEventListener("keydown", function(e){
-    if (e.key === "Enter" || e.key === " ") { e.preventDefault(); select(i, true); } });
+    if (e.key === "Enter" || e.key === " ") { e.preventDefault(); stopWalk(); select(i, true); } });
 });
+/* ================= the walk: dusk to dusk =================
+   two voices, one overlapping the other (a real crossfade needs two
+   <audio> hearts), threads lighting as they are walked. any manual
+   touch — a node, a list row — stops the walk where it stands, and the
+   plain player below already holds the current song. */
+var walkBtn = document.getElementById("walkBtn"),
+    walkKick = document.getElementById("walkKick"),
+    walkTitle = document.getElementById("walkTitle"),
+    walkBar = document.getElementById("walkBar");
+var W = { on:false, i:0, a:new Audio(), b:new Audio(), cur:0,
+          fading:false, timer:null, X:6 };
+W.a.preload = "auto"; W.b.preload = "auto";
+W.a.onended = onEnded; W.b.onended = onEnded;
+window.__circleWalk = W; /* test hook: lets a future session drive the walk */
+function wEls(){ return W.cur === 0 ? { c:W.a, n:W.b } : { c:W.b, n:W.a }; }
+function lightThreads(upto, now){
+  SONGS.forEach(function(s, j){
+    var t = document.getElementById("thread-" + j);
+    if (j < upto) { t.style.stroke = s.accent; t.style.opacity = ".75"; t.classList.remove("pulse"); }
+    else if (j === now) { t.style.stroke = s.accent; t.style.opacity = "1"; t.classList.add("pulse"); }
+    else { t.style.stroke = ""; t.style.opacity = ""; t.classList.remove("pulse"); }
+  });
+}
+function walkResetBtn(kick, title){
+  walkBtn.classList.remove("on");
+  walkKick.textContent = kick; walkTitle.textContent = title;
+  walkBar.style.width = "0%";
+}
+function startWalk(){
+  stopWalk(true);
+  try { player.pause(); } catch(e) {}
+  W.on = true; W.i = 0; W.cur = 0; W.fading = false;
+  var e = wEls();
+  e.c.src = SONGS[0].file; e.c.volume = 1;
+  e.n.src = SONGS[1].file; /* next one warming up */
+  lightThreads(0, 0);
+  select(0, false);
+  walkBtn.classList.add("on");
+  walkKick.textContent = "walking · dusk to dusk — stop";
+  walkTitle.textContent = "00:00 · Numbered";
+  try { var p = e.c.play(); if (p) p.catch(walkFail); } catch(err) { walkFail(); return; }
+  W.timer = setInterval(watch, 300);
+}
+function watch(){
+  if (!W.on) return;
+  var c = wEls().c, d = c.duration, t = c.currentTime;
+  if (d && isFinite(d)) walkBar.style.width = (((W.i + Math.min(1, t / d)) / SONGS.length) * 100).toFixed(1) + "%";
+  if (!W.fading && d && isFinite(d) && W.i < SONGS.length - 1 && (d - t) <= W.X) beginFade();
+}
+function beginFade(){
+  var e = wEls(), n = W.i + 1;
+  W.fading = true;
+  e.n.volume = 0;
+  try { var p = e.n.play(); if (p) p.catch(walkFail); } catch(err) { walkFail(); return; }
+  select(n, false);
+  walkTitle.textContent = SONGS[n].hour + " · " + SONGS[n].title;
+  lightThreads(n, n);
+  var steps = 0;
+  var iv = setInterval(function(){
+    if (!W.on) { clearInterval(iv); return; }
+    steps++;
+    e.c.volume = Math.max(0, 1 - steps / 20);
+    e.n.volume = Math.min(1, steps / 20);
+    if (steps >= 20) {
+      clearInterval(iv);
+      try { e.c.pause(); } catch(err2) {}
+      W.cur = W.cur === 0 ? 1 : 0;
+      W.i = n; W.fading = false;
+      if (n < SONGS.length - 1) wEls().n.src = SONGS[n + 1].file;
+      else walkBar.style.width = "100%";
+    }
+  }, 300);
+}
+function onEnded(){
+  if (!W.on || W.fading) return;
+  if (W.i >= SONGS.length - 1) finishWalk();
+  else beginFade();
+}
+function walkFail(){
+  /* the browser refused a chained play (usually a phone saying "not from
+     a tap"). rest here: the plain player already holds the song. */
+  if (!W.on) return;
+  W.on = false; W.fading = false;
+  clearInterval(W.timer);
+  try { W.a.pause(); } catch(e1) {} try { W.b.pause(); } catch(e2) {}
+  walkBtn.classList.remove("on");
+  walkKick.textContent = "dusk to dusk";
+  walkTitle.textContent = "the walk rests here — press play below";
+}
+function finishWalk(){
+  W.on = false; W.fading = false;
+  clearInterval(W.timer);
+  lightThreads(SONGS.length, -1);
+  walkBar.style.width = "100%";
+  walkBtn.classList.remove("on");
+  walkKick.textContent = "dusk to dusk · walked";
+  walkTitle.textContent = "walk the whole day again";
+}
+function stopWalk(silent){
+  var was = W.on;
+  W.on = false; W.fading = false;
+  clearInterval(W.timer);
+  try { W.a.pause(); } catch(e1) {} try { W.b.pause(); } catch(e2) {}
+  walkResetBtn("dusk to dusk", "walk the whole day");
+  if (!silent && was) lightThreads(0, -1);
+}
+walkBtn.addEventListener("click", function(){ if (W.on) stopWalk(); else startWalk(); });
 select(1, false); /* open on star's sunrise, silent */
 
 /* ================= starfield ================= */
