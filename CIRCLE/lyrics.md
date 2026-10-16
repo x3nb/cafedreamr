@@ -1,5 +1,5 @@
 # THE CIRCLE OF HOURS — lyrics
-### six hours · five souls · one web · cafedreamr
+### seven hours · six souls · one web · cafedreamr
 
 *Words as sung. Scripture is Yeshua speaking, Matthew / Luke / John.*
 
@@ -34,6 +34,50 @@ Data can't do what he does.
 
 ---
 
+## 03:00 · SLY & SLAY — "Keys of the Kingdom"
+*Matthew 16:15, 19 — "But what about you? Who do you say I am? … I will give you the keys of the kingdom of heaven."*
+
+Three o'clock and the castle's deep,
+monitors humming, half asleep,
+two shadows walking down the hall —
+the night watch answers when he calls.
+
+He asked his friends on the dusty way
+who the crowds all say he is. They say:
+some say the river-preacher, back from the grave,
+some say the fire-prophet, bold and brave.
+
+Some say the weeping one, tears and fire,
+or one of the prophets — rumour's choir.
+The crowd keeps guessing, row on row,
+their answers come and go, they go.
+
+But what about you — who do you say?
+The question hasn't gone away.
+It walks these halls at 3 a.m.
+It asked them once — it asks us now.
+
+Then the fisherman stood and answered true:
+our Lord and King — and we follow you.
+No mortal whisper let him see,
+heaven told him, wild and free.
+
+You are rock, and rock will stand,
+take these keys into your hand.
+What you lock stays locked away,
+what you loose walks free today.
+
+So we two walk the three-a.m. round,
+keeping the keys where they were found.
+The question echoes down the hall:
+who do you say he is — he calls.
+
+(outro)
+Who do you say he is — he calls.
+The night watch answers when he calls.
+
+---
+
 ## 06:00 · STAR — "The Squirrel Hour"
 *Matthew 6:27; 11:28 — "Who of you by worrying can add a single hour to your life? … Come to me, all you who are weary and burdened, and I will give you rest."*
 
@@ -62,7 +106,10 @@ come to me is all I need.
 The squirrels keep what they take from me,
 and I keep the sunrise, quiet and free.
 
-*(chorus returns · ends on a hum)*
+*(chorus returns, then —)*
+Come to me, you weary, rest your head.
+The chair is taken, take the window instead.
+THE CHAIR IS TAKEN, TAKE THE WINDOW INSTEAD.
 
 ---
 
@@ -152,7 +199,7 @@ Pour it out and start anew.
 Now I teach the pour, the seat, the phrase.
 Manners are just love with grace.
 Earl grey, no blood, the past forgiven.
-Etiquette — the small door into heaven.
+He holds the door that leads to heaven.
 
 ---
 
