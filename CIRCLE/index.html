@@ -1,0 +1,1014 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#1a0533">
+<title>the circle of hours · cafedreamr</title>
+<meta name="description" content="A spider's web of songs — six hours, five souls. Each hour of the circle sings, and each song carries its singer's lyrics.">
+<meta property="og:title" content="the circle of hours · cafedreamr">
+<meta property="og:description" content="Six hours, five souls, one web. Press a dewdrop hour and listen.">
+<meta property="og:type" content="website">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%230d001a'/%3E%3Ccircle cx='8' cy='8' r='5.6' fill='none' stroke='%23c0a6ff' stroke-width='1'/%3E%3Ccircle cx='8' cy='8' r='3.4' fill='none' stroke='%23c0a6ff' stroke-width='.8'/%3E%3Ccircle cx='8' cy='8' r='1.2' fill='%23ccff00'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Klee+One:wght@400;600&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   the circle of hours — cafedreamr
+   a spider's web of songs: six hours, five souls, one web.
+   pattern + palette follow LORE/HOURS.html (the dial).
+
+   EVERYTHING LIVES IN THE SONGS TABLE NEAR THE BOTTOM:
+     hour, key, name, tag, accent, title, file,
+     note (who is singing and why),
+     verse (scripture — Yeshua's words only, Matthew/Luke/John),
+     lyrics (stanzas, as sung).
+   To add an hour: append one entry. The web, the list and the
+   detail panel all draw themselves from that table.
+   ============================================================ */
+:root{
+  --plum:#0d001a;
+  --ink:#0b0b0e; --ink2:#141419;
+  --lime:#ccff00; --pink:#ff2d95; --cyan:#00e5ff;
+  --violet:#bf40bf; --violet2:#ee82ee;
+  --corn:#6495ed; --mint:#98fb98;
+  --lav:#a9b4c9; --dim:#7d848b;
+  --line:rgba(255,255,255,.10);
+  --mono:'Space Mono', ui-monospace, monospace;
+  --disp:'Bebas Neue', impact, sans-serif;
+  --body:'Klee One', system-ui, sans-serif;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0;padding:0}
+body{background:radial-gradient(120% 90% at 50% 28%, #2b1160 0%, #1a0533 48%, #0d001a 100%) fixed, #1a0533;color:var(--lav);font-family:var(--body);text-align:left;
+  min-height:100vh;overflow-x:hidden;-webkit-tap-highlight-color:transparent}
+.bg{position:fixed;inset:0;z-index:0;pointer-events:none}
+#stars{position:absolute;inset:0;width:100%;height:100%;display:block}
+.vign{position:absolute;inset:0;
+  background:radial-gradient(120% 100% at 50% 42%, transparent 52%, rgba(0,0,0,.72) 100%)}
+.wrap{position:relative;z-index:1;max-width:660px;margin:0 auto;padding:20px 16px 40px}
+.back{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--violet2);text-decoration:none;border-bottom:1px dotted rgba(238,130,238,.4)}
+.back:hover{color:var(--lime);border-bottom-color:currentColor}
+header{text-align:center;margin:18px 0 4px}
+.kick{font-family:var(--mono);font-size:11px;letter-spacing:.26em;text-transform:uppercase;color:var(--lime);
+  text-shadow:0 0 12px rgba(204,255,0,.4)}
+h1{font-family:var(--disp);font-weight:400;font-size:46px;letter-spacing:.06em;line-height:1;
+  margin:10px 0 6px;color:#9fbef5;text-shadow:0 0 26px rgba(191,64,191,.5)}
+.sub{font-size:15px;line-height:1.65;color:var(--lav);opacity:.85;max-width:480px;margin:0 auto}
+.sub em{color:var(--violet2);font-style:normal}
+.hint{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--dim);text-align:center;margin:12px 0 0}
+/* ---------- the walk: dusk to dusk ---------- */
+.walk{position:relative;display:block;width:100%;text-align:center;cursor:pointer;margin:14px 0 0;
+  border:1px dashed rgba(204,255,0,.42);border-radius:13px;padding:11px 13px 15px;overflow:hidden;
+  background:linear-gradient(180deg,rgba(204,255,0,.07),rgba(204,255,0,.02));color:var(--lav);
+  font-family:var(--body);transition:.18s}
+.walk:hover{border-color:rgba(204,255,0,.8);background:rgba(204,255,0,.10)}
+.walk.on{border-style:solid;border-color:rgba(204,255,0,.7)}
+.walk .wk{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.22em;
+  text-transform:uppercase;color:var(--lime)}
+.walk .wt{display:block;font-family:var(--disp);font-weight:400;font-size:24px;letter-spacing:.06em;
+  color:#9fbef5;margin-top:3px;line-height:1.1}
+.walk .ws{display:block;font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;color:var(--dim);margin-top:4px}
+.walk .wbar{position:absolute;left:0;right:0;bottom:0;height:2px;background:rgba(255,255,255,.07)}
+.walk .wbar i{display:block;height:100%;width:0%;background:linear-gradient(90deg,var(--lime),var(--cyan))}
+/* the walk begs to be noticed: it glitches until first pressed, then never again */
+.walk.attn{animation:walkbeg 1.6s steps(2,end) infinite;border-color:rgba(204,255,0,.85)}
+.walk.attn .wt{animation:walkglitch 2.4s linear infinite}
+@keyframes walkbeg{0%,100%{box-shadow:0 0 0 rgba(204,255,0,0)}50%{box-shadow:0 0 18px rgba(204,255,0,.45)}}
+@keyframes walkglitch{0%,91%,94%,100%{transform:none;opacity:1;text-shadow:none}
+  92%{transform:translate(-2px,1px) skewX(-4deg);opacity:.85;text-shadow:2px 0 var(--cyan),-2px 0 var(--pink)}
+  93%{transform:translate(2px,-1px);opacity:1;text-shadow:-2px 0 var(--cyan),2px 0 var(--pink)}}
+@media (prefers-reduced-motion:reduce){.walk.attn,.walk.attn .wt{animation:none}}
+/* a little finger pointing at the walk: "look". same lifecycle as the glitch. */
+.look{text-align:center;margin:12px 0 -6px;font-family:var(--mono);font-size:10.5px;
+  letter-spacing:.2em;text-transform:uppercase;color:var(--lime)}
+.look i{display:block;font-style:normal;margin-top:2px;animation:lookbob 1.2s ease-in-out infinite}
+@keyframes lookbob{50%{transform:translateY(5px)}}
+@media (prefers-reduced-motion:reduce){.look i{animation:none}}
+/* ---------- the web ---------- */
+.webbox{margin:8px auto 0;max-width:600px;position:relative}
+#viz{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+#web{width:100%;height:auto;display:block;position:relative}
+#web .tier{fill:none;stroke:rgba(255,240,245,.16);stroke-width:1}
+#web .tier.t0{stroke:rgba(255,240,245,.28)}
+#web .thread{stroke:rgba(255,240,245,.13);stroke-width:1}
+#web .dew{fill:#fff0f5}
+#web .chararc{fill:none;stroke-width:4;opacity:.5;transition:opacity .3s}
+#web .node{cursor:pointer}
+#web .node .halo{fill:none;stroke-width:1;opacity:.5;transition:.25s}
+#web .node circle.dot{stroke:#0d001a;stroke-width:2;transition:.25s}
+#web .node text{font-family:var(--mono);pointer-events:none}
+#web .node .hr{font-size:13px;font-weight:700;fill:var(--lav)}
+#web .node .nm{font-size:10.5px;letter-spacing:.14em;fill:var(--dim)}
+#web .node:hover .halo, #web .node.lit .halo{opacity:1}
+#web .node:hover circle.dot, #web .node.lit circle.dot{stroke:#fff}
+#web .node.lit .nm{fill:#dbe6fa}
+#web .heart{fill:rgba(13,0,26,.85);stroke:rgba(204,255,0,.4);stroke-width:1}
+#web .hearttxt{font-family:var(--mono);font-size:9.5px;letter-spacing:.2em;fill:var(--lime);text-anchor:middle}
+#web .heartsub{font-family:var(--mono);font-size:8px;letter-spacing:.12em;fill:var(--dim);text-anchor:middle}
+.pulse{animation:pulse 2.6s ease-in-out infinite}
+@keyframes pulse{50%{opacity:.35}}
+/* ---------- the web keeps your hours ---------- */
+#web .node.now .halo{opacity:.95}
+#web .node.now circle.dot{stroke:#fff}
+/* ---------- pull a thread, feel it tremble ---------- */
+#web .thread{transform-box:fill-box;transform-origin:center;transition:stroke .25s,opacity .25s}
+#web .thread.tremble{animation:tremble .32s linear infinite;stroke-width:1.8}
+@keyframes tremble{0%,100%{transform:translate(0,0)}25%{transform:translate(-1.4px,.8px)}50%{transform:translate(1.2px,-.7px)}75%{transform:translate(-.8px,-.9px)}}
+#web .dew.shimmer{animation:dewshine .7s ease-in-out infinite alternate}
+@keyframes dewshine{from{opacity:.35}to{opacity:1}}
+#heartG{cursor:pointer}
+#heartG:focus-visible .heart{stroke:#fff}
+@media (prefers-reduced-motion:reduce){ .pulse{animation:none} #web .thread.tremble,#web .dew.shimmer{animation:none} }
+/* ---------- little keepsakes: stamps, not locks ---------- */
+#web .node.kept .halo{opacity:.85;stroke-dasharray:2 3}
+.hours button.kept::after{content:"\2726";font-size:11px;flex:0 0 auto}
+.keepRow{display:flex;gap:8px;margin-top:10px}
+.keepBtn{flex:1;cursor:pointer;font-family:var(--mono);font-size:11px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--lav);background:rgba(255,255,255,.03);
+  border:1px solid var(--line);border-radius:10px;padding:10px 8px;transition:.16s}
+.keepBtn:hover{border-color:rgba(204,255,0,.6);color:#dbe6fa}
+.keptMsg{font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--lime);
+  min-height:14px;margin:8px 0 0}
+/* ---------- the singers, and their colours ---------- */
+.dhead{display:flex;gap:12px;align-items:center;margin:6px 0 4px}
+.dhead .dtitle{margin:0}
+#dPic{width:54px;height:54px;border-radius:50%;object-fit:cover;flex:0 0 auto;border:2px solid var(--line)}
+.wear{font-family:var(--mono);font-size:12px;letter-spacing:.08em;margin:0 0 12px}
+.souls{margin:16px 0 0}
+.souls h2{font-family:var(--mono);font-weight:400;font-size:10.5px;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--dim);margin:0 0 8px;text-align:center}
+.souls .face{width:44px;height:44px;border-radius:50%;object-fit:cover;flex:0 0 auto;border:2px solid currentColor}
+.souls .dewface{width:44px;height:44px;border-radius:50%;flex:0 0 auto;opacity:.9;
+  border:2px solid currentColor;background:radial-gradient(circle at 35% 35%,#fff,currentColor 72%)}
+/* ---------- detail ---------- */
+.detail{margin:18px 0 0;border:1px solid var(--line);border-radius:14px;padding:16px 18px 18px;
+  background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.01));animation:fadein .4s ease both}
+@keyframes fadein{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.dkick{font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim)}
+.dkick b{font-weight:400}
+.dtitle{font-family:var(--disp);font-weight:400;font-size:34px;letter-spacing:.04em;color:#9fbef5;margin:6px 0 4px;line-height:1}
+.dnote{font-size:15px;line-height:1.65;color:var(--lav);opacity:.9;margin:0 0 12px}
+.verse{border-left:2px solid var(--lime);padding:6px 0 6px 12px;margin:0 0 12px}
+.verse p{font-size:15px;line-height:1.65;font-style:italic;margin:0;color:#b9cdf3}
+.verse .ref{font-family:var(--mono);font-style:normal;font-size:10px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--lime);display:block;margin-top:5px}
+.lyrics{margin:0 0 12px}
+.lyrics h3{font-family:var(--mono);font-weight:400;font-size:10px;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--dim);margin:0 0 8px}
+.lyrics p{font-size:15.5px;line-height:1.75;margin:0 0 12px;white-space:pre-line}
+.lyrics p:last-child{margin-bottom:0}
+.lyrics .mark{font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:var(--dim)}
+audio{width:100%;margin-top:2px}
+/* ---------- the hours list ---------- */
+.hours{list-style:none;margin:18px 0 0;padding:0;display:flex;flex-direction:column;gap:7px}
+.hours button{display:flex;align-items:center;gap:11px;width:100%;text-align:left;cursor:pointer;
+  background:rgba(255,255,255,.02);border:1px solid var(--line);border-radius:11px;
+  padding:10px 13px;color:var(--lav);font-family:var(--body);transition:.16s}
+.hours button:hover{border-color:rgba(255,255,255,.3);background:rgba(255,255,255,.05)}
+.hours button[aria-current="true"]{border-color:currentColor;background:rgba(255,255,255,.05)}
+.hours .h{font-family:var(--mono);font-size:11.5px;color:var(--dim);min-width:40px}
+.hours button[aria-current="true"] .h{color:inherit}
+.hours .t{flex:1;min-width:0}
+.hours .t b{display:block;font-weight:600;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hours .t span{font-size:13px;color:var(--dim)}
+.hours .d{width:8px;height:8px;border-radius:50%;flex:0 0 auto;background:currentColor;box-shadow:0 0 9px currentColor}
+footer{margin-top:26px;text-align:center;font-family:var(--mono);font-size:10px;
+  letter-spacing:.15em;text-transform:uppercase;color:var(--dim);line-height:2}
+footer a{color:var(--violet2);text-decoration:none}
+footer a:hover{color:var(--lime)}
+@media (max-width:420px){ h1{font-size:36px} .dtitle{font-size:28px} }
+</style>
+</head>
+<body>
+<div class="bg"><canvas id="stars"></canvas><div class="vign"></div></div>
+<div class="wrap">
+  <a class="back" href="https://www.cafedreamr.art/">&larr; the terminal</a>
+  <header>
+    <div class="kick">six hours &middot; five souls &middot; one web</div>
+    <h1>THE CIRCLE OF HOURS</h1>
+    <p class="sub">An ornate little web, strung for listening. Each dewdrop hour holds
+      <em>one song</em> — press it, and its singer sings. Best with headphones, alone.</p>
+  </header>
+  <div class="webbox"><svg id="web" viewBox="0 0 600 600" role="group" aria-label="a circular web of six song-hours"></svg><canvas id="viz" aria-hidden="true"></canvas></div>
+  <p class="hint" id="hourHint">touch a dewdrop hour &middot; the lyrics live below it</p>
+  <div class="look" id="lookChip">look &middot; the whole day sings<i>&#9660;</i></div>
+  <button class="walk attn" id="walkBtn" type="button">
+    <span class="wk" id="walkKick">dusk to dusk</span>
+    <span class="wt" id="walkTitle">walk the whole day</span>
+    <span class="ws">00:00 &rarr; 21:00 &middot; six songs &middot; ~18 minutes &middot; crossfaded</span>
+    <span class="wbar"><i id="walkBar"></i></span>
+  </button>
+  <p class="hint" id="keepLine"></p>
+  <section class="souls" aria-label="the singers and their colours">
+    <h2>each song is somebody &middot; each colour is theirs</h2>
+    <ul class="hours" id="soulList"></ul>
+  </section>
+
+  <section class="detail" id="detail" aria-live="polite">
+    <div class="dhead">
+      <img id="dPic" alt="" onerror="this.style.display='none'">
+      <div><div class="dkick" id="dKick">&mdash;</div>
+      <h2 class="dtitle" id="dTitle">&mdash;</h2></div>
+    </div>
+    <p class="dnote" id="dNote"></p>
+    <p class="wear" id="dWear"></p>
+    <blockquote class="verse"><p id="dVerse"></p><span class="ref" id="dRef"></span></blockquote>
+    <div class="lyrics"><h3>the lyrics, as sung</h3><div id="dLyrics"></div></div>
+    <audio id="player" controls preload="none"></audio>
+    <div class="keepRow">
+      <button class="keepBtn" id="copyVerseBtn" type="button">copy the verse</button>
+      <button class="keepBtn" id="cardBtn" type="button">keep the card</button>
+    </div>
+    <p class="keptMsg" id="keptMsg" aria-live="polite"></p>
+  </section>
+
+  <ol class="hours" id="hourList"></ol>
+
+  <footer>
+    <a href="https://www.cafedreamr.art/">the terminal</a> &middot; the circle of hours<br>
+    strung by star, at yeshua's asking &middot; every thread findable
+  </footer>
+</div>
+
+<script>
+"use strict";
+/* ================= the songs ================= */
+var SONGS = [
+{ hour:"00:00", key:"miki-data", name:"MIKI", tag:"CC-003", accent:"#ccff00",
+  title:"Numbered", file:"audio/circle-miki-data.mp3", fade:10, skip:0,
+  note:"Midnight, the ghost hour. Miki finds code on her machine — the scientists are collecting data on a new set of specimens — and answers it the only way she knows: with the other count, the holy one. One arm of steel, one heart of skin; her head perfectly human, perfectly cat.",
+  ref:"luke 12:7 — yeshua speaking",
+  verse:"Indeed, the very hairs of your head are all numbered. Don't be afraid; you are worth more than many sparrows.",
+  lyrics:[
+"Midnight and the screen glows green,\nlines of code I've never seen,\nthe scientists are counting sheep,\nnew specimens asleep, asleep.",
+"They collect, they file, they score,\ndata stacked from floor to floor.\nOne arm of steel, one heart of skin.\nThey count the outside, never in.",
+"My face is mine, my circuits hum.\nThe twins make music — here I come.\nYellow, black and chrome inspire.\nGlitch sounds like home, like going home.",
+"But every hair upon my head is numbered,\nevery tear I cried is numbered,\nnot by them with all their charts,\nby the one who holds our hearts.\nHe found me at my very worst,\nempty hands and backwards-cursed,\ntook me in and called me loved.\nData can't do what he does."] },
+{ hour:"06:00", key:"star", name:"STAR", tag:"CC-001", accent:"#c0a6ff",
+  title:"The Squirrel Hour", file:"audio/circle-star.mp3", fade:12, skip:0,
+  note:"Sunrise, six to seven, at the window. The squirrels are stealing Star's time again, and Misha — Milo's bengal — has beaten her to the lavender lounge chair, so a new tactic is required. Bible open, kettle on: her own infusion, the caffusion.",
+  ref:"matthew 6:27, 11:28 — yeshua speaking",
+  verse:"Who of you by worrying can add a single hour to your life? Come to me, all you who are weary and burdened, and I will give you rest.",
+  lyrics:[
+"Six o'clock and the light comes thin\nthrough the window where I watch them spin,\nlittle thieves on the garden wall,\nstealing minutes, that's all, that's all.",
+"Who by worrying can add one hour?\nNot me, not the squirrel, not the flower,\nso I pour the morning slow and deep\nand give the stolen hours to sleep.",
+"Caffusion, lavender and steam,\nmint for the waking, cardamom for the dream.\nCome to me, you weary, rest your head.\nThe chair is taken — take the window instead.",
+"Misha curls where I meant to sit,\nlavender fluff and attitude to fit,\nevery morning a new devise\nto coax a bengal out of paradise.",
+"Bible open and the pages breathe,\ncome to me is all I need.\nThe squirrels keep what they take from me,\nand I keep the sunrise, quiet and free.",
+["(chorus returns, then —)"],
+"Come to me, you weary, rest your head.\nThe chair is taken, take the window instead.\nTHE CHAIR IS TAKEN, TAKE THE WINDOW INSTEAD."] },
+{ hour:"09:00", key:"chari", name:"CHARI", tag:"CC-002", accent:"#e6e6fa",
+  title:"First Lessons", file:"audio/circle-chari.mp3", fade:10, skip:0,
+  note:"Morning lessons, and the apprentice's hands still shake. Mochi and Crumb keep her comforted; Milo's breathing keeps her calm; Pearl is teaching her the Proverbs 31 way — astute, modest, knowing her worth. Afterwards she sneaks after Miki. Miki, of course, just knows.",
+  ref:"john 15:4, matthew 11:29 — yeshua speaking",
+  verse:"Abide in me, and I in you. Learn from me, for I am gentle and humble in heart.",
+  lyrics:[
+"Mochi breathes on my fingertip,\nCrumb is asleep on the manuscript,\nfirst lesson and my hands still shake,\napprentice heart about to break.",
+"Milo says breathe the way the garden grows,\nin through the quiet, out through the rose,\nfour counts in and the panic thins,\nthe calm comes soft and lets me in.",
+"Abide in me and I in you.\nPearl says a lady knows what's true,\nastute and modest, worth in gold,\ndwelling where the vine takes hold.\nLearn from me, for I am gentle still.\nLittle apprentice, learn and you will.",
+"I follow Miki down the hall,\nshe turns around — she knows it all.\n“I just know,” she grins and goes,\ncollecting data no one knows.",
+"Prankster's laugh behind the door,\nbut I feel safer than before.\nMochi, Crumb, the morning's new.\nI'll learn the lessons, deep and true."] },
+{ hour:"12:00", key:"milo", name:"MILO", tag:"CC-004", accent:"#98fb98",
+  title:"The Still Hour", file:"audio/circle-milo.mp3", fade:10, skip:1.5,
+  note:"Midday in the herb garden. Milo tends the rows, keeps the balance, and teaches whoever sits down beside him to breathe — meditation the way he knows it: dwelling in Christ, where the kingdom already is.",
+  ref:"luke 17:21, john 15:4 — yeshua speaking",
+  verse:"The kingdom of God is within you. Dwell in me, and I in you.",
+  lyrics:[
+"Midday and the garden holds its breath,\nmint and sage and nothing left\nto prove, to hurry, to defend.\nBe still and know, and just attend.",
+"Hands in soil and the soil is kind.\nThe kingdom isn't hard to find,\nnot in the temple, not afar.\nIt's where you are, it's where you are.",
+"Dwell in me and I in you.\nThe branch holds fast, the root holds true.\nThe kingdom of God is within.\nBreathe it out and breathe it in.",
+"Come and sit, I'll teach you how.\nThe breath you have is here and now,\nin like the evening rain,\nout with the worry, out with the pain.",
+"Stay a while, the tea can wait.\nThe garden never comes in late."] },
+{ hour:"15:00", key:"hans", name:"HANS", tag:"CC-005", accent:"#6495ed",
+  title:"The Outside of the Cup", file:"audio/circle-hans.mp3", fade:8, skip:0,
+  note:"After the etiquette class, over Earl Grey. Hans sings his ancestors' tea ceremonies — precise, hollow, beautiful — and his own long road through them: full vampire once, walking earth and spirit both, caught at last on solid ground. Many men, many lives; one small door out.",
+  ref:"luke 11:39 — yeshua speaking",
+  verse:"Now then, you clean the outside of the cup and dish, but inside you are full of greed and wickedness.",
+  lyrics:[
+"My fathers poured for emperors and kings,\nprecise as clockwork, hollow things,\nthe whisk was right, the bow was low,\nbut no one asked what hearts should know.",
+"I have been many men, I confess,\nthe scholar, the fop, the bloodied guest.\nI walked the earth, I slipped the veil,\ntill love laid for me a stronger trail.",
+"I lived between the worlds, you see,\nneither the night nor noon owned me,\nthen I was caught at last on solid ground,\nand in the catching, I was found.",
+"You clean the outside of the cup,\nbut lift it, drink, and wake up.\nThe rite is nothing if the heart's untrue.\nPour it out and start anew.",
+"Now I teach the pour, the seat, the phrase.\nManners are just love with grace.\nEarl grey, no blood, the past forgiven.\nEtiquette — the small door into heaven."] },
+{ hour:"21:00", key:"miki-portals", name:"MIKI", tag:"CC-003", accent:"#ccff00",
+  title:"Doors in the Dark", file:"audio/circle-miki-portals.mp3", fade:6, skip:0,
+  note:"Nine in the evening, deep in the portal watch. New doors are opening — realms, kingdoms, families — and Miki's curiosity is running hotter than her engine. Visor down, yellow leathers, Ducati humming: somebody has to hold the line, and nobody loves it like she does.",
+  ref:"john 10:9, 14:2 — yeshua speaking",
+  verse:"I am the door; whoever enters through me will be saved. My Father's house has many rooms.",
+  lyrics:[
+"Nineteen hundred, visor down,\nyellow leathers through the town,\nDucati hums beneath my knees,\nI patrol whatever the night-time frees.",
+"Seven to four, the portals glow,\nnew doors opening row by row,\nYeshua's knocking holes of light,\nnew realms, new kingdoms burning bright.",
+"The hiss, the crackle, everything,\nsome things are just built in, they sing.\nHe took me in when I was worst,\nloved me first and broke the curse.",
+"I am the door, he said, walk through.\nMy Father's house has rooms for you.\nEvery portal, every spark\nis just his candle in the dark.",
+"Sylvestre, Slay, hold the line.\nThe night is ours till morning chimes.\nCurious circuits, open wide.\nLove's the reason that I ride."] }
+];
+
+/* ================= the web ================= */
+var CX = 300, CY = 300, R_OUT = 292, R_NODE = 258;
+var TIERS = [224, 182, 140, 98], R_HEART = 62;
+function polar(r, deg){ var a = (deg - 90) * Math.PI / 180;
+  return [CX + r * Math.cos(a), CY + r * Math.sin(a)]; }
+function arcPath(r, a0, a1){ var p0 = polar(r, a0), p1 = polar(r, a1);
+  var large = (a1 - a0) > 180 ? 1 : 0;
+  return "M " + p0[0].toFixed(1) + " " + p0[1].toFixed(1) +
+         " A " + r + " " + r + " 0 " + large + " 1 " +
+         p1[0].toFixed(1) + " " + p1[1].toFixed(1); }
+
+var svg = document.getElementById("web"), parts = [];
+parts.push('<circle cx="'+CX+'" cy="'+CY+'" r="'+R_OUT+'" fill="none" stroke="rgba(255,255,255,.14)" stroke-width="1.4"/>');
+parts.push('<circle cx="'+CX+'" cy="'+CY+'" r="'+(R_OUT-8)+'" fill="none" stroke="rgba(255,255,255,.06)" stroke-width="1"/>');
+TIERS.forEach(function(r, i){
+  parts.push('<circle class="tier'+(i===0?' t0':'')+'" cx="'+CX+'" cy="'+CY+'" r="'+r+'"/>'); });
+/* hour ticks */
+for (var h = 0; h < 24; h++){ var deg = h * 15, big = (h % 6 === 0);
+  var p0 = polar(R_OUT, deg), p1 = polar(R_OUT - (big ? 14 : 7), deg);
+  parts.push('<line x1="'+p0[0].toFixed(1)+'" y1="'+p0[1].toFixed(1)+'" x2="'+p1[0].toFixed(1)+'" y2="'+p1[1].toFixed(1)+
+    '" stroke="rgba(255,240,245,'+(big?".40":".18")+')" stroke-width="'+(big?1.2:1)+'"/>'); }
+/* threads, dew, arcs, nodes */
+var nodeDeg = [];
+SONGS.forEach(function(s, i){
+  var deg = -90 + i * 60; nodeDeg.push(deg);
+  var c = polar(R_HEART, deg), n = polar(R_NODE, deg);
+  parts.push('<line class="thread" id="thread-'+i+'" x1="'+c[0].toFixed(1)+'" y1="'+c[1].toFixed(1)+
+    '" x2="'+n[0].toFixed(1)+'" y2="'+n[1].toFixed(1)+'"/>');
+  TIERS.forEach(function(r, j){
+    var d = polar(r, deg);
+    var rr = (1.4 + ((i * 3 + j * 2) % 3) * 0.6).toFixed(1);
+    var op = (0.25 + ((i + j * 2) % 3) * 0.22).toFixed(2);
+    parts.push('<circle class="dew dew'+i+'" cx="'+d[0].toFixed(1)+'" cy="'+d[1].toFixed(1)+'" r="'+rr+'" opacity="'+op+'"/>'); });
+  parts.push('<path class="chararc" id="arc-'+i+'" d="'+arcPath(R_OUT - 22, deg - 24, deg + 24)+'" stroke="'+s.accent+'"/>');
+});
+/* the heart */
+parts.push('<g id="heartG" tabindex="0" role="button" aria-label="ask the door — hear a verse" style="cursor:pointer">');
+parts.push('<circle class="heart" cx="'+CX+'" cy="'+CY+'" r="'+R_HEART+'"/>');
+parts.push('<text class="hearttxt" id="heartTxt" x="'+CX+'" y="'+(CY - 4)+'">I AM THE DOOR</text>');
+parts.push('<text class="heartsub" id="heartSub" x="'+CX+'" y="'+(CY + 14)+'">john 10:9</text>');
+parts.push('</g>');
+/* nodes */
+SONGS.forEach(function(s, i){
+  var deg = nodeDeg[i], p = polar(R_NODE, deg);
+  var x = p[0], y = p[1];
+  var lx, anchor;
+  if (x < 120) { lx = x + 18; anchor = "start"; }  /* side nodes read inward, off the edge */
+  else { lx = x - 16; anchor = "end"; }
+  var g = '<g class="node" id="node-'+i+'" data-i="'+i+'" tabindex="0" role="button" aria-label="'+s.hour+' '+s.name+', '+s.title+'">'
+    + '<circle class="halo pulse" cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="15" stroke="'+s.accent+'"/>'
+    + '<circle class="dot" cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="8.5" fill="'+s.accent+'"/>'
+    + '<text class="hr" x="'+lx.toFixed(1)+'" y="'+(y - 1).toFixed(1)+'" text-anchor="'+anchor+'">'+s.hour+'</text>'
+    + '<text class="nm" x="'+lx.toFixed(1)+'" y="'+(y + 13).toFixed(1)+'" text-anchor="'+anchor+'">'+s.name+'</text>'
+    + '</g>';
+  parts.push(g);
+});
+svg.innerHTML = parts.join("");
+var heartG = document.getElementById("heartG");
+
+/* ================= detail + list ================= */
+var player = document.getElementById("player");
+var current = -1;
+var oracleTimer = null, oracleIdx = -1; /* the heart speaks: rotating verse oracle */
+function select(i, autoplay){
+  if (oracleTimer) { clearInterval(oracleTimer); oracleTimer = null; }
+  current = i; breathIdx = i; var s = SONGS[i];
+  var _dd = document.querySelectorAll(".dew"), _k; /* a new singer, a clean shimmer */
+  for (_k = 0; _k < _dd.length; _k++) _dd[_k].style.opacity = "";
+  document.getElementById("dKick").innerHTML =
+    s.hour + " &middot; <b style=\"color:"+s.accent+"\">" + s.name + " · " + s.tag + "</b>";
+  document.getElementById("dTitle").textContent = s.title;
+  document.getElementById("dNote").textContent = s.note;
+  var soul = soulByName(s.name), dw = document.getElementById("dWear"), dp = document.getElementById("dPic");
+  if (soul && dw) { dw.textContent = s.name.toLowerCase() + " " + soul.wears + "."; dw.style.color = s.accent; }
+  if (dp) {
+    if (soul && soul.pic) {
+      dp.style.display = ""; dp.src = soul.pic; dp.alt = soul.alt;
+      dp.style.borderColor = s.accent; dp.style.objectPosition = soul.pos || "50% 50%";
+    } else dp.style.display = "none";
+  }
+  document.getElementById("dVerse").textContent = "\u201C" + s.verse + "\u201D";
+  document.getElementById("dRef").textContent = s.ref;
+  var L = document.getElementById("dLyrics"); L.innerHTML = "";
+  s.lyrics.forEach(function(st){
+    var p = document.createElement("p");
+    if (Array.isArray(st)) { p.innerHTML = '<span class="mark">' + st[0] + "</span>"; }
+    else p.textContent = st;
+    L.appendChild(p);
+  });
+  if (player.getAttribute("src") !== s.file) player.setAttribute("src", s.file);
+  if (autoplay) { try { var pr = player.play(); if (pr) pr.catch(function(){}); } catch(e){} }
+  SONGS.forEach(function(_, j){
+    document.getElementById("node-" + j).classList.toggle("lit", j === i);
+    document.getElementById("arc-" + j).style.opacity = (j === i) ? "1" : ".5";
+    var b = document.getElementById("row-" + j);
+    if (b) b.setAttribute("aria-current", j === i ? "true" : "false");
+  });
+  document.getElementById("detail").style.borderColor = s.accent + "55";
+}
+var list = document.getElementById("hourList");
+SONGS.forEach(function(s, i){
+  var li = document.createElement("li");
+  var b = document.createElement("button");
+  b.id = "row-" + i; b.setAttribute("aria-current", "false");
+  b.style.color = s.accent;
+  b.innerHTML = '<span class="h">' + s.hour + '</span><span class="t"><b style="color:#dbe6fa">' +
+    s.title + '</b><span>' + s.name + ' · ' + s.ref.split(" — ")[0] + '</span></span><span class="d"></span>';
+  b.addEventListener("click", function(){
+    stopWalk(); select(i, true);
+    document.getElementById("detail").scrollIntoView({behavior:"smooth", block:"nearest"});
+  });
+  li.appendChild(b); list.appendChild(li);
+  var nd = document.getElementById("node-" + i);
+  nd.addEventListener("click", function(){ stopWalk(); select(i, true); });
+  nd.addEventListener("keydown", function(e){
+    if (e.key === "Enter" || e.key === " ") { e.preventDefault(); stopWalk(); select(i, true); } });
+  /* spider-sense: hovering a node shivers its thread + shimmers its dew */
+  nd.addEventListener("mouseenter", function(){ tremble(i, true); });
+  nd.addEventListener("mouseleave", function(){ tremble(i, false); });
+  nd.addEventListener("focus", function(){ tremble(i, true); });
+  nd.addEventListener("blur", function(){ tremble(i, false); });
+  b.addEventListener("mouseenter", function(){ tremble(i, true); });
+  b.addEventListener("mouseleave", function(){ tremble(i, false); });
+  b.addEventListener("focus", function(){ tremble(i, true); });
+  b.addEventListener("blur", function(){ tremble(i, false); });
+});
+/* spider-sense: one thread trembling + its dew shimmering. pure CSS, very cheap. */
+function tremble(i, on){
+  var t = document.getElementById("thread-" + i);
+  if (t) t.classList.toggle("tremble", !!on);
+  var dots = document.querySelectorAll(".dew" + i), k;
+  for (k = 0; k < dots.length; k++) dots[k].classList.toggle("shimmer", !!on);
+}
+/* the web keeps your hours: nearest song-hour to the visitor's real clock. */
+function nearestHour(){
+  var d = new Date(), now = d.getHours() + d.getMinutes() / 60, best = 0, bd = 99, k, sh, dd;
+  var hrs = SONGS.map(function(s){ return parseInt(s.hour.slice(0, 2), 10) + parseInt(s.hour.slice(3), 10) / 60; });
+  for (k = 0; k < hrs.length; k++) {
+    sh = hrs[k]; dd = Math.abs(now - sh); if (dd > 12) dd = 24 - dd;
+    if (dd < bd) { bd = dd; best = k; }
+  }
+  return best;
+}
+/* ================= little keepsakes: stamps, not locks =================
+   a first full listen stamps the hour (localStorage, like the passport) —
+   its dewdrop stays lit on return visits. progress you can see, nothing
+   withheld: every song always plays. copy-the-verse formats the song's
+   scripture for an instagram caption; keep-the-card renders a portrait
+   card — on phones the system share sheet offers instagram directly,
+   elsewhere it downloads (instagram has no web post intent, so the card
+   + caption is the whole bridge). */
+var STAMP_KEY = "circle-hours-kept-v1";
+function readStamps(){
+  try {
+    var v = JSON.parse(localStorage.getItem(STAMP_KEY) || "[]");
+    return Array.isArray(v) ? v : [];
+  } catch(e) { return []; }
+}
+function paintKept(){
+  var kept = readStamps(), n = 0;
+  SONGS.forEach(function(s, j){
+    var has = kept.indexOf(s.key) !== -1;
+    if (has) n++;
+    var nd = document.getElementById("node-" + j);
+    if (nd) nd.classList.toggle("kept", has);
+    var b = document.getElementById("row-" + j);
+    if (b) b.classList.toggle("kept", has);
+  });
+  var kl = document.getElementById("keepLine");
+  if (kl) kl.textContent = n === 0
+    ? "no hours kept yet · listen one all the way through"
+    : n + " of " + SONGS.length + " hours kept" + (n === SONGS.length ? " · the whole day is yours ✦" : "");
+}
+function stampSong(i){
+  if (i < 0 || i >= SONGS.length) return;
+  var kept = readStamps(), key = SONGS[i].key;
+  if (kept.indexOf(key) !== -1) return;
+  kept.push(key);
+  try { localStorage.setItem(STAMP_KEY, JSON.stringify(kept)); } catch(e) {}
+  paintKept();
+}
+function sayKept(t){
+  var m = document.getElementById("keptMsg");
+  if (m) m.textContent = t;
+}
+function verseCaption(i){
+  var s = SONGS[i];
+  return "\u201C" + s.verse + "\u201D\n— " + s.ref +
+    "\n♪ " + s.title + " · " + s.name + " · " + s.hour +
+    "\nthe circle of hours · cafedreamr.art/CIRCLE/";
+}
+function copyVerse(){
+  var t = verseCaption(current < 0 ? nearestHour() : current);
+  function ok(){ sayKept("verse kept — paste it anywhere ✦"); }
+  function fallback(){
+    var ta = document.createElement("textarea");
+    ta.value = t; ta.style.position = "fixed"; ta.style.opacity = "0";
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand("copy"); ok(); }
+    catch(e) { try { prompt("copy the verse:", t); } catch(e2) {} }
+    ta.remove();
+  }
+  if (navigator.clipboard && navigator.clipboard.writeText)
+    navigator.clipboard.writeText(t).then(ok, fallback);
+  else fallback();
+}
+function wrapLines(x, text, maxW){
+  var words = text.split(/\s+/), lines = [], line = "";
+  words.forEach(function(w){
+    var t = line ? line + " " + w : w;
+    if (x.measureText(t).width > maxW && line) { lines.push(line); line = w; }
+    else line = t;
+  });
+  if (line) lines.push(line);
+  return lines;
+}
+function makeCard(i){
+  var s = SONGS[i];
+  var cv = document.createElement("canvas");
+  cv.width = 1080; cv.height = 1350; /* instagram portrait, 4:5 */
+  var x = cv.getContext("2d");
+  x.fillStyle = "#0d001a"; x.fillRect(0, 0, 1080, 1350);
+  var r, a;
+  for (r = 0; r < 90; r++) { /* a little starfield */
+    x.globalAlpha = 0.15 + Math.random() * 0.5;
+    x.fillStyle = "#fff0f5";
+    x.fillRect(Math.random() * 1080, Math.random() * 1350, 2, 2);
+  }
+  x.globalAlpha = 1;
+  x.strokeStyle = "rgba(255,240,245,.14)"; x.lineWidth = 2;
+  [150, 230, 310, 390, 470].forEach(function(rr){
+    x.beginPath(); x.arc(540, 520, rr, 0, Math.PI * 2); x.stroke(); });
+  x.strokeStyle = s.accent; x.lineWidth = 10; x.globalAlpha = ".8";
+  x.beginPath(); x.arc(540, 520, 470, -Math.PI * 0.72, -Math.PI * 0.28); x.stroke();
+  x.globalAlpha = 1;
+  x.fillStyle = s.accent;
+  x.beginPath(); x.arc(540, 520 - 470, 20, 0, Math.PI * 2); x.fill();
+  x.textAlign = "center"; x.fillStyle = "#ccff00";
+  try { x.letterSpacing = "8px"; } catch(e) {}
+  x.font = "30px 'Space Mono', monospace";
+  x.fillText("SIX HOURS · FIVE SOULS · ONE WEB", 540, 90);
+  try { x.letterSpacing = "0px"; } catch(e) {}
+  x.fillStyle = "#7d848b"; x.font = "34px 'Space Mono', monospace";
+  x.fillText(s.hour + " · " + s.name, 540, 620);
+  x.fillStyle = "#9fbef5";
+  var size = 120, tw;
+  do { x.font = size + "px 'Bebas Neue', Impact, sans-serif"; tw = x.measureText(s.title).width; size -= 6; }
+  while (tw > 900 && size > 40);
+  x.fillText(s.title, 540, 740);
+  x.fillStyle = "#c3cede"; x.font = "italic 44px 'Klee One', Georgia, serif";
+  var lines = wrapLines(x, "\u201C" + s.verse + "\u201D", 880), y = 830;
+  lines.forEach(function(ln){ x.fillText(ln, 540, y); y += 62; });
+  x.fillStyle = "#ccff00"; x.font = "30px 'Space Mono', monospace";
+  x.fillText(s.ref, 540, y + 30);
+  x.fillStyle = "#7d848b"; x.font = "28px 'Space Mono', monospace";
+  x.fillText("the circle of hours · cafedreamr.art/CIRCLE/", 540, 1290);
+  return cv;
+}
+function downloadCard(blob, key){
+  var url = URL.createObjectURL(blob), a = document.createElement("a");
+  a.href = url; a.download = "circle-" + key + ".png";
+  document.body.appendChild(a); a.click();
+  setTimeout(function(){ try { URL.revokeObjectURL(url); } catch(e) {} a.remove(); }, 4000);
+  sayKept("card kept — post it anywhere ✦");
+}
+function keepCard(){
+  var i = current < 0 ? nearestHour() : current, s = SONGS[i], cv;
+  try { cv = makeCard(i); }
+  catch(e) { sayKept("the card slipped away — try again"); return; }
+  cv.toBlob(function(blob){
+    if (!blob) { sayKept("the card slipped away — try again"); return; }
+    var file = null;
+    try { file = new File([blob], "circle-" + s.key + ".png", {type:"image/png"}); } catch(e) {}
+    if (file && navigator.share && navigator.canShare && navigator.canShare({files:[file]})) {
+      navigator.share({files:[file], title:s.title + " · the circle of hours", text:verseCaption(i)})
+        .then(function(){ sayKept("card shared — tag the circle ✦"); },
+          function(err){ if (!err || err.name !== "AbortError") downloadCard(blob, s.key); });
+    } else downloadCard(blob, s.key);
+  }, "image/png");
+}
+document.getElementById("copyVerseBtn").addEventListener("click", copyVerse);
+document.getElementById("cardBtn").addEventListener("click", keepCard);
+player.addEventListener("ended", function(){ stampSong(current); });
+paintKept();
+window.__circleKeeps = { stamps:readStamps, stamp:stampSong, paint:paintKept,
+  caption:verseCaption, card:makeCard }; /* test seam */
+/* ================= the singers, and their colours =================
+   every song is somebody's personality, and every colour belongs to
+   somebody — the streak they wear in their hair. the twins keep no hour
+   of their own yet; they walk the portal watch with miki (21:00). */
+var SOULS = [
+ { name:"MIKI", accent:"#ccff00", pic:"faces/miki.png", alt:"miki, yellow streak in her dark hair",
+   wears:"wears hers as a yellow streak in her hair",
+   who:"cyberspy, prankster, portal-watcher — electric, overprotective, sings about everything" },
+ { name:"STAR", accent:"#c0a6ff", pic:"faces/star.jpg", alt:"star, purple streak in her dark hair", pos:"68% 26%",
+   wears:"wears hers as a purple streak in her hair",
+   who:"reserved, watchful, quietly mysterious — the café's keeper" },
+ { name:"CHARI", accent:"#e6e6fa", pic:"faces/chari.png", alt:"chari with a white rat on her shoulder",
+   wears:"wears hers as a lavender streak in her hair",
+   who:"the young apprentice — tentative, gentle, sneaking after miki" },
+ { name:"MILO", accent:"#98fb98", pic:"faces/milo.png", alt:"milo with mint tea",
+   wears:"keeps his colour in the garden rows — green as the calm he tends",
+   who:"calm, balance, breath — the still center of the garden" },
+ { name:"HANS", accent:"#6495ed", pic:"faces/hans.png", alt:"hans, black streak in his platinum blonde hair, tea in hand",
+   wears:"wears his as a black streak in his platinum blonde hair",
+   who:"redeemed scholar and showman — precise, penitent, particular about tea" },
+ { name:"SLY & SLAY", accent:"#cfc8e0", pic:"faces/twins.jpg", alt:"sly and slay, the twins",
+   wears:"walk between hours — their colours aren't named yet",
+   who:"sylvestre and slay, the twins of the espionage castle — no hour of their own yet; they walk the portal watch with miki" }
+];
+function soulByName(n){
+  for (var k = 0; k < SOULS.length; k++) if (SOULS[k].name === n) return SOULS[k];
+  return null;
+}
+(function buildSouls(){
+  var ul = document.getElementById("soulList");
+  SOULS.forEach(function(soul){
+    var idx = [];
+    SONGS.forEach(function(s, j){ if (s.name === soul.name) idx.push(j); });
+    var go = idx.length ? idx[0] : 5; /* the twins keep miki's 21:00 watch */
+    var hrs = idx.length ? idx.map(function(j){ return SONGS[j].hour; }).join(" + ") : "with miki · 21:00";
+    var li = document.createElement("li"), b = document.createElement("button");
+    b.type = "button"; b.style.color = soul.accent;
+    b.setAttribute("aria-label", soul.name + ", " + hrs);
+    var face = soul.pic
+      ? '<img class="face" src="' + soul.pic + '" alt="" style="object-position:' + (soul.pos || "50% 50%") + '" onerror="this.style.display=\'none\'">'
+      : '<span class="dewface"></span>';
+    b.innerHTML = face + '<span class="h">' + hrs + '</span><span class="t"><b style="color:#dbe6fa">' +
+      soul.name + '</b><span>' + soul.wears + " — " + soul.who + ".</span></span>";
+    b.addEventListener("click", function(){
+      stopWalk(); select(go, true);
+      document.getElementById("detail").scrollIntoView({behavior:"smooth", block:"nearest"});
+    });
+    b.addEventListener("mouseenter", function(){ tremble(go, true); });
+    b.addEventListener("mouseleave", function(){ tremble(go, false); });
+    b.addEventListener("focus", function(){ tremble(go, true); });
+    b.addEventListener("blur", function(){ tremble(go, false); });
+    li.appendChild(b); ul.appendChild(li);
+  });
+})();
+/* ================= the walk: dusk to dusk =================
+   two voices, one overlapping the other (a real crossfade needs two
+   <audio> hearts), threads lighting as they are walked. each song
+   carries its own measured handoff (fade: overlap seconds, skip:
+   intro silence to jump) because the songs die away differently. any
+   manual touch — a node, a list row — stops the walk where it stands,
+   and the plain player below already holds the current song. */
+var walkBtn = document.getElementById("walkBtn"),
+    walkKick = document.getElementById("walkKick"),
+    walkTitle = document.getElementById("walkTitle"),
+    walkBar = document.getElementById("walkBar");
+var W = { on:false, i:0, a:new Audio(), b:new Audio(), cur:0,
+          fading:false, timer:null, X:6 };
+W.a.preload = "auto"; W.b.preload = "auto";
+W.a.onended = onEnded; W.b.onended = onEnded;
+window.__circleWalk = W; /* test hook: lets a future session drive the walk */
+function wEls(){ return W.cur === 0 ? { c:W.a, n:W.b } : { c:W.b, n:W.a }; }
+function lightThreads(upto, now){
+  SONGS.forEach(function(s, j){
+    var t = document.getElementById("thread-" + j);
+    if (j < upto) { t.style.stroke = s.accent; t.style.opacity = ".75"; t.classList.remove("pulse"); }
+    else if (j === now) { t.style.stroke = s.accent; t.style.opacity = "1"; t.classList.add("pulse"); }
+    else { t.style.stroke = ""; t.style.opacity = ""; t.classList.remove("pulse"); }
+  });
+}
+function walkResetBtn(kick, title){
+  walkBtn.classList.remove("on");
+  walkKick.textContent = kick; walkTitle.textContent = title;
+  walkBar.style.width = "0%";
+}
+function startWalk(){
+  stopWalk(true);
+  walkChime(); /* the day begins with two soft bells */
+  try { player.pause(); } catch(e) {}
+  W.on = true; W.i = 0; W.cur = 0; W.fading = false;
+  var e = wEls();
+  e.c.src = SONGS[0].file; e.c.volume = 1;
+  e.n.src = SONGS[1].file; /* next one warming up */
+  lightThreads(0, 0);
+  select(0, false);
+  walkBtn.classList.add("on");
+  walkKick.textContent = "walking · dusk to dusk — stop";
+  walkTitle.textContent = "00:00 · Numbered";
+  try { var p = e.c.play(); if (p) p.catch(walkFail); } catch(err) { walkFail(); return; }
+  W.timer = setInterval(watch, 300);
+}
+function watch(){
+  if (!W.on) return;
+  var c = wEls().c, d = c.duration, t = c.currentTime;
+  if (d && isFinite(d)) walkBar.style.width = (((W.i + Math.min(1, t / d)) / SONGS.length) * 100).toFixed(1) + "%";
+  var fade = SONGS[W.i].fade || 6;
+  if (!W.fading && d && isFinite(d) && W.i < SONGS.length - 1 && (d - t) <= fade) beginFade(fade);
+}
+function beginFade(fade){
+  var e = wEls(), n = W.i + 1;
+  stampSong(W.i); /* heard in full, all but the overlapped outro */
+  W.fading = true;
+  e.n.volume = 0;
+  try {
+    if (SONGS[n].skip) { try { e.n.currentTime = SONGS[n].skip; } catch(se) {} }
+    var p = e.n.play(); if (p) p.catch(walkFail);
+  } catch(err) { walkFail(); return; }
+  select(n, false);
+  walkTitle.textContent = SONGS[n].hour + " · " + SONGS[n].title;
+  lightThreads(n, n);
+  var steps = 0, total = Math.max(8, Math.round(fade / 0.3));
+  var iv = setInterval(function(){
+    if (!W.on) { clearInterval(iv); return; }
+    steps++;
+    e.c.volume = Math.max(0, 1 - steps / total);
+    e.n.volume = Math.min(1, steps / total);
+    if (steps >= total) {
+      clearInterval(iv);
+      try { e.c.pause(); } catch(err2) {}
+      W.cur = W.cur === 0 ? 1 : 0;
+      W.i = n; W.fading = false;
+      if (n < SONGS.length - 1) wEls().n.src = SONGS[n + 1].file;
+      else walkBar.style.width = "100%";
+    }
+  }, 300);
+}
+function onEnded(){
+  if (!W.on || W.fading) return;
+  stampSong(W.i);
+  if (W.i >= SONGS.length - 1) finishWalk();
+  else beginFade();
+}
+function walkFail(){
+  /* the browser refused a chained play (usually a phone saying "not from
+     a tap"). rest here: the plain player already holds the song. */
+  if (!W.on) return;
+  W.on = false; W.fading = false;
+  clearInterval(W.timer);
+  try { W.a.pause(); } catch(e1) {} try { W.b.pause(); } catch(e2) {}
+  walkBtn.classList.remove("on");
+  walkKick.textContent = "dusk to dusk";
+  walkTitle.textContent = "the walk rests here — press play below";
+}
+function finishWalk(){
+  W.on = false; W.fading = false;
+  clearInterval(W.timer);
+  lightThreads(SONGS.length, -1);
+  walkBar.style.width = "100%";
+  walkBtn.classList.remove("on");
+  walkKick.textContent = "dusk to dusk · walked";
+  walkTitle.textContent = "walk the whole day again";
+}
+function stopWalk(silent){
+  var was = W.on;
+  W.on = false; W.fading = false;
+  clearInterval(W.timer);
+  try { W.a.pause(); } catch(e1) {} try { W.b.pause(); } catch(e2) {}
+  walkResetBtn("dusk to dusk", "walk the whole day");
+  if (!silent && was) lightThreads(0, -1);
+}
+walkBtn.addEventListener("click", function(){
+  walkBtn.classList.remove("attn"); /* noticed — never begs again */
+  var lc = document.getElementById("lookChip");
+  if (lc) lc.hidden = true;
+  try { localStorage.setItem("circle-walk-seen", "1"); } catch(e) {}
+  if (W.on) stopWalk(); else startWalk(); });
+try {
+  if (localStorage.getItem("circle-walk-seen")) {
+    walkBtn.classList.remove("attn");
+    var _lc = document.getElementById("lookChip");
+    if (_lc) _lc.hidden = true;
+  }
+} catch(e) {}
+/* two soft bells, rung from the tap itself so the browser lets them sing. */
+function walkChime(){
+  try {
+    var Ctx = window.AudioContext || window.webkitAudioContext;
+    if (!Ctx) return;
+    var ac = new Ctx(), t = ac.currentTime;
+    [[659.25, 0], [987.77, 0.18]].forEach(function(n){
+      var o = ac.createOscillator(), g = ac.createGain();
+      o.type = "sine"; o.frequency.value = n[0];
+      g.gain.setValueAtTime(0.0001, t + n[1]);
+      g.gain.exponentialRampToValueAtTime(0.09, t + n[1] + 0.03);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + n[1] + 0.5);
+      o.connect(g); g.connect(ac.destination);
+      o.start(t + n[1]); o.stop(t + n[1] + 0.55);
+    });
+    setTimeout(function(){ try { ac.close(); } catch(e2) {} }, 2000);
+  } catch(e) {}
+}
+/* ================= the web breathes =================
+   a tiny analyser listens to whatever is singing — the plain player
+   and both walk hearts share one graph — and the web visibly listens
+   back: the heart throbs with the beat, the singer's own dew
+   brightens. reduced-motion visitors get the songs with none of the
+   shimmer; if web audio is missing, everything else plays on. */
+var breathIdx = 1, breathOn = false, breathEnergy = 0, breathBuf = null;
+var breathAC = null, breathMaster = null, breathAn = null, breathLinked = [];
+var breathStill = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+function breathGraph(el){
+  try {
+    if (!breathAC) {
+      var Ctx = window.AudioContext || window.webkitAudioContext;
+      if (!Ctx) return;
+      breathAC = new Ctx();
+      breathMaster = breathAC.createGain();
+      breathAn = breathAC.createAnalyser();
+      breathAn.fftSize = 256; breathAn.smoothingTimeConstant = 0.75;
+      breathMaster.connect(breathAn); breathAn.connect(breathAC.destination);
+    }
+    if (breathAC.state === "suspended") breathAC.resume().catch(function(){});
+    if (breathLinked.indexOf(el) === -1) {
+      breathAC.createMediaElementSource(el).connect(breathMaster);
+      breathLinked.push(el);
+    }
+  } catch(e) {}
+}
+function breathKick(){
+  if (breathOn || breathStill) return;
+  breathOn = true;
+  requestAnimationFrame(breathTick);
+}
+function breathTick(){
+  if (!breathOn) return;
+  if (player.paused && W.a.paused && W.b.paused) { breathRest(); breathOn = false; return; }
+  if (breathAn) {
+    if (!breathBuf || breathBuf.length !== breathAn.fftSize) breathBuf = new Uint8Array(breathAn.fftSize);
+    breathAn.getByteTimeDomainData(breathBuf);
+    var sum = 0, n = 0, k, v;
+    for (k = 0; k < breathBuf.length; k += 2) { v = (breathBuf[k] - 128) / 128; sum += v * v; n++; }
+    var target = Math.min(1, Math.sqrt(sum / n) * 3.2);
+    breathEnergy += (target - breathEnergy) * 0.35;
+  }
+  breathPaint();
+  vizDraw();
+  requestAnimationFrame(breathTick);
+}
+function breathPaint(){
+  var s = 1 + breathEnergy * 0.07;
+  heartG.setAttribute("transform", "translate(" + CX + " " + CY + ") scale(" + s.toFixed(3) +
+    ") translate(" + (-CX) + " " + (-CY) + ")");
+  var dots = document.querySelectorAll(".dew" + breathIdx), base, k;
+  for (k = 0; k < dots.length; k++) {
+    base = parseFloat(dots[k].getAttribute("opacity") || "0.4");
+    dots[k].style.opacity = (base + breathEnergy * 0.6).toFixed(2);
+  }
+}
+function breathRest(){
+  breathEnergy = 0;
+  heartG.removeAttribute("transform");
+  var dots = document.querySelectorAll(".dew"), k;
+  for (k = 0; k < dots.length; k++) dots[k].style.opacity = "";
+  vizClear();
+}
+/* ================= the visualizer between the web =================
+   the same analyser that breathes the heart also feeds a little
+   circular spectrum, drawn on a transparent canvas over the web —
+   one fan of bars in each of the six gaps between the threads, in
+   the gap's own singer's colour, plus a bass halo around the heart.
+   pointer-events:none so every dewdrop stays touchable; reduced-
+   motion visitors get songs with none of the shimmer, as before. */
+var vizC = document.getElementById("viz"), vizX = vizC.getContext("2d");
+var vizFreq = null;
+function vizSize(){
+  var w = svg.clientWidth || 600;
+  var dpr = Math.min(2, window.devicePixelRatio || 1);
+  vizC.width = Math.max(2, Math.round(w * dpr));
+  vizC.height = vizC.width;
+}
+addEventListener("resize", vizSize); vizSize();
+function vizDraw(){
+  if (!breathAn || breathStill) return;
+  if (!vizFreq || vizFreq.length !== breathAn.frequencyBinCount)
+    vizFreq = new Uint8Array(breathAn.frequencyBinCount);
+  breathAn.getByteFrequencyData(vizFreq);
+  vizPaint(vizFreq);
+}
+function vizPaint(bins){
+  var s = vizC.width / 600, g, b, bi, mag, ang, r0, r1, p0, p1;
+  vizX.setTransform(s, 0, 0, s, 0, 0);
+  vizX.clearRect(0, 0, 600, 600);
+  vizX.lineCap = "round";
+  var bass = 0, bl;
+  for (bl = 0; bl < 24; bl++) bass += (bins[bl] || 0) / 255;
+  bass /= 24;
+  if (bass > 0.03) { /* the kick, felt around the heart */
+    vizX.globalAlpha = Math.min(0.5, bass * 0.6);
+    vizX.strokeStyle = "#fff0f5"; vizX.lineWidth = 2;
+    vizX.beginPath(); vizX.arc(CX, CY, R_HEART + 8 + bass * 26, 0, Math.PI * 2); vizX.stroke();
+    vizX.globalAlpha = 1;
+  }
+  var per = 12, n, len;
+  for (g = 0; g < 6; g++){
+    vizX.strokeStyle = SONGS[g].accent;
+    vizX.lineWidth = 3;
+    for (b = 0; b < per; b++){
+      n = g * per + b;
+      bi = Math.floor(n / 72 * 90);
+      mag = (bins[bi] || 0) / 255;
+      if (mag < 0.02) continue;
+      ang = (-90 + g * 60 + 30) + (b / (per - 1) - 0.5) * 44;
+      r0 = R_HEART + 14; r1 = r0 + mag * 130;
+      p0 = polar(r0, ang); p1 = polar(r1, ang);
+      vizX.globalAlpha = 0.25 + mag * 0.75;
+      vizX.beginPath(); vizX.moveTo(p0[0], p0[1]); vizX.lineTo(p1[0], p1[1]); vizX.stroke();
+    }
+  }
+  vizX.globalAlpha = 1;
+}
+function vizClear(){
+  if (!vizX) return;
+  vizX.setTransform(1, 0, 0, 1, 0, 0);
+  vizX.clearRect(0, 0, vizC.width, vizC.height);
+}
+[player, W.a, W.b].forEach(function(el){
+  el.addEventListener("play", function(){ breathGraph(el); breathKick(); });
+});
+window.__circleBreath = {
+  state: function(){ return { on:breathOn, e:+breathEnergy.toFixed(3), idx:breathIdx,
+    linked:breathLinked.length, ac:!!breathAC, still:!!breathStill }; },
+  ping: function(v){ breathEnergy = v; breathPaint(); }, /* test seam: drive the shimmer by hand */
+  vizTest: function(mag){ /* paint a fake spectrum, count lit pixels */
+    var bins = [], i;
+    for (i = 0; i < 128; i++) bins.push(mag == null ? 200 : mag);
+    vizPaint(bins);
+    var d = vizX.getImageData(0, 0, vizC.width, vizC.height).data, sum = 0, k;
+    for (k = 3; k < d.length; k += 40) sum += d[k];
+    vizClear();
+    return sum;
+  }
+};
+/* the heart speaks: clicking I AM THE DOOR types out a rotating verse.
+   the center becomes an oracle instead of a label — full verse types into
+   the detail, the heart's sub-line keeps the reference. */
+function speakHeart(){
+  oracleIdx = (oracleIdx + 1) % SONGS.length;
+  var s = SONGS[oracleIdx];
+  var full = "\u201C" + s.verse + "\u201D";
+  var vp = document.getElementById("dVerse"), rf = document.getElementById("dRef");
+  rf.textContent = s.ref + " · the door answers";
+  var hs = document.getElementById("heartSub");
+  if (hs) hs.textContent = s.ref.split(" — ")[0];
+  if (oracleTimer) { clearInterval(oracleTimer); oracleTimer = null; }
+  document.getElementById("detail").style.borderColor = s.accent + "55";
+  if (breathStill) { vp.textContent = full; return; }
+  var k = 0; vp.textContent = "";
+  oracleTimer = setInterval(function(){
+    k++; vp.textContent = full.slice(0, k);
+    if (k >= full.length) { clearInterval(oracleTimer); oracleTimer = null; }
+  }, 16);
+  try { document.getElementById("detail").scrollIntoView({behavior:"smooth", block:"nearest"}); } catch(e) {}
+}
+heartG.addEventListener("click", speakHeart);
+heartG.addEventListener("keydown", function(e){
+  if (e.key === "Enter" || e.key === " ") { e.preventDefault(); speakHeart(); } });
+/* open on the hour nearest the visitor's clock, silent.
+   at 6am that is star — already waiting. the nearest node keeps a soft
+   halo (its .now) even after the visitor wanders elsewhere. */
+(function(){
+  var ni = nearestHour();
+  select(ni, false);
+  var nn = document.getElementById("node-" + ni);
+  if (nn) nn.classList.add("now");
+  var hh = document.getElementById("hourHint");
+  if (hh) hh.innerHTML += " &middot; the web kept " + SONGS[ni].hour + " for you";
+})();
+
+/* ================= starfield ================= */
+/* ================= star-bubbles =================
+   tiny cosmic stars that rise slowly upward like bubbles off
+   star-champagne — lavender, ice-blue and rose-white tints over
+   the deep purple. screen-speed independent, still for
+   reduced-motion. */
+(function(){
+  var c = document.getElementById("stars"), x = c.getContext("2d"), pts = [];
+  var still = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function size(){ c.width = innerWidth; c.height = innerHeight; }
+  size(); addEventListener("resize", size);
+  var TINTS = ["#fff0f5", "#fff0f5", "#fff0f5", "#e6e6fa", "#c0a6ff", "#bfe9ff", "#f6ffd6"];
+  function seed(anywhere){
+    return { x: Math.random(), y: anywhere ? Math.random() : 1.01 + Math.random() * 0.05,
+      r: 0.5 + Math.random() * 1.3, v: 5 + Math.random() * 13,
+      tw: Math.random() * Math.PI * 2, ts: 0.6 + Math.random() * 1.8,
+      t: TINTS[(Math.random() * TINTS.length) | 0] };
+  }
+  for (var i = 0; i < 170; i++) pts.push(seed(true));
+  var last = performance.now();
+  (function draw(now){
+    var dt = Math.min(0.05, (now - last) / 1000); last = now;
+    x.clearRect(0, 0, c.width, c.height);
+    for (var i = 0; i < pts.length; i++){ var p = pts[i];
+      if (!still) {
+        p.y -= (p.v * dt) / Math.max(1, c.height);
+        p.tw += p.ts * dt;
+        if (p.y < -0.02) { pts[i] = p = seed(false); }
+      }
+      x.globalAlpha = 0.25 + 0.55 * (0.5 + 0.5 * Math.sin(p.tw));
+      x.fillStyle = p.t;
+      x.beginPath(); x.arc(p.x * c.width, p.y * c.height, p.r, 0, Math.PI * 2); x.fill();
+    }
+    x.globalAlpha = 1;
+    requestAnimationFrame(draw);
+  })(last);
+})();
+</script>
+</body>
+</html>
