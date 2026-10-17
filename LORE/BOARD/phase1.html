@@ -1,0 +1,826 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#140d06">
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<title>the investigation board · cafedreamr</title>
+<meta name="description" content="You are not just visiting. You are remembering. Every realm holds a piece of the story — explore the realm and watch the board light up.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Caveat:wght@500;700&family=Klee+One:wght@400;600&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   the investigation board — cafedreamr
+   lamplight, brass & red-violet thread. the ENGINE is untouched:
+   every lock opens on a real passport stamp, so the board
+   lights up as the visitor actually explores the realm.
+
+   TO ADD A CARD: append one entry to CARDS below
+     {id, title, sub, href, img, mono, need, self,
+      hint, note, story, evidence}
+     need = a "visit:<page>" key (or null = open from the start).
+   TO ADD A FRIEND: append to FRIENDS (dossier:<id> or visit:<key> met them).
+   ============================================================ */
+:root{
+  --plum:#0d001a; --deep:#1a0533;
+  --amber:#ffb35c; --amber2:#ff8f3c; --lav:#c9a7ff; --viol:#a855f7;
+  --paper:#ece1c8; --note:#f2e6b8; --note2:#e3c2d4;
+  --ink:#2b2015; --blood:#a02020;
+  --lime:#ccff00; --slate:#a9b4c9; --dim:#8d8578; --pale:#efe6f7;
+  --panel:#14101c; --line:rgba(255,255,255,.10);
+  --mono:'Space Mono', ui-monospace, monospace;
+  --disp:'Bebas Neue', impact, sans-serif;
+  --body:'Klee One', system-ui, sans-serif;
+  --hand:'Caveat', cursive;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0;padding:0}
+body{font-family:var(--body);color:var(--slate);min-height:100vh;overflow-x:hidden;
+  background:
+    radial-gradient(46% 30% at 50% -4%, rgba(255,179,92,.20), transparent 70%),
+    radial-gradient(30% 42% at 4% 30%, rgba(168,85,247,.12), transparent 70%),
+    radial-gradient(30% 42% at 96% 62%, rgba(201,167,255,.10), transparent 70%),
+    radial-gradient(22% 16% at 12% 12%, rgba(255,200,130,.10), transparent 70%),
+    radial-gradient(20% 15% at 88% 10%, rgba(255,200,130,.08), transparent 70%),
+    linear-gradient(180deg,#100b07,#0b0705 60%,#070503) fixed,#0b0705}
+.cafe{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(120% 90% at 50% 108%, rgba(0,0,0,.75), transparent 55%)}
+.lamp{position:fixed;left:50%;top:0;z-index:0;pointer-events:none;transform:translateX(-50%);
+  width:min(560px,86vw);height:300px;
+  background:
+    radial-gradient(10px 8px at 50% 0%, #3a2c1c 60%, transparent 61%),
+    linear-gradient(180deg, rgba(255,190,110,.55) 0 2px, transparent 2px),
+    radial-gradient(60% 100% at 50% 0%, rgba(255,179,92,.16), transparent 70%)}
+.wrap{position:relative;z-index:1;max-width:1180px;margin:0 auto;padding:18px 14px 40px}
+/* ---------- header plate ---------- */
+.plate{text-align:center;border:2px solid #7a5f2c;border-radius:10px;padding:14px 12px 12px;
+  background:linear-gradient(180deg,rgba(36,26,14,.94),rgba(23,16,10,.94));
+  box-shadow:0 4px 24px rgba(0,0,0,.7), inset 0 0 40px rgba(255,179,92,.05)}
+.plate h1{font-family:var(--disp);font-weight:400;font-size:clamp(28px,4.6vw,44px);
+  letter-spacing:.08em;color:var(--paper);margin:0;line-height:1;text-shadow:0 2px 12px rgba(0,0,0,.8)}
+.plate .tag{font-size:14px;color:var(--paper);opacity:.75;margin-top:4px}
+/* ---------- layout ---------- */
+.layout{display:grid;grid-template-columns:196px minmax(0,1fr) 248px;gap:12px;margin-top:12px}
+.panel{background:linear-gradient(180deg,rgba(22,18,31,.96),rgba(14,12,21,.96));
+  border:1px solid #54401f;border-radius:10px;padding:12px 13px;box-shadow:0 4px 18px rgba(0,0,0,.55)}
+.panel h2{font-family:var(--mono);font-weight:400;font-size:10.5px;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--dim);margin:0 0 10px}
+/* ---------- legend ---------- */
+.legend{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:7px;font-size:12.5px}
+.legend .ic{display:inline-block;width:20px;text-align:center;margin-right:7px}
+.legend small{display:block;margin-top:10px;font-size:12px;line-height:1.6;color:var(--dim)}
+.notes p{font-size:13px;line-height:1.65;margin:0 0 10px}
+.notes p:last-child{margin-bottom:0}
+.notes .hand{font-family:var(--hand);font-size:19px;color:var(--amber);transform:rotate(-2deg);display:block}
+.stamp{display:inline-block;border:1px solid #6b5323;border-radius:50%;width:54px;height:54px;
+  font-family:var(--mono);font-size:8px;letter-spacing:.08em;color:#8a734f;text-align:center;
+  line-height:1.5;padding-top:12px;transform:rotate(-8deg);margin-top:6px}
+/* ---------- the board: aged plum fabric ---------- */
+.board{position:relative;border:12px solid #3a2412;border-radius:8px;overflow:hidden;
+  outline:1px solid #20140a;
+  background:
+    radial-gradient(60% 34% at 50% 0%, rgba(255,179,92,.14), transparent 70%),
+    radial-gradient(40% 50% at 0% 50%, rgba(168,85,247,.10), transparent 70%),
+    radial-gradient(40% 50% at 100% 40%, rgba(201,167,255,.08), transparent 70%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .06 0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E"),
+    repeating-linear-gradient(0deg, transparent 0 5px, rgba(0,0,0,.10) 5px 6px),
+    repeating-linear-gradient(90deg, transparent 0 5px, rgba(0,0,0,.10) 5px 6px),
+    linear-gradient(155deg,#3d2340 0%,#331c38 30%,#2b1830 55%,#35203a 80%,#2a172e 100%);
+  box-shadow:inset 0 0 110px rgba(0,0,0,.65), 0 6px 26px rgba(0,0,0,.65)}
+#strings{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1}
+#strings line{stroke:#c05ac0;stroke-width:1.8;opacity:.8;filter:drop-shadow(0 0 3px rgba(192,90,192,.7))}
+#strings circle{fill:#e07ae0}
+.cards{position:relative;z-index:2;display:flex;flex-wrap:wrap;gap:26px 10px;justify-content:center;
+  padding:30px 22px 36px;align-items:flex-start}
+/* section labels pinned between rows */
+.sec{position:relative;z-index:2;display:flex;align-items:center;gap:10px;
+  font-family:var(--mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--dim);padding:18px 26px 0}
+.sec:first-of-type{padding-top:26px}
+.sec b{color:var(--paper);font-weight:400}
+.sec::after{content:"";flex:1;height:1px;background:repeating-linear-gradient(90deg,rgba(255,255,255,.18) 0 6px,transparent 6px 12px)}
+.sec .n{border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:1px 8px;font-size:9px}
+/* people / stories / songs share the same paper, smaller so the collage fits */
+.cards.people,.cards.stories,.cards.songs{padding:14px 22px 8px;gap:24px 2px}
+.cards.people .card,.cards.stories .card,.cards.songs .card{width:138px;margin:0 -3px}
+.cards.people .card .ph,.cards.stories .card .ph,.cards.songs .card .ph{height:96px}
+.cards.people .card:nth-child(3n),.cards.stories .card:nth-child(even),.cards.songs .card:nth-child(3n+1){margin-top:16px}
+.cards.songs .card{background:linear-gradient(170deg,#efe6cf,#dbcfae)}
+.cards.stories .card{background:linear-gradient(170deg,#efe2e6,#d9c2cd)}
+/* pinned photographs */
+.card{position:relative;width:152px;background:linear-gradient(170deg,#f2ead6,#e2d5b8);
+  border-radius:2px;padding:9px 9px 22px;color:var(--ink);cursor:pointer;
+  box-shadow:0 8px 20px rgba(0,0,0,.6);transition:transform .18s, box-shadow .25s, filter .4s}
+.card:nth-child(odd){margin-top:12px}
+.cards.realms .card:nth-child(3n+2){margin-top:20px}
+.cards.realms .card:nth-child(4n){margin-left:-8px;margin-right:-8px}
+.cards.people .card:nth-child(4n),.cards.songs .card:nth-child(4n){margin-left:-9px;margin-right:-9px}
+.card:hover{transform:scale(1.05) rotate(0deg)!important;z-index:6}
+.card .ph{position:relative;width:100%;height:120px;background:#0e0d13;border-radius:1px;overflow:hidden}
+.card .ph img{width:100%;height:100%;object-fit:cover;display:block;filter:sepia(.32) contrast(1.03);transition:filter .4s}
+.card .mono{width:100%;height:100%;display:flex;align-items:center;justify-content:center;
+  font-family:var(--disp);font-size:54px;color:#4a4460;background:radial-gradient(circle at 50% 38%,#2b2839,#15141d)}
+.card .tape{position:absolute;top:-10px;left:50%;transform:translateX(-50%) rotate(-3deg);
+  width:64px;height:18px;background:rgba(232,220,192,.55);border-left:1px dashed rgba(0,0,0,.15);
+  border-right:1px dashed rgba(0,0,0,.15);box-shadow:0 1px 3px rgba(0,0,0,.3)}
+.card .tack{position:absolute;top:-8px;left:50%;width:17px;height:17px;border-radius:50%;
+  transform:translateX(-50%);
+  background:radial-gradient(circle at 35% 28%,#ffe9b0 0%,#d9a742 38%,#8a5f1c 72%,#4a2f0c 100%);
+  box-shadow:0 3px 5px rgba(0,0,0,.65), inset 0 -2px 3px rgba(0,0,0,.4)}
+.card .curl{position:absolute;right:0;bottom:0;width:0;height:0;pointer-events:none;
+  border-style:solid;border-width:0 0 22px 22px;
+  border-color:transparent transparent rgba(0,0,0,.28) transparent}
+.card h3{font-family:var(--mono);font-weight:700;font-size:10.5px;letter-spacing:.03em;
+  margin:9px 0 1px;line-height:1.35;min-height:28px}
+.card .sb{font-size:11.5px;opacity:.72}
+.card .hand{font-family:var(--hand),cursive;font-size:18px;line-height:1.45;color:#5a3a10;
+  margin-top:6px;padding-bottom:4px;overflow-wrap:anywhere;transform:rotate(-1.4deg)}
+/* locked: muted, desaturated, dark */
+.card.locked .ph img{filter:grayscale(.85) brightness(.42) sepia(.4)}
+.card.locked{background:linear-gradient(170deg,#b9b0a0,#9d9484)}
+.card.locked .lock{position:absolute;inset:0;display:flex;flex-direction:column;gap:5px;
+  align-items:center;justify-content:center;color:#d8d4e8;background:rgba(8,6,14,.45)}
+.card.locked .lock small{font-family:var(--mono);font-size:8.5px;letter-spacing:.1em;
+  padding:0 10px;text-align:center;line-height:1.6}
+/* open: lamplit · explored: violet-lit */
+.card.open{box-shadow:0 8px 22px rgba(0,0,0,.6), 0 0 22px rgba(255,179,92,.28)}
+.card.explored{box-shadow:0 8px 22px rgba(0,0,0,.6), 0 0 26px rgba(168,85,247,.5)}
+.card.explored .sb::after{content:" · ✓";color:#6a4a10}
+/* the next lock breathes amber so the player knows where to go next */
+.card.next{animation:nextpulse 2.6s ease-in-out infinite}
+@keyframes nextpulse{
+  0%,100%{box-shadow:0 8px 20px rgba(0,0,0,.6), 0 0 8px rgba(255,179,92,.25)}
+  50%{box-shadow:0 8px 20px rgba(0,0,0,.6), 0 0 28px rgba(255,179,92,.6)}
+}
+.obj .go{animation:nextpulse 2.6s ease-in-out infinite}
+/* scattered evidence */
+.clutter{position:relative;z-index:2;display:flex;flex-wrap:wrap;gap:14px;justify-content:center;
+  padding:0 24px 30px;align-items:flex-start}
+.clip{width:210px;background:linear-gradient(175deg,#e7dcc2,#d3c4a4);color:#33291a;border-radius:1px;
+  padding:10px 12px;box-shadow:0 6px 16px rgba(0,0,0,.55);transform:rotate(1.8deg);font-size:11px;line-height:1.55}
+.clip h4{font-family:Georgia,serif;font-weight:700;font-size:14px;margin:0 0 4px;letter-spacing:.02em}
+.clip .rule{border-top:2px solid #33291a;margin:5px 0}
+.slip{width:170px;background:var(--note);color:#4a3a10;border-radius:1px;padding:8px 9px;
+  font-family:var(--hand);font-size:18px;line-height:1.3;box-shadow:0 5px 12px rgba(0,0,0,.5);transform:rotate(-2.4deg)}
+.slip.pink{background:var(--note2);color:#5a2038;transform:rotate(2deg)}
+.songnote{width:200px;background:#efe6cf;color:#3a2c15;border-radius:1px;padding:9px 11px;
+  box-shadow:0 5px 12px rgba(0,0,0,.5);transform:rotate(-1deg);font-size:11px}
+.songnote .staff{height:34px;margin-bottom:6px;
+  background:repeating-linear-gradient(180deg, transparent 0 6px, #3a2c15 6px 7px)}
+.songnote em{font-family:var(--hand);font-size:17px}
+.sigils{display:flex;gap:16px;align-items:center;justify-content:center;width:100%;
+  color:rgba(224,122,224,.5);font-size:22px;transform:rotate(-1deg)}
+/* ---------- family rail ---------- */
+.fam{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.fam li{display:flex;align-items:center;gap:9px;border:1px solid var(--line);border-radius:9px;
+  padding:6px 8px;background:rgba(255,255,255,.02)}
+.fam img,.fam .face{width:38px;height:38px;border-radius:50%;object-fit:cover;flex:0 0 auto;
+  border:2px solid currentColor;transition:filter .4s}
+.fam .face{display:flex;align-items:center;justify-content:center;font-family:var(--disp);
+  font-size:18px;background:#1c1c28;color:#55556a}
+.fam li.locked img{filter:grayscale(.9) brightness(.5) sepia(.3)}
+.fam li:not(.locked) img{box-shadow:0 0 12px currentColor}
+.fam .who{flex:1;min-width:0}
+.fam .who b{display:block;font-size:13.5px;color:var(--pale)}
+.fam .who span{font-size:11px;color:var(--dim)}
+.fam .st{font-family:var(--mono);font-size:9px;letter-spacing:.14em}
+.fam .st.met{color:var(--lime)}
+.fam .st.locked{color:var(--dim)}
+/* ---------- bottom strip ---------- */
+.strip{display:grid;grid-template-columns:1.2fr 1.2fr 1fr 1fr;gap:12px;margin-top:12px}
+.strip ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px;font-size:12.5px}
+.strip ul .new{font-family:var(--mono);font-size:8.5px;letter-spacing:.12em;color:var(--lime);
+  border:1px solid rgba(204,255,0,.5);border-radius:4px;padding:0 4px;margin-left:6px}
+.obj{font-size:13.5px;line-height:1.65}
+.obj .go{display:inline-block;margin-top:10px;font-family:var(--mono);font-size:11px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--paper);background:#4a3018;border:1px solid #8a6a35;border-radius:8px;
+  padding:9px 14px;cursor:pointer}
+.obj .go:hover{background:#5d3f1f}
+.bigq{font-size:14px;font-style:italic;line-height:1.7;color:var(--paper)}
+.ring{width:74px;height:74px;flex:0 0 auto}
+.prow{display:flex;gap:12px;align-items:center}
+.prow .n{font-size:12.5px;line-height:1.9}
+.prow .n b{color:var(--paper)}
+/* ---------- the close-up investigation window ---------- */
+.zoom{position:fixed;inset:0;z-index:60;display:flex;align-items:center;justify-content:center;
+  padding:18px;background:rgba(5,3,8,.78);backdrop-filter:blur(2px)}
+.zbox{position:relative;max-width:560px;width:100%;max-height:88vh;overflow:auto;
+  background:linear-gradient(170deg,#f0e7d2,#dccfae);color:var(--ink);border-radius:4px;
+  padding:20px 22px 22px;box-shadow:0 20px 80px rgba(0,0,0,.8), 0 0 60px rgba(168,85,247,.25);
+  transform:rotate(-.6deg)}
+.zbox::before{content:"";position:absolute;top:-11px;left:50%;width:20px;height:20px;border-radius:50%;
+  transform:translateX(-50%);
+  background:radial-gradient(circle at 35% 28%,#ffe9b0 0%,#d9a742 38%,#8a5f1c 72%,#4a2f0c 100%);
+  box-shadow:0 3px 6px rgba(0,0,0,.6)}
+.zclose{position:absolute;top:8px;right:10px;border:1px solid #8a734f;background:none;color:#5a4a28;
+  border-radius:50%;width:30px;height:30px;cursor:pointer;font-size:14px;line-height:1}
+.zclose:hover{background:#5a4a28;color:#f0e7d2}
+.zph{width:100%;height:210px;object-fit:cover;border-radius:2px;background:#0e0d13;filter:sepia(.3)}
+.zph.dark{filter:grayscale(.9) brightness(.5)}
+.zmono{width:100%;height:120px;display:flex;align-items:center;justify-content:center;border-radius:2px;
+  font-family:var(--disp);font-size:72px;color:#4a4460;background:radial-gradient(circle at 50% 38%,#2b2839,#15141d)}
+.zkick{font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#8a6a35;margin:12px 0 2px}
+.ztitle{font-family:var(--disp);font-size:34px;letter-spacing:.04em;line-height:1;margin:0}
+.zstory{font-size:14.5px;line-height:1.7;margin:10px 0}
+.zrow{border-top:1px dashed #a08c5a;padding:8px 0;font-size:13px;line-height:1.6}
+.zrow b{font-family:var(--mono);font-weight:400;font-size:10px;letter-spacing:.16em;text-transform:uppercase;
+  color:#8a6a35;margin-right:8px}
+.zhand{font-family:var(--hand);font-size:20px;color:#5a3a10}
+.zgo{display:block;width:100%;margin-top:12px;font-family:var(--mono);font-size:12px;letter-spacing:.14em;
+  text-transform:uppercase;color:#f5edd8;background:#3a2a12;border:1px solid #8a6a35;border-radius:9px;
+  padding:12px;cursor:pointer}
+.zgo:hover:not(:disabled){background:#54401c}
+.zgo:disabled{opacity:.5;cursor:not-allowed}
+footer{margin-top:16px;text-align:center;font-family:var(--mono);font-size:10px;
+  letter-spacing:.15em;text-transform:uppercase;color:var(--dim);line-height:2}
+footer a{color:var(--amber);text-decoration:none}
+footer a:hover{color:#fff}
+@media (max-width:1020px){
+  .layout{grid-template-columns:1fr 1fr}
+  .boardcol{grid-column:1/-1;order:-1}
+  .strip{grid-template-columns:1fr 1fr}
+}
+@media (max-width:640px){
+  .layout{grid-template-columns:1fr}
+  .strip{grid-template-columns:1fr}
+  .card{width:136px}
+}
+@media (prefers-reduced-motion:reduce){.card,.card:hover{transition:none}.card.next,.obj .go{animation:none}}
+</style>
+</head>
+<body>
+<div class="cafe"></div><div class="lamp"></div>
+<div class="wrap">
+  <div class="plate">
+    <h1>CAFEDREAMR INVESTIGATION BOARD</h1>
+    <div class="tag">You are not just visiting. You are remembering.</div>
+  </div>
+
+  <div class="layout">
+    <div style="display:flex;flex-direction:column;gap:12px;min-width:0">
+      <section class="panel" aria-label="map legend">
+        <h2>map legend</h2>
+        <ul class="legend">
+          <li><span class="ic">🏠</span>Realm (Explored)</li>
+          <li><span class="ic">🔒</span>Realm (Locked)</li>
+          <li><span class="ic">🕵️</span>Character (Met)</li>
+          <li><span class="ic">👤</span>Character (Locked)</li>
+          <li><span class="ic">📖</span>Story / Article</li>
+          <li><span class="ic">🎵</span>Song / Music</li>
+          <li><span class="ic">🎯</span>Quest / Task</li>
+          <li><span class="ic">⭐</span>Secret / Hidden</li>
+          <li><span class="ic">→</span>Connection / Link</li>
+        </ul>
+        <small>The more you explore, the more the dream remembers.</small>
+      </section>
+      <section class="panel notes" aria-label="investigator notes">
+        <h2>investigator notes</h2>
+        <p>Every realm holds a piece of the story. Every character holds a memory.
+          Connect the pieces. Discover the truth behind the dream.</p>
+        <span class="hand">the grey ones wake up — go and be seen!</span>
+        <span class="stamp">DREAM<br>UNIT<br>★</span>
+      </section>
+    </div>
+
+    <div class="boardcol" style="min-width:0">
+      <div class="board" id="board">
+        <svg id="strings" aria-hidden="true"></svg>
+        <div class="sec"><b>realms</b><span class="n" id="nRealms"></span><span>every door opens a piece</span></div>
+        <div class="cards realms" id="cards"></div>
+        <div class="sec"><b>people</b><span class="n" id="nPeople"></span><span>every face holds a memory</span></div>
+        <div class="cards people" id="people"></div>
+        <div class="sec"><b>stories</b><span class="n" id="nStories"></span><span>miki's zine, stapled by hand</span></div>
+        <div class="cards stories" id="stories"></div>
+        <div class="sec"><b>songs</b><span class="n" id="nSongs"></span><span>the circle, sung instead of told</span></div>
+        <div class="cards songs" id="songs"></div>
+        <div class="clutter" id="clutter"></div>
+      </div>
+    </div>
+
+    <section class="panel" aria-label="field kit">
+      <h2>field kit</h2>
+      <div class="obj" id="kit"></div>
+      <h2 style="margin-top:14px">family &amp; friends</h2>
+      <ul class="fam" id="fam" style="display:none"></ul>
+      <div class="obj" id="famline" style="font-size:12.5px;line-height:1.7"></div>
+    </section>
+  </div>
+
+  <div class="strip">
+    <section class="panel" aria-label="recent discoveries">
+      <h2>recent discoveries</h2>
+      <ul id="fresh"></ul>
+    </section>
+    <section class="panel" aria-label="current objective">
+      <h2>current objective</h2>
+      <div class="obj" id="obj"></div>
+    </section>
+    <section class="panel" aria-label="the big question">
+      <h2>the big question</h2>
+      <div class="bigq">What does it mean to become real… and what is the house still trying to remember?</div>
+    </section>
+    <section class="panel" aria-label="progress overview">
+      <h2>progress overview</h2>
+      <div class="prow">
+        <svg class="ring" id="ring" viewBox="0 0 80 80"></svg>
+        <div class="n" id="progNums"></div>
+      </div>
+    </section>
+  </div>
+
+  <footer>
+    <a href="https://www.cafedreamr.art/">the terminal</a> &middot;
+    <a href="https://www.cafedreamr.art/LORE/MAP.html">the realm map</a> &middot;
+    <a href="https://www.cafedreamr.art/CIRCLE/">the circle of hours</a><br>
+    the board remembers what the passport saw
+  </footer>
+</div>
+
+<div class="zoom" id="zoom" hidden>
+  <div class="zbox" role="dialog" aria-modal="true" aria-labelledby="zTitle">
+    <button class="zclose" id="zClose" aria-label="close">✕</button>
+    <div id="zBody"></div>
+  </div>
+</div>
+
+<script>
+"use strict";
+/* ================= the cards =================
+   need = the passport stamp that picks the lock ("visit:<page>").
+   null = pinned open from the start. explored = its own page visited. */
+var CARDS = [
+  { id:"hub", title:"CHIMERA'S CUP · CAFE HUB", sub:"start here · star's place", href:"https://www.cafedreamr.art/STAR/",
+    img:"https://www.cafedreamr.art/CIRCLE/faces/star.jpg", need:null, self:"star",
+    hint:"", note:"start here — star was waiting",
+    story:"Every road in the realm starts at Star's counter, and she was already waiting when you arrived. Keepers always know. The cup was poured before you asked.",
+    evidence:"one warm cup · lavender steam · a guarded chair" },
+  { id:"nook", title:"PROJECT NOOK · TOP SECRET", sub:"the mystery grid", href:"https://www.cafedreamr.art/LORE/MYSTERYGRID/",
+    img:null, mono:"?", need:"star", self:"grid",
+    hint:"something is hidden behind this lock",
+    note:"something is hidden behind this lock",
+    story:"Four hidden clues and one sealed door, kept by Hans' grid. Something behind it doesn't want to be found yet — which is exactly why you're going.",
+    evidence:"four tea-time clues · one sealed door" },
+  { id:"zine", title:"INTERVIEW · MIKI'S ZINE", sub:"the first door", href:"https://www.cafedreamr.art/MIKI/ZINE/",
+    img:"https://www.cafedreamr.art/CIRCLE/faces/miki.png", need:"grid", self:"zine",
+    hint:"she was the first door",
+    note:"she was the first door",
+    story:"Miki's paper door: interviews, admissions, and at least one thing she only ever told Charlotte. Read it in order. Mind the margins.",
+    evidence:"the issue rack · one margin confession" },
+  { id:"games", title:"GAMES ROOM · MIKI'S TOY CO.", sub:"under miki's place", href:"https://www.cafedreamr.art/MIKI/GAMES/",
+    img:null, mono:"◈", need:"zine", self:"games",
+    hint:"the machines are restless",
+    note:"winner leaves something real",
+    story:"Six machines under Miki's place, kept by the toy co. Charlotte runs the claw — white spider, eight-legged aim. Put in a jelly. Winners leave realer.",
+    evidence:"one marble · the taped manifest" },
+  { id:"mooncake", title:"MOONCAKE · CHARI", sub:"the menu", href:"https://www.cafedreamr.art/MENU/",
+    img:"https://www.cafedreamr.art/CIRCLE/faces/chari.png", need:"zine", self:"menu",
+    hint:"a forgotten recipe",
+    note:"questions are the key to becoming family",
+    story:"Chari's first unsupervised bake. Mochi and Crumb supervised; the recipe card did not survive. The counter serves it anyway.",
+    evidence:"a forgotten recipe · flour on everything" },
+  { id:"mending", title:"MENDING · CHARLOTTE", sub:"the web", href:"https://www.cafedreamr.art/LORE/THEWEB/",
+    img:null, mono:"C", need:"menu", self:"web",
+    hint:"some things are broken for a reason",
+    note:"some things are broken for a reason",
+    story:"Charlotte stitches the realms to each other. What arrives torn leaves holding. Bring her the broken things.",
+    evidence:"one mended thread · a verse" },
+  { id:"archives", title:"ARCHIVES-LIBRARY · HANS", sub:"the stacks", href:"https://www.cafedreamr.art/HANS/",
+    img:"https://www.cafedreamr.art/CIRCLE/faces/hans.png", need:"web", self:"hans",
+    hint:"records never lie — but people sometimes do",
+    note:"go and speak with hans — he keeps the past",
+    story:"Hans keeps every record the realm has ever written, in tea and good order. Ask him about the past. All of it. Mind the monocle file.",
+    evidence:"the three-kitten file · sealed" },
+  { id:"garden", title:"GARDEN SANCTUARY · MILO", sub:"paradise garden", href:"https://www.cafedreamr.art/MILO/",
+    img:"https://www.cafedreamr.art/CIRCLE/faces/milo.png", need:"hans", self:"milo",
+    hint:"something grows when you believe",
+    note:"something grows when you believe",
+    story:"Milo's rows, the herb wall, the hammock. Leave a prayer or an inspiration at the gate — and watch where you sit; the chair is taken.",
+    evidence:"mint · lamplight · one bengal" },
+  { id:"perfume", title:"PERFUME REALM · PEARL", sub:"the mixtape", href:"https://www.cafedreamr.art/MIKI/MIXTAPE/",
+    img:"https://www.cafedreamr.art/CIRCLE/faces/pearl.png", need:"milo", self:"mixtape",
+    hint:"the older versions still whisper",
+    note:"the older versions still whisper",
+    story:"Pearl bottles the older versions — every take the realm outgrew, still whispering from the tape. Spray once. Listen twice.",
+    evidence:"one labeled tape · lavender" },
+  { id:"remembering", title:"REMEMBERING · WREN", sub:"the realm map", href:"https://www.cafedreamr.art/LORE/MAP.html",
+    img:null, mono:"W", need:"mixtape", self:"map",
+    hint:"tug one thread, find another",
+    note:"memory is a web — tug one thread, find another",
+    story:"Wren keeps the memories nobody claimed, and filed them on the map. Every door down there opens something.",
+    evidence:"a thread tied to every door" },
+  { id:"music", title:"MUSIC ROOM · SLAY", sub:"the all-night radio", href:"https://www.cafedreamr.art/PLAYLIST/RADIO/",
+    img:"https://www.cafedreamr.art/CIRCLE/faces/twins.jpg", need:"map", self:"music",
+    hint:"every song is a piece of someone's heart",
+    note:"every song is a piece of someone's heart",
+    story:"Slay's room of everyone's songs, playing all night. Thirteen takes, one ear off. Handle loudly.",
+    evidence:"thirteen takes · one ear off" },
+  { id:"circle", title:"THE CIRCLE OF HOURS", sub:"seven hours, six souls", href:"https://www.cafedreamr.art/CIRCLE/",
+    img:null, mono:"◉", need:"music", self:"circle",
+    hint:"the day, sung instead of told",
+    note:"the day, sung instead of told",
+    story:"Seven hours, six souls, one web. When the day is sung instead of told, the siblings keep it here — each hour its singer, each singer their verse.",
+    evidence:"seven dewdrops · one door" }
+];
+var NEED_WORDS = { star:"meet Star at her place", grid:"open the mystery grid", zine:"read Miki's zine",
+  games:"play a machine in the games room",
+  menu:"order at the counter", web:"be mended at the web", hans:"consult the archives",
+  milo:"rest in the garden", mixtape:"play the old tapes", map:"walk the whole map",
+  music:"hear every song", circle:"stand in the circle" };
+var LINKS = [["hub","nook"],["nook","zine"],["zine","games"],["games","mooncake"],["mooncake","mending"],
+  ["mending","archives"],["archives","garden"],["garden","perfume"],["perfume","remembering"],
+  ["remembering","music"],["music","circle"],["hub","zine"],["garden","music"]];
+/* the family: met = dossier opened OR their room walked into. star met you at the door. */
+var FRIENDS = [
+  { id:"star", name:"Star", role:"The Guardian", img:"https://www.cafedreamr.art/CIRCLE/faces/star.jpg", cc:"#8a2be2", key:"star", always:true,
+    href:"https://www.cafedreamr.art/STAR/", note:"she poured before you asked",
+    story:"Star keeps the counter and the first cup. Squirrels steal her minutes, Misha steals her chair, and she keeps the sunrise anyway — lavender, mint, cardamom, rest.",
+    evidence:"one warm cup · the guarded chair" },
+  { id:"miki", name:"Miki", role:"The First Door", img:"https://www.cafedreamr.art/CIRCLE/faces/miki.png", cc:"#ccff00", key:"miki",
+    href:"https://www.cafedreamr.art/MIKI/ZINE/", note:"first door — mind the margins",
+    story:"Miki collects data on everything and confesses in margins. One arm of steel, one heart of skin; visor down at nine, counting hairs at midnight. She just knows.",
+    evidence:"one margin confession · yellow leathers" },
+  { id:"chari", name:"Chari", role:"The Apprentice", img:"https://www.cafedreamr.art/CIRCLE/faces/chari.png", cc:"#e6e6fa", key:"zine",
+    href:"https://www.cafedreamr.art/MENU/", note:"apprentice — flour on everything",
+    story:"Chari learns out loud, hands shaking, rats on her shoulder. Mochi and Crumb supervise; Milo teaches the breathing; Pearl teaches the worth. Her mooncake survived anyway.",
+    evidence:"a forgotten recipe · two white rats" },
+  { id:"hans", name:"Hans", role:"The Archivist", img:"https://www.cafedreamr.art/CIRCLE/faces/hans.png", cc:"#6495ed", key:"hans",
+    href:"https://www.cafedreamr.art/HANS/", note:"ask him about the past. all of it",
+    story:"Hans keeps every record in tea and good order — scholar, penitent, showman by turns. Full vampire once, caught at last on solid ground. Mind the monocle file.",
+    evidence:"the three-kitten file · earl grey" },
+  { id:"milo", name:"Milo", role:"The Gardener", img:"https://www.cafedreamr.art/CIRCLE/faces/milo.png", cc:"#98fb98", key:"milo",
+    href:"https://www.cafedreamr.art/MILO/", note:"the chair is taken — take the window",
+    story:"Milo tends the rows and the breathing between them. Midday keeper, hammock philosopher, bengal landlord. Leave a prayer at the gate; sit where Misha allows.",
+    evidence:"mint · lamplight · one bengal" },
+  { id:"charlotte", name:"Charlotte", role:"The Mender", img:null, mono:"C", cc:"#e0a3c8", key:"web",
+    href:"https://www.cafedreamr.art/LORE/THEWEB/", note:"bring her the broken things",
+    story:"Charlotte stitches the realms to each other. What arrives torn leaves holding. Bring her the broken things — she has thread and a verse for each.",
+    evidence:"one mended thread · a verse" },
+  { id:"pearl", name:"Pearl", role:"The Perfumer", img:"https://www.cafedreamr.art/CIRCLE/faces/pearl.png", cc:"#ffb8d9", key:"mixtape",
+    href:"https://www.cafedreamr.art/MIKI/MIXTAPE/", note:"spray once. listen twice",
+    story:"Pearl bottles the older versions — every take the realm outgrew, still whispering from the tape. Astute, modest, worth in gold. The ribbon remembers.",
+    evidence:"one labeled tape · lavender ribbon" },
+  { id:"wren", name:"Wren", role:"The Remembered", img:null, mono:"W", cc:"#ffc861", key:"map",
+    href:"https://www.cafedreamr.art/LORE/MAP.html", note:"she files what nobody claimed",
+    story:"Wren keeps the memories nobody claimed and filed them on the map. Tug one thread and another moves. Every door down there opens something.",
+    evidence:"a thread tied to every door" },
+  { id:"slay", name:"Slay", role:"The Musician", img:"https://www.cafedreamr.art/CIRCLE/faces/twins.jpg", cc:"#45c9f0", key:"music",
+    href:"https://www.cafedreamr.art/PLAYLIST/RADIO/", note:"handle loudly — one ear off",
+    story:"Slay keeps the room of everyone's songs, playing all night. Thirteen takes, turquoise streak, plaid flannel. The night watch answers when he calls.",
+    evidence:"thirteen takes · one ear off" },
+  { id:"sylvestre", name:"Sylvestre", role:"The Barista", img:"https://www.cafedreamr.art/CIRCLE/faces/twins.jpg", cc:"#45c9f0", key:"music",
+    href:"https://www.cafedreamr.art/PLAYLIST/RADIO/", note:"keeps the keys at 3 a.m.",
+    story:"Sylvestre walks the three-a.m. round with Slay — monitors humming, question echoing down the hall. Who do you say he is? He calls.",
+    evidence:"two shadows · one question" },
+  { id:"bobby", name:"Bobby", role:"The Strategist", img:null, mono:"B", cc:"#ff2d95", key:"jackbox",
+    href:"https://www.cafedreamr.art/LORE/BOBBY/cards.html", note:"she runs the long game",
+    story:"Bobby deals the dossiers and plays the long day. Every card is a room, every room a tell. Sit down at her table when you're ready to be read.",
+    evidence:"a dealt hand · sealed" },
+  { id:"misha", name:"Misha", role:"The Companion", img:null, mono:"M", cc:"#c0a6ff", key:"milo",
+    href:"https://www.cafedreamr.art/MILO/", note:"lavender chair thief — beloved",
+    story:"Misha is Milo's bengal and Star's beloved rival: lavender lounge chair, sunrise window, zero remorse. Every investigation needs a warm weight on the evidence.",
+    evidence:"one bengal hair · lavender fluff" }
+];
+/* stories: miki's zine, stapled by hand. need = the shelf unlocks as its realm opens. */
+var ARTICLES = [
+  { id:"z1", title:"ISSUE 01 · THE VIOLET WEB CAFÉ", sub:"article · the first issue", href:"https://www.cafedreamr.art/MIKI/ZINE/01/",
+    img:null, mono:"01", need:"zine", self:"zine", hint:"the rack's first fold",
+    note:"where the web began — keep this one",
+    story:"The first fold: the violet web café as Miki first saw it — who pours, who watches, who writes in the margins. Front page first, oldest on the left.",
+    evidence:"stapled by hand · free to take" },
+  { id:"z2", title:"ISSUE 02 · WHISPERED TRUTHS", sub:"article · back issue", href:"https://www.cafedreamr.art/MIKI/ZINE/02/",
+    img:null, mono:"02", need:"menu", self:"zine", hint:"the atrium issue",
+    note:"the atrium issue — read it twice",
+    story:"The atrium of whispered truths: what the house says when it thinks nobody is listening. Miki took notes. Some of them are about you.",
+    evidence:"one overheard page · underlined" },
+  { id:"z3", title:"ISSUE 03 · OUR NEW TRACKS!", sub:"article · the current issue", href:"https://www.cafedreamr.art/MIKI/ZINE/03/",
+    img:"https://www.cafedreamr.art/CIRCLE/faces/twins.jpg", need:"music", self:"zine", hint:"the loudest issue",
+    note:"slay & sylvestre — loudest issue yet",
+    story:"Our new tracks: the twins take the cover and the racks shake. Issue three guessed what the new neighbours would do next — and they read it.",
+    evidence:"one loud cover · tour scuffs" },
+  { id:"zt", title:"TWINS FEATURE · WRITE BACK", sub:"article · the reply", href:"https://www.cafedreamr.art/MIKI/ZINE/twins/",
+    img:null, mono:"TW", need:"music", self:"zine", hint:"their turn to write",
+    note:"now it's their turn to write back",
+    story:"The reply slot: issue three guessed, the neighbours read it, and now the pen passes over. Their turn to write back — the rack is waiting.",
+    evidence:"one blank page · a borrowed pen" }
+];
+/* songs: the circle, sung instead of told. star's hour plays open as the invitation; the rest unlock with the radio. */
+var SONGS = [
+  { id:"s-star", title:"06:00 · THE SQUIRREL HOUR", sub:"song · star", href:"https://www.cafedreamr.art/CIRCLE/",
+    img:"https://www.cafedreamr.art/CIRCLE/faces/star.jpg", need:null, self:"circle", hint:"",
+    note:"caffusion, lavender + steam",
+    story:"Star at the sunrise window: squirrels stealing minutes, Misha in the chair, Bible open, kettle on. Who by worrying can add one hour? Pour slow instead.",
+    evidence:"matthew 6:27 · 11:28" },
+  { id:"s-chari", title:"09:00 · FIRST LESSONS", sub:"song · chari", href:"https://www.cafedreamr.art/CIRCLE/",
+    img:"https://www.cafedreamr.art/CIRCLE/faces/chari.png", need:"music", self:"circle", hint:"the lesson tape",
+    note:"breathe the way the garden grows",
+    story:"Chari's hands still shake; Mochi breathes on her fingertip. Milo counts the breath, Pearl counts the worth. Abide — and follow Miki down the hall.",
+    evidence:"john 15:4 · matthew 11:29" },
+  { id:"s-milo", title:"12:00 · THE STILL HOUR", sub:"song · milo", href:"https://www.cafedreamr.art/CIRCLE/",
+    img:"https://www.cafedreamr.art/CIRCLE/faces/milo.png", need:"music", self:"circle", hint:"the midday tape",
+    note:"be still — the tea can wait",
+    story:"Midday in the herb garden: hands in soil, kingdom within. Dwell, breathe in like rain, breathe out the worry. The garden never comes in late.",
+    evidence:"luke 17:21 · john 15:4" },
+  { id:"s-hans", title:"15:00 · OUTSIDE OF THE CUP", sub:"song · hans", href:"https://www.cafedreamr.art/CIRCLE/",
+    img:"https://www.cafedreamr.art/CIRCLE/faces/hans.png", need:"music", self:"circle", hint:"the etiquette tape",
+    note:"earl grey, no blood — forgiven",
+    story:"Hans after class, over Earl Grey: ancestors' ceremonies, many men, many lives, one small door out. Clean the cup — then pour it out and start anew.",
+    evidence:"luke 11:39" },
+  { id:"s-portals", title:"21:00 · DOORS IN THE DARK", sub:"song · miki", href:"https://www.cafedreamr.art/CIRCLE/",
+    img:"https://www.cafedreamr.art/CIRCLE/faces/miki.png", need:"music", self:"circle", hint:"the portal-watch tape",
+    note:"visor down — love's why i ride",
+    story:"Nine in the evening, portal watch: new doors opening row by row, Ducati humming, yellow leathers. I am the door — every spark his candle in the dark.",
+    evidence:"john 10:9 · 14:2" },
+  { id:"s-data", title:"00:00 · NUMBERED", sub:"song · miki", href:"https://www.cafedreamr.art/CIRCLE/",
+    img:"https://www.cafedreamr.art/CIRCLE/faces/miki.png", need:"music", self:"circle", hint:"the midnight tape",
+    note:"every hair numbered — loved",
+    story:"Midnight, screen green: scientists counting specimens, stacking data floor to floor. Miki answers with the other count — numbered by the one who holds our hearts.",
+    evidence:"luke 12:7" },
+  { id:"s-twins", title:"03:00 · KEYS OF THE KINGDOM", sub:"song · sly & slay", href:"https://www.cafedreamr.art/CIRCLE/",
+    img:"https://www.cafedreamr.art/CIRCLE/faces/twins.jpg", need:"music", self:"circle", hint:"the 3 a.m. round",
+    note:"who do you say he is — he calls",
+    story:"Three in the morning, third watch: two shadows down the hall, monitors humming. The crowd keeps guessing; the fisherman answered true. Take the keys.",
+    evidence:"matthew 16:15, 19" }
+];
+/* the reel, in walking order — first unwalked room is the objective. */
+var REEL = [
+  { key:"cards", title:"the dossiers", href:"https://www.cafedreamr.art/LORE/BOBBY/cards.html" },
+  { key:"map", title:"the realm map", href:"https://www.cafedreamr.art/LORE/MAP.html" },
+  { key:"grid", title:"the mystery grid", href:"https://www.cafedreamr.art/LORE/MYSTERYGRID/" },
+  { key:"hours", title:"the hours", href:"https://www.cafedreamr.art/LORE/HOURS/" },
+  { key:"menu", title:"make it real", href:"https://www.cafedreamr.art/MENU/" },
+  { key:"zine", title:"the zine", href:"https://www.cafedreamr.art/MIKI/ZINE/" },
+  { key:"games", title:"the games room", href:"https://www.cafedreamr.art/MIKI/GAMES/" },
+  { key:"play", title:"the long day", href:"https://www.cafedreamr.art/PLAY/" },
+  { key:"vendi", title:"the vendi machine", href:"https://www.cafedreamr.art/LORE/VENDI/index.html" },
+  { key:"support", title:"support the realm", href:"https://www.cafedreamr.art/SUPPORT/" },
+  { key:"music", title:"the all-night radio", href:"https://www.cafedreamr.art/PLAYLIST/RADIO/" },
+  { key:"milo", title:"the garden gate", href:"https://www.cafedreamr.art/MILO/" },
+  { key:"hans", title:"the stacks", href:"https://www.cafedreamr.art/HANS/" },
+  { key:"circle", title:"the circle of hours", href:"https://www.cafedreamr.art/CIRCLE/" }
+];
+
+/* ================= passport reading (all guarded) ================= */
+function hasStamp(id){
+  try {
+    var c = window.CD;
+    if (!c || !id) return false;
+    if (c.has && c.has(id)) return true;
+    if (c.count && c.count(id) > 0) return true;
+    if (c.log) {
+      var l = c.log(200) || [];
+      for (var i = 0; i < l.length; i++) if (l[i] && l[i].id === id) return true;
+    }
+  } catch(e) {}
+  return false;
+}
+function cardOpen(cd){ return !cd.need || hasStamp("visit:" + cd.need); }
+function cardDone(cd){ return hasStamp("visit:" + cd.self); }
+function friendMet(f){ return !!f.always || hasStamp("dossier:" + f.id) || (f.key && hasStamp("visit:" + f.key)); }
+
+/* ================= build ================= */
+var PADLOCK = '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>';
+var boardEl = document.getElementById("board"),
+    cardsEl = document.getElementById("cards"),
+    peopleEl = document.getElementById("people"),
+    storiesEl = document.getElementById("stories"),
+    songsEl = document.getElementById("songs"),
+    svgEl = document.getElementById("strings");
+var cardEls = {};
+var ALL = {};
+/* one paper card: portrait, brass pin, tape, handwritten note, slight tilt.
+   tilt uses a per-card seed so the collage overlaps naturally and stays
+   identical between visits (no Math.random shimmer). */
+function tiltFor(id, i){
+  var h = 0, k;
+  for (k = 0; k < id.length; k++) h = (h * 31 + id.charCodeAt(k)) % 997;
+  var deg = ((h + i * 37) % 80) / 10 - 4;
+  return "rotate(" + deg.toFixed(1) + "deg)";
+}
+function paperCard(cd, i, isOpen, isDone, onOpen){
+  var open = isOpen, done = isDone;
+  var d = document.createElement("div");
+  d.className = "card" + (open ? " open" : " locked") + (done ? " explored" : "");
+  d.id = "card-" + cd.id;
+  d.style.transform = tiltFor(cd.id, i);
+  var ph = (cd.img)
+    ? '<img src="' + cd.img + '" alt="">' +
+      (open ? "" : '<div class="lock">' + PADLOCK + "<small>" + cd.hint + "</small></div>")
+    : (open
+      ? '<div class="mono">' + (cd.mono || "✦") + "</div>"
+      : '<div class="mono">?</div><div class="lock">' + PADLOCK + "<small>" + cd.hint + "</small></div>");
+  d.innerHTML = '<div class="tape"></div><div class="tack"></div><div class="ph">' + ph + "</div><h3>" + cd.title +
+    "</h3><div class=\"sb\">" + cd.sub + "</div>" +
+    (open && cd.note ? '<div class="hand">' + cd.note + "</div>" : "");
+  d.setAttribute("role", "button");
+  d.setAttribute("tabindex", "0");
+  d.setAttribute("aria-label", cd.title + (open ? "" : " (locked: " + cd.hint + ")"));
+  function go(e){ if (e) e.stopPropagation(); onOpen(cd.id); }
+  d.addEventListener("click", go);
+  d.addEventListener("keydown", function(e){
+    if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onOpen(cd.id); } });
+  return d;
+}
+CARDS.forEach(function(cd, i){
+  var open = cardOpen(cd), done = open && cardDone(cd);
+  ALL[cd.id] = { data: cd, kind: "realm" };
+  var d = paperCard(cd, i, open, done, openZoom);
+  cardsEl.appendChild(d);
+  cardEls[cd.id] = d;
+});
+FRIENDS.forEach(function(f, i){
+  var met = friendMet(f);
+  var cd = { id:"p-" + f.id, title:(f.name + " · " + f.role).toUpperCase(), sub:"character · " + f.role.toLowerCase(),
+    href:f.href, img:f.img, mono:(f.mono || f.name.charAt(0).toUpperCase()),
+    hint:(f.always ? "" : "they haven't met you yet"), note:f.note, story:f.story, evidence:f.evidence,
+    _f:f };
+  ALL[cd.id] = { data: cd, kind:"person" };
+  var d = paperCard(cd, i + 40, met, met, openZoom);
+  peopleEl.appendChild(d);
+  cardEls[cd.id] = d;
+});
+ARTICLES.forEach(function(cd, i){
+  var open = cardOpen(cd), done = open && cardDone(cd);
+  ALL[cd.id] = { data: cd, kind:"story" };
+  var d = paperCard(cd, i + 80, open, done, openZoom);
+  storiesEl.appendChild(d);
+  cardEls[cd.id] = d;
+});
+SONGS.forEach(function(cd, i){
+  var open = cardOpen(cd), done = open && cardDone(cd);
+  ALL[cd.id] = { data: cd, kind:"song" };
+  var d = paperCard(cd, i + 120, open, done, openZoom);
+  songsEl.appendChild(d);
+  cardEls[cd.id] = d;
+});
+/* section counts */
+function setCounts(){
+  var ro = CARDS.filter(cardOpen).length,
+      pm = FRIENDS.filter(friendMet).length,
+      ao = ARTICLES.filter(cardOpen).length,
+      so = SONGS.filter(cardOpen).length;
+  document.getElementById("nRealms").textContent = ro + " / " + CARDS.length + " open";
+  document.getElementById("nPeople").textContent = pm + " / " + FRIENDS.length + " met";
+  document.getElementById("nStories").textContent = ao + " / " + ARTICLES.length + " open";
+  document.getElementById("nSongs").textContent = so + " / " + SONGS.length + " open";
+}
+setCounts();
+/* breathe on the next lock: the first still-locked realm is "your move" */
+(function(){
+  for (var i = 0; i < CARDS.length; i++) {
+    if (!cardOpen(CARDS[i])) {
+      var el = cardEls[CARDS[i].id];
+      if (el) el.classList.add("next");
+      break;
+    }
+  }
+})();
+/* scattered evidence — static set dressing, same voice as the notes */
+(function(){
+  var c = document.getElementById("clutter");
+  c.innerHTML =
+    '<div class="clip"><h4>REALMS KEEP POPPING UP</h4><div class="rule"></div>' +
+    'witnesses report a new door where no door was. the house declined to comment.</div>' +
+    '<div class="slip pink">lavender ribbon, one bengal hair — the chair is taken</div>' +
+    '<div class="sigils"><span>✦</span><span>☾</span><span>❖</span><span>♦</span><span>✧</span></div>';
+})();
+/* red-violet strings between open cards */
+function drawStrings(){
+  var r = boardEl.getBoundingClientRect(), s = "";
+  LINKS.forEach(function(p){
+    var a = cardEls[p[0]], b = cardEls[p[1]];
+    if (!a || !b) return;
+    var ca = CARDS.filter(function(c){ return c.id === p[0]; })[0],
+        cb = CARDS.filter(function(c){ return c.id === p[1]; })[0];
+    if (!cardOpen(ca) || !cardOpen(cb)) return;
+    var ra = a.getBoundingClientRect(), rb = b.getBoundingClientRect();
+    var x1 = ra.left + ra.width / 2 - r.left, y1 = ra.top + ra.height / 2 - r.top;
+    var x2 = rb.left + rb.width / 2 - r.left, y2 = rb.top + rb.height / 2 - r.top;
+    s += '<line x1="' + x1.toFixed(1) + '" y1="' + y1.toFixed(1) + '" x2="' + x2.toFixed(1) +
+      '" y2="' + y2.toFixed(1) + '"/><circle cx="' + x1.toFixed(1) + '" cy="' + y1.toFixed(1) +
+      '" r="2.6"/><circle cx="' + x2.toFixed(1) + '" cy="' + y2.toFixed(1) + '" r="2.6"/>';
+  });
+  svgEl.innerHTML = s;
+}
+var drawT = null;
+function redraw(){ clearTimeout(drawT); drawT = setTimeout(drawStrings, 120); }
+addEventListener("resize", redraw);
+addEventListener("load", redraw);
+setTimeout(redraw, 600);
+cardsEl.querySelectorAll("img").forEach(function(im){
+  im.addEventListener("load", redraw); im.addEventListener("error", function(){ im.style.display = "none"; redraw(); });
+});
+/* field kit (right rail): how the board reads the passport */
+(function(){
+  var met = FRIENDS.filter(friendMet).length;
+  document.getElementById("kit").innerHTML =
+    "✦ Every pin opens on a real stamp." +
+    "<br>✦ Grey faces wake when you meet them — open a dossier, walk their room." +
+    "<br>✦ Grey photos wake when you walk there first.";
+  var names = FRIENDS.map(function(f){
+    return (friendMet(f) ? "● " : "○ ") + f.name;
+  }).join("<br>");
+  document.getElementById("famline").innerHTML =
+    "<b style=\"color:var(--paper)\">" + met + " / " + FRIENDS.length + " met</b><br>" + names;
+})();
+/* recent discoveries = the passport log tail */
+(function(){
+  var ul = document.getElementById("fresh"), items = [];
+  try {
+    var l = (window.CD && window.CD.log) ? window.CD.log(40) || [] : [];
+    for (var i = l.length - 1; i >= 0 && items.length < 4; i--) {
+      if (l[i] && l[i].label) items.push(l[i].label);
+    }
+  } catch(e) {}
+  if (!items.length) items = ["the board itself — you are remembering", "star was waiting at the cafe hub"];
+  ul.innerHTML = items.map(function(t){
+    return "<li>🔎 " + String(t).slice(0, 90) + ' <span class="new">NEW!</span></li>';
+  }).join("");
+})();
+/* objective = first unwalked reel room */
+(function(){
+  var box = document.getElementById("obj"), next = null, k;
+  for (k = 0; k < REEL.length; k++) {
+    if (!hasStamp("visit:" + REEL[k].key)) { next = REEL[k]; break; }
+  }
+  if (!next) {
+    box.innerHTML = "✦ the whole reel is walked. the board is lit. <br>wander — the dream keeps making more.";
+  } else {
+    box.innerHTML = "✦ Visit <b>" + next.title + "</b>." +
+      '<br><button class="go" id="objGo">Go to ' + next.title + "</button>";
+    document.getElementById("objGo").addEventListener("click", function(){
+      window.location.href = next.href;
+    });
+  }
+})();
+/* progress ring */
+(function(){
+  var rooms = 0, k;
+  for (k = 0; k < REEL.length; k++) if (hasStamp("visit:" + REEL[k].key)) rooms++;
+  var met = FRIENDS.filter(friendMet).length;
+  var pct = Math.round(((rooms + met) / (REEL.length + FRIENDS.length)) * 100);
+  var C = 2 * Math.PI * 30;
+  document.getElementById("ring").innerHTML =
+    '<circle cx="40" cy="40" r="30" fill="none" stroke="rgba(255,255,255,.12)" stroke-width="9"/>' +
+    '<circle cx="40" cy="40" r="30" fill="none" stroke="#ccff00" stroke-width="9" stroke-linecap="round"' +
+    ' stroke-dasharray="' + (C * pct / 100).toFixed(1) + " " + C.toFixed(1) +
+    '" transform="rotate(-90 40 40)"/>' +
+    '<text x="40" y="46" text-anchor="middle" fill="#e8dcc0" font-size="16" font-family="Space Mono,monospace">' +
+    pct + "%</text>";
+  document.getElementById("progNums").innerHTML =
+    "<b>" + rooms + " / " + REEL.length + "</b> rooms explored<br>" +
+    "<b>" + met + " / " + FRIENDS.length + "</b> characters met";
+})();
+/* ================= the close-up investigation window ================= */
+var zoomEl = document.getElementById("zoom"), zBody = document.getElementById("zBody");
+function openZoom(id){
+  var rec = ALL[id];
+  if (!rec) return;
+  var cd = rec.data;
+  var open, done;
+  if (rec.kind === "person") { open = friendMet(cd._f); done = open; }
+  else { open = cardOpen(cd); done = open && cardDone(cd); }
+  var need = cd.need ? (NEED_WORDS[cd.need] || cd.need) : null;
+  var ph = cd.img
+    ? '<img class="zph' + (open ? "" : " dark") + '" src="' + cd.img + '" alt="">'
+    : '<div class="zmono">' + (open ? (cd.mono || "✦") : "?") + "</div>";
+  zBody.innerHTML = ph +
+    '<div class="zkick">' + rec.kind + ' · ' + cd.sub + (done ? " · ✓ explored" : "") + "</div>" +
+    '<h2 class="ztitle">' + cd.title + "</h2>" +
+    '<p class="zstory">' + cd.story + "</p>" +
+    '<div class="zrow"><b>evidence</b>' + cd.evidence + "</div>" +
+    '<div class="zrow"><b>requirement</b>' +
+      (open ? '<span class="zhand">unlocked — the thread is yours</span>'
+        : "🔒 " + cd.hint + ". <span class=\"zhand\">to pick this lock: " + need + "</span>") +
+    "</div>" +
+    '<button class="zgo" id="zGo"' + (open ? "" : " disabled") + ">" +
+      (open ? "continue the investigation →" : "locked — " + need) + "</button>";
+  if (open) {
+    document.getElementById("zGo").addEventListener("click", function(){
+      window.location.href = cd.href;
+    });
+  }
+  zoomEl.hidden = false;
+  document.getElementById("zClose").focus();
+}
+function closeZoom(){ zoomEl.hidden = true; }
+document.getElementById("zClose").addEventListener("click", closeZoom);
+zoomEl.addEventListener("click", function(e){ if (e.target === zoomEl) closeZoom(); });
+addEventListener("keydown", function(e){ if (e.key === "Escape" && !zoomEl.hidden) closeZoom(); });
+window.__board = {
+  cards: CARDS, friends: FRIENDS, articles: ARTICLES, songs: SONGS, zoom: openZoom,
+  open: CARDS.filter(cardOpen).map(function(c){ return c.id; }),
+  met: FRIENDS.filter(friendMet).map(function(f){ return f.id; }),
+  openStories: ARTICLES.filter(cardOpen).map(function(c){ return c.id; }),
+  openSongs: SONGS.filter(cardOpen).map(function(c){ return c.id; })
+};
+</script>
+<script src="/PASSPORT/cd-passport.js"></script>
+<script>window.CD && CD.boot({page:"board"});</script>
+</body>
+</html>
