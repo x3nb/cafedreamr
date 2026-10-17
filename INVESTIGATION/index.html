@@ -150,6 +150,13 @@ body{font-family:var(--body);color:var(--slate);min-height:100vh;overflow-x:hidd
 .card.open{box-shadow:0 8px 22px rgba(0,0,0,.6), 0 0 22px rgba(255,179,92,.28)}
 .card.explored{box-shadow:0 8px 22px rgba(0,0,0,.6), 0 0 26px rgba(168,85,247,.5)}
 .card.explored .sb::after{content:" · ✓";color:#6a4a10}
+/* the next lock breathes amber so the player knows where to go next */
+.card.next{animation:nextpulse 2.6s ease-in-out infinite}
+@keyframes nextpulse{
+  0%,100%{box-shadow:0 8px 20px rgba(0,0,0,.6), 0 0 8px rgba(255,179,92,.25)}
+  50%{box-shadow:0 8px 20px rgba(0,0,0,.6), 0 0 28px rgba(255,179,92,.6)}
+}
+.obj .go{animation:nextpulse 2.6s ease-in-out infinite}
 /* scattered evidence */
 .clutter{position:relative;z-index:2;display:flex;flex-wrap:wrap;gap:14px;justify-content:center;
   padding:0 24px 30px;align-items:flex-start}
@@ -242,7 +249,7 @@ footer a:hover{color:#fff}
   .strip{grid-template-columns:1fr}
   .card{width:136px}
 }
-@media (prefers-reduced-motion:reduce){.card,.card:hover{transition:none}}
+@media (prefers-reduced-motion:reduce){.card,.card:hover{transition:none}.card.next,.obj .go{animation:none}}
 </style>
 </head>
 <body>
@@ -653,6 +660,16 @@ function setCounts(){
   document.getElementById("nSongs").textContent = so + " / " + SONGS.length + " open";
 }
 setCounts();
+/* breathe on the next lock: the first still-locked realm is "your move" */
+(function(){
+  for (var i = 0; i < CARDS.length; i++) {
+    if (!cardOpen(CARDS[i])) {
+      var el = cardEls[CARDS[i].id];
+      if (el) el.classList.add("next");
+      break;
+    }
+  }
+})();
 /* scattered evidence — static set dressing, same voice as the notes */
 (function(){
   var c = document.getElementById("clutter");
