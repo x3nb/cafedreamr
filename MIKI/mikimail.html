@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="/.nekoweb-api/static/site.js" defer></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MIKIMAIL — the mail itself (prototype)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Rubik+Mono+One&family=Special+Elite&family=VT323&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #060606;
+    --panel: #0e0e0e;
+    --canary: #fff12e;
+    --canary-dim: #b8aa10;
+    --cerulean: #3ae6cb;
+    --deeppurple: #8a2be2;
+    --grey: #9c9c9c;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--black); }
+  body {
+    font-family: 'VT323', monospace;
+    font-size: 1.05rem;
+    color: #cfcfcf;
+    overflow-x: hidden;
+    min-height: 100vh;
+  }
+  body::before {
+    content: ""; position: fixed; inset: 0; z-index: 2; pointer-events: none;
+    background:
+      radial-gradient(42% 30% at 10% 6%, rgba(255,241,46,.13), transparent 62%),
+      radial-gradient(32% 26% at 92% 14%, rgba(255,241,46,.09), transparent 60%),
+      radial-gradient(38% 32% at 80% 94%, rgba(255,241,46,.07), transparent 62%),
+      radial-gradient(26% 22% at 24% 90%, rgba(255,241,46,.06), transparent 60%);
+  }
+  body::after {
+    content: ""; position: fixed; inset: 0; z-index: 3; pointer-events: none; opacity: .07;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="140" height="140"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" stitchTiles="stitch"/></filter><rect width="140" height="140" filter="url(%23n)"/></svg>');
+  }
+
+  /* ═══════════ boot ═══════════ */
+  #boot {
+    position: fixed; inset: 0; z-index: 1000;
+    background: #050505;
+    padding: 8vw; cursor: pointer;
+    transition: opacity .5s ease;
+  }
+  #boot.out { opacity: 0; pointer-events: none; }
+  .boot-log { font-family: 'VT323', monospace; font-size: 1.05rem; line-height: 1.7; color: #7ee8d6; }
+  .boot-log .ok { color: var(--canary); }
+  .boot-hint { margin-top: 3rem; font-size: .85rem; color: #555; letter-spacing: .12em; text-transform: uppercase; }
+  .boot-hint b { color: var(--canary-dim); font-weight: normal; animation: blink 1s steps(2) infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  /* ═══════════ shell ═══════════ */
+  #main { position: relative; z-index: 5; display: none; }
+  #main.on { display: block; animation: pageIn .5s ease; }
+  @keyframes pageIn { from { opacity: 0; transform: translateY(10px); } }
+
+  .mail-head { text-align: center; padding: 40px 16px 8px; }
+  .mail-title {
+    font-family: 'Rubik Mono One', sans-serif; font-weight: normal;
+    font-size: clamp(2.6rem, 9vw, 5.8rem); line-height: .95;
+    color: var(--canary);
+    text-shadow:
+      5px 0 rgba(255,0,128,.8),
+      -5px 0 rgba(0,255,255,.6),
+      0 0 34px rgba(255,241,46,.35);
+    animation: kick 2.4s ease-in-out infinite;
+  }
+  @keyframes kick { 0%,100% { transform: rotate(-.6deg); } 50% { transform: rotate(.6deg); } }
+  .mail-sub {
+    margin-top: 14px; font-family: 'Special Elite', cursive;
+    font-size: clamp(1rem, 2.4vw, 1.4rem); color: #eafffa; letter-spacing: .02em;
+  }
+  .mail-sub b { color: var(--cerulean); font-weight: normal; }
+  .strip {
+    margin: 18px auto 0; padding: 8px 0; overflow: hidden;
+    background: var(--canary); color: #000; white-space: nowrap;
+    font-family: 'Rubik Mono One', sans-serif; font-size: .78rem; letter-spacing: .06em;
+    text-transform: uppercase; border-top: 3px solid #000; border-bottom: 3px solid #000;
+    box-shadow: 0 0 0 2px var(--canary), 0 0 24px rgba(255,241,46,.35);
+  }
+  .strip span { display: inline-block; padding: 0 12px; }
+  .strip span:nth-child(odd) { background: rgba(0,0,0,.08); }
+
+  /* ═══════════ early-access banner ═══════════ */
+  .early {
+    max-width: 1060px; margin: 18px auto 0; padding: 8px 12px;
+    background: rgba(138,43,226,.16); border: 1px dashed rgba(138,43,226,.6);
+    font-family: 'Press Start 2P', monospace; font-size: .55rem; line-height: 1.8;
+    color: #e6c6ff; text-transform: uppercase; letter-spacing: .06em;
+  }
+  .early b { color: var(--canary); font-weight: normal; }
+
+  /* ═══════════ the mailbox ═══════════ */
+  .app {
+    max-width: 1060px; margin: 20px auto 0; padding: 0 14px;
+    display: grid; grid-template-columns: 200px 1fr; grid-template-rows: auto 1fr;
+    gap: 10px;
+  }
+  .side {
+    grid-row: 1 / 3;
+    background: rgba(4,10,14,.6);
+    border: 2px solid rgba(58,230,203,.45);
+    padding: 14px 10px;
+    font-family: 'Press Start 2P', monospace; font-size: .52rem; line-height: 2;
+  }
+  .side .who { display: block; font-size: .62rem; color: var(--canary); margin-bottom: 10px; }
+  .side .who small { color: var(--grey); font-size: .46rem; letter-spacing: .1em; }
+  .nav-item {
+    display: flex; justify-content: space-between; align-items: center;
+    color: #7ee8d6; cursor: pointer; padding: 6px 6px; letter-spacing: .04em;
+    border-left: 3px solid transparent; text-transform: uppercase;
+  }
+  .nav-item:hover { color: #fff; }
+  .nav-item.on { background: rgba(255,241,46,.1); border-left-color: var(--canary); color: var(--canary); }
+  .nav-item .n { color: var(--grey); font-size: .46rem; }
+  .side .foot-note { margin-top: 18px; font-size: .45rem; color: #555; line-height: 1.8; letter-spacing: .02em; text-transform: none; }
+
+  .tbar {
+    grid-column: 2;
+    display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap;
+    background: rgba(4,10,14,.6); border: 2px solid rgba(58,230,203,.45);
+    padding: 8px 10px;
+    font-family: 'Press Start 2P', monospace; font-size: .5rem; color: #7ee8d6;
+  }
+  .tbar .crumbs b { color: var(--canary); font-weight: normal; }
+  #newMailBtn {
+    font-family: 'Press Start 2P', monospace; font-size: .5rem; letter-spacing: .04em;
+    background: var(--canary); color: #000; border: 2px solid #000; padding: 7px 10px;
+    cursor: pointer; text-transform: uppercase; box-shadow: 3px 3px 0 rgba(0,0,0,.6);
+  }
+  #newMailBtn:hover { transform: translate(1px,1px); box-shadow: 2px 2px 0 rgba(0,0,0,.6); }
+
+  .mailbox {
+    grid-column: 2;
+    background: rgba(4,10,14,.6); border: 2px solid rgba(58,230,203,.45);
+    display: grid; grid-template-columns: 300px 1fr; min-height: 420px;
+  }
+  .list { border-right: 2px solid rgba(58,230,203,.3); overflow-y: auto; max-height: 560px; }
+  .mlist-item {
+    padding: 10px 12px; border-bottom: 1px solid rgba(58,230,203,.18);
+    cursor: pointer;
+  }
+  .mlist-item:hover { background: rgba(58,230,203,.08); }
+  .mlist-item.on { background: rgba(255,241,46,.1); border-left: 3px solid var(--canary); padding-left: 9px; }
+  .mlist-item .f { font-family: 'Press Start 2P', monospace; font-size: .48rem; color: var(--cerulean); text-transform: uppercase; }
+  .mlist-item .s { font-size: 1.05rem; color: #eafffa; line-height: 1.2; margin-top: 3px; }
+  .mlist-item .t { font-size: .8rem; color: #8a8a8a; }
+  .mlist-item .star { color: var(--canary); }
+
+  .reader { padding: 18px 18px 28px; min-height: 420px; }
+  .r-head .r-sub { font-family: 'Special Elite', cursive; font-size: 1.35rem; color: var(--canary); line-height: 1.25; }
+  .r-meta { margin-top: 6px; font-size: .85rem; color: #7ee8d6; }
+  .r-meta b { color: #eafffa; font-weight: normal; }
+  .r-body { margin-top: 16px; font-size: 1.08rem; line-height: 1.55; color: #eafffa; white-space: pre-wrap; }
+
+  #replyBox { margin-top: 16px; }
+  #replyBox textarea {
+    width: 100%; min-height: 70px; resize: vertical;
+    background: rgba(6,6,6,.7); color: #eafffa; border: 1px solid rgba(58,230,203,.5);
+    font-family: 'VT323', monospace; font-size: 1.05rem; padding: 8px;
+  }
+  #replyBox textarea:focus { outline: none; border-color: var(--canary); }
+  #sendBtn {
+    margin-top: 8px; font-family: 'Press Start 2P', monospace; font-size: .5rem;
+    background: var(--cerulean); color: #000; border: 2px solid #000; padding: 8px 12px;
+    cursor: pointer; text-transform: uppercase; box-shadow: 3px 3px 0 rgba(0,0,0,.6);
+  }
+  #sendBtn:hover { transform: translate(1px,1px); box-shadow: 2px 2px 0 rgba(0,0,0,.6); }
+  #sentNote { margin-top: 10px; font-size: .9rem; color: var(--canary-dim); }
+
+  #confetti { position: fixed; inset: 0; pointer-events: none; z-index: 900; }
+
+  /* ═══════════ waitlist ═══════════ */
+  .waitlist {
+    max-width: 1060px; margin: 46px auto 0; padding: 0 14px;
+  }
+  .h2 {
+    font-family: 'Press Start 2P', monospace; font-size: .6rem; letter-spacing: .1em;
+    color: #101010; background: var(--canary);
+    padding: 7px 9px; text-transform: uppercase;
+    border: 2px solid #000; margin-bottom: 14px;
+    box-shadow: 4px 4px 0 rgba(0,0,0,.55);
+  }
+  .h2 .l { color: var(--deeppurple); }
+  .wl-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; align-items: start; }
+  .wl-left p { font-family: 'Special Elite', cursive; font-size: 1.15rem; line-height: 1.6; color: #eafffa; }
+  .wl-left p b { color: var(--canary); font-weight: normal; }
+  .wl-perks { margin-top: 12px; list-style: none; }
+  .wl-perks li { padding: 7px 0 7px 22px; position: relative; font-size: 1.02rem; color: #cfcfcf; border-top: 1px dashed rgba(58,230,203,.25); }
+  .wl-perks li::before { content: "◈"; position: absolute; left: 2px; color: var(--deeppurple); }
+  .wl-perks li b { color: #7ee8d6; font-weight: normal; }
+
+  .wl-card {
+    background: rgba(4,10,14,.65); border: 2px solid rgba(255,241,46,.55);
+    box-shadow: 6px 6px 0 rgba(255,241,46,.12);
+    padding: 20px;
+  }
+  .wl-card .cap { font-family: 'Press Start 2P', monospace; font-size: .5rem; color: var(--canary); text-transform: uppercase; letter-spacing: .08em; }
+  .bd-embed {
+    margin-top: 14px;
+    background: #0b0b0b; border: 2px solid rgba(58,230,203,.55);
+    padding: 4px; overflow: hidden;
+  }
+  .bd-embed iframe { display: block; }
+  .wl-card form { margin-top: 14px; }
+  .wl-card input[type="email"] {
+    width: 100%; padding: 11px 12px; font-family: 'VT323', monospace; font-size: 1.1rem;
+    background: #050505; color: #eafffa; border: 2px solid rgba(58,230,203,.55);
+  }
+  .wl-card input[type="email"]:focus { outline: none; border-color: var(--canary); }
+  .wl-card button[type="submit"] {
+    width: 100%; margin-top: 10px; font-family: 'Press Start 2P', monospace; font-size: .56rem;
+    background: var(--canary); color: #000; border: 2px solid #000; padding: 12px;
+    cursor: pointer; text-transform: uppercase; box-shadow: 4px 4px 0 rgba(0,0,0,.7);
+  }
+  .wl-card button[type="submit"]:hover { transform: translate(1px,1px); box-shadow: 3px 3px 0 rgba(0,0,0,.7); }
+  .wl-note { margin-top: 12px; font-size: .78rem; line-height: 1.5; color: #777; }
+  .wl-note b { color: #7ee8d6; font-weight: normal; }
+
+  /* ═══════════ miki's mixtape ═══════════ */
+  .mixtape { max-width: 1060px; margin: 46px auto 0; padding: 0 14px; }
+  .mixtape-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; align-items: start; }
+  .mixtape-desc p { font-family: 'Special Elite', cursive; font-size: 1.05rem; line-height: 1.6; color: #eafffa; }
+  .mixtape-desc p b { color: var(--canary); font-weight: normal; }
+  .tape {
+    background: rgba(4,10,14,.65); border: 2px solid rgba(58,230,203,.45); padding: 16px;
+    font-family: 'Press Start 2P', monospace; font-size: .5rem;
+  }
+  .tape-head { display: flex; justify-content: space-between; align-items: center; color: var(--canary); margin-bottom: 12px; letter-spacing: .06em; }
+  .tape-head .side { color: var(--grey); }
+  .trk {
+    display: flex; align-items: center; gap: 10px; width: 100%; text-align: left;
+    background: transparent; border: 1px solid rgba(58,230,203,.25); border-left: 3px solid rgba(58,230,203,.4);
+    color: #cfcfcf; padding: 10px 12px; margin-bottom: 8px; cursor: pointer;
+    font-family: 'VT323', monospace; font-size: 1.05rem;
+  }
+  .trk:hover { background: rgba(58,230,203,.08); border-left-color: var(--canary); }
+  .trk.on { background: rgba(255,241,46,.1); border-left-color: var(--canary); color: #fff; }
+  .trk .play { width: 22px; text-align: center; color: var(--canary); }
+  .trk .name b { color: #eafffa; font-weight: normal; }
+  .trk .name small { display: block; color: var(--grey); font-size: .85rem; }
+  .trk .dur { margin-left: auto; color: var(--grey); font-size: .85rem; }
+  .now { margin-top: 10px; min-height: 1.2em; font-family: 'VT323', monospace; font-size: .95rem; color: #7ee8d6; }
+  .now b { color: var(--canary); font-weight: normal; }
+  #muteBtn {
+    font-family: 'Press Start 2P', monospace; font-size: .46rem; letter-spacing: .04em;
+    background: transparent; color: var(--canary-dim); border: 1px solid rgba(255,241,46,.4);
+    padding: 5px 8px; cursor: pointer; text-transform: uppercase;
+  }
+  #muteBtn:hover { color: var(--canary); border-color: var(--canary); }
+
+  /* ═══════════ footer ═══════════ */
+  footer {
+    margin-top: 60px; padding: 30px 16px 40px; text-align: center;
+    border-top: 3px solid var(--canary); background: #0a0a0a;
+    font-family: 'Press Start 2P', monospace; font-size: .52rem; color: #9c9c9c; line-height: 1.9;
+  }
+  footer a { color: var(--canary); text-decoration: none; border-bottom: 1px solid rgba(255,241,46,.4); }
+  footer .credit { display: block; margin-top: 8px; font-family: 'VT323', monospace; font-size: .85rem; color: #6b6b6b; }
+  footer .fineprint {
+    display: block; max-width: 720px; margin: 12px auto 0;
+    font-family: 'VT323', monospace; font-size: .68rem; line-height: 1.6; color: #3c3c3c; letter-spacing: .04em;
+  }
+
+  @media (max-width: 760px) {
+    .app { grid-template-columns: 1fr; }
+    .side { grid-row: auto; }
+    .tbar { grid-column: 1; }
+    .mailbox { grid-column: 1; grid-template-columns: 1fr; }
+    .list { border-right: none; border-bottom: 2px solid rgba(58,230,203,.3); max-height: 240px; }
+    .reader { max-height: none; }
+    .wl-grid { grid-template-columns: 1fr; }
+    .mixtape-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+  <!-- ═══════════ boot ═══════════ -->
+  <div id="boot">
+    <div class="boot-log" id="bootLog"></div>
+    <div class="boot-hint">this is a prototype. click to skip. <b>▼</b></div>
+  </div>
+
+  <div id="main">
+    <header class="mail-head">
+      <h1 class="mail-title">MIKIMAIL</h1>
+      <p class="mail-sub">the <b>mail itself</b> — prototype build. runs on <b>absolution</b> and a <b>dream</b>.</p>
+    </header>
+    <div class="strip">
+      <span>● EARLY ACCESS ●</span><span>PROTOTYPE BUILD v0.2</span><span>NOT A REAL MAILBOX YET</span><span>● GET IN EARLY ↓</span><span>THE DRAWER IS REAL</span><span>PROTOTYPE BUILD v0.2</span><span>● EARLY ACCESS ●</span>
+    </div>
+
+    <div class="early">
+      <b>▲ EARLY ACCESS:</b> this is a prototype of the real thing. nothing you type here leaves the building —
+      but if you <b>sign up below</b>, you'll be first in line when the real mailbox opens.
+    </div>
+
+    <!-- ═══════════ the mailbox ═══════════ -->
+    <div class="app">
+      <aside class="side">
+        <span class="who">the keeper<small> · prototype tenant</small></span>
+        <div class="nav-item on" data-box="inbox">inbox <span class="n" id="inboxCount"></span></div>
+        <div class="nav-item" data-box="drawer">the drawer <span class="n">??</span></div>
+        <div class="nav-item" data-box="drafts">drafts <span class="n">1</span></div>
+        <div class="nav-item" data-box="sent">sent pranks <span class="n">∞</span></div>
+        <div class="foot-note">storage: 15GB of feelings<br>spam folder: full of moths<br>encryption: the web, obviously</div>
+      </aside>
+
+      <div class="tbar">
+        <span class="crumbs">you are in: <b id="crumbs">inbox</b></span>
+        <button id="newMailBtn">+ new mail</button>
+      </div>
+
+      <div class="mailbox">
+        <div class="list" id="mailList"></div>
+        <div class="reader" id="reader">
+          <div class="r-head">
+            <div class="r-sub" id="rSub"></div>
+            <div class="r-meta" id="rMeta"></div>
+          </div>
+          <div class="r-body" id="rBody"></div>
+          <div id="replyBox">
+            <textarea id="replyInput" placeholder="reply to anyone. nothing leaves the building."></textarea>
+            <button id="sendBtn">send</button>
+            <div id="sentNote"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════ waitlist ═══════════ -->
+    <section class="waitlist" id="signup">
+      <div class="h2"><span class="l">◈</span> get in early</div>
+      <div class="wl-grid">
+        <div class="wl-left">
+          <p>the real mailbox isn't open <b>yet</b> — but the future is, and it's taking names.</p>
+          <ul class="wl-perks">
+            <li><b>exactly one (1) carrier pigeon</b> the moment the real mikimail opens</li>
+            <li><b>first access</b> — you get in before the general public learns to be suspicious</li>
+            <li><b>your name</b> on the founding members screen, in order of trust</li>
+            <li><b>miki will read your first draft</b> personally. she has opinions. you've been warned.</li>
+          </ul>
+        </div>
+        <div class="wl-card">
+          <div class="cap">◈ early access waitlist</div>
+
+          <!-- ◈◈◈◈◈◈ BUTTONDOWN SETUP — ONE PLACE, EVERYTHING ◈◈◈◈◈◈
+               ── SLUG ──
+               slug:  mikimail ✓ (already wired into the form below)
+               public page:   https://buttondown.email/mikimail
+               the form below posts to /api/emails/embed-subscribe/mikimail — done.
+
+               ── EMAIL COLLECTION ──
+               buttondown handles it all, no backend needed: double opt-in,
+               unsubscribes, deliverability. the whole mailing list, cozy.
+
+               ── TAG ──
+               uncomment the hidden <input name="tag"> below to sort every signup
+               into a "mikimail-waitlist" tag, so the real newsletter can launch
+               later with a clean subscriber list.
+
+               ── EMBED ALTERNATIVE (official iframe widget) ──
+               buttondown's own one-liner works too, but renders in their plain
+               default styling (grey border, stock input). use it if you want zero
+               maintenance, or keep the hand-styled form below for the vibe:
+                 <iframe scrolling="no"
+                   style="width:100%;height:220px;border:1px #ccc solid"
+                   src="https://buttondown.com/mikimail?as_embed=true"></iframe>
+
+               ── NEWSLETTER SETTINGS (buttondown dashboard) ──
+               name:        MIKIMAIL
+               description: MIKIMAIL is the email that runs on absolution and a dream.
+                            notes from the violet web café: tea committee updates, sibling
+                            pranks, garden gossip, and exactly one (1) carrier pigeon when
+                            the real mailbox opens. no spam. no boats.
+
+               ── PREHEADER (default, Settings → Emails) ──
+               the waitlist is open. when the real mailbox opens, exactly one (1) carrier
+               pigeon finds you. no spam, no boats — miki is watching.
+
+               ── META DESCRIPTION (SEO + social cards) ──
+               MIKIMAIL — the email that runs on absolution and a dream. join the waitlist:
+               when the real mailbox opens, exactly one (1) carrier pigeon finds you.
+               no spam. no boats.
+
+               ── WELCOME EMAIL ──
+               subject:    you're on the list. the future of mail says hi.
+               preheader:  a carrier pigeon has been sighted in your general area.
+               body:       hello, early one.
+                           this is miki. (yes, the one from the zine. no, the spider does
+                           not have a name. she prefers it that way.)
+                           you just joined the mikimail waitlist, which means the future of
+                           mail now includes you. the mailbox itself isn't built yet — it's
+                           being constructed out of absolution, a dream, and the goodwill of
+                           one (1) spider — but when the real thing opens, you'll be first
+                           in line. your name is going on the founding members screen, in
+                           order of trust. you are currently very high.
+                           what happens now:
+                           · exactly one (1) carrier pigeon will find you the moment the
+                             real mikimail opens
+                           · miki will read your first draft personally. she has opinions.
+                             you've been warned
+                           · the drawer stays closed until then. do not ask about the drawer
+                           until then, nothing else. no spam, no weekly roundups, no boats.
+                           if you ever want off the list, one click and you're free — the
+                           drawer stays open, but the door does too.
+                           welcome aboard.
+                           — miki, who is watching. affectionately. -->
+          <!-- NOTE (2026-08-18): buttondown emailed about the raw API form below —
+               the /api/emails/embed-subscribe endpoint is for developers, not live forms,
+               and it skips buttondown's spam protection. So the live form is now the
+               official iframe embed (it respects your newsletter's theme: dark mode,
+               mono font, yellow accents). The custom API form is kept here commented
+               out in case you ever want the "mikimail-waitlist" tag field instead. -->
+          <div class="bd-embed">
+            <iframe
+              scrolling="no"
+              style="width:100%;height:235px;border:0;background:transparent;"
+              src="https://buttondown.com/mikimail?as_embed=true"
+            ></iframe>
+          </div>
+          <!-- custom API form (kept for reference / tag support):
+          <form action="https://buttondown.email/api/emails/embed-subscribe/mikimail" method="post" target="_blank" id="wlForm">
+            <input type="email" name="email" id="wlEmail" placeholder="you@somewhere.good" required>
+            <input type="hidden" name="tag" value="mikimail-waitlist">
+            <button type="submit">◈ get in early ◈</button>
+          </form>
+          -->
+
+          <p class="wl-note">powered by <b>buttondown</b>, which keeps the whole mailing list cozy: double opt-in, one unsubscribe click, no spam folder olympics. miki approves of its vibes.<br><br>zero spam. <b>exactly one (1) pigeon</b>. you can leave whenever (the drawer stays open).</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════ miki's mixtape ═══════════ -->
+    <section class="mixtape" id="music">
+      <div class="h2"><span class="l">◈</span> miki's mixtape</div>
+      <div class="mixtape-grid">
+        <div class="mixtape-desc">
+          <p>the official soundtrack of the future of mail. three fresh tracks, zero boats.
+             <b>start with the anthem</b> — miki sings it herself, which is why the confetti
+             budget is already spent.</p>
+        </div>
+        <div class="tape">
+          <div class="tape-head"><span>MIKI SIDE A</span><span class="side">~7 MIN TOTAL</span></div>
+          <button class="trk" data-track="anthem">
+            <span class="play">▶</span>
+            <span class="name"><b>absolution and a dream</b><small>the anthem · with vocals</small></span>
+            <span class="dur">2:07</span>
+          </button>
+          <button class="trk" data-track="drawer">
+            <span class="play">▶</span>
+            <span class="name"><b>the drawer</b><small>chiptune · contains a smaller drawer</small></span>
+            <span class="dur">2:08</span>
+          </button>
+          <button class="trk" data-track="light">
+            <span class="play">▶</span>
+            <span class="name"><b>the light is always on</b><small>ballad · for the violet hour</small></span>
+            <span class="dur">2:52</span>
+          </button>
+          <div class="now" id="nowPlaying">nothing playing. the web is holding its breath.</div>
+          <button id="muteBtn">mute</button>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <a href="mikimail.html">← back to the fundraiser</a> · <a href="miki-zine.html">THE ZINE</a>
+      <span class="credit">mail concept: miki · prototype laid out in the light by <a href="#" title="wren, the little weaver of light">wren</a>, who believes in the drawer.</span>
+      <span class="fineprint">© <span id="yr"></span> the keeper of the violet web · this page is a prototype and is not affiliated with gmail, the post office, or anyone who makes boats · nothing typed here leaves the building · one (1) opinionated spider is the entire privacy policy · the drawer was inspected and remains a drawer</span>
+    </footer>
+  </div>
+
+  <canvas id="confetti"></canvas>
+
+<script>
+(function () {
+  "use strict";
+
+  var yr = document.getElementById("yr");
+  if (yr) yr.textContent = new Date().getFullYear();
+
+  /* ── boot log ── */
+  var BOOT = [
+    "mikimail v0.2 — prototype build, booting…",
+    "> loading the mailbox… not real yet. ok.",
+    "> loading the drawer… the drawer is real.",
+    "> loading the spider… ok (she has opinions)",
+    "> loading the dreams… loaded. type something."
+  ];
+  var bootEl = document.getElementById("boot");
+  var bootLog = document.getElementById("bootLog");
+  var mainEl = document.getElementById("main");
+  var booted = false;
+
+  function boot() {
+    if (booted) return;
+    booted = true;
+    bootEl.classList.add("out");
+    mainEl.classList.add("on");
+    setTimeout(function () { bootEl.style.display = "none"; }, 550);
+  }
+  bootEl.addEventListener("click", function () { if (!booted) boot(); });
+  function runBoot(i) {
+    if (booted) return;
+    bootLog.textContent += BOOT[i] + "\n";
+    if (i < BOOT.length - 1) setTimeout(function () { runBoot(i + 1); }, 620);
+    else setTimeout(boot, 450);
+  }
+  runBoot(0);
+
+  /* ── the mail ── */
+  var MAILS = [
+    { id: "sys0", box: "inbox", from: "SYSTEM", sub: "welcome to the prototype", time: "now", starred: true, body: "this is not a real mailbox. yet.\n\nthe real one is being built out of absolution, a dream, and the goodwill of one (1) spider. poke around. open the drawer. send a message. nothing leaves this building.\n\n— the system, which is also not real" },
+    { id: "star1", box: "inbox", from: "star", sub: "tea committee: final verdict", time: "11:02", body: "the tea is ready. i mean it this time.\n\nthere is a pot with your name on it — literally, i wrote it on the pot. three sugars, no questions. the void asked for none.\n\nyou should come get it before miki calls it 'evidence'." },
+    { id: "hans1", box: "inbox", from: "hans", sub: "re: the fourth shelf", time: "10:47", body: "status update: the fourth shelf still bites. it is a joke. it does not bite. probably.\n\nnevertheless, i have alphabetized the apology notes. you may have one (1). this is generous." },
+    { id: "chari1", box: "inbox", from: "chari", sub: "ctrl+z saved my life today", time: "10:12", body: "today i undid a small flood. star said nothing. i consider this a victory.\n\nalso, how many siblings does it take to change a lightbulb? none. the light is always on here. that's the thing." },
+    { id: "milo1", box: "inbox", from: "milo", sub: "the mint says hello", time: "09:58", body: "it does. i hear it.\n\nweather report: the garden is calm. the moths are on their best behavior. someone apologized to a violet this morning. progress." },
+    { id: "pearl1", box: "inbox", from: "pearl", sub: "seasonal forecast", time: "09:30", body: "violet is this season's everything. i decided.\n\nyour inbox could use a little more violet. consider this a forecast, not a threat.\n\n(it's a threat.)" },
+    { id: "charlotte1", box: "inbox", from: "charlotte", sub: "re: that pun", time: "09:01", body: "mended two threads. ate one moth. zero regrets.\n\nsomeone's pun left a hole in the web again. patched. barely. tell miki i'm keeping the invoice." },
+    { id: "miki1", box: "inbox", from: "miki", sub: "read this first", time: "08:00", body: "yo. it's miki.\n\nthe prototype is yours to poke. everything here is a lie except the spider and the drawer. the drawer is real. don't ask about the drawer.\n\nif you reply to anyone, i'll know. i always know." },
+    { id: "drawer", box: "drawer", from: "THE DRAWER", sub: "contains: one (1) drawer", time: "always", starred: true, body: "you opened the drawer.\n\ninside: one (1) drawer. smaller. it contains another drawer. this continues until you stop.\n\nthis is the stop.\n\ngood. we don't talk about the drawer." },
+    { id: "draft1", box: "drafts", from: "you (draft)", sub: "dear future mail", time: "—", body: "draft. unfinished. like the prototype. like me.\n\nyour very first draft is waiting for you. press 'new mail' up there and finish something." },
+    { id: "sent0", box: "sent", from: "you", sub: "to: the void", time: "—", body: "your sent pranks are stored here for evidence.\n\nthe void thanks you for your contributions." }
+  ];
+
+  var listEl = document.getElementById("mailList");
+  var reader = document.getElementById("reader");
+  var rSub = document.getElementById("rSub");
+  var rMeta = document.getElementById("rMeta");
+  var rBody = document.getElementById("rBody");
+  var replyInput = document.getElementById("replyInput");
+  var sendBtn = document.getElementById("sendBtn");
+  var sentNote = document.getElementById("sentNote");
+  var crumbs = document.getElementById("crumbs");
+  var box = "inbox";
+  var current = null;
+  var compose = false;
+
+  function listBox(b) {
+    box = b;
+    crumbs.textContent = box;
+    compose = false;
+    document.querySelectorAll(".nav-item").forEach(function (n) {
+      n.classList.toggle("on", n.dataset.box === b);
+    });
+    var items = MAILS.filter(function (m) { return m.box === b; });
+    listEl.innerHTML = "";
+    items.forEach(function (m) {
+      var d = document.createElement("div");
+      d.className = "mlist-item" + (current === m ? " on" : "");
+      var f = document.createElement("div");
+      f.className = "f";
+      f.textContent = (m.starred ? "★ " : "") + m.from;
+      var s = document.createElement("div");
+      s.className = "s";
+      s.textContent = m.sub;
+      var t = document.createElement("div");
+      t.className = "t";
+      t.textContent = m.time;
+      d.appendChild(f); d.appendChild(s); d.appendChild(t);
+      d.addEventListener("click", function () { openMail(m); });
+      listEl.appendChild(d);
+    });
+    var count = document.getElementById("inboxCount");
+    if (count) count.textContent = MAILS.filter(function (m) { return m.box === "inbox"; }).length;
+    if (!compose) {
+      if (items[0]) openMail(items[0]);
+      else blankReader();
+    }
+  }
+
+  function openMail(m) {
+    current = m;
+    compose = false;
+    document.querySelectorAll(".mlist-item").forEach(function (n) { n.classList.remove("on"); });
+    rSub.textContent = m.sub;
+    rMeta.innerHTML = "from: <b>" + m.from + "</b> · " + m.time;
+    rBody.textContent = m.body;
+    replyInput.value = "";
+    sentNote.textContent = "";
+    replyInput.disabled = false;
+    sendBtn.disabled = false;
+    replyInput.placeholder = "reply to " + m.from + ". nothing leaves the building.";
+    listEl.querySelectorAll(".mlist-item").forEach(function (n) {
+      var s = n.querySelector(".s");
+      if (s && s.textContent === m.sub) n.classList.add("on");
+    });
+  }
+
+  function blankReader() {
+    current = null;
+    rSub.textContent = "";
+    rMeta.textContent = "";
+    rBody.textContent = "…nothing here. as intended. the drawer is elsewhere.";
+    replyInput.value = ""; sentNote.textContent = "";
+  }
+
+  function composeMail() {
+    compose = true;
+    current = null;
+    rSub.textContent = "new mail";
+    rMeta.textContent = "to: the future";
+    rBody.textContent = "";
+    replyInput.value = "";
+    sentNote.textContent = "";
+    replyInput.disabled = false; sendBtn.disabled = false;
+    replyInput.placeholder = "compose your very first mail…";
+    replyInput.focus();
+    listEl.querySelectorAll(".mlist-item").forEach(function (n) { n.classList.remove("on"); });
+  }
+
+  sendBtn.addEventListener("click", sendIt);
+  replyInput.addEventListener("keydown", function (e) {
+    if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) sendIt();
+  });
+  function sendIt() {
+    var v = replyInput.value.trim();
+    if (!v) return;
+    sentNote.textContent = "✓ sent to the void. the void appreciated it. confetti provided.";
+    confettiBurst();
+    replyInput.value = "";
+  }
+  document.querySelectorAll(".nav-item").forEach(function (n) {
+    n.addEventListener("click", function () { listBox(n.dataset.box); });
+  });
+  document.getElementById("newMailBtn").addEventListener("click", composeMail);
+
+  /* ── confetti ── */
+  var cv = document.getElementById("confetti");
+  var ctx = cv.getContext("2d");
+  var parts = [];
+  function confettiBurst() {
+    cv.width = cv.clientWidth || innerWidth;
+    cv.height = cv.clientHeight || innerHeight;
+    var colors = ["#fff12e", "#3ae6cb", "#8a2be2", "#ff5f56", "#ff9ecf"];
+    var cx = cv.width / 2, cy = cv.height / 2;
+    for (var i = 0; i < 140; i++) {
+      var a = Math.random() * Math.PI * 2;
+      var sp = 4 + Math.random() * 9;
+      parts.push({
+        x: cx, y: cy,
+        vx: Math.cos(a) * sp, vy: Math.sin(a) * sp - 3,
+        g: 0.18 + Math.random() * 0.12, s: Math.random() * 5 + 3,
+        c: colors[Math.floor(Math.random() * colors.length)],
+        rot: Math.random() * Math.PI * 2, vr: (Math.random() - .5) * .3,
+        life: 1
+      });
+    }
+    if (!animOn) requestAnimationFrame(stepConfetti);
+  }
+  var animOn = false;
+  function stepConfetti() {
+    animOn = true;
+    ctx.clearRect(0, 0, cv.width, cv.height);
+    parts = parts.filter(function (p) { return p.life > 0 && p.y < cv.height + 40; });
+    parts.forEach(function (p) {
+      p.vy += p.g; p.x += p.vx; p.y += p.vy; p.rot += p.vr; p.vx *= .99; p.life -= .012;
+      ctx.save();
+      ctx.translate(p.x, p.y); ctx.rotate(p.rot);
+      ctx.globalAlpha = Math.max(0, Math.min(1, p.life));
+      ctx.fillStyle = p.c;
+      ctx.fillRect(-p.s / 2, -p.s / 2, p.s, p.s * .6);
+      ctx.restore();
+    });
+    if (parts.length) requestAnimationFrame(stepConfetti);
+    else { animOn = false; ctx.clearRect(0, 0, cv.width, cv.height); }
+  }
+
+  /* ── miki's mixtape ──
+     The three tracks below are live (uploaded 2026-08-19). If one ever dies,
+     re-upload the mp3 (scratch/music/miki-*.mp3) and paste the new URL here. */
+  var MIKI_TRACKS = {
+    anthem: { name: "absolution and a dream", url: "https://user.uploads.dev/file/f42622ebdd75ef50547bad2ba0965880.mp3" },
+    drawer: { name: "the drawer", url: "https://user.uploads.dev/file/5b1008246717b301948a52f806cf5aeb.mp3" },
+    light:  { name: "the light is always on", url: "https://user.uploads.dev/file/9c69ccd2da9080450c2a19edf479c38c.mp3" }
+  };
+  var audioEl = null;
+  var currentTrack = null;
+  var muted = false;
+  var musicNote = document.getElementById("nowPlaying");
+  function playTrack(key) {
+    var t = MIKI_TRACKS[key];
+    if (!t.url) {
+      musicNote.textContent = "the track is still being pressed to floppy — the music tube isn't wired yet. check back soon.";
+      return;
+    }
+    if (currentTrack === key && audioEl && !audioEl.paused) {
+      audioEl.pause();
+      musicNote.textContent = "paused: " + t.name + ".";
+      document.querySelectorAll(".trk").forEach(function (b) { b.classList.remove("on"); });
+      currentTrack = null;
+      return;
+    }
+    if (audioEl) audioEl.pause();
+    audioEl = new Audio(t.url);
+    audioEl.volume = muted ? 0 : 0.6;
+    audioEl.play().catch(function () {});
+    currentTrack = key;
+    musicNote.innerHTML = "now playing: <b>" + t.name + "</b>.";
+    document.querySelectorAll(".trk").forEach(function (b) { b.classList.toggle("on", b.dataset.track === key); });
+    audioEl.addEventListener("ended", function () {
+      musicNote.textContent = "track done. the web applauds.";
+      document.querySelectorAll(".trk").forEach(function (b) { b.classList.remove("on"); });
+      currentTrack = null;
+    });
+  }
+  document.querySelectorAll(".trk").forEach(function (b) {
+    b.addEventListener("click", function () { playTrack(b.dataset.track); });
+  });
+  var muteBtn = document.getElementById("muteBtn");
+  muteBtn.addEventListener("click", function () {
+    muted = !muted;
+    if (audioEl) audioEl.volume = muted ? 0 : 0.6;
+    muteBtn.textContent = muted ? "unmute" : "mute";
+  });
+
+  listBox("inbox");
+})();
+</script>
+</body>
+</html>
