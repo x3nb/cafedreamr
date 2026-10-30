@@ -1,0 +1,492 @@
+<!doctype html>
+<html lang="en">
+<head><script src="/.nekoweb-api/static/site.js" defer></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>the study room &middot; cafedreamr</title>
+<meta name="description" content="Three calm, dramatic study songs. Press the toaster down — when the song ends, your toast pops.">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%23faf3e3'/%3E%3Crect x='3' y='7' width='10' height='6' rx='2' fill='%23c93a4b'/%3E%3Crect x='5' y='3' width='6' height='4' rx='2' fill='%23e8a020'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700;9..144,900&family=Karla:wght@400;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#f4ecdd; --card:#fffdf7; --ink:#2c231a; --dim:#7a6c5d;
+  --cherry:#c93a4b; --cherry-deep:#a32c3c; --caramel:#e8a020; --crust:#b07a3f;
+  --leaf:#3d7a2c; --violet:#7c3fc0; --line:rgba(44,35,26,.14);
+  --disp:'Fraunces',georgia,serif; --body:'Karla',system-ui,sans-serif; --mono:'IBM Plex Mono',ui-monospace,monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  min-height:100dvh;color:var(--ink);font-family:var(--body);
+  background:
+    radial-gradient(900px 480px at 50% -8%, rgba(255,197,61,.35), transparent 65%),
+    radial-gradient(700px 500px at 88% 108%, rgba(201,58,75,.10), transparent 60%),
+    linear-gradient(180deg,#faf3e3 0%, #f4ecdd 55%, #eadfc8 100%);
+  display:flex;flex-direction:column;align-items:center;padding:34px 16px 60px;
+}
+.wrap{width:min(94vw,460px);display:flex;flex-direction:column;align-items:center;gap:14px}
+.kicker{font-family:var(--mono);font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--dim)}
+h1{font-family:var(--disp);font-weight:900;font-size:clamp(38px,10vw,54px);margin:0;line-height:1;color:var(--cherry)}
+.sub{font-size:14px;line-height:1.6;color:var(--dim);text-align:center;margin:0;max-width:36ch}
+
+/* ---------- the toaster ---------- */
+.scene{position:relative;width:300px;height:250px;margin-top:10px}
+.toast{
+  position:absolute;left:calc(50% - 50px);bottom:96px;transform:translateX(-50%);
+  width:64px;height:96px;z-index:1;opacity:1;
+  background:linear-gradient(180deg,#fdeed9,#f6dfbc);
+  border:5px solid #dd9050;border-bottom:0;
+  border-radius:14px 14px 8px 8px;
+  transition:bottom .55s cubic-bezier(.2,1.4,.4,1),opacity .4s ease,transform .4s ease;
+  box-shadow:inset 0 0 0 3px #231a12, inset 0 -8px 0 rgba(176,122,63,.25);
+}
+.toast::before{content:"";position:absolute;left:9px;right:9px;top:38px;bottom:10px;
+  border-radius:4px;opacity:.92;
+  background:repeating-linear-gradient(-58deg, transparent 0 8px, rgba(52,30,14,.9) 8px 13px)}
+.toast::after{content:"";position:absolute;inset:9px 8px auto 8px;height:24px;
+  background:
+    radial-gradient(circle at 30% 30%, rgba(40,25,12,.9) 0 2.5px, transparent 3.5px),
+    radial-gradient(circle at 62% 18%, rgba(40,25,12,.9) 0 2px, transparent 3px),
+    radial-gradient(circle at 48% 55%, rgba(40,25,12,.9) 0 2.5px, transparent 3.5px),
+    radial-gradient(circle at 76% 48%, rgba(40,25,12,.85) 0 2px, transparent 3px),
+    radial-gradient(circle at 20% 62%, rgba(40,25,12,.85) 0 2px, transparent 3px);
+}
+.scene.popped .toast{bottom:168px}
+.scene.playing .toast{bottom:28px}
+.scene.launching .toast{bottom:348px;opacity:0;
+  transition:bottom .8s ease-in,opacity .45s ease-in .15s}
+.scene.entering .toast{opacity:0;transform:translateX(-50%) translateY(-18px)}
+.toast.right{left:calc(50% + 50px)}
+.scene.launching .toast.right{transition:bottom .8s ease-in .08s,opacity .45s ease-in .23s}
+.crumb{position:absolute;width:6px;height:6px;border-radius:2px;z-index:4;pointer-events:none;background:#8a4d1c}
+.spark{position:absolute;width:5px;height:5px;border-radius:50%;z-index:4;pointer-events:none;
+  background:#ffd75e;box-shadow:0 0 6px #ffd75e}
+/* ---------- butter cursor ---------- */
+.butter{position:fixed;left:0;top:0;width:26px;height:26px;z-index:9999;pointer-events:none;
+  border-radius:6px;background:linear-gradient(135deg,#ffefa8 0%,#f7cd4e 60%,#eaa92e 100%);
+  box-shadow:0 3px 8px rgba(120,80,10,.35), inset 0 2px 0 rgba(255,255,255,.65), inset 0 -3px 0 rgba(160,100,10,.25);
+  opacity:0;transition:opacity .3s}
+.butter::after{content:"";position:absolute;left:4px;top:3px;width:8px;height:5px;border-radius:3px;
+  background:rgba(255,255,255,.55)}
+.drip{position:fixed;width:7px;height:10px;border-radius:50% 50% 60% 60%;z-index:9998;
+  pointer-events:none;background:linear-gradient(180deg,#ffe89a,#f0b73a)}
+@media (pointer:fine){ body,button,.knob,.dot{cursor:none} }
+@media (pointer:coarse){ .butter,.drip{display:none} }
+.toaster{
+  position:absolute;left:50%;bottom:8px;transform:translateX(-50%);z-index:2;
+  width:252px;height:118px;border-radius:22px;
+  background:linear-gradient(180deg,#d8445a,#a32c3c);
+  box-shadow:0 18px 40px rgba(120,40,50,.35), inset 0 2px 0 rgba(255,255,255,.35), inset 0 -4px 0 rgba(0,0,0,.18);
+}
+.toaster::before,.toaster::after{ /* feet */
+  content:"";position:absolute;bottom:-9px;width:26px;height:12px;border-radius:0 0 8px 8px;background:#5c232c;
+}
+.toaster::before{left:26px}.toaster::after{right:26px}
+.slots{position:absolute;top:0;left:50%;transform:translateX(-50%);display:flex;gap:14px}
+.slots i{display:block;width:86px;height:16px;border-radius:8px;background:#3a1d22;
+  box-shadow:inset 0 3px 5px rgba(0,0,0,.7)}
+.face{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);text-align:center}
+.face .dial{width:46px;height:46px;border-radius:50%;background:var(--card);
+  border:3px solid rgba(0,0,0,.18);margin:0 auto;position:relative;
+  box-shadow:inset 0 2px 4px rgba(0,0,0,.15)}
+.face .dial::after{content:"";position:absolute;left:50%;top:50%;width:4px;height:15px;border-radius:2px;
+  background:var(--cherry-deep);transform-origin:50% 100%;
+  transform:translate(-50%,-100%) rotate(-40deg);transition:transform .4s}
+.scene.playing .face .dial::after{transform:translate(-50%,-100%) rotate(120deg)}
+.face small{display:block;margin-top:6px;font-family:var(--mono);font-size:8px;
+  letter-spacing:.2em;color:rgba(255,248,240,.85);text-transform:uppercase}
+.lever{position:absolute;right:16px;top:124px;width:44px;height:96px;z-index:3}
+.lever .rail{position:absolute;left:50%;top:0;transform:translateX(-50%);
+  width:10px;height:92px;border-radius:5px;background:rgba(46,14,19,.85);
+  box-shadow:inset 0 2px 4px rgba(0,0,0,.6), 0 1px 0 rgba(255,255,255,.25)}
+.lever .knob{
+  position:absolute;left:50%;top:0;transform:translateX(-50%);
+  width:40px;height:34px;border-radius:10px;border:0;cursor:pointer;
+  background:linear-gradient(180deg,#fffdf7,#e9dcc3);
+  box-shadow:0 4px 10px rgba(44,35,26,.4), inset 0 -3px 0 rgba(44,35,26,.15);
+  transition:top .28s cubic-bezier(.3,1.3,.5,1), filter .15s;
+  font-family:var(--mono);font-size:14px;color:var(--ink);
+}
+.lever .knob:hover{filter:brightness(1.05)}
+.lever .knob:active{filter:brightness(.95)}
+.scene.playing .lever .knob{top:56px}
+.hint{position:absolute;left:50%;bottom:0;transform:translateX(-50%);
+  font-family:var(--mono);font-size:8px;letter-spacing:.12em;text-transform:uppercase;
+  color:rgba(255,248,240,.92);white-space:nowrap}
+
+/* ---------- now playing ---------- */
+.card{width:100%;background:var(--card);border:1px solid var(--line);border-radius:16px;
+  padding:16px 18px;box-shadow:0 14px 34px rgba(120,90,40,.16)}
+.nowline{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.loopbtn{margin-left:auto;border:1px solid var(--line);background:transparent;border-radius:999px;
+  padding:6px 12px;cursor:pointer;font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--dim);transition:.18s}
+.loopbtn:hover{border-color:rgba(61,122,44,.5);color:var(--ink)}
+.loopbtn[aria-pressed="true"]{border-color:var(--leaf);color:var(--leaf);
+  box-shadow:0 0 0 3px rgba(61,122,44,.12)}
+.slice{font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--leaf)}
+.songtitle{font-family:var(--disp);font-weight:700;font-size:26px;line-height:1;margin:2px 0 0}
+.jamwrap{position:relative;margin-top:12px}
+.progress{height:22px;border-radius:11px;background:linear-gradient(180deg,#f6c453,#e8a020);
+  border:2px solid var(--crust);box-shadow:inset 0 -3px 0 rgba(176,122,63,.25);overflow:hidden}
+.progress i{display:block;height:100%;width:0%;border-radius:0 8px 8px 0;
+  background:linear-gradient(180deg,#e0446b,#a32c3c 70%,#7e1f2e);
+  box-shadow:inset 0 2px 0 rgba(255,255,255,.35);transition:width .2s linear;position:relative}
+.progress i::before{content:"";position:absolute;left:8px;right:8px;top:3px;height:4px;border-radius:2px;
+  background:rgba(255,255,255,.28)}
+.knife{position:absolute;top:-5px;left:0%;width:36px;height:32px;margin-left:-3px;z-index:2;
+  pointer-events:none;transition:left .2s linear}
+.knife .blade{position:absolute;left:0;top:13px;width:25px;height:7px;transform:rotate(-18deg);
+  border-radius:3px 7px 7px 3px;background:linear-gradient(180deg,#f4f4f7,#b9bec9);
+  box-shadow:0 1px 2px rgba(0,0,0,.3)}
+.knife .blade::after{content:"";position:absolute;left:-2px;bottom:-4px;width:7px;height:9px;
+  border-radius:3px;background:#a32c3c;box-shadow:inset 0 1px 0 rgba(255,255,255,.4)}
+.knife .grip{position:absolute;right:0;top:3px;width:15px;height:9px;border-radius:4px;
+  background:linear-gradient(180deg,#7d4a2b,#5c3319);transform:rotate(-18deg);
+  box-shadow:0 1px 2px rgba(0,0,0,.3)}
+.dots{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.dot{flex:1 1 auto;border:1px solid var(--line);background:transparent;border-radius:999px;
+  padding:8px 6px;cursor:pointer;font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--dim);transition:.18s}
+.dot:hover{border-color:rgba(201,58,75,.5);color:var(--ink)}
+.dot.on{border-color:var(--cherry);color:var(--cherry);box-shadow:0 0 0 3px rgba(201,58,75,.12)}
+.lyrics{font-size:14.5px;line-height:1.75;color:var(--ink);white-space:pre-line;margin:12px 0 0;
+  border-top:1px dashed var(--line);padding-top:12px;min-height:120px}
+.lyrics.swap{animation:fadein .5s ease}
+@keyframes fadein{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+.foot{font-family:var(--mono);font-size:9px;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--dim);opacity:.8;text-align:center;line-height:2}
+@media (max-width:380px){ .scene{transform:scale(.92)} }
+@media (prefers-reduced-motion:reduce){ .toast,.lever .knob,.lyrics.swap,.progress i,.knife{transition:none;animation:none} }
+</style>
+</head>
+<body>
+<main class="wrap">
+  <span class="kicker">cafedreamr &middot; the study room</span>
+  <h1>Study Music</h1>
+  <p class="sub">Three high-energy K-pop study songs to keep you wide awake. Press the toaster lever down &mdash; the toast goes down with it. When the song ends &mdash; or you tap mid-song &mdash; your toast springs up with a <i>boing</i>. Press again for the next slice.</p>
+
+  <div class="scene" id="scene">
+    <div class="toast" id="toast" aria-hidden="true"></div>
+    <div class="toast right" id="toast2" aria-hidden="true"></div>
+    <div class="toaster">
+      <div class="slots"><i></i><i></i></div>
+      <div class="face">
+        <div class="dial"></div>
+        <small id="dialLabel">ready</small>
+      </div>
+      <div class="hint" id="hint">press the lever down</div>
+    </div>
+    <div class="lever">
+      <div class="rail"></div>
+      <button class="knob" id="leverBtn" title="press down to play" aria-label="press the toaster lever down to play">&#9660;</button>
+    </div>
+  </div>
+
+  <section class="card">
+    <div class="nowline"><span class="slice" id="sliceLabel">slice 1 of 3</span>
+      <button class="loopbtn" id="loopBtn" type="button" aria-pressed="false" title="keep the slices coming without pressing">↻ continuous</button>
+    </div>
+    <h2 class="songtitle" id="songTitle">Morning Pages</h2>
+    <div class="jamwrap">
+      <div class="progress"><i id="progFill"></i></div>
+      <div class="knife" id="jamKnife" aria-hidden="true"><div class="grip"></div><div class="blade"></div></div>
+    </div>
+    <div class="dots" id="dots"></div>
+    <p class="lyrics" id="lyrics"></p>
+  </section>
+
+  <p class="foot">soft-spoken &middot; steady percussion &amp; bass &middot; study on</p>
+</main>
+
+<div class="butter" id="butter" aria-hidden="true"></div>
+<audio id="studyAudio" preload="auto"></audio>
+
+<script>
+(function () {
+  "use strict";
+  var TRACKS = [
+    { title: "Morning Pages", url: "https://user.uploads.dev/file/56688342ad900087910e0e2ce45254f6.mp3",
+      lyrics: "Wake up, the morning's bright\nShake the sleep off, feel the light\nOpen the book, the time is right\nBeat is pumping, hold on tight\n\nGo go, keep the pages turning\nWoah woah, feel the fire burning\nBrain is on and bass is pounding\nStudy stars, we are ascending\n\nPen is flying left to right\nEvery answer locked in tight\nWe don't stop, we own the fight\nEvery line is dynamite" },
+    { title: "Ink and Rain", url: "https://user.uploads.dev/file/0dd1bff7b446a01d678b3ec74a4108d4.mp3",
+      lyrics: "Rain is dancing on the glass\nNo more slow, we're moving fast\nInk is flying, make it last\nLeave the sleepy past in the past\n\nRun run, the rhythm's calling\nJump jump, we're never falling\nBeat goes boom, we answer back\nFocus on a faster track\n\nHeartbeat racing with the drum\nFeel the bassline, here it comes\nEyes are open, brains on fire\nTaking every thought much higher" },
+    { title: "Lantern Bright", url: "https://user.uploads.dev/file/09a2b6b6a30cec7a6b582bb3dbf042f9.mp3",
+      lyrics: "Lantern bright, we light the flame\nSay goodbye to sleepy haze\nTurn it up, we're in the game\nStudy loud, remember the name\n\nHey hey, we're wide awake\nMove move, no time to break\nBass is jumping, hearts are racing\nEvery goal is ours for chasing\n\nHands up, we have got the power\nLearning more with every hour\nSweet like sugar, never sour\nBloom and grow like spring flowers" },
+    { title: "Gavel to Gavel", url: "https://user.uploads.dev/file/eacc93cc20ed0677dcbc224a198b8d66.mp3",
+      lyrics: "Open the casebook, light the lamp\nBriefing every case, no time to camp\nStatutes stacked up to the sky\nObjection! We aim so high\n\nGavel to gavel, we never rest\nCross-examine, pass the test\nSustained! Our minds are clear\nFuture lawyers ruling here\n\nTorts and contracts, line by line\nEvery precedent will shine\nCivil procedure, don't be late\nWe argue early, we study late\n\nGavel to gavel, we own the floor\nKnocking down each closing door\nOverruled is not our fate\nWe litigate, we dominate" },
+    { title: "Bar Exam Blaze", url: "https://user.uploads.dev/file/7e86ab71e0a5ab35ee479c7da44d99fa.mp3",
+      lyrics: "Bar exam morning, heart beats fast\nMonths of outlines, built to last\nEvidence rules inside my head\nCriminal law, enough said\n\nBlaze through the questions, blaze through the night\nEvery answer burning bright\nMultistate, essays too\nNothing that we can't push through\n\nCon law powers, separate still\nStanding, mootness, iron will\nProperty deeds and future gifts\nStudy grind gives us a lift\n\nBlaze through the questions, hear the call\nOne more push and through it all\nBar exam blaze, we rise above\nFueled by coffee, grit and love" },
+    { title: "Precedent Power", url: "https://user.uploads.dev/file/a784acf9863d88b5d36c35836c896866.mp3",
+      lyrics: "Stare decisis, stand your ground\nHolding, dicta, all profound\nRead the dissent, find the spark\nReasoning lights up the dark\n\nPrecedent power, case by case\nWinning every brief we face\nIRAC attack, clean and tight\nIssue, rule, we own the fight\n\nPlaintiff pleads and defendant moves\nBurden of proof is what he proves\nRemedies granted, justice found\nOur study table's hallowed ground\n\nPrecedent power, hear us plead\nKnowledge is the friend we need\nShepardize and highlight more\nFuture counsel, hear us roar" }
+  ];
+  var scene = document.getElementById("scene"),
+      leverBtn = document.getElementById("leverBtn"),
+      hint = document.getElementById("hint"),
+      dialLabel = document.getElementById("dialLabel"),
+      sliceLabel = document.getElementById("sliceLabel"),
+      songTitle = document.getElementById("songTitle"),
+      lyricsEl = document.getElementById("lyrics"),
+      progFill = document.getElementById("progFill"),
+      jamKnife = document.getElementById("jamKnife"),
+      toastEl = document.getElementById("toast"),
+      toast2 = document.getElementById("toast2"),
+      dotsEl = document.getElementById("dots"),
+      audio = document.getElementById("studyAudio");
+  var idx = 0, state = "idle"; // idle | playing | stopped | popped
+  var continuous = false; // hands-free mode: the next slice starts itself
+  var brown = 0; // 0 = pale fresh bread, 1 = deep golden with dark edges
+  var actx = null;
+
+  function tone(freqA, freqB, dur, type, vol, delay) {
+    try {
+      actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+      if (actx.state === "suspended") actx.resume();
+      var t = actx.currentTime + (delay || 0);
+      var o = actx.createOscillator(), g = actx.createGain();
+      o.type = type || "sine";
+      o.frequency.setValueAtTime(freqA, t);
+      if (freqB) o.frequency.exponentialRampToValueAtTime(freqB, t + dur);
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.exponentialRampToValueAtTime(vol || 0.25, t + 0.02);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+      o.connect(g); g.connect(actx.destination);
+      o.start(t); o.stop(t + dur + 0.05);
+    } catch (e) {}
+  }
+  function clickSnd() { tone(2200, 900, 0.07, "square", 0.12); } /* the carriage locking down */
+  function boingSnd() {
+    /* the spring letting go: down-then-up vowel of a real toaster */
+    try {
+      actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+      if (actx.state === "suspended") actx.resume();
+      var t = actx.currentTime, o = actx.createOscillator(), g = actx.createGain();
+      o.type = "sine";
+      o.frequency.setValueAtTime(350, t);
+      o.frequency.exponentialRampToValueAtTime(90, t + 0.22);
+      o.frequency.exponentialRampToValueAtTime(320, t + 0.44);
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.exponentialRampToValueAtTime(0.3, t + 0.03);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + 0.52);
+      o.connect(g); g.connect(actx.destination);
+      o.start(t); o.stop(t + 0.6);
+    } catch (e) {}
+  }
+
+  function lerp(a, b, t) { return Math.round(a + (b - a) * t); }
+  function paintBrown() {
+    /* the heat works while the song plays: crumb and crust darken to deep brown — both slices */
+    var b = Math.max(0, Math.min(1, brown));
+    var glow = "inset 0 0 0 3px #231a12," +
+      "inset 0 0 " + Math.round(44 * b) + "px " + Math.round(16 * b) + "px rgba(122,62,12," + (0.62 * b).toFixed(2) + ")";
+    var crumb = "linear-gradient(180deg," +
+      "rgb(" + lerp(253, 203, b) + "," + lerp(238, 158, b) + "," + lerp(217, 108, b) + ")," +
+      "rgb(" + lerp(246, 188, b) + "," + lerp(223, 138, b) + "," + lerp(188, 88, b) + "))";
+    var crust = "rgb(" + lerp(221, 101, b) + "," + lerp(144, 62, b) + "," + lerp(80, 22, b) + ")";
+    toastEl.style.boxShadow = glow; toastEl.style.borderColor = crust; toastEl.style.background = crumb;
+    toast2.style.boxShadow = glow; toast2.style.borderColor = crust; toast2.style.background = crumb;
+  }
+  function renderTrack() {
+    sliceLabel.textContent = "slice " + (idx + 1) + " of " + TRACKS.length;
+    songTitle.textContent = TRACKS[idx].title;
+    lyricsEl.textContent = TRACKS[idx].lyrics;
+    lyricsEl.classList.remove("swap"); void lyricsEl.offsetWidth; lyricsEl.classList.add("swap");
+    Array.prototype.forEach.call(dotsEl.children, function (d, i) {
+      d.classList.toggle("on", i === idx);
+    });
+  }
+  function loadTrack(fresh) {
+    if (fresh === undefined) fresh = true;
+    if (fresh) { brown = 0; paintBrown(); } /* fresh bread — unless it's a re-toast */
+    audio.src = TRACKS[idx].url;
+    try { audio.load(); } catch (e) {}
+    progFill.style.width = "0%";
+    jamKnife.style.left = "0%";
+    renderTrack();
+  }
+  function setProg(pct) {
+    /* the knife spreads the jam across the little toast as the song plays */
+    progFill.style.width = pct + "%";
+    jamKnife.style.left = pct + "%";
+  }
+  function setPlayingUI() {
+    scene.classList.add("playing"); scene.classList.remove("popped");
+    dialLabel.textContent = "toasting";
+    hint.textContent = "now toasting · tap lever to stop";
+    leverBtn.innerHTML = "&#10074;&#10074;";
+  }
+  function setIdleUI() {
+    scene.classList.remove("playing"); scene.classList.remove("popped");
+    dialLabel.textContent = "ready";
+    hint.textContent = "press the lever down";
+    leverBtn.innerHTML = "&#9660;";
+  }
+  function burst() {
+    /* crumbs + glitter fountain out of the slots when the toast springs up:
+       everything rises, then rains back down and fades */
+    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    var golds = ["#ffd75e", "#fff3c4", "#f6c453", "#ff9d5c"],
+        browns = ["#8a4d1c", "#b07a3f", "#653e16"];
+    for (var i = 0; i < 18; i++) {
+      var p = document.createElement("i"),
+          spark = (i % 3 !== 0);
+      p.className = spark ? "spark" : "crumb";
+      p.style.background = spark ? golds[i % golds.length] : browns[i % browns.length];
+      if (!spark) {
+        p.style.width = (4 + i % 4) + "px";
+        p.style.height = (4 + (i * 7) % 4) + "px";
+      }
+      p.style.left = "calc(50% + " + ((i * 37) % 90 - 45) + "px)";
+      p.style.top = (108 + (i * 13) % 24) + "px";
+      scene.appendChild(p);
+      var dx = ((i * 53) % 140) - 70,
+          peak = -60 - ((i * 29) % 90),
+          rot = spark ? 0 : ((i * 53) % 360) - 180;
+      var anim = p.animate([
+        { transform: "translate(0,0) rotate(0deg)", opacity: 1 },
+        { transform: "translate(" + (dx * .6) + "px," + peak + "px) rotate(" + rot + "deg)", opacity: 1, offset: .45 },
+        { transform: "translate(" + dx + "px,64px) rotate(" + (rot * 2) + "deg)", opacity: 0 }
+      ], { duration: 950 + (i * 47) % 500, delay: (i * 23) % 120, easing: "cubic-bezier(.2,.7,.4,1)" });
+      (function (el, a) { a.onfinish = function () { el.remove(); }; })(p, anim);
+    }
+  }
+  function popUp(endHint, freshHint, after) {
+    /* lever springs up and the toast flies with it — boing! — then the
+       toast bounces up into oblivion and a fresh slice drops in */
+    state = "leaving";
+    scene.classList.remove("playing");
+    scene.classList.add("popped");
+    dialLabel.textContent = "done";
+    hint.textContent = endHint;
+    leverBtn.innerHTML = "&#9660;";
+    boingSnd();
+    burst();
+    setTimeout(function () { scene.classList.add("launching"); }, 350);
+    setTimeout(function () {
+      if (after) after();
+      brown = 0; paintBrown(); /* fresh bread, pale again */
+      scene.classList.remove("popped");
+      scene.classList.remove("launching");
+      scene.classList.add("entering");
+      void toastEl.offsetWidth;
+      scene.classList.remove("entering");
+      state = "idle";
+      dialLabel.textContent = "ready";
+      hint.textContent = freshHint;
+    }, 1250);
+  }
+  function play() {
+    audio.play().then(function () {
+      state = "playing"; setPlayingUI();
+    }).catch(function () {
+      hint.textContent = "tap once more to let the sound out";
+    });
+  }
+
+  leverBtn.addEventListener("click", function () {
+    if (state === "playing") {
+      /* STOP mid-song: halt the music, toast launches, fresh bread after */
+      audio.pause(); audio.currentTime = 0;
+      setProg(0);
+      popUp("toast's up · bye!", "fresh bread in · press to re-toast", null);
+    } else if (state === "idle") {
+      /* lever goes down and takes the toast with it — click! */
+      scene.classList.remove("popped");
+      clickSnd();
+      play();
+    }
+    /* presses while a slice is mid-flight are ignored */
+  });
+
+  audio.addEventListener("ended", function () {
+    setProg(100);
+    popUp("toast's up · nice!",
+      continuous ? "next slice coming right up" : "fresh bread in · press for the next slice",
+      function () {
+        idx = (idx + 1) % TRACKS.length; /* the next slice is already queued */
+        audio.src = TRACKS[idx].url;
+        try { audio.load(); } catch (e) {}
+        renderTrack();
+        /* continuous mode: fresh bread goes straight back down by itself */
+        if (continuous) setTimeout(function () {
+          if (!continuous || state !== "idle") return;
+          clickSnd();
+          play();
+        }, 1400);
+      });
+  });
+  document.getElementById("loopBtn").addEventListener("click", function () {
+    continuous = !continuous;
+    this.setAttribute("aria-pressed", continuous ? "true" : "false");
+    this.innerHTML = continuous ? "&#8635; continuous on" : "&#8635; continuous";
+    tone(continuous ? 880 : 660, continuous ? 1320 : 440, 0.12, "sine", 0.15);
+  });
+  audio.addEventListener("timeupdate", function () {
+    if (audio.duration) {
+      setProg(audio.currentTime / audio.duration * 100);
+      brown = audio.currentTime / audio.duration;
+      paintBrown();
+    }
+  });
+
+  TRACKS.forEach(function (t, i) {
+    var d = document.createElement("button");
+    d.className = "dot" + (i === 0 ? " on" : "");
+    d.type = "button";
+    d.textContent = (i + 1) + " · " + t.title;
+    d.title = t.title;
+    d.addEventListener("click", function () {
+      /* picking a title slams the carriage down by itself — click! */
+      if (state === "leaving") return; /* wait for the fresh slice to land */
+      var descending = (state !== "playing");
+      idx = i;
+      state = "idle";
+      scene.classList.remove("popped");
+      loadTrack();
+      if (descending) clickSnd();
+      play();
+    });
+    dotsEl.appendChild(d);
+  });
+
+  loadTrack();
+
+  /* a little square of butter for a cursor — it glides after the mouse
+     and lets a drip fall every now and then */
+  (function () {
+    var butter = document.getElementById("butter");
+    if (!window.matchMedia || !window.matchMedia("(pointer:fine)").matches) return;
+    var mx = -100, my = -100, bx = -100, by = -100, active = false, lastMove = 0;
+    document.addEventListener("mousemove", function (e) {
+      mx = e.clientX; my = e.clientY; lastMove = Date.now();
+      if (!active) { active = true; bx = mx; by = my; butter.style.opacity = "1"; }
+    });
+    document.addEventListener("mouseleave", function () {
+      active = false; butter.style.opacity = "0";
+    });
+    (function glide() {
+      if (active) {
+        bx += (mx - bx) * .3; by += (my - by) * .3;
+        butter.style.transform = "translate(" + (bx - 13) + "px," + (by - 13) + "px) rotate(-10deg)";
+      }
+      requestAnimationFrame(glide);
+    })();
+    setInterval(function () {
+      if (!active || Date.now() - lastMove > 4000) return;
+      var d = document.createElement("i");
+      d.className = "drip";
+      d.style.left = (bx + 2 + Math.random() * 10) + "px";
+      d.style.top = (by + 12) + "px";
+      document.body.appendChild(d);
+      var fall = d.animate([
+        { transform: "translateY(0) scale(1)", opacity: 1 },
+        { transform: "translateY(46px) scale(.7)", opacity: 0 }
+      ], { duration: 750, easing: "cubic-bezier(.4,0,.8,.4)" });
+      fall.onfinish = function () { d.remove(); };
+    }, 2400);
+  })();
+})();
+</script>
+</body>
+</html>
