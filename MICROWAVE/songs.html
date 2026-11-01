@@ -1,0 +1,368 @@
+<style>
+*{box-sizing:border-box}
+:root{
+  --pink:#ffc7de; --pink2:#ff9ec4; --cream:#fff6fa; --lilac:#d9c6ff;
+  --ink:#5b3a4d;
+}
+body{
+  margin:0; min-height:100vh; text-align:center;
+  font-family:"Comic Sans MS","Chalkboard SE","Segoe UI",sans-serif;
+  color:var(--ink);
+  background: radial-gradient(circle at 20% 10%, #ffe3ef 0, transparent 40%),
+             radial-gradient(circle at 80% 20%, #d9e6ff 0, transparent 40%),
+             radial-gradient(circle at 50% 90%, #ffe9f5 0, #ffd6e8 35%, #e6d9ff 100%);
+  display:flex; flex-direction:column; align-items:center; padding:28px 12px 60px;
+}
+h1{margin:6px 0 2px; letter-spacing:2px; font-size:clamp(22px,4vw,34px)}
+.sub{opacity:.75; margin:0 0 18px; font-size:14px}
+.stage{position:relative; width:min(860px,96vw)}
+/* microwave body - pastel with lustre */
+.nuke{
+  position:relative; border-radius:28px; padding:18px;
+  background: linear-gradient(135deg,#ffeef6 0%, var(--pink) 22%, #ffb1d2 45%, var(--pink2) 60%, var(--lilac) 100%);
+  border:4px solid #fff;
+  box-shadow:0 18px 50px rgba(255,120,175,.35), inset 0 2px 12px #fff, inset 0 -8px 22px rgba(180,120,200,.35);
+  overflow:hidden;
+}
+/* lustre sweep */
+.nuke::after{
+  content:""; position:absolute; inset:-40%; pointer-events:none;
+  background:linear-gradient(115deg,transparent 42%,rgba(255,255,255,.75) 48%,rgba(255,255,255,.15) 53%,transparent 58%);
+  animation:shine 6s ease-in-out infinite;
+}
+@keyframes shine{0%,100%{transform:translateX(-12%)}50%{transform:translateX(12%)}}
+/* kitty top */
+.kitty{display:flex; align-items:center; justify-content:center; gap:12px; margin-bottom:12px; position:relative; z-index:2}
+.face{
+  width:86px; height:66px; background:#fff; border:3px solid var(--ink); border-radius:50%/55%;
+  position:relative;
+}
+.face::before,.face::after{
+  content:""; position:absolute; top:-18px; width:28px; height:28px; background:#fff;
+  border:3px solid var(--ink); border-bottom:none;
+  clip-path:polygon(50% 0,100% 100%,0 100%);
+}
+.face::before{left:8px; transform:rotate(-18deg)} .face::after{right:8px; transform:rotate(18deg)}
+.eye{position:absolute; top:28px; width:10px; height:14px; background:var(--ink); border-radius:50%}
+.eye.l{left:22px}.eye.r{right:22px}
+.nose{position:absolute; left:50%; top:40px; transform:translateX(-50%); width:14px; height:10px; background:#ff9ec4; border:2px solid var(--ink); border-radius:50%/60%}
+.wh{position:absolute; top:36px; width:22px; height:2px; background:var(--ink)}
+.bow{position:absolute; right:-12px; top:-6px; font-size:30px; transform:rotate(15deg)}
+.main{display:grid; grid-template-columns:1.6fr .9fr; gap:14px; position:relative; z-index:2}
+@media(max-width:640px){.main{grid-template-columns:1fr}}
+/* cavity + door */
+.cavity{
+  position:relative; border-radius:18px; background:#3a2b36; overflow:hidden;
+  border:3px solid #fff; min-height:360px;
+}
+.interior{
+  position:absolute; inset:0;
+  background:radial-gradient(circle at 50% 60%, #fff8 0, transparent 55%), linear-gradient(#4b3a46,#2b2028);
+  transition:background .4s;
+}
+.interior.on{background:radial-gradient(circle at 50% 60%, #fff2b8 0, #ffd98a 35%, #6b4a3a 75%)}
+.turntable{
+  position:absolute; left:50%; bottom:26px; transform:translateX(-50%);
+  width:72%; aspect-ratio:1.6/1; border-radius:50%;
+  background:radial-gradient(circle,#ffffffee 0 18%,#ffd9ea 19% 40%,#ffffff88 41%,transparent 42%), repeating-conic-gradient(#fff2 0 10deg, transparent 10deg 20deg);
+  border:3px solid #ffffffaa;
+}
+.foodWrap{
+  position:absolute; left:50%; bottom:70px; transform:translateX(-50%);
+  width:190px; height:190px; pointer-events:auto;
+}
+.foodWrap img{
+  width:100%; height:100%; object-fit:cover; border-radius:50%;
+  border:6px solid #fff; box-shadow:0 8px 24px rgba(0,0,0,.4);
+  background:#fff;
+}
+.spinning{animation:spin 6s linear infinite}
+@keyframes spin{to{transform:translateX(-50%) rotate(360deg)}}
+.spinning img{animation:counter 6s linear infinite}
+@keyframes counter{to{transform:rotate(-360deg)}}
+/* beam-in effect */
+.beam{
+  position:absolute; left:50%; bottom:0; width:120px; height:100%;
+  transform:translateX(-50%); pointer-events:none; opacity:0;
+  background:linear-gradient(to top, #9ff8ff, #ff9ff2aa, transparent);
+  filter:blur(6px);
+}
+.beam.go{animation:beamIn 1.2s ease-out}
+@keyframes beamIn{0%{opacity:0; height:0}30%{opacity:1}100%{opacity:0; height:100%}}
+.pop-in{animation:popIn .9s cubic-bezier(.2,1.6,.4,1)}
+@keyframes popIn{0%{transform:translateX(-50%) translateY(220px) scale(.2); opacity:0}60%{transform:translateX(-50%) translateY(-18px) scale(1.08); opacity:1}100%{transform:translateX(-50%) translateY(0) scale(1)}}
+/* door - right-to-left swing, smoky see-through */
+.door{
+  position:absolute; inset:0; transform-origin:left center; transition:transform .8s cubic-bezier(.6,0,.3,1);
+  background:linear-gradient(135deg, rgba(255,238,246,.88), rgba(255,177,210,.88));
+  border-left:6px solid #fff;
+  z-index:5; display:flex; align-items:center; justify-content:center;
+}
+.door.open{transform:perspective(900px) rotateY(-102deg)}
+.door.fling{transition:transform .35s cubic-bezier(.2,1.4,.4,1); transform:perspective(900px) rotateY(-108deg)}
+.window{
+  width:76%; height:68%; border-radius:14px; border:3px solid #fff;
+  background:rgba(40,20,35,.38);
+  backdrop-filter:blur(0px);
+  box-shadow:inset 0 0 30px rgba(0,0,0,.7);
+  display:flex; align-items:center; justify-content:center; overflow:hidden;
+  color:#ffd9ea; font-size:13px; position:relative;
+}
+.window img.ghost{
+  position:absolute; inset:6px; width:calc(100% - 12px); height:calc(100% - 12px);
+  object-fit:cover; border-radius:10px; opacity:.85; pointer-events:none;
+  animation:ghostspin 6s linear infinite;
+}
+@keyframes ghostspin{to{transform:rotate(360deg)}}
+.window .peekTxt{position:relative; z-index:2; background:rgba(0,0,0,.35); padding:4px 10px; border-radius:999px}
+.handle{
+  position:absolute; right:12px; top:20px; bottom:20px; width:14px; border-radius:10px;
+  background:linear-gradient(#fff,#ffb1d2); border:2px solid var(--ink);
+}
+/* control panel */
+.panel{
+  background:var(--cream); border-radius:18px; border:3px solid #fff;
+  padding:14px; display:flex; flex-direction:column; gap:10px; box-shadow:inset 0 2px 8px #ffd6e8;
+}
+.display{
+  background:#2b2028; color:#8affc1; border-radius:10px; padding:10px; font-family:monospace;
+  min-height:64px; font-size:14px; line-height:1.5; overflow:hidden;
+}
+.eq{display:flex; gap:3px; align-items:end; height:22px; justify-content:center; margin-top:4px}
+.eq i{width:6px; background:#8affc1; border-radius:2px; height:4px}
+.cooking .eq i{animation:eq .7s ease-in-out infinite alternate}
+.eq i:nth-child(2n){animation-delay:.15s}.eq i:nth-child(3n){animation-delay:.3s}
+@keyframes eq{from{height:4px}to{height:20px}}
+.foodBtn{
+  font-size:52px; line-height:1; cursor:pointer; border:3px solid var(--ink);
+  background:linear-gradient(#fff,#ffe3ef); border-radius:50%; width:86px; height:86px;
+  margin:0 auto; transition:transform .15s;
+}
+.foodBtn:hover{transform:scale(1.08) rotate(-6deg)}
+.row{display:flex; gap:8px; justify-content:center; flex-wrap:wrap}
+button.pill{
+  border:2px solid var(--ink); border-radius:999px; padding:8px 14px; cursor:pointer;
+  background:#fff; font-family:inherit; font-weight:bold; color:var(--ink);
+}
+button.pill:disabled{opacity:.4; cursor:default}
+button.pill.go{background:var(--ink); color:#fff}
+/* menu */
+.menuBack{
+  position:fixed; inset:0; background:rgba(60,20,45,.45); display:flex;
+  align-items:center; justify-content:center; z-index:50; padding:16px;
+}
+.menuBack[hidden]{display:none}
+.menu{
+  background:var(--cream); border-radius:20px; border:4px solid #fff;
+  max-width:520px; width:100%; padding:18px; box-shadow:0 20px 60px rgba(0,0,0,.4);
+}
+.menu h2{margin:4px 0 12px}
+.grid{display:grid; grid-template-columns:repeat(3,1fr); gap:10px}
+@media(max-width:480px){.grid{grid-template-columns:repeat(2,1fr)}}
+.pick{border:2px solid var(--pink2); border-radius:14px; background:#fff; cursor:pointer; padding:8px}
+.pick:hover{transform:translateY(-2px); box-shadow:0 8px 18px rgba(255,120,175,.3)}
+.pick img{width:100%; aspect-ratio:1; object-fit:cover; border-radius:10px}
+.pick b{display:block; margin-top:6px; font-size:13px}
+.pick small{opacity:.7; font-size:11px}
+/* steam */
+.steam{position:absolute; left:50%; bottom:180px; transform:translateX(-50%); z-index:6; pointer-events:none}
+.steam span{
+  position:absolute; bottom:0; width:16px; height:16px; border-radius:50%;
+  background:radial-gradient(circle,#fff,transparent 70%); opacity:0;
+}
+.steam.on span{animation:rise 2.2s ease-out infinite}
+.steam.on span:nth-child(2){animation-delay:.4s; margin-left:-26px}
+.steam.on span:nth-child(3){animation-delay:.8s; margin-left:26px}
+.steam.on span:nth-child(4){animation-delay:1.2s; margin-left:-12px}
+@keyframes rise{0%{opacity:0; transform:translateY(0) scale(.6)}20%{opacity:.9}100%{opacity:0; transform:translateY(-140px) scale(1.8)}}
+.note{font-size:12px; opacity:.7; max-width:640px; margin:14px auto 0}
+a{color:var(--ink)}
+</style>
+
+<h1>🎀 HELLO-KITTYSH MICROWAVE 🎀</h1>
+<p class="sub">pastel lustre • peek-a-boo door • synthwave kitchen</p>
+
+<div class="stage">
+<div class="nuke" id="nukeEl">
+  <div class="kitty">
+    <div class="face">
+      <span class="eye l"></span><span class="eye r"></span><span class="nose"></span>
+      <span class="wh" style="left:-16px"></span><span class="wh" style="right:-16px"></span>
+      <span class="bow">🎀</span>
+    </div>
+    <div><b>NEKO-CHAN 6000</b><br><small>pastel lustre edition</small></div>
+  </div>
+  <div class="main">
+    <div class="cavity">
+      <div class="interior" id="interiorEl"></div>
+      <div class="turntable" id="plateEl"></div>
+      <div class="beam" id="beamEl"></div>
+      <div class="foodWrap" id="foodWrapEl" hidden>
+        <img id="foodImgEl" alt="food cooking">
+      </div>
+      <div class="steam" id="steamEl"><span></span><span></span><span></span><span></span></div>
+      <div class="door" id="doorEl">
+        <div class="window" id="windowEl"><img class="ghost" id="ghostImgEl" hidden alt=""><span class="peekTxt" id="peekTxtEl">🍜 peek window — food visible while cooking 🍗</span></div>
+        <div class="handle"></div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="display" id="displayEl">READY ♡<br>tap the food icon to choose</div>
+      <div class="eq" id="eqEl"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      <button class="foodBtn" id="menuBtn" title="open food menu">🍜</button>
+      <small>tap 🍜 / 🍗 for menu</small>
+      <div class="row">
+        <button class="pill" id="stopBtn" disabled>■ stop</button>
+        <button class="pill" id="muteBtn">♪ sound: on</button>
+      </div>
+      <div class="row"><small id="nowEl">no dish loaded</small></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<p class="note">Each dish cooks for exactly one song. When the song ends: beep-beep-beep + door flings open + steam. Click the steaming food to take it out, then pick another.</p>
+
+<div class="menuBack" id="menuBack" hidden>
+  <div class="menu">
+    <h2>🍜 choose your dish 🍗</h2>
+    <div class="grid" id="gridEl"></div>
+    <p><button class="pill" id="closeMenuBtn">close</button></p>
+  </div>
+</div>
+
+<audio id="cookAudio" preload="auto"></audio>
+
+<script>
+const FOODS = [
+  {id:"ramen", name:"Ramen", img:"src/img/ramen.jpg", music:"src/music/ramen.mp3", desc:"rainy neon synthwave 85 BPM"},
+  {id:"chicken", name:"Chicken dinner", img:"src/img/chicken.jpg", music:"src/music/chicken.mp3", desc:"goth-emo EDM 110 BPM"},
+  {id:"cake", name:"Cake", img:"src/img/cake.jpg", music:"src/music/cake.mp3", desc:"kawaii synthwave 100 BPM"},
+  {id:"souffle", name:"Souffle", img:"src/img/souffle.jpg", music:"src/music/souffle.mp3", desc:"dreamy airy 80 BPM"},
+  {id:"pasta", name:"Pasta", img:"src/img/pasta.jpg", music:"src/music/pasta.mp3", desc:"italo-disco 115 BPM"},
+  {id:"pizza", name:"Pizza", img:"src/img/pizza.jpg", music:"src/music/pizza.mp3", desc:"party synthwave 125 BPM"},
+];
+const doorEl = document.getElementById("doorEl");
+const foodWrapEl = document.getElementById("foodWrapEl");
+const foodImgEl = document.getElementById("foodImgEl");
+const interiorEl = document.getElementById("interiorEl");
+const plateEl = document.getElementById("plateEl");
+const beamEl = document.getElementById("beamEl");
+const steamEl = document.getElementById("steamEl");
+const displayEl = document.getElementById("displayEl");
+const nowEl = document.getElementById("nowEl");
+const audio = document.getElementById("cookAudio");
+const nukeEl = document.getElementById("nukeEl");
+const ghostImgEl = document.getElementById("ghostImgEl");
+const peekTxtEl = document.getElementById("peekTxtEl");
+const menuBack = document.getElementById("menuBack");
+const gridEl = document.getElementById("gridEl");
+let muted = false, state = "idle", current = null, tick = null;
+
+FOODS.forEach(f=>{
+  const b=document.createElement("button"); b.className="pick";
+  b.innerHTML = `<img src="${f.img}" alt="${f.name}"><b>${f.name}</b><small>${f.desc}</small>`;
+  b.onclick=()=>{ menuBack.hidden=true; loadDish(f); };
+  gridEl.appendChild(b);
+});
+document.getElementById("menuBtn").onclick=()=>{ menuBack.hidden=false; };
+document.getElementById("closeMenuBtn").onclick=()=>{ menuBack.hidden=true; };
+menuBack.addEventListener("click",e=>{ if(e.target===menuBack) menuBack.hidden=true; });
+document.getElementById("muteBtn").onclick=(e)=>{ muted=!muted; audio.muted=muted; e.target.textContent = muted?"♪ sound: off":"♪ sound: on"; };
+document.getElementById("stopBtn").onclick=stopAll;
+foodWrapEl.onclick=()=>{ if(state==="done"){ takeOut(); } };
+
+function fmt(s){ s=Math.max(0,Math.round(s)); return String(Math.floor(s/60)).padStart(1,"0")+":"+String(s%60).padStart(2,"0"); }
+
+async function loadDish(f){
+  if(state==="cooking"||state==="loading") stopAll(true);
+  state="loading"; current=f; steamEl.classList.remove("on");
+  document.getElementById("stopBtn").disabled=false;
+  displayEl.innerHTML=`LOADING ${f.name.toUpperCase()}…<br>door opening →`;
+  // door opens right-to-left
+  doorEl.classList.remove("fling"); doorEl.classList.add("open");
+  await wait(850);
+  // food ascends from unknown location (beam in)
+  foodImgEl.src=f.img; foodWrapEl.hidden=false;
+  ghostImgEl.src=f.img; ghostImgEl.hidden=false; peekTxtEl.style.display="none";
+  foodWrapEl.classList.remove("pop-in"); void foodWrapEl.offsetWidth;
+  beamEl.classList.remove("go"); void beamEl.offsetWidth; beamEl.classList.add("go");
+  foodWrapEl.classList.add("pop-in");
+  nowEl.textContent = f.name+" • beaming in…";
+  await wait(1250);
+  // close door, start music + rotation
+  doorEl.classList.remove("open");
+  await wait(850);
+  startCooking(f);
+}
+function startCooking(f){
+  state="cooking";
+  interiorEl.classList.add("on");
+  foodWrapEl.classList.add("spinning");
+  nukeEl.classList.add("cooking");
+  audio.src=f.music; audio.muted=muted; audio.currentTime=0;
+  audio.play().then(()=>{
+    displayEl.innerHTML=`♪ NOW COOKING: ${f.name.toUpperCase()} ♪<br><span id="tEl">00:00</span> / ${fmt(audio.duration||0)} — ${f.desc}`;
+    nowEl.textContent = "♪ "+f.name+" — "+f.desc;
+  }).catch(()=>{
+    displayEl.innerHTML=`TAP AGAIN TO START SOUND<br>${f.name} loaded`;
+    nowEl.textContent=f.name+" (tap food icon again)";
+  });
+  clearInterval(tick);
+  tick=setInterval(()=>{
+    const el=document.getElementById("tEl");
+    if(el) el.textContent=fmt(audio.currentTime||0);
+  },500);
+  audio.onended=finishCooking;
+}
+function finishCooking(){
+  clearInterval(tick);
+  state="done";
+  foodWrapEl.classList.remove("spinning");
+  interiorEl.classList.remove("on");
+  nukeEl.classList.remove("cooking");
+  // beeps then fling open
+  beep3(()=>{
+    doorEl.classList.add("fling","open");
+    steamEl.classList.add("on");
+    displayEl.innerHTML=`★ DONE! ${current.name.toUpperCase()} IS HOT ★<br>tap the food to take it out`;
+    nowEl.textContent=current.name+" • careful, steamy!";
+    document.getElementById("stopBtn").disabled=true;
+  });
+}
+function takeOut(){
+  foodWrapEl.hidden=true; steamEl.classList.remove("on");
+  ghostImgEl.hidden=true; peekTxtEl.style.display="";
+  doorEl.classList.remove("fling","open");
+  state="idle"; current=null;
+  displayEl.innerHTML="READY ♡<br>tap the food icon to choose";
+  nowEl.textContent="no dish loaded";
+  document.getElementById("stopBtn").disabled=true;
+}
+function stopAll(silent){
+  try{audio.pause();}catch(e){}
+  clearInterval(tick);
+  foodWrapEl.classList.remove("spinning");
+  interiorEl.classList.remove("on"); nukeEl.classList.remove("cooking");
+  steamEl.classList.remove("on");
+  if(!silent){ takeOut(); }
+}
+let AC=null;
+function beep3(done){
+  try{
+    AC = AC || new (window.AudioContext||window.webkitAudioContext)();
+    const t0=AC.currentTime;
+    [0,0.35,0.7].forEach((d,i)=>{
+      const o=AC.createOscillator(), g=AC.createGain();
+      o.frequency.value= i===2?1568:1046;
+      o.connect(g); g.connect(AC.destination);
+      g.gain.setValueAtTime(0.001,t0+d);
+      g.gain.exponentialRampToValueAtTime(0.4,t0+d+0.03);
+      g.gain.exponentialRampToValueAtTime(0.001,t0+d+0.28);
+      o.start(t0+d); o.stop(t0+d+0.3);
+    });
+    setTimeout(done,1150);
+  }catch(e){ done(); }
+}
+function wait(ms){ return new Promise(r=>setTimeout(r,ms)); }
+</script>
