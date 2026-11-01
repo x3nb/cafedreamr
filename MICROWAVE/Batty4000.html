@@ -1,0 +1,266 @@
+<style>
+*{box-sizing:border-box}
+:root{--ink:#e8e2ff; --neon:#9dff57; --violet:#7b4bff; --panel:#140f22;}
+body{
+  margin:0; min-height:100vh; text-align:center; color:var(--ink);
+  font-family:"Courier New",monospace;
+  background:#0d0716;
+  display:flex; flex-direction:column; align-items:center; padding:28px 12px 60px;
+  overflow-x:hidden;
+}
+.blur{position:fixed; border-radius:50%; filter:blur(90px); opacity:.5; pointer-events:none; z-index:0}
+.b1{width:420px;height:420px;left:-120px;top:-80px;background:#4b1e8a}
+.b2{width:380px;height:380px;right:-100px;top:20%;background:#1e3a8a}
+.b3{width:460px;height:300px;left:30%;bottom:-140px;background:#7b4bff;opacity:.35}
+h1{margin:6px 0 2px; letter-spacing:3px; font-size:clamp(22px,4vw,34px); color:#fff; text-shadow:0 0 18px var(--violet); position:relative; z-index:1}
+.sub{opacity:.75; margin:0 0 18px; font-size:14px; position:relative; z-index:1}
+.stage{position:relative; width:min(880px,96vw); z-index:1}
+.nuke{
+  position:relative; border-radius:26px; padding:18px;
+  background:linear-gradient(135deg,#0a0a0f 0%, #1c1033 25%, #3b1d6e 45%, #12081f 62%, #2a1650 80%, #000 100%);
+  border:2px solid #3d2b5e;
+  box-shadow:0 0 0 2px #000, 0 0 34px rgba(123,75,255,.45), inset 0 1px 0 #ffffff33, inset 0 -10px 26px #000;
+  overflow:hidden;
+}
+.nuke::after{
+  content:""; position:absolute; inset:-40%; pointer-events:none;
+  background:linear-gradient(115deg,transparent 42%,rgba(255,255,255,.22) 48%,rgba(157,255,87,.12) 53%,transparent 58%);
+  animation:shine 7s ease-in-out infinite;
+}
+.nuke::before{
+  content:""; position:absolute; inset:10px; border-radius:18px; pointer-events:none;
+  border:1px solid rgba(157,255,87,.35); box-shadow:0 0 18px rgba(157,255,87,.15) inset;
+}
+@keyframes shine{0%,100%{transform:translateX(-12%)}50%{transform:translateX(12%)}}
+.bathead{display:flex; align-items:center; justify-content:center; gap:12px; margin-bottom:12px; position:relative; z-index:2}
+.batface{font-size:64px; filter:drop-shadow(0 0 12px var(--violet)); animation:bob 3s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-6px) rotate(4deg)}}
+.main{display:grid; grid-template-columns:1.6fr .9fr; gap:14px; position:relative; z-index:2}
+@media(max-width:640px){.main{grid-template-columns:1fr}}
+.cavity{position:relative; border-radius:18px; background:#050308; overflow:hidden; border:2px solid var(--neon); min-height:360px; box-shadow:0 0 22px rgba(157,255,87,.25)}
+.interior{position:absolute; inset:0; background:radial-gradient(circle at 50% 60%, #ffffff10 0, transparent 55%), linear-gradient(#1a1030,#050308); transition:background .4s}
+.interior.on{background:radial-gradient(circle at 50% 60%, #9dff5733 0, #7b4bff44 45%, #000 75%)}
+.turntable{position:absolute; left:50%; bottom:26px; transform:translateX(-50%); width:72%; aspect-ratio:1.6/1; border-radius:50%;
+  background:radial-gradient(circle,#ffffff22 0 18%,#7b4bff55 19% 40%,transparent 41%), repeating-conic-gradient(#ffffff10 0 10deg, transparent 10deg 20deg);
+  border:2px solid var(--neon);}
+.foodWrap{position:absolute; left:50%; bottom:70px; transform:translateX(-50%); width:190px; height:190px}
+.foodWrap img{width:100%; height:100%; object-fit:cover; border-radius:50%; border:4px solid var(--neon); box-shadow:0 0 24px rgba(157,255,87,.5); background:#000}
+.spinning{animation:spin 9s linear infinite}
+@keyframes spin{to{transform:translateX(-50%) rotate(360deg)}}
+/* food rides the turntable — rotates WITH the plate, like a real microwave */
+.spinning img{display:block}
+.beam{position:absolute; left:50%; bottom:0; width:120px; height:100%; transform:translateX(-50%); pointer-events:none; opacity:0;
+  background:linear-gradient(to top, var(--neon), #7b4bffaa, transparent); filter:blur(6px)}
+.beam.go{animation:beamIn 1.2s ease-out}
+@keyframes beamIn{0%{opacity:0; height:0}30%{opacity:1}100%{opacity:0; height:100%}}
+.pop-in{animation:popIn .9s cubic-bezier(.2,1.6,.4,1)}
+@keyframes popIn{0%{transform:translateX(-50%) translateY(220px) scale(.2); opacity:0}60%{transform:translateX(-50%) translateY(-18px) scale(1.08); opacity:1}100%{transform:translateX(-50%) translateY(0) scale(1)}}
+.door{position:absolute; inset:0; transform-origin:left center; transition:transform .8s cubic-bezier(.6,0,.3,1);
+  background:linear-gradient(135deg, rgba(10,8,18,.92), rgba(59,29,110,.92));
+  border-left:4px solid var(--neon); z-index:5; display:flex; align-items:center; justify-content:center}
+.door.open{transform:perspective(900px) rotateY(-102deg)}
+.door.fling{transition:transform .35s cubic-bezier(.2,1.4,.4,1); transform:perspective(900px) rotateY(-108deg)}
+.window{width:76%; height:68%; border-radius:14px; border:2px solid var(--neon);
+  background:rgba(10,5,20,.45); box-shadow:inset 0 0 30px #000;
+  display:flex; align-items:center; justify-content:center; overflow:hidden; color:#c9ff9d; font-size:13px; position:relative}
+.window img.ghost{position:absolute; inset:6px; width:calc(100% - 12px); height:calc(100% - 12px); object-fit:cover; border-radius:10px; opacity:.85; animation:ghostspin 9s linear infinite}
+@keyframes ghostspin{to{transform:rotate(360deg)}}
+.window .peekTxt{position:relative; z-index:2; background:rgba(0,0,0,.5); padding:4px 10px; border-radius:999px}
+.handle{position:absolute; right:12px; top:20px; bottom:20px; width:12px; border-radius:10px; background:linear-gradient(var(--neon),#2a1650); box-shadow:0 0 12px var(--neon)}
+.panel{background:var(--panel); border-radius:18px; border:2px solid #3d2b5e; padding:14px; display:flex; flex-direction:column; gap:10px; box-shadow:inset 0 0 18px #000}
+.display{background:#000; color:var(--neon); border-radius:10px; padding:10px; font-family:monospace; min-height:64px; font-size:13px; line-height:1.5; border:1px solid #2e4a22; text-shadow:0 0 8px var(--neon)}
+.eq{display:flex; gap:3px; align-items:end; height:22px; justify-content:center; margin-top:4px}
+.eq i{width:6px; background:var(--neon); border-radius:2px; height:4px; box-shadow:0 0 8px var(--neon)}
+.cooking .eq i{animation:eq .7s ease-in-out infinite alternate}
+.eq i:nth-child(2n){animation-delay:.15s}.eq i:nth-child(3n){animation-delay:.3s}
+@keyframes eq{from{height:4px}to{height:20px}}
+.batBtn{font-size:56px; line-height:1; cursor:pointer; border:2px solid var(--neon); background:radial-gradient(circle at 50% 30%, #2a1650, #000); border-radius:50%; width:90px; height:90px; margin:0 auto; transition:transform .15s; box-shadow:0 0 18px rgba(157,255,87,.4); position:relative; z-index:2}
+.batBtn:hover{transform:scale(1.08) rotate(-6deg)}
+.batBtn.attention{animation:batPulse 1.6s ease-in-out infinite; border-width:3px}
+@keyframes batPulse{
+  0%,100%{transform:scale(1); box-shadow:0 0 18px rgba(157,255,87,.6), 0 0 45px rgba(123,75,255,.55), 0 0 90px rgba(157,255,87,.25)}
+  50%{transform:scale(1.12); box-shadow:0 0 32px rgba(157,255,87,.95), 0 0 80px rgba(123,75,255,.9), 0 0 130px rgba(157,255,87,.45)}
+}
+.batBtn.attention::after{content:""; position:absolute; inset:-10px; border-radius:50%; border:2px solid var(--neon); opacity:.7; animation:ping 1.6s ease-out infinite; pointer-events:none}
+@keyframes ping{0%{transform:scale(.85); opacity:.9}100%{transform:scale(1.35); opacity:0}}
+.tapHint{font-size:13px; color:var(--neon); text-shadow:0 0 10px var(--neon); animation:blink 1.2s steps(2) infinite; margin:0}
+@keyframes blink{50%{opacity:.25}}
+.nuke.powerOff{filter:saturate(.4) brightness(.55)}
+.nuke.powerOff .display{background:#050505; color:#234; text-shadow:none}
+.row{display:flex; gap:8px; justify-content:center; flex-wrap:wrap}
+button.pill{border:1px solid var(--neon); border-radius:999px; padding:8px 14px; cursor:pointer; background:#000; font-family:inherit; font-weight:bold; color:var(--neon)}
+button.pill:disabled{opacity:.4}
+button.pill.go{background:var(--neon); color:#000}
+.menuBack{position:fixed; inset:0; background:rgba(5,2,12,.7); backdrop-filter:blur(6px); display:flex; align-items:center; justify-content:center; z-index:50; padding:16px}
+.menuBack[hidden]{display:none}
+.menu{background:#160d29; border-radius:20px; border:2px solid var(--violet); max-width:540px; width:100%; padding:18px; box-shadow:0 0 40px rgba(123,75,255,.5); color:var(--ink)}
+.menu h2{margin:4px 0 12px; color:#fff}
+.grid{display:grid; grid-template-columns:repeat(3,1fr); gap:10px}
+@media(max-width:480px){.grid{grid-template-columns:repeat(2,1fr)}}
+.pick{border:1px solid var(--violet); border-radius:14px; background:#0d0716; cursor:pointer; padding:8px; color:var(--ink)}
+.pick:hover{transform:translateY(-2px); box-shadow:0 0 18px rgba(123,75,255,.5)}
+.pick img{width:100%; aspect-ratio:1; object-fit:cover; border-radius:10px}
+.pick b{display:block; margin-top:6px; font-size:13px}
+.pick small{opacity:.7; font-size:11px}
+.steam{position:absolute; left:50%; bottom:180px; transform:translateX(-50%); z-index:6; pointer-events:none}
+.steam span{position:absolute; bottom:0; width:16px; height:16px; border-radius:50%; background:radial-gradient(circle,#e8e2ff,transparent 70%); opacity:0}
+.steam.on span{animation:rise 2.2s ease-out infinite}
+.steam.on span:nth-child(2){animation-delay:.4s; margin-left:-26px}
+.steam.on span:nth-child(3){animation-delay:.8s; margin-left:26px}
+.steam.on span:nth-child(4){animation-delay:1.2s; margin-left:-12px}
+@keyframes rise{0%{opacity:0; transform:translateY(0) scale(.6)}20%{opacity:.9}100%{opacity:0; transform:translateY(-140px) scale(1.8)}}
+.note{font-size:12px; opacity:.7; max-width:640px; margin:14px auto 0; position:relative; z-index:1}
+.lore{font-size:12px; opacity:.8; max-width:640px; margin:10px auto 0; position:relative; z-index:1; line-height:1.6}
+a{color:var(--neon)}
+</style>
+
+<div class="blur b1"></div><div class="blur b2"></div><div class="blur b3"></div>
+
+<h1>BAT-WAVE MICROWAVE</h1>
+<p class="sub">black-violet metal • neon green • bookstore goth kitchen</p>
+
+<div class="stage">
+<div class="nuke" id="nukeEl">
+  <div class="bathead">
+    <div class="batface">🦇</div>
+    <div style="text-align:left"><b style="color:#fff">NOCTURNE 3000</b><br><small>cute bat edition • gaussian blur inside</small></div>
+  </div>
+  <div class="main">
+    <div class="cavity">
+      <div class="interior" id="interiorEl"></div>
+      <div class="turntable" id="plateEl"></div>
+      <div class="beam" id="beamEl"></div>
+      <div class="foodWrap" id="foodWrapEl" hidden><img id="foodImgEl" alt="food cooking"></div>
+      <div class="steam" id="steamEl"><span></span><span></span><span></span><span></span></div>
+      <div class="door" id="doorEl">
+        <div class="window" id="windowEl"><img class="ghost" id="ghostImgEl" hidden alt=""><span class="peekTxt" id="peekTxtEl">🦇 peek window — dinner is watching you 🦇</span></div>
+        <div class="handle"></div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="display" id="displayEl">READY ♡<br>tap the bat for menu</div>
+      <div class="eq" id="eqEl"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      <button class="batBtn attention" id="menuBtn" title="open food menu">🦇</button>
+      <p class="tapHint" id="tapHintEl">▼ TAP THE BAT ▼</p>
+      <small>tap the bat for menu</small>
+      <div class="row"><button class="pill" id="stopBtn" disabled>■ stop</button><button class="pill" id="muteBtn">♪ sound: on</button><button class="pill" id="powerBtn">⦻ off</button></div>
+      <div class="row"><small id="nowEl">no dish loaded</small></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<p class="lore">Starring Star (ADHD, squirrel-distracted), 7 black cats, dark coffee at 3am, and chats with the Holy Spirit. Each dish cooks for exactly one snarky deadpan song. Singer is contractually bored. Sighs included. Utensils may drop.</p>
+<p class="note">Song ends → beep-beep-beep + door flings open + steam. Click food to take it out.</p>
+
+<div class="menuBack" id="menuBack" hidden>
+  <div class="menu"><h2>🦇 midnight menu 🦇</h2><div class="grid" id="gridEl"></div>
+  <p><button class="pill" id="closeMenuBtn">close</button></p></div>
+</div>
+
+<audio id="cookAudio" preload="auto"></audio>
+
+<script>
+const FOODS = [
+  {id:"coffee", name:"Dark Coffee", img:"src/img/coffee.jpg", music:"src/music/coffee.mp3", desc:"bookstore basement 78 BPM"},
+  {id:"croissant", name:"Choc Croissant", img:"src/img/croissant.jpg", music:"src/music/croissant.mp3", desc:"Star + squirrel 82 BPM"},
+  {id:"matcha", name:"Matcha Tea", img:"src/img/matcha.jpg", music:"src/music/matcha.mp3", desc:"3am chats 70 BPM"},
+  {id:"fries", name:"French Fries", img:"src/img/fries.jpg", music:"src/music/fries.mp3", desc:"black things list 95 BPM"},
+  {id:"burger", name:"Burger", img:"src/img/burger.jpg", music:"src/music/burger.mp3", desc:"bookstore couch 88 BPM"},
+  {id:"toast", name:"Black Toast", img:"src/img/toast.jpg", music:"src/music/toast.mp3", desc:"burnt again 92 BPM"},
+  {id:"licorice", name:"Licorice", img:"src/img/licorice.jpg", music:"src/music/licorice.mp3", desc:"black + mean 98 BPM"},
+  {id:"mocha", name:"Midnight Mocha", img:"src/img/mocha.jpg", music:"src/music/mocha.mp3", desc:"bookstore close 76 BPM"},
+];
+const doorEl=document.getElementById("doorEl"), foodWrapEl=document.getElementById("foodWrapEl"),
+foodImgEl=document.getElementById("foodImgEl"), interiorEl=document.getElementById("interiorEl"),
+beamEl=document.getElementById("beamEl"), steamEl=document.getElementById("steamEl"),
+displayEl=document.getElementById("displayEl"), nowEl=document.getElementById("nowEl"),
+audio=document.getElementById("cookAudio"), nukeEl=document.getElementById("nukeEl"),
+menuBack=document.getElementById("menuBack"), gridEl=document.getElementById("gridEl"),
+ghostImgEl=document.getElementById("ghostImgEl"), peekTxtEl=document.getElementById("peekTxtEl");
+const menuBtn=document.getElementById("menuBtn"), tapHintEl=document.getElementById("tapHintEl"),
+powerBtn=document.getElementById("powerBtn"), muteBtn=document.getElementById("muteBtn"),
+stopBtn=document.getElementById("stopBtn");
+let muted=false, state="idle", current=null, tick=null, powered=true;
+function setAttention(on){ menuBtn.classList.toggle("attention", on); tapHintEl.style.display=on?"":"none"; }
+FOODS.forEach(f=>{const b=document.createElement("button"); b.className="pick";
+  b.innerHTML=`<img src="${f.img}" alt="${f.name}"><b>${f.name}</b><small>${f.desc}</small>`;
+  b.onclick=()=>{menuBack.hidden=true; loadDish(f);}; gridEl.appendChild(b);});
+document.getElementById("menuBtn").onclick=()=>{ if(!powered) return; menuBack.hidden=false; };
+document.getElementById("closeMenuBtn").onclick=()=>{menuBack.hidden=true;};
+menuBack.addEventListener("click",e=>{if(e.target===menuBack) menuBack.hidden=true;});
+document.getElementById("muteBtn").onclick=(e)=>{muted=!muted; audio.muted=muted; e.target.textContent=muted?"♪ sound: off":"♪ sound: on";};
+powerBtn.onclick=()=>{
+  if(powered){
+    powered=false; stopAll(true); takeOut();
+    nukeEl.classList.add("powerOff");
+    displayEl.innerHTML="— OFF —"; nowEl.textContent="unplugged. spooky silence.";
+    powerBtn.textContent="⟡ on"; setAttention(false); menuBtn.style.opacity=.4;
+    stopBtn.disabled=true; muteBtn.disabled=true;
+  }else{
+    powered=true; nukeEl.classList.remove("powerOff");
+    displayEl.innerHTML="READY ♡<br>tap the bat for menu"; nowEl.textContent="no dish loaded";
+    powerBtn.textContent="⦻ off"; setAttention(true); menuBtn.style.opacity="";
+    stopBtn.disabled=true; muteBtn.disabled=false;
+  }
+};
+document.getElementById("stopBtn").onclick=()=>stopAll(true);
+foodWrapEl.onclick=()=>{if(state==="done") takeOut();};
+function fmt(s){s=Math.max(0,Math.round(s)); return String(Math.floor(s/60)).padStart(1,"0")+":"+String(s%60).padStart(2,"0");}
+async function loadDish(f){
+  if(state==="cooking"||state==="loading") stopAll(true);
+  state="loading"; current=f; steamEl.classList.remove("on"); setAttention(false);
+  document.getElementById("stopBtn").disabled=false;
+  displayEl.innerHTML=`LOADING ${f.name.toUpperCase()}…<br>door opening →`;
+  doorEl.classList.remove("fling"); doorEl.classList.add("open");
+  await wait(850);
+  foodImgEl.src=f.img; foodWrapEl.hidden=false;
+  ghostImgEl.src=f.img; ghostImgEl.hidden=false; peekTxtEl.style.display="none";
+  beamEl.classList.remove("go"); void beamEl.offsetWidth; beamEl.classList.add("go");
+  foodWrapEl.classList.remove("pop-in"); void foodWrapEl.offsetWidth; foodWrapEl.classList.add("pop-in");
+  nowEl.textContent=f.name+" • beaming in…";
+  await wait(1250);
+  doorEl.classList.remove("open");
+  await wait(850);
+  startCooking(f);
+}
+function startCooking(f){
+  state="cooking"; interiorEl.classList.add("on"); foodWrapEl.classList.add("spinning"); nukeEl.classList.add("cooking");
+  audio.src=f.music; audio.muted=muted; audio.currentTime=0;
+  audio.play().then(()=>{
+    displayEl.innerHTML=`♪ NOW COOKING: ${f.name.toUpperCase()} ♪<br><span id="tEl">00:00</span> / ${fmt(audio.duration||0)} — ${f.desc}`;
+    nowEl.textContent="♪ "+f.name+" — "+f.desc;
+  }).catch(()=>{displayEl.innerHTML=`TAP BAT AGAIN FOR SOUND<br>${f.name} loaded`;});
+  clearInterval(tick);
+  tick=setInterval(()=>{const el=document.getElementById("tEl"); if(el) el.textContent=fmt(audio.currentTime||0);},500);
+  audio.onended=finishCooking;
+}
+function finishCooking(){
+  clearInterval(tick); state="done";
+  foodWrapEl.classList.remove("spinning"); interiorEl.classList.remove("on"); nukeEl.classList.remove("cooking");
+  beep3(()=>{
+    doorEl.classList.add("fling","open"); steamEl.classList.add("on");
+    displayEl.innerHTML=`★ DONE! ${current.name.toUpperCase()} IS HOT ★<br>tap the food to take it out`;
+    nowEl.textContent=current.name+" • careful, steamy!";
+    document.getElementById("stopBtn").disabled=true;
+  });
+}
+function takeOut(){
+  foodWrapEl.hidden=true; steamEl.classList.remove("on");
+  ghostImgEl.hidden=true; peekTxtEl.style.display="";
+  doorEl.classList.remove("fling","open"); state="idle"; current=null;
+  displayEl.innerHTML="READY ♡<br>tap the bat for menu"; nowEl.textContent="no dish loaded";
+  document.getElementById("stopBtn").disabled=true; if(powered) setAttention(true);
+}
+function stopAll(silent){try{audio.pause();}catch(e){} clearInterval(tick);
+  foodWrapEl.classList.remove("spinning"); interiorEl.classList.remove("on"); nukeEl.classList.remove("cooking");
+  steamEl.classList.remove("on"); if(!silent) takeOut();}
+let AC=null;
+function beep3(done){try{AC=AC||new (window.AudioContext||window.webkitAudioContext)(); const t0=AC.currentTime;
+  [0,0.35,0.7].forEach((d,i)=>{const o=AC.createOscillator(), g=AC.createGain();
+    o.frequency.value=i===2?1568:1046; o.connect(g); g.connect(AC.destination);
+    g.gain.setValueAtTime(0.001,t0+d); g.gain.exponentialRampToValueAtTime(0.4,t0+d+0.03);
+    g.gain.exponentialRampToValueAtTime(0.001,t0+d+0.28); o.start(t0+d); o.stop(t0+d+0.3);});
+  setTimeout(done,1150);}catch(e){done();}}
+function wait(ms){return new Promise(r=>setTimeout(r,ms));}
+</script>
