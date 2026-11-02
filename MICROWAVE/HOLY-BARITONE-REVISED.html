@@ -209,12 +209,12 @@ a{color:#111; text-decoration:underline; text-decoration-thickness:3px; text-dec
 
 <script>
 const FOODS = [
-  {id:"vine", name:"The Vine", emoji:"🍇", music:"audio/vine.mp3", desc:"John 15:1-5 • 62 BPM train-bass"},
-  {id:"mana", name:"Mana", emoji:"🫓", music:"audio/mana.mp3", desc:"John 6:31-35 • 60 BPM train-bass"},
-  {id:"bread", name:"The Bread", emoji:"🍞", music:"audio/TheBread-Revised-333.mp3", desc:"John 6:35 • 60 BPM train-bass"},
-  {id:"communion", name:"Communion", emoji:"🍷", music:"audio/covenant.mp3", desc:"1 Cor 11:23-26 • 58 BPM train-bass"},
-  {id:"sophrosyne", name:"Sophrosyne", emoji:"🕊️", music:"audio/sophrosyne.mp3", desc:"Acts 26:25 • 64 BPM train-bass"},
-  {id:"milkhoney", name:"Milk and Honey", emoji:"🍯", music:"audio/milkhoney.mp3", desc:"1 Pet 2:2 • 62 BPM train-bass"},
+  {id:"vine", name:"The Vine", emoji:"🍇", music:"src/music/vine-male.mp3", desc:"John 15:1-5 • 62 BPM train-bass"},
+  {id:"mana", name:"Mana", emoji:"🫓", music:"src/music/mana-male.mp3", desc:"John 6:31-35 • 60 BPM train-bass"},
+  {id:"bread", name:"The Bread", emoji:"🍞", music:"src/music/bread-male.mp3", desc:"John 6:35 • 60 BPM train-bass"},
+  {id:"communion", name:"Communion", emoji:"🍷", music:"src/music/communion-male.mp3", desc:"1 Cor 11:23-26 • 58 BPM train-bass"},
+  {id:"sophrosyne", name:"Sophrosyne", emoji:"🕊️", music:"src/music/sophrosyne-male.mp3", desc:"Acts 26:25 • 64 BPM train-bass"},
+  {id:"milkhoney", name:"Milk and Honey", emoji:"🍯", music:"src/music/milkhoney-male.mp3", desc:"1 Pet 2:2 • 62 BPM train-bass"},
 ];
 const doorEl=document.getElementById("doorEl"), foodWrapEl=document.getElementById("foodWrapEl"),
 foodImgEl=document.getElementById("foodImgEl"), foodEmojiEl=document.getElementById("foodEmojiEl"),
@@ -231,7 +231,7 @@ lootBack=document.getElementById("lootBack"), playBtn=document.getElementById("p
 const LYRICS = {
 vine: `[verse]\nI am the true Vine, My Father tends the row\nJohn fifteen, abide in Me\nEvery branch in Me that bears, He lets it grow\nPruned by the Word to set you free\n[verse]\nApart from Me you can do nothing at all\nThe branch alone will dry and fall\nAbide in love, let My words remain\nAsk what you will, Heaven will not refrain\n[chorus]\nAbide, abide, slow sap rising\nTrain-bass hum, the stars aligning\nVine to branch, the life runs through\nI in you, and you in Me too\n[couplet]\nBy this My Father is glorified\nMuch fruit remains, in the Vine abide\n[outro]\nRemain in Me`,
 mana: `[verse]\nIn the desert manna fell like morning dew\nExodus bread, a test of trust\nJohn six thirty-five, I tell you true\nI am the Bread, not grain to dust\n[verse]\nYour fathers ate and yet they died\nWho eats this Bread shall live in Me\nHidden manna, promised to the tried\nRevelation two seventeen, receive and see\n[chorus]\nMana, mana, slow from Heaven\nGathered daily, sixty-seven\nTrain-bass rolling, patient, even\nChrist the portion, never leaven\n[couplet]\nLord, evermore give us this Bread\nWe feed on You and shall not dread\n[outro]\nGive us this Bread`,
-bread: `[verse]\nI am the Bread of Life, come down to feed\nJohn six fifty-one, living bread\nWho hungers here shall hunger nevermore\nWho comes in thirst shall break no dread\n[verse]\nTake, eat, this is My body broken low\nMatthew twenty-six, night of song\nOne loaf for many, that all may know\nThe bruised grain makes the weak strong\n[chorus]\nBread, bread, broken slowly\nOven-warm and lowly, holy\nTrain-bass heartbeat, even, whole\nOne loaf binds one body, one soul\n[couplet]\nEat and live, this Bread shall last\nThe first shall feast, the last not past\n[outro]\nTaste and live`,
+bread: `[verse]\nI am the Bread of Life come down from Heaven\nJohn six fifty-one, the living Bread\nWhoever hungers here shall hunger never\nWhoever thirsts for Me shall never dread\n[verse]\nTake and eat, for this is My body broken\nMatthew twenty-six, the night of song\nOne loaf for many, this is the token\nThe bruised grain will make the weak strong\n[chorus]\nBread of Heaven, broken slowly\nOven-warm and lowly, holy\nHear the train-bass heartbeat roll\nOne loaf binds us, body and soul\n[verse]\nYou labor for the food that will not perish\nJohn six twenty-seven, hear the call\nThe Son of Man will feed you and will cherish\nEvery hungry one who comes, He feeds them all\n[chorus]\nBread of Heaven, broken slowly\nOven-warm and lowly, holy\nHear the train-bass heartbeat roll\nOne loaf binds us, body and soul\n[couplet]\nEat and live, this Bread shall ever last\nThe first shall feast here with the last\n[outro]\nTaste and live\nTaste and see`,
 communion: `[verse]\nThat night betrayed, He took the bread and wine\nFirst Corinthians eleven, take and eat\nThis is My body, given as sign\nThis cup the covenant, poured complete\n[verse]\nAs often as you eat, remember Me\nLuke twenty-two, do this in love\nProclaim the death until all eyes shall see\nThe Lamb returning from above\n[chorus]\nCommunion, slow cup lifted high\nOne table under one wide sky\nTrain-bass waiting, breath by breath\nWe taste His life, we taste His death\n[couplet]\nOne cup, one bread, one patient hymn\nTill He returns, we wait in Him\n[outro]\nDo this, remember`,
 sophrosyne: `[verse]\nI speak words of truth and sophrosyne\nActs twenty-six, a sober mind\nNot fear, but power, love serene\nSecond Timothy one seven, defined\n[verse]\nGrace teaches us to live upright and still\nTitus two twelve, denying fire\nBe sober, watchful, do the Father's will\nFirst Peter four seven, lift it higher\n[chorus]\nSophrosyne, clear and even\nSober mind, a quiet Heaven\nTrain-bass steady, slow and sound\nFeet on unshakable ground\n[couplet]\nSound mind kept in patient art\nA guarded tongue, a temperate heart\n[outro]\nSober, still, sound`,
 milkhoney: `[verse]\nA land that floweth with milk and honey\nExodus three eight, promised rest\nNot coin nor trade, nor minted money\nBut milk sincere upon the breast\n[verse]\nAs newborn babes desire the pure milk word\nFirst Peter two two, taste and grow\nStrong meat belongs to those who heard\nHebrews five fourteen, discern and know\n[chorus]\nMilk and honey, slow and sweet\nCanaan flows beneath our feet\nTrain-bass river, deep and wide\nChrist the land where we abide\n[couplet]\nTaste and see the Lord is good\nFed in Canaan as He said we would\n[outro]\nFlow, milk and honey`
@@ -269,8 +269,24 @@ function openLootFor(f){
   document.getElementById("lootLyricsEl").textContent = LYRICS[f.id] || "(lyrics missing)";
   const mp3=document.getElementById("lootMp3"), txt=document.getElementById("lootTxt");
   mp3.href=f.music; mp3.setAttribute("download", f.id+".mp3");
+  mp3.onclick=(e)=>{e.preventDefault(); saveFile(f.music, f.id+".mp3", mp3);};
   txt.href="src/lyrics/"+f.id+".txt"; txt.setAttribute("download", f.id+"-lyrics.txt");
+  txt.onclick=(e)=>{e.preventDefault(); saveFile("src/lyrics/"+f.id+".txt", f.id+"-lyrics.txt", txt);};
   lootBack.hidden=false;
+}
+async function saveFile(url, name, linkEl){
+  const old=linkEl.textContent; linkEl.textContent="⏳ preparing…";
+  try{
+    const r=await fetch(url);
+    if(!r.ok) throw new Error("HTTP "+r.status);
+    const b=await r.blob();
+    const o=URL.createObjectURL(b);
+    const a=document.createElement("a");
+    a.href=o; a.download=name;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(()=>URL.revokeObjectURL(o),15000);
+  }catch(err){ window.open(url,"_blank"); }
+  linkEl.textContent=old;
 }
 lootBtn.onclick=()=>{ if(current) openLootFor(current); };
 document.getElementById("lyrBtn").onclick=()=>{ if(current && powered) openLootFor(current); };
