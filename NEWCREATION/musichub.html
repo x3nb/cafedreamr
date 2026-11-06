@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>new creation — a soft sanctuary</title>
+<meta name="description" content="Plain white sanctuary in Press Start 2P + Klee One. Whispered scriptures about love, a tiny library, four songs with visualizers and full lyrics, and a hidden letters drawer.">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Klee+One:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#111114; --muted:#3a3a42; --faint:#7a7a86;
+    --lavline:#c9c2d8; --lavline2:#8f86ad;
+    --plum:#4a3a6b; --deep:#241f31;
+    --paper:#ffffff; --panel:#faf9fc; --panel2:#f0edf5;
+  }
+  body{
+    text-align:left; margin:0; background:var(--paper); color:var(--ink);
+    font-family:"Klee One", cursive; font-size:18px; line-height:1.8;
+  }
+  .wrap{ max-width:880px; margin:0 auto; padding:0 20px 120px; }
+
+  .pix{ font-family:"Press Start 2P", monospace; }
+  .eyebrow{
+    font-family:"Press Start 2P", monospace; font-size:10px; line-height:2;
+    letter-spacing:.08em; color:var(--muted);
+  }
+  .hero{ text-align:left; padding:60px 0 8px; border-bottom:3px solid #111; padding-bottom:28px; }
+  .hero h1{
+    font-family:"Press Start 2P", monospace;
+    font-size:clamp(22px, 5vw, 36px); line-height:1.5; margin:18px 0 14px; color:#000;
+  }
+  .hero p.sub{ font-size:19px; color:var(--muted); margin:0; max-width:36em; }
+  .font-note{ font-size:15px; color:var(--faint); margin-top:12px; }
+
+  .arc-label{ font-family:"Press Start 2P", monospace; font-size:10px; color:var(--faint); margin:28px 0 6px; }
+  .arc{
+    display:flex; justify-content:center; align-items:flex-end; gap:10px;
+    padding:26px 6px 34px; flex-wrap:nowrap; overflow:visible;
+    scrollbar-width:none; border-bottom:2px dashed var(--lavline);
+  }
+  .arc::-webkit-scrollbar{ display:none; }
+  .arc a{
+    flex:0 0 auto; text-decoration:none; text-align:center;
+    font-family:"Press Start 2P", monospace; font-size:9px; line-height:1.9;
+    padding:12px 14px; color:#111; background:#fff;
+    border:3px solid #111; min-width:92px;
+    transition:transform .3s ease, box-shadow .3s ease;
+  }
+  .arc a span{ display:block; font-family:"Klee One", cursive; font-size:14px; line-height:1.4; color:var(--muted); margin-top:6px; }
+  .arc a:nth-child(1){ transform:translateY(20px); background:#faf9fc; }
+  .arc a:nth-child(2){ transform:translateY(10px); background:#f0edf5; }
+  .arc a:nth-child(3){ transform:translateY(2px); background:#e6e1ef; }
+  .arc a:nth-child(4){ transform:translateY(-6px); background:var(--plum); color:#fff; box-shadow:6px 6px 0 #111; }
+  .arc a:nth-child(4) span{ color:#d7c9f2; }
+  .arc a:nth-child(5){ transform:translateY(2px); background:#e6e1ef; }
+  .arc a:nth-child(6){ transform:translateY(10px); background:#f0edf5; }
+  .arc a:nth-child(7){ transform:translateY(20px); background:#faf9fc; }
+  .arc a:hover{ transform:translateY(-2px); box-shadow:4px 4px 0 var(--plum); }
+  @media (max-width:760px){
+    .arc{ flex-wrap:wrap; align-items:stretch; }
+    .arc a{ transform:none; min-width:44%; }
+    .arc a:hover{ transform:none; }
+  }
+
+  section.block{ margin:56px 0 0; }
+  .kicker{ font-family:"Press Start 2P", monospace; font-size:10px; color:var(--faint); margin-bottom:12px; }
+  section.block h2{
+    font-family:"Press Start 2P", monospace; font-size:clamp(14px, 3vw, 20px);
+    line-height:1.8; margin:0 0 12px; color:#000;
+  }
+  .soft{ color:var(--muted); font-size:18px; max-width:38em; }
+  .plain{ color:#111; font-size:19px; max-width:38em; }
+
+  .whisper-grid{ display:flex; flex-wrap:wrap; gap:12px; margin:22px 0 18px; }
+  .whisper{
+    cursor:pointer; color:#111; background:#fff; border:3px solid #111;
+    font-family:"Press Start 2P", monospace; font-size:9px; line-height:1.9;
+    padding:12px 14px; transition:box-shadow .3s, background .3s;
+  }
+  .whisper small{ display:block; font-family:"Klee One", cursive; font-size:14px; color:var(--muted); margin-top:6px; }
+  .w-love{ border-radius:999px; }
+  .w-seen{ border-radius:18px 18px 4px 4px; background:var(--panel); }
+  .w-called{ border-radius:50%; width:132px; height:132px; display:grid; place-content:center; text-align:center; }
+  .w-shame{ border-radius:4px 20px 4px 20px; }
+  .w-heart{ border-radius:8px 8px 40px 40px; border-style:double; border-width:6px; }
+  .w-new{ border-radius:999px 999px 999px 6px; background:var(--panel2); }
+  .whisper:hover{ box-shadow:4px 4px 0 var(--plum); }
+  .whisper.shiver{ animation:shiver .55s linear; }
+  .whisper.lit{
+    background:#efeaf8; color:#000;
+    box-shadow:0 0 0 2px #fff, 0 0 22px rgba(122,95,181,.9), 6px 6px 0 #111;
+    border-color:var(--plum);
+  }
+  @keyframes shiver{
+    0%,100%{ transform:translate(0,0) rotate(0); }
+    15%{ transform:translate(-2px,1px) rotate(-.6deg); }
+    30%{ transform:translate(2px,-1px) rotate(.6deg); }
+    45%{ transform:translate(-2px,-1px) rotate(-.4deg); }
+    60%{ transform:translate(2px,1px) rotate(.4deg); }
+    75%{ transform:translate(-1px,0) rotate(-.2deg); }
+  }
+  .verse-card{
+    border:3px solid #111; background:#fff; box-shadow:6px 6px 0 var(--plum);
+    border-radius:4px; padding:22px 22px 18px;
+    animation:rise .5s ease both;
+  }
+  @keyframes rise{ from{ opacity:0; transform:translateY(10px); } to{ opacity:1; transform:none; } }
+  .verse-card .ref{ font-family:"Press Start 2P", monospace; font-size:10px; color:var(--plum); margin-bottom:12px; }
+  .verse-card .txt{ font-size:22px; line-height:1.7; margin:0; color:#000; }
+  .verse-card .note{ color:var(--muted); margin:10px 0 0; font-size:17px; }
+
+  .shelf-wrap{ margin-top:22px; border:3px solid #111; border-radius:6px; background:var(--panel); padding:24px 16px 12px; box-shadow:6px 6px 0 #111; }
+  .shelf{ display:flex; align-items:flex-end; justify-content:center; gap:8px; min-height:190px; padding:0 8px; flex-wrap:nowrap; overflow-x:auto; }
+  .book{
+    cursor:pointer; border:3px solid #111; border-top-width:2px; color:#fff;
+    writing-mode:vertical-rl; font-family:"Klee One", cursive; font-weight:600; font-size:15px;
+    padding:12px 0; width:46px; display:flex; align-items:center; justify-content:center;
+    position:relative; overflow:hidden;
+    transition:transform .3s, box-shadow .3s, filter .3s;
+  }
+  .book span{ white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-height:150px; position:relative; z-index:1; }
+  .book::after{ content:""; position:absolute; left:0; right:0; top:-60%; height:55%; background:linear-gradient(180deg, rgba(255,255,255,.9), rgba(255,255,255,0)); opacity:0; transition:opacity .3s; pointer-events:none; }
+  .book:hover, .book:focus-visible{ transform:translateY(-10px); filter:brightness(1.25); outline:none;
+    box-shadow:0 0 0 2px #fff, 0 0 18px rgba(122,95,181,.95), 0 0 46px rgba(122,95,181,.6), 4px 4px 0 #111; }
+  .book:hover::after, .book:focus-visible::after{ opacity:1; }
+  .book.b1{ height:168px; background:linear-gradient(180deg,#3d3358,#211c30); }
+  .book.b2{ height:148px; background:linear-gradient(180deg,#6a6a75,#2b2b32); color:#fff; }
+  .book.b3{ height:178px; background:linear-gradient(180deg,#5b4a85,#241f38); }
+  .book.b4{ height:156px; background:linear-gradient(180deg,#3a3a42,#17171b); }
+  .book.b5{ height:172px; background:linear-gradient(180deg,#8f86ad,#2b2740); }
+  .book.b6{ height:150px; background:linear-gradient(180deg,#111114,#3a3a42); }
+  .book.b7{ height:182px; background:linear-gradient(180deg,#111114,#4a3a6b); }
+  .book.b8{ height:174px; background:linear-gradient(180deg,#e8e4f0,#8f86ad); color:#111; }
+  .wood{ height:14px; margin:10px 4px 4px; background:#111; border-radius:2px; }
+  .shelf-hint{ text-align:center; color:var(--faint); font-size:16px; margin:10px 0 6px; }
+
+  .song-card{ border:3px solid #111; border-radius:6px; background:#fff; padding:20px; box-shadow:6px 6px 0 #111; margin-bottom:16px; }
+  .song-card .ver{ font-family:"Press Start 2P", monospace; font-size:10px; margin:0 0 10px; }
+  .song-card .ver small{ font-family:"Klee One", cursive; font-size:15px; color:var(--muted); display:block; margin-top:8px; }
+  .song-card audio{ width:100%; margin:10px 0 6px; }
+  .viz{ width:100%; height:64px; border:2px solid #111; background:#faf9fc; display:block; margin:8px 0 2px; }
+  .viz-note{ font-size:13px; color:var(--faint); margin:0 0 4px; }
+  .lyrics{ color:var(--muted); font-size:17px; border-left:4px solid var(--plum); padding-left:16px; margin:12px 0 0; }
+
+  .scrim{ position:fixed; inset:0; background:rgba(255,255,255,.7); z-index:40; }
+  .modal{
+    position:fixed; z-index:41; left:50%; top:50%; transform:translate(-50%,-50%);
+    width:min(560px, calc(100vw - 40px)); max-height:82vh; overflow:auto;
+    background:#fff; border:3px solid #111; box-shadow:8px 8px 0 var(--plum);
+    border-radius:6px; padding:26px 24px;
+  }
+  .modal h3{ font-family:"Press Start 2P", monospace; font-size:14px; line-height:1.8; margin:0 0 8px; }
+  .modal .tag{ font-family:"Press Start 2P", monospace; font-size:9px; color:var(--plum); margin-bottom:12px; }
+  .modal p{ font-size:18px; color:#222; }
+  .modal .script{ border-left:4px solid var(--plum); padding-left:12px; color:#000; }
+  .xbtn{ float:right; cursor:pointer; background:#fff; border:3px solid #111; border-radius:999px; width:38px; height:38px; font-family:"Press Start 2P", monospace; font-size:12px; }
+
+  #scrollBtn{
+    position:fixed; right:12px; top:50%; transform:translateY(-50%); z-index:30;
+    cursor:pointer; background:#fff; border:3px solid #111; border-radius:999px;
+    width:62px; height:96px; display:grid; place-content:center; gap:2px; color:#111;
+    box-shadow:4px 4px 0 var(--plum);
+  }
+  #scrollBtn small{ font-family:"Press Start 2P", monospace; font-size:7px; color:var(--muted); }
+  #remote{
+    position:fixed; left:12px; bottom:12px; z-index:30;
+    display:flex; flex-direction:column; gap:8px; align-items:center;
+    background:#fff; border:3px solid #111; border-radius:14px; padding:10px 8px;
+    box-shadow:4px 4px 0 var(--plum);
+  }
+  #remote button{
+    cursor:pointer; background:#fff; border:2px solid #111; border-radius:8px;
+    width:44px; height:40px; font-family:"Press Start 2P", monospace; font-size:11px; color:#111;
+  }
+  #remote button:hover{ background:#111; color:#fff; }
+  #remote small{ font-family:"Press Start 2P", monospace; font-size:6px; color:var(--muted); }
+  #drawer{
+    position:fixed; top:0; right:0; bottom:0; width:min(380px, 92vw); z-index:35;
+    background:#fff; border-left:3px solid #111;
+    box-shadow:-8px 0 0 rgba(74,58,107,.25);
+    transform:translateX(105%); transition:transform .4s ease;
+    display:flex; flex-direction:column;
+  }
+  #drawer.open{ transform:none; }
+  #drawer header{ padding:18px 16px 12px; border-bottom:2px solid #111; }
+  #drawer header h4{ font-family:"Press Start 2P", monospace; font-size:13px; margin:0; }
+  #drawer header p{ margin:8px 0 0; color:var(--muted); font-size:16px; }
+  .drawer-tools{ display:flex; gap:8px; margin-top:12px; }
+  .drawer-tools button{
+    cursor:pointer; background:#fff; border:2px solid #111; border-radius:999px;
+    padding:6px 14px; font-family:"Press Start 2P", monospace; font-size:8px; color:#111;
+  }
+  .drawer-tools button:hover{ background:#111; color:#fff; }
+  .chars{ display:flex; gap:8px; margin-top:12px; flex-wrap:wrap; }
+  .chars button{
+    cursor:pointer; border:2px solid #111; background:#fff; color:#111;
+    border-radius:999px; padding:8px 12px; font-family:"Press Start 2P", monospace; font-size:8px;
+  }
+  .chars button.on{ background:#111; color:#fff; }
+  #msgs{ flex:1; overflow:auto; padding:16px; display:flex; flex-direction:column; gap:10px; background:var(--panel); }
+  .msg{ max-width:88%; padding:10px 12px; border-radius:12px; line-height:1.6; font-size:17px; border:2px solid #111; background:#fff; }
+  .msg.them{ align-self:flex-start; border-bottom-left-radius:2px; }
+  .msg.me{ align-self:flex-end; background:#111; color:#fff; border-bottom-right-radius:2px; }
+  .msg .who{ display:block; font-family:"Press Start 2P", monospace; font-size:7px; color:var(--plum); margin-bottom:6px; }
+  .msg.me .who{ color:#d7c9f2; }
+  #chatForm{ display:flex; gap:8px; padding:12px; border-top:2px solid #111; background:#fff; }
+  #chatForm input{
+    flex:1; background:#fff; border:2px solid #111; border-radius:999px;
+    padding:10px 14px; color:#111; font-family:"Klee One", cursive; font-size:17px; outline:none;
+  }
+  #chatForm button{ cursor:pointer; border-radius:999px; border:3px solid #111; background:#111; color:#fff; padding:0 16px; font-family:"Press Start 2P", monospace; font-size:9px; }
+
+  footer{ margin-top:70px; border-top:3px solid #111; padding-top:18px; color:var(--faint); font-size:15px; }
+</style>
+</head>
+<body>
+
+
+<button id="scrollBtn" aria-label="open letters drawer" title="letters">
+  <svg width="26" height="34" viewBox="0 0 26 34" fill="none" aria-hidden="true">
+    <rect x="4" y="2" width="18" height="30" rx="3" stroke="#111" stroke-width="2"/>
+    <rect x="7" y="5" width="12" height="3" rx="1.5" fill="#4a3a6b"/>
+    <rect x="7" y="10" width="12" height="2" rx="1" fill="#7a7a86"/>
+    <rect x="7" y="14" width="9" height="2" rx="1" fill="#7a7a86"/>
+    <rect x="7" y="18" width="12" height="2" rx="1" fill="#7a7a86"/>
+  </svg>
+  <small>letters</small>
+</button>
+
+<div id="remote" aria-label="page remote">
+  <small>go</small>
+  <button id="goTopBtn" type="button" title="to the top" aria-label="go to top">↑</button>
+  <button id="goBottomBtn" type="button" title="to the bottom" aria-label="go to bottom">↓</button>
+</div>
+
+<aside id="drawer" aria-hidden="true" aria-label="letters drawer">
+  <header>
+    <h4>letters</h4>
+    <p>eight friends, each with scriptures. choose who reminds you today.</p>
+    <div class="drawer-tools"><button id="clearChatBtn" type="button">clear</button><button id="closeDrawerBtn" type="button">close ×</button></div>
+    <div class="chars" id="charRow"></div>
+  </header>
+  <div id="msgs"></div>
+  <form id="chatForm">
+    <input id="chatInput" placeholder="whisper something plain…" autocomplete="off" />
+    <button type="submit">send</button>
+  </form>
+</aside>
+
+<div class="wrap">
+  <div class="hero">
+    <div class="eyebrow">a plain sanctuary for the new creation</div>
+    <h1>new creation</h1>
+    <p class="sub">the old me is not here. the light is in me, the darkness has gone. plain white, black ink.</p>
+    <div class="font-note">headings in Press Start 2P — the original template font · small words in Klee One</div>
+  </div>
+
+  <div class="arc-label pix">walk softly — choose a path</div>
+  <nav class="arc" aria-label="main">
+    <a href="#beginning">beginning<span>where you are</span></a>
+    <a href="#whispers">whispers<span>verses of love</span></a>
+    <a href="#library">library<span>eight books</span></a>
+    <a href="#song">song<span>v1 · v2 · v3 · v4</span></a>
+    <a href="#blessing">blessing<span>for the home</span></a>
+    <a href="#rest">rest<span>sit a while</span></a>
+    <a href="#letters" id="lettersLink">letters<span>drawer -></span></a>
+  </nav>
+
+  <section class="block" id="beginning">
+    <div class="kicker">i. beginning</div>
+    <h2>come in quietly.</h2>
+    <p class="soft">this is plain on purpose. white wall, black ink. no noise. for whoever traveled far and through pain.</p>
+    <p class="plain">Sit down. Breathe. If you want company, tap the little scroll on the right edge — letters will slide out.</p>
+  </section>
+
+  <section class="block" id="whispers">
+    <div class="kicker">ii. whispers</div>
+    <h2>verses about how you are loved.</h2>
+    <p class="soft">touch one. it will shiver, then glow. plain promise: you are seen, not condemned, called by name.</p>
+    <div class="whisper-grid" id="whisperGrid"></div>
+    <div id="verseCardWrap"></div>
+  </section>
+
+  <section class="block" id="library">
+    <div class="kicker">iii. the tiny library</div>
+    <h2>eight small books.</h2>
+    <p class="soft">miniature spines in purple, black and grey. curses broken, homes blessed, family covered, walking with Yeshua. tap a spine to open it.</p>
+    <div class="shelf-wrap">
+      <div class="shelf" id="shelf"></div>
+      <div class="wood"></div>
+      <div class="shelf-hint">dust, quiet. pick one.</div>
+    </div>
+  </section>
+
+  <section class="block" id="song">
+    <div class="kicker">iv. songs</div>
+    <h2>songs — full lyrics.</h2>
+    <div class="song-card">
+      <p class="ver">v1 — warm analog echoes<small>808 · moog · drum machine · bass drum · dolphin chirps · bat tweets · morse blips</small></p>
+      <audio controls loop preload="auto" crossorigin="anonymous" data-viz="viz1" src="https://user.uploads.dev/file/025811b37d810327408751e5fdbde74d.mp3"></audio>
+      <canvas class="viz" id="viz1" width="600" height="64"></canvas>
+      <p class="viz-note">visualizer — press play. one tap wakes the audio.</p>
+      <p class="lyrics">intro Ooh, ooh<br><br>verse<br>I am a new creation<br>The old me is not here<br>I am a new creation<br>Create a new spirit in me<br>Oh Heavenly Father<br><br>chorus<br>The light is in me<br>The darkness has gone<br>The light is in me<br>The darkness has gone<br><br>verse 2<br>I traveled from far away<br>Through pain and suffering<br>But now I lay my life down<br>At Your feet<br>At Your feet<br><br>bridge<br>At Your feet I lay it down<br>New spirit in me now<br>Light is in me, darkness gone<br>Old me is gone, I am reborn<br><br>chorus<br>The light is in me<br>The darkness has gone<br>I am a new creation<br>The old me is not here<br><br>outro<br>Create a new spirit in me<br>At Your feet<br>I am new</p>
+    </div>
+    <div class="song-card">
+      <p class="ver">v2 — wispy vintage cinematic<small>same song, softer: slow 72 BPM · wispy transatlantic vocal · deadpan, charming, plain · dolphin chirps + bat tweets kept quiet</small></p>
+      <audio controls loop preload="auto" crossorigin="anonymous" data-viz="viz2" src="https://user.uploads.dev/file/271bcb9d1fe3f3646a2e5345c37e4cf5.mp3"></audio>
+      <canvas class="viz" id="viz2" width="600" height="64"></canvas>
+      <p class="viz-note">visualizer — press play. one tap wakes the audio.</p>
+      <p class="lyrics">intro Ooh, ooh<br><br>verse<br>I am a new creation<br>The old me is not here<br>I am a new creation<br>Create a new spirit in me<br>Oh Heavenly Father<br><br>chorus<br>The light is in me<br>The darkness has gone<br>The light is in me<br>The darkness has gone<br><br>verse 2<br>I traveled from far away<br>Through pain and suffering<br>But now I lay my life down<br>At Your feet<br>At Your feet<br><br>bridge<br>At Your feet I lay it down<br>New spirit in me now<br>Light is in me, darkness gone<br>Old me is gone, I am reborn<br><br>chorus<br>The light is in me<br>The darkness has gone<br>I am a new creation<br>The old me is not here<br><br>outro<br>Create a new spirit in me<br>At Your feet<br>I am new</p>
+    </div>
+    <div class="song-card">
+      <p class="ver">v3 — washed clean / crowned<small>industrial drum n bass · 174 BPM · reese + droning sub · metallic breaks · echo-stutter vocal</small></p>
+      <audio controls loop preload="auto" crossorigin="anonymous" data-viz="viz3" src="https://user.uploads.dev/file/177b14be0594ab0ce723c2d583aab7a5.mp3"></audio>
+      <canvas class="viz" id="viz3" width="600" height="64"></canvas>
+      <p class="viz-note">visualizer — press play. one tap wakes the audio.</p>
+      <p class="lyrics">introMaranatha<br>Come, Lord Jesus<br><br>verse<br>I'm not a sinner<br>I'm washed clean<br>In the blood of my Messiah<br>In the physical, not a dream<br><br>verse<br>Baptised and redeemed<br>Surrendered my life<br>Washed and sanctified<br>In Jesus Christ<br><br>chorus<br>Called to be a saint<br>Holy and beloved<br>Hold on to my crown<br>Till Messiah returns<br><br>verse<br>Christ inside of me<br>Dwelling in His kingdom<br>He resides in me<br>I abide in Him<br><br>chorus<br>I'm not a sinner<br>I'm washed clean<br>Hold on to my crown<br>Come, Lord Jesus<br><br>outro<br>Maranatha<br>Come, Lord Jesus<br>Maranatha<br>I am crowned</p>
+    </div>
+    <div class="song-card">
+      <p class="ver">v4 — washed in hyssop<small>industrial drum n bass · 174 BPM · reese + droning sub · metallic breaks · echo-stutter vocal · saint anthem</small></p>
+      <audio controls loop preload="auto" crossorigin="anonymous" data-viz="viz4" src="https://user.uploads.dev/file/899c55198744ec7e654481e1f63e27ce.mp3"></audio>
+      <canvas class="viz" id="viz4" width="600" height="64"></canvas>
+      <p class="viz-note">visualizer — press play. one tap wakes the audio.</p>
+      <p class="lyrics">introWash me with hyssop<br>Whiter than snow<br><br>verse<br>A saint is set apart<br>Called and made holy<br>Not by my own goodness<br>But by mercy only<br><br>verse<br>Purge me with hyssop<br>I shall be clean<br>Wash me in Your mercy<br>Whiter than snow<br><br>chorus<br>Holy, royal, chosen<br>Washed and sanctified<br>Saints who keep His word<br>And in Him abide<br><br>verse<br>Blood of the Messiah<br>Makes the sinner white<br>Saints walk in the light<br>Robes of linen bright<br><br>chorus<br>Wash me with hyssop<br>Whiter than snow<br>Set me apart, Lord<br>Yours alone to know<br><br>outro<br>Maranatha<br>Holy, holy, holy</p>
+    </div>
+  </section>
+
+  <section class="block" id="blessing">
+    <div class="kicker">v. blessing</div>
+    <h2>a blessing for your home.</h2>
+    <p class="plain">May your doorposts remember peace. May your kitchen be warm. May your sleep be unvisited by fear. May everyone under your roof be called by name and kept.</p>
+    <p class="soft">Numbers 6:24-26 — The Lord bless you and keep you; the Lord make his face shine on you and be gracious to you.</p>
+  </section>
+
+  <section class="block" id="rest">
+    <div class="kicker">vi. rest</div>
+    <h2>plain ending.</h2>
+    <p class="soft">nothing else is required. you came from far away. lay it down. stay as long as you like.</p>
+  </section>
+
+  <footer>plain white, black ink. headings: Press Start 2P · body: Klee One.<br>for the one becoming new.</footer>
+</div>
+
+
+<script>
+(function(){
+  if("scrollRestoration" in history){ history.scrollRestoration = "manual"; }
+  (function pinTop(){
+    var userScrolled = false;
+    ["wheel","touchmove","keydown"].forEach(function(ev){ window.addEventListener(ev, function(){ userScrolled = true; }, {passive:true, once:true}); });
+    function pin(){ if(!userScrolled){ window.scrollTo(0, 0); } }
+    pin();
+    window.addEventListener("load", pin);
+    setTimeout(pin, 250); setTimeout(pin, 800); setTimeout(pin, 2000);
+  })();
+  var verses = [
+    { key:"love", label:"love itself", sub:"god is love", ref:"1 John 4 : 16",
+      text:"God is love. Whoever lives in love lives in God, and God in them.",
+      note:"plainly: you are not tolerated. you are loved, from the inside out." },
+    { key:"seen", label:"seen + sung over", sub:"rejoices over you", ref:"Zephaniah 3 : 17",
+      text:"He will take great delight in you; he will quiet you with his love, he will rejoice over you with singing.",
+      note:"deadpan and true: Heaven sings, softly, over you." },
+    { key:"called", label:"called by name", sub:"you are mine", ref:"Isaiah 43 : 1",
+      text:"Do not fear, for I have redeemed you; I have called you by name; you are mine.",
+      note:"not a number. not a stranger. named." },
+    { key:"shame", label:"no condemnation", sub:"for the weary", ref:"Romans 8 : 1",
+      text:"There is now no condemnation for those who are in Christ Jesus.",
+      note:"the old voice is not yours anymore. leave it outside." },
+    { key:"heart", label:"new heart", sub:"new spirit in you", ref:"Ezekiel 36 : 26",
+      text:"I will give you a new heart and put a new spirit in you.",
+      note:"exactly what you sang: create a new spirit in me." },
+    { key:"new", label:"new creation", sub:"the old has gone", ref:"2 Corinthians 5 : 17",
+      text:"If anyone is in Christ, the new creation has come: The old has gone, the new is here.",
+      note:"plain, charming, true: the old me is not here." }
+  ];
+  var grid = document.getElementById("whisperGrid");
+  var cardWrap = document.getElementById("verseCardWrap");
+  var shapeClasses = ["w-love","w-seen","w-called","w-shame","w-heart","w-new"];
+  verses.forEach(function(v, i){
+    var b = document.createElement("button");
+    b.className = "whisper " + shapeClasses[i % shapeClasses.length];
+    var t = document.createElement("span"); t.textContent = v.label;
+    var s = document.createElement("small"); s.textContent = v.sub;
+    b.appendChild(t); b.appendChild(s);
+    b.addEventListener("click", function(){
+      b.classList.remove("shiver"); void b.offsetWidth; b.classList.add("shiver");
+      Array.prototype.forEach.call(grid.children, function(x){ x.classList.remove("lit"); });
+      setTimeout(function(){
+        b.classList.add("lit");
+        cardWrap.innerHTML = "";
+        var card = document.createElement("div");
+        card.className = "verse-card";
+        var ref = document.createElement("div"); ref.className = "ref"; ref.textContent = v.ref;
+        var txt = document.createElement("p"); txt.className = "txt"; txt.textContent = v.text;
+        var note = document.createElement("p"); note.className = "note"; note.textContent = v.note;
+        card.appendChild(ref); card.appendChild(txt); card.appendChild(note);
+        cardWrap.appendChild(card);
+        card.scrollIntoView({ behavior:"smooth", block:"nearest" });
+      }, 420);
+    });
+    grid.appendChild(b);
+  });
+
+  var books = [
+    { cls:"b1", title:"Breaking the Thread", theme:"generational curses",
+      about:"For the pattern that keeps repeating. Naming it plainly, forgiving backward and forward, ending it with blessing instead of fear.",
+      verse:"Christ redeemed us from the curse. — Galatians 3:13",
+      prayer:"At the door of my family line, I lay down what was handed to me in pain. Let it end with me. Let blessing begin with me." },
+    { cls:"b2", title:"Blessing the Doorposts", theme:"protecting the home",
+      about:"A gentle manual for a quiet home: short prayers for doors, windows, beds, and tables. No drama, just quiet authority.",
+      verse:"As for me and my household, we will serve the Lord. — Joshua 24:15",
+      prayer:"Peace on this threshold. Light in this room. Nothing cruel may stay here." },
+    { cls:"b3", title:"Covering Our Kin", theme:"blessings over family",
+      about:"Blessings to speak over children, parents, and the ones far away. Words that cover like a blanket when you cannot be there.",
+      verse:"The Lord bless you and keep you. — Numbers 6:24",
+      prayer:"I name each one before You. Keep them in the going out and coming in." },
+    { cls:"b4", title:"Learning His Name", theme:"relationship with Yeshua",
+      about:"How to grow a real friendship with Yeshua: sitting, listening, reading slowly, asking plain questions, staying when it is quiet.",
+      verse:"Come to me, all you who are weary, and I will give you rest. — Matthew 11:28",
+      prayer:"Yeshua, teach me Your voice. I will sit a little longer today." },
+    { cls:"b5", title:"Soft Return", theme:"christian faith, gently",
+      about:"For the prodigal and the tired believer alike. Faith without performance: confession, communion, coming home daily.",
+      verse:"Return to me, and I will return to you. — Malachi 3:7",
+      prayer:"I turn my face home. No speech prepared. Just: here I am." },
+    { cls:"b6", title:"The New Spirit", theme:"laying pain down",
+      about:"What to do with suffering that shaped you. Laying your life at His feet — grief, memory, and all — and receiving a new spirit.",
+      verse:"I will give you a new heart and put a new spirit in you. — Ezekiel 36:26",
+      prayer:"Heavenly Father, create a new spirit in me. The old is not here. I am new." },
+    { cls:"b7", title:"Light Remains", theme:"walking free",
+      about:"After darkness: how to stay free. Small rhythms — morning verse, evening thanks, honest friends — that keep the light lit.",
+      verse:"The light shines in the darkness, and the darkness has not overcome it. — John 1:5",
+      prayer:"The light is in me. The darkness has gone. I will walk like it is true." },
+    { cls:"b8", title:"Washed in Hyssop", theme:"what a saint is",
+      about:"What it means to be a saint: not a statue, but one set apart — called, washed, sanctified. Purge me with hyssop, and I shall be clean; wash me, and I shall be whiter than snow.",
+      verse:"Purge me with hyssop, and I shall be clean: wash me, and I shall be whiter than snow. — Psalm 51:7",
+      prayer:"Wash me with hyssop, Lord. Set me apart. Whiter than snow, Yours alone to know." }
+  ];
+  var shelf = document.getElementById("shelf");
+  books.forEach(function(bk){
+    var el = document.createElement("button");
+    el.className = "book " + bk.cls;
+    var s = document.createElement("span"); s.textContent = bk.title;
+    el.appendChild(s);
+    el.title = bk.title + " — " + bk.theme;
+    el.addEventListener("click", function(){ openBook(bk); });
+    shelf.appendChild(el);
+  });
+  function openBook(bk){
+    closeModal();
+    var scrim = document.createElement("div"); scrim.className = "scrim"; scrim.id = "scrim";
+    scrim.addEventListener("click", closeModal);
+    var m = document.createElement("div"); m.className = "modal"; m.id = "modal";
+    var x = document.createElement("button"); x.className = "xbtn"; x.textContent = "x"; x.setAttribute("aria-label","close");
+    x.addEventListener("click", closeModal);
+    var tag = document.createElement("div"); tag.className = "tag"; tag.textContent = bk.theme;
+    var h = document.createElement("h3"); h.textContent = bk.title;
+    var a = document.createElement("p"); a.textContent = bk.about;
+    var v = document.createElement("p"); v.className = "script"; v.textContent = bk.verse;
+    var pl = document.createElement("p"); pl.className = "tag"; pl.textContent = "a small prayer";
+    var pr = document.createElement("p"); pr.style.fontStyle = "italic"; pr.textContent = bk.prayer;
+    m.appendChild(x); m.appendChild(tag); m.appendChild(h); m.appendChild(a); m.appendChild(v); m.appendChild(pl); m.appendChild(pr);
+    document.body.appendChild(scrim); document.body.appendChild(m);
+    document.addEventListener("keydown", escClose);
+  }
+  function closeModal(){
+    var s = document.getElementById("scrim"); if(s) s.remove();
+    var m = document.getElementById("modal"); if(m) m.remove();
+    document.removeEventListener("keydown", escClose);
+  }
+  function escClose(e){ if(e.key === "Escape") closeModal(); }
+
+  var drawer = document.getElementById("drawer");
+  var scrollBtn = document.getElementById("scrollBtn");
+  var lettersLink = document.getElementById("lettersLink");
+  function openDrawer(){ drawer.classList.add("open"); drawer.setAttribute("aria-hidden","false"); }
+  function closeDrawer(){ drawer.classList.remove("open"); drawer.setAttribute("aria-hidden","true"); }
+  function toggleDrawer(){ drawer.classList.contains("open") ? closeDrawer() : openDrawer(); }
+  scrollBtn.addEventListener("click", toggleDrawer);
+  document.getElementById("goTopBtn").addEventListener("click", function(){ window.scrollTo({top:0, behavior:"smooth"}); });
+  document.getElementById("goBottomBtn").addEventListener("click", function(){ window.scrollTo({top:document.body.scrollHeight, behavior:"smooth"}); });
+  document.getElementById("closeDrawerBtn").addEventListener("click", closeDrawer);
+  document.getElementById("clearChatBtn").addEventListener("click", function(){
+    msgs.innerHTML = "";
+    addMsg(current.name, current.hello, "them");
+  });
+  if(lettersLink) lettersLink.addEventListener("click", function(e){ e.preventDefault(); openDrawer(); });
+
+  var characters = [
+    { id:"star", name:"star", hello:"hi, star here. i remind you to stay close. what is on your mind?",
+      replies:[
+        "remain in me, and i in you — a branch cannot bear fruit alone. (John 15:4)",
+        "whoever abides in love abides in God, and God in them. (1 John 4:16)",
+        "abide in my love, the way i kept my Father's word. (John 15:10)",
+        "if you remain in me and my words remain in you, ask, and it will be done. (John 15:7)"
+      ]},
+    { id:"hans", name:"hans", hello:"hans. plain truth only: you are loved the way the Father loves the Son.",
+      replies:[
+        "as the Father has loved me, so have i loved you. abide in my love. (John 15:9)",
+        "you loved them even as you loved me. (John 17:23)",
+        "having loved his own, he loved them to the end. (John 13:1)",
+        "see what great love the Father has lavished on us, that we be called children of God. (1 John 3:1)"
+      ]},
+    { id:"chari", name:"chari", hello:"chari here — He does not visit, He moves in. tell me everything.",
+      replies:[
+        "we will come to them and make our home with them. (John 14:23)",
+        "i stand at the door and knock... i will come in and eat with them. (Revelation 3:20)",
+        "i am with you always, to the very end. (Matthew 28:20)",
+        "never will i leave you; never will i forsake you. (Hebrews 13:5)"
+      ]},
+    { id:"miki", name:"miki", hello:"miki! good news first: He loved you first. what do you need?",
+      replies:[
+        "we love because he first loved us. (1 John 4:19)",
+        "God's love has been poured into our hearts. (Romans 5:5)",
+        "i have loved you with an everlasting love. (Jeremiah 31:3)",
+        "while we were still sinners, Christ died for us. (Romans 5:8)"
+      ]},
+    { id:"milo", name:"milo", hello:"milo. nothing you did today moved you one inch from His love.",
+      replies:[
+        "nothing in all creation will separate us from the love of God. (Romans 8:38-39)",
+        "he who began a good work will carry it on to completion. (Philippians 1:6)",
+        "my grace is sufficient for you. (2 Corinthians 12:9)",
+        "no one will snatch them out of my hand. (John 10:28)"
+      ]},
+    { id:"sylvestre", name:"sylvestre", hello:"sylvestre. quiet one. you are hidden somewhere safe. ask me anything.",
+      replies:[
+        "your life is now hidden with Christ in God. (Colossians 3:3)",
+        "whoever dwells in the shelter of the Most High will rest in His shadow. (Psalm 91:1)",
+        "christ lives in me. (Galatians 2:20)",
+        "in him we live and move and have our being. (Acts 17:28)"
+      ]},
+    { id:"slay", name:"slay", hello:"slay. no fear here — only who you really are. go on.",
+      replies:[
+        "you are a chosen people, a royal priesthood. (1 Peter 2:9)",
+        "rooted and established in love... to know this love that surpasses knowledge. (Ephesians 3:17-19)",
+        "there is now no condemnation for those in Christ Jesus. (Romans 8:1)",
+        "be strong in the Lord and in his mighty power. (Ephesians 6:10)"
+      ]},
+    { id:"pearl", name:"pearl", hello:"pearl here, keeper of small precious things — like you. whisper to me.",
+      replies:[
+        "he will rejoice over you with singing. (Zephaniah 3:17)",
+        "you are precious and honored in my sight, and i love you. (Isaiah 43:4)",
+        "the Lord your God is with you, the Mighty Warrior who saves. (Zephaniah 3:17)",
+        "i have called you by name; you are mine. (Isaiah 43:1)"
+      ]}
+  ];
+  var current = characters[0];
+  var charRow = document.getElementById("charRow");
+  var msgs = document.getElementById("msgs");
+  characters.forEach(function(c, idx){
+    var b = document.createElement("button");
+    b.textContent = c.name;
+    if(idx === 0) b.classList.add("on");
+    b.addEventListener("click", function(){
+      current = c;
+      Array.prototype.forEach.call(charRow.children, function(x){ x.classList.remove("on"); });
+      b.classList.add("on");
+      addMsg(c.name, c.hello, "them");
+    });
+    charRow.appendChild(b);
+  });
+  function addMsg(who, text, kind){
+    var d = document.createElement("div");
+    d.className = "msg " + kind;
+    var w = document.createElement("span"); w.className = "who"; w.textContent = who;
+    d.appendChild(w);
+    d.appendChild(document.createTextNode(text));
+    msgs.appendChild(d);
+    msgs.scrollTop = msgs.scrollHeight;
+    return d;
+  }
+  addMsg(current.name, current.hello, "them");
+
+  var form = document.getElementById("chatForm");
+  var input = document.getElementById("chatInput");
+  form.addEventListener("submit", function(e){
+    e.preventDefault();
+    var t = input.value.trim();
+    if(!t) return;
+    addMsg("you", t, "me");
+    input.value = "";
+    var typing = addMsg(current.name, "...", "them");
+    var reply = pickReply(t);
+    setTimeout(function(){
+      typing.remove();
+      addMsg(current.name, reply, "them");
+    }, 900 + Math.random()*700);
+  });
+  function pickReply(t){
+    var s = t.toLowerCase();
+    if(s.indexOf("curse") !== -1 || s.indexOf("family") !== -1) return "it ends with you. blessing begins with you — as for me and my household, we will serve the Lord. (Joshua 24:15)";
+    if(s.indexOf("fear") !== -1 || s.indexOf("afraid") !== -1 || s.indexOf("dark") !== -1) return "fear makes everything louder than it is. quieter truth: perfect love drives out fear. (1 John 4:18)";
+    if(s.indexOf("alone") !== -1 || s.indexOf("lonely") !== -1) return "you are not alone — we will come and make our home with you. (John 14:23)";
+    if(s.indexOf("love") !== -1) return "as the Father has loved me, so have i loved you. abide in my love. (John 15:9)";
+    if(s.indexOf("yeshua") !== -1 || s.indexOf("jesus") !== -1 || s.indexOf("god") !== -1) return "He is closer than you think — your life is hidden with Christ in God. (Colossians 3:3)";
+    if(s.indexOf("tired") !== -1 || s.indexOf("pain") !== -1 || s.indexOf("suffer") !== -1 || s.indexOf("heavy") !== -1) return "come to me, all you who are weary, and i will give you rest. (Matthew 11:28)";
+    if(s.indexOf("abide") !== -1 || s.indexOf("dwell") !== -1 || s.indexOf("stay") !== -1 || s.indexOf("close") !== -1) return "remain in me, as i also remain in you. (John 15:4)";
+    var pool = current.replies;
+    return pool[Math.floor(Math.random()*pool.length)];
+  }
+
+  /* --- visualizers: real WebAudio bars, monochrome --- */
+  var vizCtx = null, vizSources = new WeakMap();
+  function ensureCtx(){
+    if(!vizCtx){
+      var AC = window.AudioContext || window.webkitAudioContext;
+      if(AC){ try{ vizCtx = new AC(); }catch(e){ vizCtx = null; } }
+    }
+    if(vizCtx && vizCtx.state === "suspended"){ vizCtx.resume().catch(function(){}); }
+    return vizCtx;
+  }
+  document.addEventListener("pointerdown", function(){ ensureCtx(); }, {passive:true});
+  function paintBars(c, data, peak){
+    var x = c.getContext("2d"), W = c.width, H = c.height;
+    x.clearRect(0,0,W,H);
+    x.fillStyle = "#faf9fc"; x.fillRect(0,0,W,H);
+    var n = 48, bw = W / n;
+    for(var i=0;i<n;i++){
+      var v = data ? (data[Math.floor(i * data.length / n)] / 255) : peak;
+      var h = 4 + v * (H - 10);
+      x.fillStyle = i % 3 === 0 ? "#111114" : (i % 3 === 1 ? "#4a3a6b" : "#8f86ad");
+      x.fillRect(i*bw+1, H-h, bw-2, h);
+    }
+  }
+  function paintIdle(c){ paintBars(c, null, 0.06); }
+  function hookViz(audio, canvas){
+    paintIdle(canvas);
+    var analyser = null, data = null, raf = 0, fakeT = 0, fakeRaf = 0;
+    function stopAnims(){ cancelAnimationFrame(raf); cancelAnimationFrame(fakeRaf); }
+    function fakeLoop(){
+      stopAnims();
+      var start = Date.now();
+      (function loop(){
+        fakeRaf = requestAnimationFrame(loop);
+        if(audio.paused){ return; }
+        var t = (Date.now()-start)/1000;
+        var arr = [];
+        for(var i=0;i<48;i++){ arr.push(90 + 90*Math.abs(Math.sin(t*3 + i*0.55)) * (0.4 + 0.6*Math.abs(Math.sin(t*0.7+i)))); }
+        paintBars(canvas, arr, 0);
+      })();
+    }
+    audio.addEventListener("play", function(){
+      var ac = ensureCtx();
+      if(!ac){ fakeLoop(); return; }
+      try{
+        var src = vizSources.get(audio);
+        if(!src){ src = ac.createMediaElementSource(audio); vizSources.set(audio, src); }
+        if(!analyser){
+          analyser = ac.createAnalyser(); analyser.fftSize = 128; analyser.smoothingTimeConstant = 0.78;
+          data = new Uint8Array(analyser.frequencyBinCount);
+          src.connect(analyser); analyser.connect(ac.destination);
+        }
+      }catch(e){ fakeLoop(); return; }
+      stopAnims();
+      (function loop(){
+        raf = requestAnimationFrame(loop);
+        if(!audio.paused){ analyser.getByteFrequencyData(data); paintBars(canvas, data, 0); }
+      })();
+    });
+    audio.addEventListener("pause", function(){ stopAnims(); paintBars(canvas, data, 0); });
+    audio.addEventListener("ended", function(){ stopAnims(); paintIdle(canvas); });
+  }
+  Array.prototype.forEach.call(document.querySelectorAll("audio[data-viz]"), function(a){
+    var c = document.getElementById(a.getAttribute("data-viz"));
+    if(c) hookViz(a, c);
+  });
+})();
+</script>
+</body>
+</html>
