@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="en"> 
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Indie Film — Zine Theater</title>
+  <style>
+    :root{
+      --bg:#000;
+      --cerulean: #2aa3ff; /* lighter cerulean */
+      --cornflower: #6495ed;
+      --neon-yellow: #fffb3b;
+      --deep-purple-1: #5b2aa6;
+      --deep-purple-2: #2b0b5a;
+      --theater-width: 820px;
+    }
+
+    html,body{height:100%;margin:0;background:var(--bg);font-family:Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial}
+
+    /* Page container */
+    .stage{height:100vh;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+
+    /* Tiny cosmic stars */
+    .starfield{position:absolute;inset:0;pointer-events:none}
+    .star{position:absolute;width:2px;height:2px;border-radius:50%;background:rgba(255,255,255,0.9);opacity:0.15;transform:translateZ(0)}
+    @keyframes twinkle{0%{opacity:0.05}50%{opacity:0.6}100%{opacity:0.1}}
+
+    /* subtle color glow across background */
+    .glow{position:absolute;inset:0;mix-blend-mode:screen;background:linear-gradient(135deg, rgba(42,163,255,0.06), rgba(100,149,237,0.04), rgba(91,42,166,0.06));pointer-events:none}
+
+    /* Theater frame */
+    .theater{width:var(--theater-width);max-width:92vw;aspect-ratio:16/9;position:relative;z-index:10;display:flex;align-items:center;justify-content:center;padding:28px;border-radius:12px;box-shadow:0 30px 80px rgba(0,0,0,0.8);background:linear-gradient(180deg, rgba(0,0,0,0.9), rgba(6,6,8,0.98));border:2px solid rgba(91,42,166,0.18)}
+
+    /* Projector mask / screen */
+    .screen-wrap{position:relative;width:100%;height:100%;display:flex;align-items:center;justify-content:center}
+    .screen{width:92%;height:92%;background:#000;border-radius:6px;overflow:hidden;box-shadow:inset 0 0 40px rgba(0,0,0,0.6);border:6px solid rgba(0,0,0,0.6)}
+
+    /* Video element */
+    video{width:100%;height:100%;object-fit:cover;display:block}
+
+    /* Grain + flicker overlay */
+    .grain{position:absolute;inset:0;pointer-events:none;mix-blend-mode:overlay;background-image:radial-gradient(rgba(255,255,255,0.02) 1px, transparent 1px);background-size:3px 3px;opacity:0.25}
+    @keyframes flicker{0%{opacity:0.02}8%{opacity:0.3}10%{opacity:0.02}20%{opacity:0.12}100%{opacity:0.02}}
+    .flicker{animation:flicker 6s infinite}
+
+    /* Zine title badge */
+    .badge{position:absolute;left:24px;top:18px;z-index:20;padding:8px 12px;border-radius:6px;background:linear-gradient(90deg,var(--cornflower),var(--cerulean));color:#021020;font-weight:700;letter-spacing:0.08em;font-size:13px;mix-blend-mode:screen}
+
+    /* Progress and loading UI */
+    .loader{position:absolute;bottom:24px;left:50%;transform:translateX(-50%);z-index:20;text-align:center;color:#dfeeff}
+    .loading-text{font-size:14px;margin-bottom:8px;font-weight:600;letter-spacing:0.06em}
+    .progress{width:420px;max-width:70vw;height:10px;background:rgba(255,255,255,0.06);border-radius:999px;overflow:hidden;border:1px solid rgba(255,255,255,0.03)}
+    .progress-bar{height:100%;width:0%;background:linear-gradient(90deg,var(--neon-yellow),var(--cerulean));box-shadow:0 4px 18px rgba(0,0,0,0.6) inset}
+    .timer{margin-top:8px;font-size:12px;opacity:0.9}
+
+    /* Play controls overlay */
+    .controls{position:absolute;right:20px;top:18px;z-index:20;display:flex;gap:8px;align-items:center}
+    .btn{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.04);padding:8px 10px;border-radius:6px;font-weight:600;font-size:13px;color:#fff;backdrop-filter:blur(4px);cursor:pointer}
+    .btn:active{transform:translateY(1px)}
+
+    /* Cinematic curtain hints */
+    .curtain-left, .curtain-right{position:absolute;top:0;bottom:0;width:18%;background:linear-gradient(90deg, rgba(11,8,20,0.9), rgba(30,15,40,0.7));z-index:5;pointer-events:none}
+    .curtain-left{left:-10%;transform:skewX(-8deg)}
+    .curtain-right{right:-10%;transform:skewX(8deg)}
+
+    /* tiny zine-styled grainy label */
+    .credit{position:absolute;bottom:18px;left:18px;color:rgba(220,220,255,0.85);font-size:12px;font-weight:600;letter-spacing:0.06em}
+
+    /* responsive tweaks */
+    @media (max-width:640px){
+      .badge{left:12px;top:10px;padding:6px 8px;font-size:12px}
+      .controls{right:12px;top:12px}
+      .loader{bottom:14px}
+    }
+  </style>
+</head>
+<body>
+  <div class="stage">
+    <div class="starfield" id="starfield"></div>
+    <div class="glow"></div>
+
+    <div class="curtain-left"></div>
+    <div class="curtain-right"></div>
+
+    <div class="theater" role="main">
+      <div class="badge">indie · punk zine</div>
+      <div class="controls">
+        <button class="btn" id="muteBtn">Mute</button>
+        <a id="sourceLink" class="btn" href="#" target="_blank" rel="noreferrer">Open source</a>
+      </div>
+
+      <div class="screen-wrap">
+        <div class="screen">
+          <video id="filmVideo" preload="auto" playsinline webkit-playsinline>
+            <!-- Replace the src below with your GitHub-hosted video file URL -->
+            <source id="videoSource" src="xenbohem.github.io/2026/archive/hans-teafox-8.mp4" type="video/mp4" />
+            Sorry — your browser does not support HTML5 video.
+          </video>
+          <div class="grain flicker"></div>
+        </div>
+      </div>
+
+      <div class="loader" id="loader">
+        <div class="loading-text">Loading Film...</div>
+        <div class="progress"><div class="progress-bar" id="progressBar"></div></div>
+        <div class="timer" id="timer">0%</div>
+      </div>
+
+      <div class="credit">— Feature presentation —</div>
+    </div>
+  </div>
+
+  <script>
+    // CONFIG
+    const LOADING_MS = 2500; // how long the loading/progress lasts before play (in ms)
+    const STAR_COUNT = 140;
+
+    // Elements
+    const progressBar = document.getElementById('progressBar');
+    const timerText = document.getElementById('timer');
+    const loader = document.getElementById('loader');
+    const video = document.getElementById('filmVideo');
+    const sourceLink = document.getElementById('sourceLink');
+    const videoSource = document.getElementById('videoSource');
+    const muteBtn = document.getElementById('muteBtn');
+
+    // Put your GitHub video URL here (raw file link) — also updates the "Open source" link
+    const GITHUB_VIDEO_URL = 'Chimera-Movie.mp4';
+    videoSource.src = GITHUB_VIDEO_URL;
+    sourceLink.href = GITHUB_VIDEO_URL;
+
+    // Create gentle starfield
+    const starfield = document.getElementById('starfield');
+    for(let i=0;i<STAR_COUNT;i++){
+      const s = document.createElement('div');
+      s.className = 'star';
+      const top = Math.random() * 100;
+      const left = Math.random() * 100;
+      const scale = Math.random() * 1.8 + 0.2;
+      s.style.top = top + '%';
+      s.style.left = left + '%';
+      s.style.transform = `scale(${scale})`;
+      s.style.animation = `twinkle ${Math.random()*4 + 2}s ${Math.random()*2}s infinite`;
+      s.style.opacity = 0.08 + Math.random()*0.25;
+      starfield.appendChild(s);
+    }
+
+    // Loading progress routine
+    function startLoading() {
+      const start = performance.now();
+      function tick(now){
+        const elapsed = now - start;
+        const pct = Math.min(1, elapsed / LOADING_MS);
+        const percent = Math.round(pct * 100);
+        progressBar.style.width = percent + '%';
+        timerText.textContent = percent + '%';
+        if(pct < 1){
+          requestAnimationFrame(tick);
+        } else {
+          // hide loader and begin playing
+          loader.style.transition = 'opacity 400ms ease';
+          loader.style.opacity = 0;
+          setTimeout(()=> loader.style.display = 'none', 420);
+          playFilm();
+        }
+      }
+      requestAnimationFrame(tick);
+    }
+
+    // Video autoplay handling — mute required for many browsers
+    video.muted = true;
+    muteBtn.textContent = 'Muted';
+    muteBtn.addEventListener('click', ()=>{
+      video.muted = !video.muted;
+      muteBtn.textContent = video.muted ? 'Muted' : 'Unmuted';
+    });
+
+    function playFilm(){
+      // ensure the source is loaded
+      video.load();
+      const playPromise = video.play();
+      if(playPromise !== undefined){
+        playPromise.then(()=>{
+          // played successfully
+        }).catch(err=>{
+          // autoplay blocked; show a play hint
+          showPlayHint();
+        });
+      }
+
+      // After the short film ends, we bring back the loader for a subtle replay prompt
+      video.addEventListener('ended', ()=>{
+        // brief pause then show replay affordance
+        loader.style.display = 'block';
+        loader.style.opacity = 0;
+        setTimeout(()=> loader.style.opacity = 1, 20);
+        progressBar.style.width = '100%';
+        timerText.textContent = 'Replay?';
+      });
+    }
+
+    // If autoplay is blocked by browser, show a large center play button
+    function showPlayHint(){
+      const btn = document.createElement('button');
+      btn.className = 'btn';
+      btn.style.fontSize = '18px';
+      btn.style.padding = '14px 18px';
+      btn.textContent = 'Play Film';
+      btn.onclick = ()=>{ video.play(); btn.remove(); loader.style.display='none'; };
+      document.querySelector('.theater').appendChild(btn);
+    }
+
+    // quick UX: clicking the video toggles mute/unmute (keeps user in control)
+    video.addEventListener('click', ()=>{ video.muted = !video.muted; muteBtn.textContent = video.muted ? 'Muted' : 'Unmuted'; });
+
+    // start loading animation on DOM ready
+    document.addEventListener('DOMContentLoaded', ()=>{
+      // slight delay for dramatic effect
+      setTimeout(startLoading, 260);
+    });
+
+    // Accessibility: set descriptive title on link
+    sourceLink.setAttribute('title','Open raw video file (GitHub hosted)');
+  </script>
+</body>
+</html>
